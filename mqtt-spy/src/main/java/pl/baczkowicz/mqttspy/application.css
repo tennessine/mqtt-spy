@@ -1,0 +1,101 @@
+.tab:selected
+{
+	-fx-font-weight: bold;
+}
+
+.messageIndex
+{
+	-fx-font-weight: bold;
+}
+
+.filterOff
+{
+	-fx-text-fill: 	black;
+	-fx-stroke: 	black;
+}
+
+.filterOn
+{
+	-fx-text-fill: 	red;
+	-fx-stroke: 	red;
+}
+
+.buttonArea
+{
+	-fx-background-color: white; 
+}
+
+.styled-text-area
+{	
+    -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 3, 2, 2;
+    -fx-padding: 4;	
+}
+
+.messageText
+{
+	-fx-font: 11px "System";
+	-fx-font-weight: normal;
+}
+
+.messageTextHighlighted
+{
+	-fx-font: 		11px "System";
+	-fx-fill: 	red;
+	-fx-font-weight: normal;
+}
+
+.list-view .list-cell:filled:selected {
+   -fx-background-color: -fx-focus-color;   
+}
+
+.list-view .list-cell:filled:selected .text {
+       -fx-fill: white;
+}
+
+.list-view .list-cell:filled:odd {
+    /* -fx-control-inner-background: rgba(233, 222, 255, 0.6); */
+    -fx-background-radius: 7;
+}
+
+.list-view .list-cell:filled:even {
+    /* -fx-control-inner-background: rgba(233, 222, 255, 0.3); */
+    -fx-background-radius: 7;
+}
+
+.table-row-cell:selected {
+	-fx-background-color: -fx-focus-color;
+}
+
+.table-row-cell:selected .text {
+       -fx-fill: white;
+}
+
+/* Connections */
+
+.tab-title-connected
+{
+	-fx-base: lightgreen;
+}
+
+.tab-title-disconnected
+{
+	-fx-base: red;
+}
+
+.tab-title-connecting
+{
+	-fx-base: yellow;
+}
+
+.tab-title-not-connected
+{
+	-fx-base: white;
+}
+
+.tab-title-default
+{
+	-fx-base: grey;
+}
+	

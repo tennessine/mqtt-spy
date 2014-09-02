@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:versions="http://baczkowicz.pl/mqtt-spy-versions"
+			targetNamespace="http://baczkowicz.pl/mqtt-spy-versions">
+
+	<xs:complexType name="MqttSpyVersions">
+		<xs:sequence>
+			<xs:element name="ReleasedVersions" 	type="versions:ReleasedVersions" />
+			<xs:element name="LatestVersions" 		type="versions:LatestVersions" />
+			
+		</xs:sequence>
+	</xs:complexType>
+		
+	<xs:complexType name="VersionInfo">
+		<xs:sequence>
+			<xs:element name="Number"				type="xs:string" />
+			<xs:element name="Name"					type="xs:string" />
+			<xs:element name="ReleaseDate" 			type="xs:date" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- ======================= -->
+	<!-- === Latest versions === -->
+	<!-- ======================= -->
+	
+	<xs:complexType name="LatestVersions">
+		<xs:sequence>
+			<xs:element name="LatestVersion" 		type="versions:LatestVersion" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+		
+	
+	<xs:complexType name="LatestVersion">
+		<xs:complexContent>
+			<xs:extension base="versions:VersionInfo">
+				<xs:sequence>
+		        	<xs:element name="KeyFeatures"	type="xs:string" />
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+	
+	<!-- ========================= -->
+	<!-- === Released versions === -->
+	<!-- ========================= -->
+	
+	<xs:complexType name="ReleasedVersions">
+		<xs:sequence>
+			<xs:element name="ReleasedVersion" 		type="versions:ReleasedVersion" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ReleasedVersion">
+		<xs:complexContent>
+			<xs:extension base="versions:VersionInfo">
+				<xs:sequence>
+		        	<xs:element name="UpdateNote"		type="xs:string" />
+		        	<xs:element name="VersionStatus"	type="versions:VersionStatus" />
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>	
+	
+	<xs:simpleType name="VersionStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ON_LATEST"></xs:enumeration>
+			<xs:enumeration value="NEW_AVAILABLE"></xs:enumeration>
+			<xs:enumeration value="UPDATE_RECOMMENDED"></xs:enumeration>
+			<xs:enumeration value="CRITICAL"></xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<!-- ================ -->
+	<!-- === ELEMENTS === -->
+	<!-- ================ -->
+
+	<xs:element name="MqttSpyVersions" type="versions:MqttSpyVersions" />
+
+</xs:schema>

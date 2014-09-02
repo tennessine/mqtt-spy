@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="356.0" prefWidth="594.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.EditConnectionController">
+   <children>
+      
+      <!-- Connection name -->
+      <Label fx:id="connectionNameLabel" layoutX="14.0" layoutY="18.0" text="Connection name" />
+      <TextField fx:id="connectionNameText" layoutX="262.0" layoutY="13.0" prefHeight="25.0" prefWidth="302.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="14.0" />
+
+      <Label layoutX="39.0" layoutY="32.0" text="(auto-generated if = client ID@broker URI)" textFill="#5e5e5e">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      
+      <!-- Create -->
+ 	  <Button fx:id="connectButton" focusTraversable="false" layoutX="421.0" layoutY="317.0" mnemonicParsing="false" onAction="#createConnection" prefHeight="25.0" prefWidth="296.0" text="Open connection" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Button fx:id="saveButton" focusTraversable="false" layoutX="14.0" layoutY="317.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="100.0" text="Apply" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+      <TabPane layoutY="301.0" prefHeight="241.0" prefWidth="594.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="60.0">
+        <tabs>
+          <Tab text="Connectivity">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>  
+                              
+                        <!-- Broker URI -->
+                        <Label layoutX="23.0" layoutY="20.0" text="Broker TCP/IP address:" />
+                        <!--  onKeyReleased="#updateConnectionName" -->
+                        <TextField fx:id="brokerAddressText" layoutX="279.0" layoutY="15.0" prefHeight="25.0" prefWidth="259.0" promptText="tcp://localhost:1883" text="127.0.0.1" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="14.0" />
+                        
+                        <Label layoutX="48.0" layoutY="34.0" text="(e.g. localhost or tcp://mybroker:1883)" textFill="#5e5e5e">
+                        <!-- SSL: ssl://mybroker:8888 -->
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                        
+                        <Label layoutX="23.0" layoutY="70.0" text="Client ID" />
+                        <!-- onKeyReleased="#updateClientId" -->
+                        <TextField fx:id="clientIdText" layoutX="279.0" layoutY="63.0" prefHeight="25.0" prefWidth="209.0" promptText="e.g. your name" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="107.0" />
+                  	  <Label fx:id="lengthLabel" alignment="CENTER_RIGHT" layoutX="387.0" layoutY="88.0" prefHeight="14.0" prefWidth="100.0" text="Length = 0/23" AnchorPane.rightAnchor="107.0">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                                         
+                        <Label layoutX="23.0" layoutY="180.0" text="Clean session" />
+                        <CheckBox fx:id="cleanSession" layoutX="279.0" layoutY="179.0" mnemonicParsing="false" selected="true" AnchorPane.rightAnchor="284.0" />
+                        <Label layoutX="48.0" layoutY="85.0" text="(keep it unique to avoid disconnections)" textFill="#5e5e5e">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="23.0" layoutY="120.0" text="Connection timeout" />
+                        <Label layoutX="23.0" layoutY="150.0" text="Keep alive interval" />
+                        <TextField fx:id="connectionTimeout" layoutX="279.0" layoutY="115.0" prefHeight="25.0" prefWidth="78.0" />
+                        <TextField fx:id="keepAlive" layoutX="279.0" layoutY="145.0" prefHeight="25.0" prefWidth="78.0" />
+                        <Button fx:id="addTimestampButton" focusTraversable="false" layoutX="494.0" layoutY="62.0" mnemonicParsing="false" onAction="#addTimestamp" prefHeight="25.0" prefWidth="87.0" text="Generate" textAlignment="CENTER" wrapText="true" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="User authentication">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                     	<Label layoutX="23.0" layoutY="20.0" text="Enable user authentication" />
+                     	<CheckBox fx:id="userAuthentication" layoutX="279.0" layoutY="18.0" mnemonicParsing="false" />
+                     	
+                        <Label layoutX="23.0" layoutY="70.0" text="User name" />
+                        <TextField fx:id="username" disable="true" layoutX="279.0" layoutY="63.0" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="14.0" />
+                        <Label layoutX="23.0" layoutY="136.0" text="Password" />
+                        <PasswordField fx:id="password" disable="true" layoutX="279.0" layoutY="131.0" prefHeight="25.0" prefWidth="302.0" AnchorPane.leftAnchor="279.0" AnchorPane.rightAnchor="14.0" />
+                        <RadioButton fx:id="predefinedPassword" disable="true" layoutX="164.0" layoutY="135.0" mnemonicParsing="false" selected="true" text="Predefined">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="passwordMode" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="askForPassword" disable="true" layoutX="164.0" layoutY="166.0" mnemonicParsing="false" text="Ask before connecting" toggleGroup="$passwordMode" />                                                
+                        <RadioButton fx:id="predefinedUsername" disable="true" layoutX="164.0" layoutY="67.0" mnemonicParsing="false" selected="true" text="Predefined">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="usernameMode" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="askForUsername" disable="true" layoutX="164.0" layoutY="98.0" mnemonicParsing="false" text="Ask before connecting" toggleGroup="$usernameMode" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="UI &amp; Formatting">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  	<children>
+                  		<Label layoutX="23.0" layoutY="20.0" text="Auto-open at start-up" />         
+                        <CheckBox fx:id="autoConnect" layoutX="279.0" layoutY="58.0" mnemonicParsing="false" selected="true" />
+                        <Label layoutX="23.0" layoutY="60.0" text="Auto-connect when opened" />
+                        <CheckBox fx:id="autoOpen" layoutX="279.0" layoutY="18.0" mnemonicParsing="false" selected="true" />
+                        <Label layoutX="23.0" layoutY="100.0" text="Max messages stored" />
+                        <Label layoutX="23.0" layoutY="140.0" text="Message content formatter" />
+                        <TextField fx:id="maxMessagesStored" layoutX="279.0" layoutY="95.0" prefHeight="25.0" prefWidth="78.0" />
+                        <ComboBox fx:id="formatter" layoutX="279.0" layoutY="135.0" prefHeight="25.0" prefWidth="296.0" AnchorPane.rightAnchor="11.0" />                        
+                  	</children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Publications">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="publicationsTable" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                          <columns>
+                            <TableColumn fx:id="publicationTopicColumn" minWidth="300.0" prefWidth="531.0" text="Topic" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="566.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Subscriptions">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="subscriptionsTable" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                           <columns>
+                              <TableColumn fx:id="subscriptionTopicColumn" minWidth="300.0" prefWidth="399.0" text="Topic" />
+                              <TableColumn fx:id="qosSubscriptionColumn" prefWidth="40.0" text="QoS" />
+                              <TableColumn fx:id="createTabSubscriptionColumn" prefWidth="95.0" text="Create tab" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="566.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Separator layoutX="14.0" layoutY="278.0" prefHeight="0.0" prefWidth="618.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+      <Button fx:id="undoButton" focusTraversable="false" layoutX="120.0" layoutY="317.0" mnemonicParsing="false" onAction="#undo" prefHeight="25.0" prefWidth="100.0" text="Undo" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="120.0" />
+      <Button fx:id="cancelButton" cancelButton="true" focusTraversable="false" layoutX="192.0" layoutY="317.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="80.0" text="Close" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="322.0" />
+      
+   </children>
+</AnchorPane>

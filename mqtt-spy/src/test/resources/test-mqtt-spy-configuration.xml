@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config:MqttSpyConfiguration
+   xmlns:config="http://baczkowicz.pl/mqtt-spy-configuration"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+   <Connectivity>
+
+        <Connection>
+                <Name>user1@localhost</Name>
+                <ServerURI>tcp://127.0.0.1:1883</ServerURI>
+                <ClientID>user1</ClientID>
+                <AutoConnect>false</AutoConnect>
+                
+                <Formatter>ascii</Formatter>
+                <!--  <MaxMessagesStored>500</MaxMessagesStored>-->
+        </Connection>
+
+        <Connection>
+                <Name>user2@localhost</Name>
+                <ServerURI>tcp://localhost</ServerURI>
+                <ClientID>user2</ClientID>
+                <AutoConnect>true</AutoConnect>
+                <CleanSession>true</CleanSession>
+                <ConnectionTimeout>5</ConnectionTimeout>
+                <KeepAliveInterval>10</KeepAliveInterval>
+
+				<!-- This is an optional field; put the ID of the decoder -->
+				<Formatter>base64-body-decoder</Formatter>
+				<MaxMessagesStored>1500</MaxMessagesStored>
+				
+                <Publication topic="/test3/" />
+                <Publication topic="/pubtest2/"/>
+                <Publication topic="/pubtest3/"/>
+                
+                <Subscription topic="/test1/" />
+                <Subscription topic="/test2/" qos="1" />
+                <Subscription topic="/test3/" qos="0" createTab="true" />
+        </Connection>
+
+   </Connectivity>
+   
+   <Formatting>
+   		<Formatter>
+   			<Name>ASCII</Name>
+   			<ID>ascii</ID>
+   			
+   			<Function>
+   				<CharacterReplace>
+   					<Format>HexEncode</Format>   				
+   					<CharacterRangeFrom>0</CharacterRangeFrom>
+   					<CharacterRangeTo>32</CharacterRangeTo>
+   					<WrapCharacter>-</WrapCharacter>
+   				</CharacterReplace>
+   			</Function>
+   			
+   		</Formatter>
+   		
+   		<Formatter>
+   			<!-- Name that will appear in the application -->
+   			<Name>Base64 body decoder</Name>
+   			
+   			<!-- This should be unique within the file -->
+   			<ID>base64-body-decoder</ID>
+   			
+   			<!-- Convert the base64 content to plain text -->
+   			<Function>
+   				<SubstringConversion>
+   					<StartTag><![CDATA[<Body>]]></StartTag>
+   					<EndTag><![CDATA[</Body>]]></EndTag>
+   					<KeepTags>true</KeepTags>
+   					<Format>Base64Decode</Format>
+   				</SubstringConversion>   				
+   			</Function>
+   			
+   			<!-- Ignore anything else but the Body tags and their content, then remove these tags, leaving only the content of the Body -->
+   			<Function>
+   				<SubstringExtract>
+   					<StartTag><![CDATA[<Body>]]></StartTag>
+   					<EndTag><![CDATA[</Body>]]></EndTag>
+   					<KeepTags>false</KeepTags>
+   				</SubstringExtract>
+   			</Function>
+   			
+   		</Formatter>
+   </Formatting>
+   
+</config:MqttSpyConfiguration>

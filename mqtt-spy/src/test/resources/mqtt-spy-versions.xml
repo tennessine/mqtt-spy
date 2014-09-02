@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<versions:MqttSpyVersions xmlns:versions="http://baczkowicz.pl/mqtt-spy-versions" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  
+	<ReleasedVersions>
+		
+		<ReleasedVersion>
+	      <ID>703</ID>
+	      <Name>0.0.7-SNAPSHOT</Name>
+	      <ReleaseDate>2014.08.31</ReleaseDate>
+	      <UpdateNote>update to get improved connection management and configuration saving</UpdateNote>
+	      <VersionStatus>UPDATE_RECOMMENDED</VersionStatus>
+	    </ReleasedVersion>
+	    
+	    <ReleasedVersion>
+	      <ID>799</ID>
+	      <Name>0.0.7</Name>
+	      <ReleaseDate>2014.08.31</ReleaseDate>
+	      <UpdateNote>update to get improved connection management and configuration saving</UpdateNote>
+	      <VersionStatus>ON_LATEST</VersionStatus>
+	    </ReleasedVersion>
+	    
+  	</ReleasedVersions>
+  
+  	<LatestVersions>
+	    <LatestVersion>
+	    	<ID>801</ID>
+	    	<Name>0.0.8-SNAPSHOT</Name>
+	    	<ReleaseDate>2014.09.01</ReleaseDate>
+	    	<KeyFeatures>saving the configuration to file, control panel and improved connection management</KeyFeatures>
+	    </LatestVersion>
+    <!--
+    <LatestVersion>
+    	<ID>8</ID>
+    	<Name>0.0.8-SNAPSHOT</Name>
+    	<ReleaseDate>2014.09.05</ReleaseDate>
+    	<KeyFeatures>saving the configuration to file, control panel and improved connection management</KeyFeatures>
+    </LatestVersion>
+    -->
+  	</LatestVersions>
+</versions:MqttSpyVersions>

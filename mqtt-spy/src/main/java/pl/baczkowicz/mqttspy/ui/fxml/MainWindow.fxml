@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainPane" prefHeight="550.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.MainController">
+	<children>
+		<MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+			<menus>
+				<Menu mnemonicParsing="false" text="File">
+					<items>
+	            		<MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
+					</items>
+				</Menu>
+				
+				<Menu mnemonicParsing="false" text="Configuration">
+					<items>
+						<MenuItem fx:id="openConfigFileMenu" mnemonicParsing="false" onAction="#openConfigurationFile" text="Open file" />
+						<!-- 
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem mnemonicParsing="false" onAction="#restoreConfigurationFile" text="Create/restore sample configuration file" />
+						 -->
+					</items>
+				</Menu>
+				
+				<Menu mnemonicParsing="false" text="Connections">
+					<items>
+						<MenuItem 	mnemonicParsing="false" onAction="#createNewConnection" 	text="New connection" />
+						<MenuItem 	mnemonicParsing="false" onAction="#editConnections" 		text="Manage connections" />
+					</items>
+				</Menu>
+				
+				<!-- 
+				<Menu mnemonicParsing="false" text="Preferences">
+					<items>
+						<MenuItem mnemonicParsing="false" text="Edit..." />
+					</items>
+				</Menu>
+				 -->
+				
+				<Menu mnemonicParsing="false" text="Help">
+					<items>
+						<Menu 		mnemonicParsing="false" 									text="Wiki">
+							<items>
+								<MenuItem 	mnemonicParsing="false" onAction="#overviewWiki" 	text="Overview" />
+								<MenuItem 	mnemonicParsing="false" onAction="#changelogWiki" 	text="Changelog" />
+								<MenuItem 	mnemonicParsing="false" onAction="#configurationWiki" text="Configuration" />
+								<MenuItem 	mnemonicParsing="false" onAction="#loggingWiki" 	text="Logging" />
+							</items>
+						</Menu>
+			
+						<SeparatorMenuItem mnemonicParsing="false" />
+						<MenuItem 	mnemonicParsing="false" onAction="#openProjectWebsite"	text="About" />
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+		<TabPane fx:id="connectionTabs" layoutY="29.0" prefHeight="350.0" prefWidth="554.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+			<tabs>
+				<Tab fx:id="firstTab" text="Control panel">
+					<content>
+						<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+							<children>
+								<!-- <fx:include source="ConnectionTab.fxml" /> -->
+								<!-- 0.0.8 -->
+								<!-- <fx:include fx:id="controlPanelPane" source="ControlPanelPane.fxml" /> -->
+							</children>
+						</AnchorPane>
+					</content>
+				</Tab>
+			</tabs>
+		</TabPane>
+	</children>
+</AnchorPane>

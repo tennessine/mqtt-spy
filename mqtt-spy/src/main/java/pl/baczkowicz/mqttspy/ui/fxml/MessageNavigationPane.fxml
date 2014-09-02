@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="31.0" prefWidth="490.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.MessageNavigationController">
+	<children>      
+      <HBox fx:id="messageIndexBox" layoutX="8.0" layoutY="3.0" prefHeight="22.0" prefWidth="271.0">
+         <children>
+      		<Label fx:id="messageLabel" prefHeight="27.0" text="No messages" />
+         </children>
+      </HBox>
+      <Button fx:id="lessRecentButton" focusTraversable="false" layoutX="473.0" layoutY="3.0" mnemonicParsing="false" onAction="#showLessRecent" text="&gt;" AnchorPane.rightAnchor="36.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="11.0" />
+         </font></Button>
+      <Button fx:id="moreRecentButton" focusTraversable="false" layoutX="445.0" layoutY="3.0" mnemonicParsing="false" onAction="#showMoreRecent" text="&lt;" AnchorPane.rightAnchor="64.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="11.0" />
+         </font></Button>
+      <CheckBox fx:id="showLatestBox" layoutX="279.0" layoutY="6.0" mnemonicParsing="false" selected="true" text="Show latest on new" AnchorPane.rightAnchor="127.0" AnchorPane.topAnchor="6.0">
+         <font>
+            <Font size="11.0" />
+         </font></CheckBox>
+      <Button fx:id="showLastButton" focusTraversable="false" layoutX="501.0" layoutY="3.0" mnemonicParsing="false" onAction="#showLast" text="&gt;|" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="11.0" />
+         </font></Button>
+      <Button fx:id="showFirstButton" focusTraversable="false" layoutX="414.0" layoutY="3.0" mnemonicParsing="false" onAction="#showFirst" text="|&lt;" AnchorPane.rightAnchor="92.0" AnchorPane.topAnchor="3.0">
+         <font>
+            <Font size="11.0" />
+         </font></Button>      
+	</children>
+</AnchorPane>

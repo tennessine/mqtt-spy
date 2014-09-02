@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.SubscriptionSummaryTableController">
+	<children>
+	
+        <TableView fx:id="filterTable" editable="true" maxHeight="1000.0" minHeight="115.0" prefHeight="115.0" prefWidth="626.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        	<columnResizePolicy>
+              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+           </columnResizePolicy>
+          <columns>
+            	<TableColumn fx:id="topicColumn" editable="false" maxWidth="500.0" minWidth="200.0" prefWidth="300.0" text="Topic" />
+              	<TableColumn fx:id="contentColumn" editable="false" maxWidth="1.7976931348623157E308" minWidth="150.0" prefWidth="500.0" text="Content" />
+         		<TableColumn fx:id="showColumn" maxWidth="70" minWidth="70" prefWidth="70" resizable="false" text="Show" />
+              	<TableColumn fx:id="messageCountColumn" editable="false" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Messages" />
+              	<TableColumn fx:id="lastReceivedColumn" editable="false" maxWidth="190.0" minWidth="190.0" prefWidth="190.0" resizable="false" text="Last received" />
+          </columns>
+        </TableView>
+                        
+	</children>
+</AnchorPane>

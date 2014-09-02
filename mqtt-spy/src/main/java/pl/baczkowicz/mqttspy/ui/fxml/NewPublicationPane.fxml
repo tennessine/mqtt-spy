@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.ComboBox?>
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
+
+<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" 
+	xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.NewPublicationController">
+	<children>
+            
+        <Label layoutX="14.0" layoutY="15.0" text="Topic" AnchorPane.topAnchor="5.0" />
+        <ComboBox fx:id="publicationTopicText" editable="true" layoutX="53.0" layoutY="10.0" prefHeight="25.0" prefWidth="401.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="204.0" AnchorPane.topAnchor="0.0" />
+        <ChoiceBox fx:id="publicationQosChoice" layoutX="506.0" prefHeight="25.0" prefWidth="14.0" value="0" AnchorPane.rightAnchor="108.0" AnchorPane.topAnchor="0.0">
+           <items>
+              <FXCollections fx:factory="observableArrayList">
+                 <String fx:value="0" />
+                 <String fx:value="1" />
+                 <String fx:value="2" />
+              </FXCollections>
+           </items>
+        </ChoiceBox>
+        <Label layoutX="470.0" layoutY="5.0" text="QoS" AnchorPane.rightAnchor="161.0" AnchorPane.topAnchor="5.0" />
+        <Button fx:id="publishButton" disable="true" layoutX="542.0" layoutY="10.0" mnemonicParsing="false" onAction="#publish" prefHeight="25.0" prefWidth="97.0" text="Publish" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+        <ToggleButton fx:id="plainTextButton" layoutX="561.0" layoutY="32.0" mnemonicParsing="false" onAction="#showAsPlain" prefHeight="25.0" prefWidth="50.0" selected="true" text="Plain" AnchorPane.rightAnchor="47.0" AnchorPane.topAnchor="32.0">
+	        <toggleGroup>
+	           <ToggleGroup fx:id="formatGroup" />
+	        </toggleGroup>
+   		</ToggleButton>
+        <ToggleButton fx:id="hexTextButton" layoutX="614.0" layoutY="32.0" mnemonicParsing="false" onAction="#showAsHex" text="Hex" toggleGroup="$formatGroup" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0" />
+        <Label layoutX="14.0" layoutY="37.0" text="Data" AnchorPane.topAnchor="37.0" />
+        <StyleClassedTextArea fx:id="publicationData" layoutX="53.0" layoutY="32.0" prefHeight="25.0" prefWidth="478.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="108.0" AnchorPane.topAnchor="32.0" />
+
+   	</children>
+</AnchorPane>
