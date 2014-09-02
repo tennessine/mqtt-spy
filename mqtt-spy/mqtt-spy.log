@@ -6094,3 +6094,98 @@ Caused by: java.lang.NullPointerException
 2014-09-02 19:42:21,788 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/workspace/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
 2014-09-02 19:42:35,007 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/workspace/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
 2014-09-02 19:43:05,503 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/workspace/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-02 20:24:50,033 INFO  [main                          ] [MainController                ]  - test
+2014-09-02 20:24:50,469 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:24:50,481 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:24:50,483 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:24:50,489 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 20:24:50,492 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:24:50,493 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:24:50,501 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 20:24:50,508 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Removing t2 from active filters
+2014-09-02 20:24:50,517 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:24:51,368 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 20:24:51,396 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:24:51,396 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:24:51,397 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 20:24:51,409 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 20:24:51,411 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:24:51,422 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:24:51,428 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 20:24:51,430 INFO  [main                          ] [MqttConnection                ]  - Subscription /# removed
+2014-09-02 20:27:31,878 INFO  [main                          ] [MainController                ]  - test
+2014-09-02 20:27:32,059 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:27:32,077 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:27:32,081 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:27:32,081 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 20:27:32,089 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 20:27:32,090 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:27:32,091 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 20:27:32,095 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Removing t2 from active filters
+2014-09-02 20:27:32,096 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 20:27:32,448 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 20:27:32,451 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:27:32,452 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:27:32,453 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 20:27:32,460 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 20:27:32,461 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:27:32,462 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 20:27:32,467 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 20:27:32,468 INFO  [main                          ] [MqttConnection                ]  - Subscription /# removed
+2014-09-02 21:16:59,484 INFO  [main                          ] [MainController                ]  - test
+2014-09-02 21:16:59,627 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:16:59,632 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:16:59,639 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:16:59,640 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:16:59,646 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:16:59,647 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:16:59,652 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:16:59,661 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Removing t2 from active filters
+2014-09-02 21:16:59,661 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:17:00,000 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:17:00,003 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:17:00,004 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:17:00,007 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:17:00,012 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:17:00,013 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:17:00,014 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:17:00,015 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:17:00,016 INFO  [main                          ] [MqttConnection                ]  - Subscription /# removed
+2014-09-02 21:19:50,032 INFO  [main                          ] [MainController                ]  - test
+2014-09-02 21:19:50,227 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:19:50,230 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:19:50,231 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:19:50,232 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:19:50,234 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:19:50,235 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:19:50,236 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:19:50,236 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Removing t2 from active filters
+2014-09-02 21:19:50,237 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:19:50,597 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:19:50,600 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:19:50,600 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:19:50,601 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:19:50,608 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:19:50,609 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:19:50,610 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:19:50,611 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:19:50,611 INFO  [main                          ] [MqttConnection                ]  - Subscription /# removed
+2014-09-02 21:22:11,361 INFO  [main                          ] [MainController                ]  - test
+2014-09-02 21:22:11,541 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:22:11,563 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:22:11,565 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:22:11,566 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:22:11,568 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t1 to active filters; recreate = false
+2014-09-02 21:22:11,569 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:22:11,570 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding t2 to active filters; recreate = false
+2014-09-02 21:22:11,574 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Removing t2 from active filters
+2014-09-02 21:22:11,575 ERROR [main                          ] [MessagesPerTopic              ]  - Found empty value
+2014-09-02 21:22:11,951 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:22:11,954 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:22:11,955 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:22:11,956 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:22:11,961 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-02 21:22:11,962 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:22:11,963 INFO  [main                          ] [ObservableMessageStoreWithFiltering]  - Adding /topic to active filters; recreate = false
+2014-09-02 21:22:11,964 INFO  [main                          ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-02 21:22:11,964 INFO  [main                          ] [MqttConnection                ]  - Subscription /# removed
