@@ -1,7 +1,5 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
-import java.io.IOException;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -25,17 +23,14 @@ public class TabUtils
 	
 	public static ConnectionController loadConnectionTab(final MainController mainController,
 			final Object parent, final MqttManager mqttManager, 
-			final RuntimeConnectionProperties connectionProperties
-			)
-	
-		throws IOException
+			final RuntimeConnectionProperties connectionProperties)
 	{		
 		// Create connection
 		final MqttConnection connection = mqttManager.createConnection(connectionProperties);
 
 		// Load a new tab and connection pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
-		AnchorPane connectionPane = (AnchorPane) loader.load();
+		AnchorPane connectionPane = Utils.loadAnchorPane(loader);
 		final ConnectionController connectionController = (ConnectionController) loader.getController();
 		final Tab connectionTab = TabUtils.createConnectionTab(mqttManager, connectionProperties,
 				connectionPane, connectionController); 
@@ -68,7 +63,7 @@ public class TabUtils
 
 	public static Tab createConnectionTab(final MqttManager mqttManager,
 			final RuntimeConnectionProperties connectionProperties, final Node content,
-			final ConnectionController connectionController) throws IOException
+			final ConnectionController connectionController)
 	{
 		final Tab tab = new Tab();
 		connectionController.setTab(tab);
@@ -81,12 +76,12 @@ public class TabUtils
 
 	public static Tab createSubscriptionTab(final boolean allTab, final Object parent,
 			final ObservableMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
-			final MqttSubscription subscription, final RuntimeConnectionProperties connectionProperties, final ConnectionController connectionController) throws IOException
+			final MqttSubscription subscription, final RuntimeConnectionProperties connectionProperties, final ConnectionController connectionController)
 	{
 		// Load a new tab and connection pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "SubscriptionPane.fxml");
 
-		final AnchorPane subscriptionPane = (AnchorPane) loader.load();
+		final AnchorPane subscriptionPane = Utils.loadAnchorPane(loader);
 		final SubscriptionController subscriptionController = ((SubscriptionController) loader.getController());
 		
 		final Tab tab = new Tab();

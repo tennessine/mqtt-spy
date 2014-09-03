@@ -35,4 +35,19 @@ public class EventManager
 			}
 		}
 	}
+
+	public void notifyConfigurationFileWriteFailure()
+	{
+		// TODO Auto-generated method stub
+	}
+
+	public void notifyConfigurationFileCopyFailure()
+	{
+		// TODO Auto-generated method stub		
+	}
+
+	public void notifyConfigurationFileReadFailure()
+	{
+		// TODO Auto-generated method stub
+	}
 }

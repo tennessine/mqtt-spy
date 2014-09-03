@@ -15,10 +15,10 @@ import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.baczkowicz.mqttspy.configuration.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttConnectionTest extends TestCase

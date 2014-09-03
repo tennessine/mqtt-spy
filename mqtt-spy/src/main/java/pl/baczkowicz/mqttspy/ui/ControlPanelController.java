@@ -17,15 +17,14 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.Main;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.versions.VersionManager;
 import pl.baczkowicz.mqttspy.versions.generated.LatestVersion;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
 import pl.baczkowicz.mqttspy.versions.generated.ReleasedVersion;
-import pl.baczkowicz.mqttspy.xml.XMLException;
 
 public class ControlPanelController extends AnchorPane implements Initializable
 {

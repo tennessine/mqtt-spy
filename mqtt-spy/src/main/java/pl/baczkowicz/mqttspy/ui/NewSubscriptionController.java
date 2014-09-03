@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,30 +150,22 @@ public class NewSubscriptionController implements Initializable
 				subscriptionDetails.getQos(), colorPicker.getValue(), connection.getMaxMessageStoreSize());
 
 		// Add a new tab
-		try
+		final Tab tab = TabUtils.createSubscriptionTab(false, this, subscription, connection,
+				subscription, connectionProperties, connectionController);
+
+		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
+
+		colorPicker.setValue(colors.get(subscriptionTabs.getTabs().size() % 16));
+		subscriptionTabs.getTabs().add(tab);
+
+		if (subscribe)
 		{
-			final Tab tab = TabUtils.createSubscriptionTab(false, this, subscription, connection,
-					subscription, connectionProperties, connectionController);
-			
-			final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
-
-			colorPicker.setValue(colors.get(subscriptionTabs.getTabs().size() % 16));
-			subscriptionTabs.getTabs().add(tab);
-
-			if (subscribe)
-			{
-				connection.subscribe(subscription);
-			}
-			else
-			{
-				connection.addSubscription(subscription);
-				subscription.setActive(false);
-			}
-
+			connection.subscribe(subscription);
 		}
-		catch (IOException e)
+		else
 		{
-			logger.error("Cannot load the subscription tab", e);
+			connection.addSubscription(subscription);
+			subscription.setActive(false);
 		}
 	}
 	

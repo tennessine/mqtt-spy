@@ -3,8 +3,8 @@ package pl.baczkowicz.mqttspy.versions;
 import java.io.IOException;
 import java.net.URL;
 
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
-import pl.baczkowicz.mqttspy.xml.XMLException;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 /**

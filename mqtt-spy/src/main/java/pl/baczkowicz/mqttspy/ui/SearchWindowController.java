@@ -64,17 +64,17 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		searchTabs.getTabs().clear();				
 	}
 	
-	public void createNewSearch() throws IOException
+	public void createNewSearch()
 	{
 		searchTabs.getTabs().add(createSearchTab(this));
 	}
 	
-	public Tab createSearchTab(final Object parent) throws IOException
+	public Tab createSearchTab(final Object parent)
 	{
 		// Load a new tab and message pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "SearchPane.fxml");
 
-		final AnchorPane searchPane = (AnchorPane) loader.load();
+		final AnchorPane searchPane = Utils.loadAnchorPane(loader);
 		final SearchPaneController searchPaneController = ((SearchPaneController) loader.getController());
 		
 		final Tab tab = new Tab();

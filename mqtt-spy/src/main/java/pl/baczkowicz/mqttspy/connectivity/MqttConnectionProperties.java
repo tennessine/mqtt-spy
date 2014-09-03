@@ -2,8 +2,8 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
-import pl.baczkowicz.mqttspy.configuration.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.generated.UserCredentials;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 
 public class MqttConnectionProperties
 {

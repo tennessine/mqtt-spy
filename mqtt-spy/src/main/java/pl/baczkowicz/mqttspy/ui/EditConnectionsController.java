@@ -16,7 +16,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import pl.baczkowicz.mqttspy.configuration.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
@@ -25,6 +24,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class EditConnectionsController extends AnchorPane implements Initializable, ConnectionStatusChangeObserver
@@ -132,7 +132,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 						{
 							editConnectionPaneController.createConnection();
 						}
-						catch (IOException | ConfigurationException e)
+						catch (ConfigurationException e)
 						{
 							// TODO
 							e.printStackTrace();

@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.xml;
+package pl.baczkowicz.mqttspy.exceptions;
 
 /**
  * Represents an exception during configuration loading.

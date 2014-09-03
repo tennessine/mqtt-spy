@@ -1,7 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.io.File;
-import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -22,10 +21,7 @@ import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.Main;
-import pl.baczkowicz.mqttspy.configuration.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
-import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
@@ -33,11 +29,12 @@ import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
-import pl.baczkowicz.mqttspy.xml.XMLException;
 
 public class MainController
 {
@@ -69,8 +66,6 @@ public class MainController
 	private Application application;
 
 	private final ConfigurationManager configurationManager;
-
-	//private File configurationFile;
 	
 	private Stage stage;
 
@@ -80,7 +75,7 @@ public class MainController
 	{
 		this.eventManager = new EventManager();
 		this.mqttManager = new MqttManager(eventManager);
-		this.configurationManager = new ConfigurationManager();
+		this.configurationManager = new ConfigurationManager(eventManager);
 	}
 
 	@FXML
@@ -88,37 +83,21 @@ public class MainController
 	{
 		logger.trace("Creating new connection...");
 
-		try
-		{
-			showEditConnectionsWindow(true);
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		showEditConnectionsWindow(true);
 	}
 
 	@FXML
 	public void editConnections()
 	{
-		try
-		{
-			showEditConnectionsWindow(false);
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		showEditConnectionsWindow(false);
 	}
 	
-	private void showEditConnectionsWindow(final boolean createNew) throws IOException
+	private void showEditConnectionsWindow(final boolean createNew)
 	{
 		if (editConnectionsController  == null)
 		{
 			final FXMLLoader loader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "EditConnectionsWindow.fxml");
-			AnchorPane connectionWindow = (AnchorPane) loader.load();
+			final AnchorPane connectionWindow = Utils.loadAnchorPane(loader);
 			editConnectionsController = ((EditConnectionsController) loader.getController());
 			editConnectionsController.setManager(mqttManager); 		
 			editConnectionsController.setMainController(this);
@@ -153,7 +132,7 @@ public class MainController
 		System.exit(0);
 	}
 
-	public void init() throws XMLException
+	public void init()
 	{
 		getParentWindow().setOnCloseRequest(new EventHandler<WindowEvent>()
 		{
@@ -191,7 +170,7 @@ public class MainController
 	}
 
 	@FXML
-	public void openConfigurationFile() throws ConfigurationException, IOException
+	public void openConfigurationFile()
 	{
 		final FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select a configuration file to open");
@@ -208,44 +187,41 @@ public class MainController
 	
 	public void loadConfigurationFileAndShowErrorWhenApplicable(final File selectedFile)
 	{
-		try
-		{
-			loadConfigurationFile(selectedFile);
-			// 0.0.8
-			// controlPanelPaneController.refreshConfigurationFileStatus();
-			// controlPanelPaneController.refreshConnectionsStatus();
-		
-			openConfigFileMenu.setDisable(true);
-		}
-		catch (XMLException e)
-		{
-			DialogUtils.showInvalidConfigurationFileDialog("Cannot process the given configuration file. See the log file for more details.");						
-			LoggerFactory.getLogger(Main.class).error("Error while processing the configuration file", e);
-		}
-		catch (IOException e)
-		{
-			DialogUtils.showInvalidConfigurationFileDialog("Cannot read the given configuration file. See the log file for more details.");						
-			LoggerFactory.getLogger(Main.class).error("Error while reading the configuration file", e);
-		}
+		loadConfigurationFile(selectedFile);
+		// 0.0.8
+		// controlPanelPaneController.refreshConfigurationFileStatus();
+		// controlPanelPaneController.refreshConnectionsStatus();
 	}
 	
-	private void loadConfigurationFile(final File selectedFile) throws IOException, XMLException
+	private void loadConfigurationFile(final File selectedFile)
 	{
 		logger.info("Loading configuration file from " + selectedFile.getAbsolutePath());
 
-		configurationManager.loadConfiguration(selectedFile);
-
-		// Process the connection settings		
-		for (final ConfiguredConnectionDetails connection : configurationManager.getConnections())
+		if (configurationManager.loadConfiguration(selectedFile))
 		{
-			if (connection.isAutoOpen() != null && connection.isAutoOpen())
+			// Process the connection settings		
+			for (final ConfiguredConnectionDetails connection : configurationManager.getConnections())
 			{
-				openConnection(connection, mqttManager);
+				if (connection.isAutoOpen() != null && connection.isAutoOpen())
+				{
+					
+					try
+					{
+						openConnection(connection, mqttManager);
+					}
+					catch (ConfigurationException e)
+					{
+						// TODO: show warning dialog for invalid
+						logger.error("Cannot open conection {}", connection.getName(), e);
+					}
+				}
 			}
+			
+			openConfigFileMenu.setDisable(true);
 		}
 	}	
 	
-	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws IOException, ConfigurationException
+	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
 	{
 		// Note: this is not a complete ConfiguredConnectionDetails copy but ConnectionDetails copy
 		final ConfiguredConnectionDetails connectionDetails = new ConfiguredConnectionDetails();

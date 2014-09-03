@@ -1,6 +1,7 @@
 package pl.baczkowicz.mqttspy.xml;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import javax.xml.bind.JAXBContext;
@@ -13,6 +14,8 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.xml.sax.SAXException;
+
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
 
 /**
  * 
@@ -65,8 +68,13 @@ public class XMLParser
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public Object loadFromFile(final File file) throws XMLException
+	public Object loadFromFile(final File file) throws XMLException, FileNotFoundException
 	{
+		if (file == null || !file.exists())
+		{
+			throw new FileNotFoundException("Cannot load the configuration " + (file != null ? "from " + file.getAbsolutePath() : ""));
+		}
+		
 		Object readObject = null;
 		try
 		{
@@ -78,21 +86,21 @@ public class XMLParser
 		}
 		catch (JAXBException | IllegalArgumentException e)
 		{
-			throw new XMLException("Cannot load the configuration from " + file.getPath(), e);
+			throw new XMLException("Cannot load the configuration from " + file.getAbsolutePath(), e);
 		}
 
 		return readObject;
 	}
 
-	public void saveToFile(final String filename, final Object objectToSave) throws XMLException
+	public void saveToFile(final File file, final Object objectToSave) throws XMLException
 	{
 		try
 		{
-			marshaller.marshal(objectToSave, new File(filename));
+			marshaller.marshal(objectToSave, file);
 		}
 		catch (JAXBException e)
 		{
-			throw new XMLException("Cannot write the XML to " + filename, e);
+			throw new XMLException("Cannot save configuration to " + file.getAbsolutePath(), e);
 		}
 	}
 

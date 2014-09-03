@@ -11,11 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Connectivity;
 import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.configuration.generated.MqttSpyConfiguration;
-import pl.baczkowicz.mqttspy.xml.XMLException;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 /**
@@ -25,13 +34,16 @@ import pl.baczkowicz.mqttspy.xml.XMLParser;
  * @author Kamil Baczkowicz
  *
  */
-public class ConfigurationManager extends XMLParser
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class ConfigurationManager
 {
-	public static final String VERSION_PROPERTY = "versionNumber";
+	final static Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
 	
-	private static final String PACKAGE = "pl.baczkowicz.mqttspy.configuration.generated";
+	public static final String VERSION_PROPERTY = "application.version";
 	
-	private static final String SCHEMA = "/mqtt-spy-configuration.xsd";
+	public static final String PACKAGE = "pl.baczkowicz.mqttspy.configuration.generated";
+	
+	public static final String SCHEMA = "/mqtt-spy-configuration.xsd";
 
 	public static final String DEFAULT_FILE_NAME = "mqtt-spy-configuration.xml";
 	
@@ -49,15 +61,22 @@ public class ConfigurationManager extends XMLParser
 
 	private final Properties properties;
 
-	public ConfigurationManager() throws XMLException
+	private Exception lastException;
+
+	private EventManager eventManager;
+	
+	private final XMLParser parser;
+
+	public ConfigurationManager(final EventManager eventManager) throws XMLException
 	{
-		super(SCHEMA, PACKAGE);
+		this.parser = new XMLParser(SCHEMA, PACKAGE);
 					
 		// Create empty configuration
 		this.configuration = new MqttSpyConfiguration();
 		this.configuration.setConnectivity(new Connectivity());
 		this.configuration.setFormatting(new Formatting());		
 		
+		this.eventManager = eventManager;
 		this.properties = readPropertyFile(DEFAULT_PROPERTIES_FILE_NAME);
 	}
 
@@ -67,13 +86,31 @@ public class ConfigurationManager extends XMLParser
 		return lastUsedId;
 	}
 	
-	public MqttSpyConfiguration loadConfiguration(final File file) throws XMLException
+	public boolean loadConfiguration(final File file)
 	{
-		// TODO: show the error somewhere
-		configuration = (MqttSpyConfiguration) loadFromFile(file);
-		createConnections();
-		loadedConfigurationFile = file;
-		return configuration;
+		try
+		{
+			configuration = (MqttSpyConfiguration) parser.loadFromFile(file);
+			createConnections();
+			loadedConfigurationFile = file;
+			return true;
+		}
+		catch (XMLException e)
+		{
+			setLastException(e);
+			DialogUtils.showInvalidConfigurationFileDialog("Cannot process the given configuration file. See the log file for more details.");					
+			logger.error("Cannot process the configuration file at " + file.getAbsolutePath(), e);
+			eventManager.notifyConfigurationFileReadFailure();
+		}
+		catch (FileNotFoundException e)
+		{
+			setLastException(e);
+			DialogUtils.showInvalidConfigurationFileDialog("Cannot read the given configuration file. See the log file for more details.");
+			logger.error("Cannot read the configuration file from " + file.getAbsolutePath(), e);
+			eventManager.notifyConfigurationFileReadFailure();
+		}
+		
+		return false;
 	}
 	
 	private void createConnections()
@@ -95,12 +132,6 @@ public class ConfigurationManager extends XMLParser
 	{
 		return connections;
 	}
-
-	public void saveConfiguration(final String filename) throws XMLException
-	{
-		// TODO: show the error somewhere
-		saveToFile(filename, configuration);
-	}
 	
 	public static File getDefaultConfigurationFile()
 	{
@@ -120,32 +151,43 @@ public class ConfigurationManager extends XMLParser
 		return loadedConfigurationFile;
 	}
 	
+	public boolean isConfigurationWritable()
+	{
+		if (loadedConfigurationFile != null && loadedConfigurationFile.canWrite())
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isConfigurationReadOnly()
 	{
 		if (loadedConfigurationFile != null && !loadedConfigurationFile.canWrite())
-		{
-			// TODO: probably not needed anymore
-			// DialogUtils.showReadOnlyWarning(configurationFile.getAbsolutePath());						
+		{					
 			return true;
 		}
 		
 		return false;
 	}
 
-	public void createDefaultConfigurationFile()
+	public boolean createDefaultConfigurationFile()
 	{
+		final File dest = getDefaultConfigurationFile();
+		
 		try
 		{
-			final File orig = new File(ConfigurationManager.class.getResource("/" + ConfigurationManager.DEFAULT_FILE_NAME).toURI()); 
-			final File dest = new File(getDefaultConfigurationFile().getAbsolutePath());
-		
-			Files.copy(orig.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);			
+			final File orig = new File(ConfigurationManager.class.getResource("/" + ConfigurationManager.DEFAULT_FILE_NAME).toURI()); 			
+			Files.copy(orig.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			return true;
 		}
 		catch (IOException | URISyntaxException e)
 		{
-			// TODO: show the error somewhere
-			e.printStackTrace();
+			setLastException(e);
+			logger.error("Cannot create the default configuration file at " + dest.getAbsolutePath(), e);
+			eventManager.notifyConfigurationFileCopyFailure();			
 		}		
+		
+		return false;
 	}
 	
 	public static Properties readPropertyFile(final String location) throws ConfigurationException
@@ -172,5 +214,41 @@ public class ConfigurationManager extends XMLParser
 	public String getProperty(final String propertyName)
 	{
 		return properties.getProperty(propertyName, "");
+	}
+
+	public boolean saveConfiguration()
+	{
+		if (isConfigurationWritable())
+		{
+			try
+			{
+				configuration.getConnectivity().getConnection().clear();
+				configuration.getConnectivity().getConnection().addAll(connections);
+				
+				// TODO: what about new formatters?
+				
+				parser.saveToFile(loadedConfigurationFile, 
+						new JAXBElement(new QName("http://baczkowicz.pl/mqtt-spy-configuration", "MqttSpyConfiguration"), MqttSpyConfiguration.class, configuration));
+				return true;
+			}
+			catch (XMLException e)
+			{
+				setLastException(e);
+				logger.error("Cannot save the configuration file", e);
+				eventManager.notifyConfigurationFileWriteFailure();
+			}
+		}
+		
+		return false;
+	}
+
+	public Exception getLastException()
+	{
+		return lastException;
+	}
+
+	public void setLastException(Exception lastException)
+	{
+		this.lastException = lastException;
 	}
 }

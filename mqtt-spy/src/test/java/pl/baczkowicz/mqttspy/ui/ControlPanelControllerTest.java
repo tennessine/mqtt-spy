@@ -3,7 +3,7 @@ package pl.baczkowicz.mqttspy.ui;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.baczkowicz.mqttspy.xml.XMLException;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
 
 public class ControlPanelControllerTest
 {

@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
@@ -248,13 +247,13 @@ public class SubscriptionController implements Observer, Initializable
 		return tab.getTabPane().getScene().getWindow();
 	}
 	
-	public void showSearchWindow() throws IOException
+	public void showSearchWindow()
 	{
 		if (searchStage == null)
 		{
 			// Create the search window controller
 			final FXMLLoader searchLoader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "SearchWindow.fxml");
-			AnchorPane searchWindow = (AnchorPane) searchLoader.load();
+			AnchorPane searchWindow = Utils.loadAnchorPane(searchLoader);
 			searchWindowController = (SearchWindowController) searchLoader.getController();
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);

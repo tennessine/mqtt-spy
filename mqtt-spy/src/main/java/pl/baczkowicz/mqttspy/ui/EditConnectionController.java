@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,10 +26,11 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
@@ -43,6 +43,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
+import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
@@ -349,10 +350,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private void addTimestamp()
 	{
 		updateClientId(true);
-//		{
-//			updateClientIdLength();			
-//			updateConnectionName();
-//		}
 	}
 	
 	@FXML
@@ -374,7 +371,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		updateButtons();
 		
-		// TODO: save
+		logger.debug("Saving connection " + connectionNameText.getText());
+		configurationManager.saveConfiguration();
 	}	
 	
 	private boolean updateClientId(final boolean addTimestamp)
@@ -452,7 +450,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	}
 	
 	@FXML
-	public void createConnection() throws IOException, ConfigurationException
+	public void createConnection() throws ConfigurationException
 	{
 		readAndDetectChanges();
 		final String validationResult = MqttUtils.validateConnectionDetails(editedConnectionDetails, false);
@@ -462,16 +460,22 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			DialogUtils.showValidationWarning(validationResult);
 		}
 		else
-		{		
+		{					
 			if (editedConnectionDetails.isModified())
-			{
-				if (DialogUtils.showApplyChangesQuestion("connection" + editedConnectionDetails.getName()))
+			{	
+				Action response = DialogUtils.showApplyChangesQuestion("connection " + editedConnectionDetails.getName()); 
+				if (response == Dialog.Actions.OK)
 				{
-					// TODO: save
+					logger.debug("Saving connection " + connectionNameText.getText());
+					configurationManager.saveConfiguration();
+				}
+				else if (response == Dialog.Actions.NO)
+				{
+					// Do nothing
 				}
 				else
 				{
-					// Do nothing
+					return;
 				}
 			}
 			
@@ -498,10 +502,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 					{						
 						mainController.openConnection(editedConnectionDetails, mqttManager);
 					}
-					catch (IOException | ConfigurationException e)
+					catch (ConfigurationException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						// TODO: show warning dialog for invalid
+						logger.error("Cannot open conection {}", editedConnectionDetails.getName(), e);
 					}					
 				}				
 			});
@@ -599,14 +603,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			existingConnection = null;
 			connectButton.setText("Open connection");
 			
-			// logger.info("Editing connection id={} name={}",
-			// editedConnectionDetails.getId(),
-			// editedConnectionDetails.getName());
+			logger.debug("Editing connection id={} name={}", editedConnectionDetails.getId(),
+					editedConnectionDetails.getName());
 			for (final MqttConnection mqttConnection : mqttManager.getConnections())
 			{
-				// logger.info("Checking connection id={} name={}",
-				// mqttConnection.getProperties().getConfiguredProperties().getId(),
-				// mqttConnection.getProperties().getConfiguredProperties().getName());
 				if (connectionDetails.getId() == mqttConnection.getProperties().getConfiguredProperties().getId() && mqttConnection.isOpened())
 				{
 					openNewMode = false;

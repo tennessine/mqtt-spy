@@ -1,6 +1,5 @@
-package pl.baczkowicz.mqttspy.configuration;
+package pl.baczkowicz.mqttspy.exceptions;
 
-import pl.baczkowicz.mqttspy.xml.XMLException;
 
 /**
  * Represents an exception during configuration loading.

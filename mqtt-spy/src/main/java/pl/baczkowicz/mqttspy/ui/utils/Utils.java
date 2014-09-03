@@ -1,9 +1,12 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 public class Utils
@@ -42,6 +45,19 @@ public class Utils
 	public static FXMLLoader createFXMLLoader(final Object object, final String fxmlFile)
 	{
 		return new FXMLLoader(object.getClass().getResource(fxmlFile));
+	}
+	
+	public static AnchorPane loadAnchorPane(final FXMLLoader loader)
+	{
+		try
+		{
+			return (AnchorPane) loader.load();
+		}
+		catch (IOException e)
+		{
+			// TODO: log
+			throw new CriticalException("Cannot load FXML", e);
+		}
 	}
 	
 	public static void recordTopic(final String newTopic, final List<String> topics)

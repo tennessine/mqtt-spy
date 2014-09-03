@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.ui.utils;
 
 import java.util.Optional;
 
+import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.CustomLoginDialog;
 import org.controlsfx.dialog.Dialogs;
 import org.controlsfx.dialog.Dialogs.UserInfo;
@@ -17,10 +18,10 @@ public class DialogUtils
 				.message(message + ".").showWarning();
 	}
 
-	public static boolean showApplyChangesQuestion(final String message)
+	public static Action showApplyChangesQuestion(final String message)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return Dialogs.create().owner(null).title("Unsaved changes detected").masthead(null)
+		.message("You've got unsaved changes for " + message + ". Do you want to save/apply them now?").showConfirm();		
 	}
 
 	public static boolean showUsernameAndPasswordDialog(final Object owner,
