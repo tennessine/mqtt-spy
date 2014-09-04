@@ -21,7 +21,7 @@
       </Label>
       
       <!-- Create -->
- 	  <Button fx:id="connectButton" focusTraversable="false" layoutX="421.0" layoutY="317.0" mnemonicParsing="false" onAction="#createConnection" prefHeight="25.0" prefWidth="296.0" text="Open connection" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+ 	  <Button fx:id="connectButton" focusTraversable="false" layoutX="421.0" layoutY="317.0" mnemonicParsing="false" onAction="#createConnection" prefHeight="25.0" prefWidth="302.0" text="Open connection" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
       <Button fx:id="saveButton" focusTraversable="false" layoutX="14.0" layoutY="317.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="100.0" text="Apply" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
       <TabPane layoutY="301.0" prefHeight="241.0" prefWidth="594.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="60.0">
         <tabs>
@@ -52,7 +52,7 @@
                         </Label>
                                          
                         <Label layoutX="23.0" layoutY="180.0" text="Clean session" />
-                        <CheckBox fx:id="cleanSession" layoutX="279.0" layoutY="179.0" mnemonicParsing="false" selected="true" AnchorPane.rightAnchor="284.0" />
+                        <CheckBox fx:id="cleanSession" layoutX="279.0" layoutY="179.0" mnemonicParsing="false" selected="true" AnchorPane.rightAnchor="283.0" />
                         <Label layoutX="48.0" layoutY="85.0" text="(keep it unique to avoid disconnections)" textFill="#5e5e5e">
                            <font>
                               <Font size="10.0" />
@@ -114,12 +114,13 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="publicationsTable" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="publicationsTable" editable="true" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                           <columns>
                             <TableColumn fx:id="publicationTopicColumn" minWidth="300.0" prefWidth="531.0" text="Topic" />
                           </columns>
                         </TableView>
-                        <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="566.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                        <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
+                        <Button fx:id="addPublicationButton" disable="true" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Add" visible="false" />
                      </children>
                   </AnchorPane>
               </content>
@@ -128,14 +129,15 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="subscriptionsTable" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                        <TableView fx:id="subscriptionsTable" editable="true" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                            <columns>
                               <TableColumn fx:id="subscriptionTopicColumn" minWidth="300.0" prefWidth="399.0" text="Topic" />
                               <TableColumn fx:id="qosSubscriptionColumn" prefWidth="40.0" text="QoS" />
                               <TableColumn fx:id="createTabSubscriptionColumn" prefWidth="95.0" text="Create tab" />
                            </columns>
                         </TableView>
-                        <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="14.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="566.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
+                        <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
+                        <Button fx:id="addSubscriptionButton" disable="true" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Add" visible="false" />
                      </children>
                   </AnchorPane>
                </content>

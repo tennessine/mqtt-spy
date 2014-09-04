@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Connectivity;
+import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.configuration.generated.MqttSpyConfiguration;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -92,6 +93,7 @@ public class ConfigurationManager
 		{
 			configuration = (MqttSpyConfiguration) parser.loadFromFile(file);
 			createConnections();
+			createConfigurationDefaults();
 			loadedConfigurationFile = file;
 			return true;
 		}
@@ -113,6 +115,14 @@ public class ConfigurationManager
 		return false;
 	}
 	
+	private void createConfigurationDefaults()
+	{
+		if (configuration.getFormatting() == null)
+		{
+			configuration.setFormatting(new Formatting());
+		}
+	}
+	
 	private void createConnections()
 	{
 		for (final ConnectionDetails connectionDetails : getConfiguration().getConnectivity().getConnection())
@@ -121,16 +131,6 @@ public class ConfigurationManager
 			ConfigurationUtils.populateConnectionDefaults(connectionDetails);
 			connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, connectionDetails));
 		}		
-	}
-
-	public MqttSpyConfiguration getConfiguration()
-	{
-		return configuration;
-	}
-	
-	public List<ConfiguredConnectionDetails> getConnections()
-	{
-		return connections;
 	}
 	
 	public static File getDefaultConfigurationFile()
@@ -144,30 +144,6 @@ public class ConfigurationManager
 		}
 		
 		return new File(homeDirectory + ConfigurationManager.DEFAULT_FILE_NAME);
-	}
-	
-	public File getLoadedConfigurationFile()
-	{
-		return loadedConfigurationFile;
-	}
-	
-	public boolean isConfigurationWritable()
-	{
-		if (loadedConfigurationFile != null && loadedConfigurationFile.canWrite())
-		{
-			return true;
-		}
-		return false;
-	}
-	
-	public boolean isConfigurationReadOnly()
-	{
-		if (loadedConfigurationFile != null && !loadedConfigurationFile.canWrite())
-		{					
-			return true;
-		}
-		
-		return false;
 	}
 
 	public boolean createDefaultConfigurationFile()
@@ -211,11 +187,6 @@ public class ConfigurationManager
 		return fileProperties;
 	}
 
-	public String getProperty(final String propertyName)
-	{
-		return properties.getProperty(propertyName, "");
-	}
-
 	public boolean saveConfiguration()
 	{
 		if (isConfigurationWritable())
@@ -223,9 +194,8 @@ public class ConfigurationManager
 			try
 			{
 				configuration.getConnectivity().getConnection().clear();
-				configuration.getConnectivity().getConnection().addAll(connections);
-				
-				// TODO: what about new formatters?
+				configuration.getConnectivity().getConnection().addAll(connections);				
+				populateMissingFormatters(configuration.getFormatting().getFormatter(), connections);
 				
 				parser.saveToFile(loadedConfigurationFile, 
 						new JAXBElement(new QName("http://baczkowicz.pl/mqtt-spy-configuration", "MqttSpyConfiguration"), MqttSpyConfiguration.class, configuration));
@@ -241,6 +211,36 @@ public class ConfigurationManager
 		
 		return false;
 	}
+	
+	private void populateMissingFormatters(final List<FormatterDetails> formatters, final List<ConfiguredConnectionDetails> connections)
+	{
+		for (final ConfiguredConnectionDetails connection : connections)
+		{
+			if (connection.getFormatter() == null)
+			{
+				continue;
+			}
+			
+			boolean formatterFound = false;
+			
+			for (final FormatterDetails formatter : formatters)
+			{
+				if (((FormatterDetails) connection.getFormatter()).getID().equals(formatter.getID()))
+				{
+					formatterFound = true;
+				}
+			}
+			
+			if (!formatterFound)
+			{
+				formatters.add((FormatterDetails) connection.getFormatter());
+			}
+		}
+	}
+	
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
 
 	public Exception getLastException()
 	{
@@ -250,5 +250,44 @@ public class ConfigurationManager
 	public void setLastException(Exception lastException)
 	{
 		this.lastException = lastException;
+	}
+	
+	public String getProperty(final String propertyName)
+	{
+		return properties.getProperty(propertyName, "");
+	}
+	
+	public File getLoadedConfigurationFile()
+	{
+		return loadedConfigurationFile;
+	}
+	
+	public boolean isConfigurationWritable()
+	{
+		if (loadedConfigurationFile != null && loadedConfigurationFile.canWrite())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isConfigurationReadOnly()
+	{
+		if (loadedConfigurationFile != null && !loadedConfigurationFile.canWrite())
+		{					
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public MqttSpyConfiguration getConfiguration()
+	{
+		return configuration;
+	}
+	
+	public List<ConfiguredConnectionDetails> getConnections()
+	{
+		return connections;
 	}
 }

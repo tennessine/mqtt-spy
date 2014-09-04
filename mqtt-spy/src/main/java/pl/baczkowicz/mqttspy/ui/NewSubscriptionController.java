@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -57,6 +58,8 @@ public class NewSubscriptionController implements Initializable
 	private RuntimeConnectionProperties connectionProperties;
 
 	private boolean active;
+
+	private EventManager eventManager;
 
 	public NewSubscriptionController()
 	{
@@ -151,7 +154,7 @@ public class NewSubscriptionController implements Initializable
 
 		// Add a new tab
 		final Tab tab = TabUtils.createSubscriptionTab(false, this, subscription, connection,
-				subscription, connectionProperties, connectionController);
+				subscription, connectionProperties, connectionController, eventManager);
 
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
 
@@ -167,6 +170,11 @@ public class NewSubscriptionController implements Initializable
 			connection.addSubscription(subscription);
 			subscription.setActive(false);
 		}
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 	
 	public void setConnectionController(ConnectionController connectionController)

@@ -58,24 +58,19 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	}
 
 	public void messageReceived(final MqttContent message)
-	{
-		if (message != null)
+	{		
+		// Check matching subscription, based on moquette
+		List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
+		for (final Subscription matchingSubscription : matchingSubscriptions)
 		{
-			// Check matching subscription, based on moquette
-			List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message
-					.getTopic());
-			for (final Subscription matchingSubscription : matchingSubscriptions)
-			{
-				MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription
-						.getTopic());
+			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription.getTopic());
 
-				if (mqttSubscription != null && mqttSubscription.isActive())
-				{
-					message.setSubscription(mqttSubscription);
-					mqttSubscription.messageReceived(message);
-				}
+			if (mqttSubscription != null && mqttSubscription.isActive())
+			{
+				message.setSubscription(mqttSubscription);
+				mqttSubscription.messageReceived(message);
 			}
-		}
+		}		
 
 		super.messageReceived(message);
 	}

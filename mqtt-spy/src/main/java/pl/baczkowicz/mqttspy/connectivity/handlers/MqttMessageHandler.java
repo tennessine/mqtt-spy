@@ -8,6 +8,7 @@ import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 public class MqttMessageHandler implements Runnable
 {
 	private final Queue<MqttContent> queue;
+	
 	private MqttConnection connection;
 
 	public MqttMessageHandler(final MqttConnection connection, final Queue<MqttContent> queue)
@@ -18,6 +19,25 @@ public class MqttMessageHandler implements Runnable
 	
 	public void run()
 	{
-		connection.messageReceived(queue.remove());
+		while (true)
+		{
+			if (queue.size() > 0)
+			{
+				final MqttContent content =  queue.remove();			
+				connection.messageReceived(content);
+			}
+			else
+			{
+				try
+				{
+					Thread.sleep(10);
+				}
+				catch (InterruptedException e)
+				{
+					// Not expected
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }

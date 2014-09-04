@@ -1,7 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -22,9 +21,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.versions.VersionManager;
-import pl.baczkowicz.mqttspy.versions.generated.LatestVersion;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
-import pl.baczkowicz.mqttspy.versions.generated.ReleasedVersion;
 
 public class ControlPanelController extends AnchorPane implements Initializable
 {
@@ -165,68 +162,68 @@ public class ControlPanelController extends AnchorPane implements Initializable
 		
 		controller.refresh();		
 	}
-	
-	private ItemStatus convertVersionStatus(final ReleasedVersion release)
-	{
-		switch (release.getVersionStatus())
-		{
-			case CRITICAL:
-				return ItemStatus.ERROR;
-			case NEW_AVAILABLE:
-				return ItemStatus.INFO;
-			case ON_LATEST:
-				return ItemStatus.OK;
-			case UPDATE_RECOMMENDED:
-				return ItemStatus.WARN;
-			default:
-				return ItemStatus.ERROR;		
-		}
-	}
-	
-	private String convertVersionStatusToTitle(final ReleasedVersion release)
-	{
-		switch (release.getVersionStatus())
-		{
-			case ON_LATEST:
-				return "Your mqtt-spy is up to date!";
-			case NEW_AVAILABLE:
-				return "Your mqtt-spy is a bit old now - new version is available!";
-			case UPDATE_RECOMMENDED:
-				return "Your mqtt-spy is now pretty dated - consider an update!";
-			case CRITICAL:
-				return "A critical issue has been identified in your version - update now!";
-			default:
-				return "";		
-		}
-	}
-	
-	private String convertVersionStatusToDetails(final ReleasedVersion release, final List<LatestVersion> latestVersions)
-	{
-		final String current = "Your version is " + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY)
-				+ " (released on " + release.getReleaseDate() + ")";
-		
-		final StringBuffer sb = new StringBuffer();
-		sb.append(System.lineSeparator() + "Latest versions:" + System.lineSeparator() + System.lineSeparator());
-		
-		for (LatestVersion latest : latestVersions)
-		{
-			sb.append("   - " + latest.getName() + " (released on " + latest.getReleaseDate() + "), " + latest.getKeyFeatures() + System.lineSeparator());
-		}
-		
-		switch (release.getVersionStatus())
-		{
-			case ON_LATEST:
-				return current + ".";
-			case NEW_AVAILABLE:
-				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
-			case UPDATE_RECOMMENDED:
-				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
-			case CRITICAL:
-				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
-			default:
-				return "";		
-		}
-	}
+//	
+//	private ItemStatus convertVersionStatus(final ReleasedVersion release)
+//	{
+//		switch (release.getVersionStatus())
+//		{
+//			case CRITICAL:
+//				return ItemStatus.ERROR;
+//			case NEW_AVAILABLE:
+//				return ItemStatus.INFO;
+//			case ON_LATEST:
+//				return ItemStatus.OK;
+//			case UPDATE_RECOMMENDED:
+//				return ItemStatus.WARN;
+//			default:
+//				return ItemStatus.ERROR;		
+//		}
+//	}
+//	
+//	private String convertVersionStatusToTitle(final ReleasedVersion release)
+//	{
+//		switch (release.getVersionStatus())
+//		{
+//			case ON_LATEST:
+//				return "Your mqtt-spy is up to date!";
+//			case NEW_AVAILABLE:
+//				return "Your mqtt-spy is a bit old now - new version is available!";
+//			case UPDATE_RECOMMENDED:
+//				return "Your mqtt-spy is now pretty dated - consider an update!";
+//			case CRITICAL:
+//				return "A critical issue has been identified in your version - update now!";
+//			default:
+//				return "";		
+//		}
+//	}
+//	
+//	private String convertVersionStatusToDetails(final ReleaseStatus release, final List<LatestRelease> latestVersions)
+//	{
+//		final String current = "Your version is " + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY)
+//				+ " (released on " + release.getDate() + ")";
+//		
+//		final StringBuffer sb = new StringBuffer();
+//		sb.append(System.lineSeparator() + "Latest versions:" + System.lineSeparator() + System.lineSeparator());
+//		
+//		for (LatestRelease latest : latestVersions)
+//		{
+//			sb.append("   - " + latest.getName() + " (released on " + latest.getDate() + "), " + latest.getKeyFeatures() + System.lineSeparator());
+//		}
+//		
+//		switch (release.getUpdateStatus())
+//		{
+//			case ON_LATEST:
+//				return current + ".";
+//			case NEW_AVAILABLE:
+//				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
+//			case UPDATE_RECOMMENDED:
+//				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
+//			case CRITICAL:
+//				return current + " - " + release.getUpdateNote() + "." + System.lineSeparator() + sb.toString();
+//			default:
+//				return "";		
+//		}
+//	}
 	
 	public void showConnections(final ControlPanelItemController controller, final Button button)
 	{
@@ -307,15 +304,15 @@ public class ControlPanelController extends AnchorPane implements Initializable
 			
 		if (versions != null)
 		{
-			for (final ReleasedVersion release : versions.getReleasedVersions().getReleasedVersion())
-			{
-				if (configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY) == release.getNumber())
-				{
-					controller.setStatus(convertVersionStatus(release));
-					controller.setTitle(convertVersionStatusToTitle(release));
-					controller.setDetails(convertVersionStatusToDetails(release, versions.getLatestVersions().getLatestVersion()));
-				}
-			}
+//			for (final ReleasedVersion release : versions.getReleasedVersions().getReleasedVersion())
+//			{
+//				if (configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY) == release.getNumber())
+//				{
+//					controller.setStatus(convertVersionStatus(release));
+//					controller.setTitle(convertVersionStatusToTitle(release));
+//					controller.setDetails(convertVersionStatusToDetails(release, versions.getLatestVersions().getLatestVersion()));
+//				}
+//			}
 		}	
 		
 		controller.refresh();

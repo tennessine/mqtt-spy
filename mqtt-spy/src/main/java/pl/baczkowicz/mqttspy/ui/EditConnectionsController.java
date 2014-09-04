@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +15,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+
+import org.controlsfx.dialog.Dialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
@@ -25,13 +29,14 @@ import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class EditConnectionsController extends AnchorPane implements Initializable, ConnectionStatusChangeObserver
 {
 	private final static String NEW_ITEM = "* ";
 	
-	// private final static Logger logger = LoggerFactory.getLogger(EditConnectionsController.class);
+	private final static Logger logger = LoggerFactory.getLogger(EditConnectionsController.class);
 
 	/**
 	 * The name of this field needs to be set to the name of the pane +
@@ -200,14 +205,21 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	private void deleteConnection()
 	{
 		connections.get(getSelectedIndex()).setDeleted(true);
-		// TODO: question
 		
-		// TODO: if yes, the then...
-		connections.remove(getSelectedIndex());
-		listConnections();
-		selectFirst();
+		if (DialogUtils.showDeleteQuestion(connections.get(getSelectedIndex()).getName()) == Dialog.Actions.YES)
+		{
+			connections.remove(getSelectedIndex());
+			listConnections();
+			selectFirst();
 		
-		// TODO: save
+			saveAll();
+		}
+	}
+	
+	private void saveAll()
+	{
+		logger.debug("Saving all connections");
+		configurationManager.saveConfiguration();
 	}
 	
 	@FXML
@@ -231,7 +243,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		
 		listConnections();
 		
-		// TODO: save
+		saveAll();
 	}
 	
 	@FXML

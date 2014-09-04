@@ -35,6 +35,8 @@ import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
 import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
@@ -44,7 +46,7 @@ import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SubscriptionController implements Observer, Initializable
+public class SubscriptionController implements Observer, Initializable, ClearTabObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
@@ -114,17 +116,28 @@ public class SubscriptionController implements Observer, Initializable
 
 	private EventDispatcher eventDispatcher;
 
+	private EventManager eventManager;
+
+	@Override
+	public void onClearTab(final ObservableMessageStoreWithFiltering subscription)
+	{	
+		messagePaneController.clear();
+		messageNavigationPaneController.clear();
+		store.setAllShowValues(false);		
+	}
+	
 	public void update(Observable observable, Object update)
 	{
 		// Expecting to receive only notifications from subscriptions and the
 		// connection (for all subscriptions)
-		if (update == null)
-		{
-			messagePaneController.clear();
-			messageNavigationPaneController.clear();
-			store.setAllShowValues(false);
-		}
-		else if (update instanceof MqttContent)
+		// if (update == null)
+		// {
+		// messagePaneController.clear();
+		// messageNavigationPaneController.clear();
+		// store.setAllShowValues(false);
+		// }
+		// else 
+		if (update instanceof MqttContent)
 		{
 			if (store.getFilters().contains(((MqttContent) update).getTopic()))
 			{
@@ -297,6 +310,7 @@ public class SubscriptionController implements Observer, Initializable
 	{
 		eventDispatcher = new EventDispatcher();
 		eventDispatcher.addObserver(this);
+		eventManager.registerClearTabObserver(this, store);
 		
 		summaryTablePaneController.setStore(store);
 		summaryTablePaneController.setNavigationEventDispatcher(eventDispatcher);
@@ -327,6 +341,11 @@ public class SubscriptionController implements Observer, Initializable
 	public void setStore(final ObservableMessageStoreWithFiltering store)
 	{
 		this.store = store;
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 
 	/**

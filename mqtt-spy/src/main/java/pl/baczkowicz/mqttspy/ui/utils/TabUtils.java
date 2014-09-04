@@ -9,6 +9,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
@@ -23,7 +24,7 @@ public class TabUtils
 	
 	public static ConnectionController loadConnectionTab(final MainController mainController,
 			final Object parent, final MqttManager mqttManager, 
-			final RuntimeConnectionProperties connectionProperties)
+			final RuntimeConnectionProperties connectionProperties, final EventManager eventManager)
 	{		
 		// Create connection
 		final MqttConnection connection = mqttManager.createConnection(connectionProperties);
@@ -52,11 +53,12 @@ public class TabUtils
 		
 		connectionController.setConnection(connection);
 		connectionController.setConnectionProperties(connectionProperties);
+		connectionController.setEventManager(eventManager);
 		connectionController.init();
 
 		// Add "All" subscription tab
 		connectionController.getSubscriptionTabs().getTabs().clear();
-		connectionController.getSubscriptionTabs().getTabs().add(TabUtils.createSubscriptionTab(true, parent, connection, connection, null, connectionProperties, connectionController));
+		connectionController.getSubscriptionTabs().getTabs().add(TabUtils.createSubscriptionTab(true, parent, connection, connection, null, connectionProperties, connectionController, eventManager));
 		
 		return connectionController;
 	}
@@ -76,7 +78,8 @@ public class TabUtils
 
 	public static Tab createSubscriptionTab(final boolean allTab, final Object parent,
 			final ObservableMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
-			final MqttSubscription subscription, final RuntimeConnectionProperties connectionProperties, final ConnectionController connectionController)
+			final MqttSubscription subscription, final RuntimeConnectionProperties connectionProperties, final ConnectionController connectionController,
+			final EventManager eventManager)
 	{
 		// Load a new tab and connection pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "SubscriptionPane.fxml");
@@ -87,6 +90,7 @@ public class TabUtils
 		final Tab tab = new Tab();
 		observableMessageStore.addObserver(subscriptionController);
 		subscriptionController.setStore(observableMessageStore);
+		subscriptionController.setEventManager(eventManager);
 		subscriptionController.setTab(tab);
 		subscriptionController.setConnectionProperties(connectionProperties);
 		subscriptionController.init();
@@ -101,14 +105,12 @@ public class TabUtils
 
 		if (allTab)
 		{
-			tab.setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(tab,
-					connection));
+			tab.setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(tab, connection, eventManager));
 			tab.setText("All");
 		}
 		else
 		{
-			tab.setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(tab, connection,
-					subscription));
+			tab.setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(tab, connection, subscription, eventManager));
 			tab.setText(subscription.getTopic());
 		}
 

@@ -15,6 +15,12 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionLostEvent;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 
+/**
+ * One MQTT callback handler per connection.
+ * 
+ * @author Kamil Baczkowicz
+ *
+ */
 public class MqttCallbackHandler implements MqttCallback
 {
 	private final static Logger logger = LoggerFactory.getLogger(MqttCallbackHandler.class);
@@ -25,9 +31,13 @@ public class MqttCallbackHandler implements MqttCallback
 	
 	private long currentId = 1;
 
+	private MqttMessageHandler messageHandler;
+
 	public MqttCallbackHandler(final MqttConnection connection)
 	{
 		this.setConnection(connection);
+		this.messageHandler = new MqttMessageHandler(connection, queue);
+		new Thread(messageHandler).start();
 	}
 
 	public void connectionLost(Throwable cause)
@@ -41,7 +51,9 @@ public class MqttCallbackHandler implements MqttCallback
 		logger.info("Received message on topic \"" + topic + "\". Payload = \"" + new String(message.getPayload()) + "\"");
 		queue.add(new MqttContent(currentId, topic, message));
 		currentId++;
-		Platform.runLater(new MqttMessageHandler(connection, queue));
+		
+		// TODO: don't run it on FX 
+		// Platform.runLater(messageHandler);
 	}
 
 	public void deliveryComplete(IMqttDeliveryToken token)

@@ -200,3 +200,333 @@ Caused by: org.xml.sax.SAXParseException; systemId: file:/home/dellik/git/mqtt-s
 2014-09-03 08:08:30,129 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
 2014-09-03 08:11:14,560 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
 2014-09-03 08:11:21,376 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:06:57,025 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-03 23:07:11,701 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:10:21,655 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-03 23:10:42,902 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = false
+2014-09-03 23:10:42,906 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-03 23:10:44,582 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:10:44,683 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:10:47,798 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:10:47,804 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:10:51,432 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:10:51,452 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:11:39,526 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:42,119 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:42,149 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:43,586 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:43,746 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:44,489 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:47,459 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:11:57,524 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:12:05,094 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:12:07,647 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:12:10,279 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:12:11,849 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-03 23:12:11,853 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-03 23:12:12,138 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:12:12,153 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:12:46,844 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:12:46,851 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:12:49,251 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:12:49,266 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:15:00,302 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:15:00,308 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:15:08,777 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:08,849 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:10,414 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:10,536 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:10,761 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:11,261 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:12,668 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-03 23:15:14,761 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-03 23:15:14,766 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-03 23:15:15,031 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:15:15,051 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:15:18,060 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:15:18,068 WARN  [MQTT Con: user2               ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-03 23:16:12,486 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-03 23:16:12,556 INFO  [MQTT Call: user2              ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-03 23:16:34,549 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-03 23:16:45,974 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test". Payload = "<Body>dGVzdDE=</Body>"
+2014-09-03 23:16:45,978 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test". Payload = "<Body>dGVzdDE=</Body>"
+2014-09-03 23:16:46,029 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = false
+2014-09-03 23:16:46,060 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = false
+2014-09-03 23:16:46,091 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test
+2014-09-03 23:16:46,091 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = true
+2014-09-03 23:16:46,111 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test
+2014-09-03 23:16:46,111 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = true
+2014-09-03 23:16:46,155 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test
+2014-09-03 23:16:46,155 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = true
+2014-09-03 23:16:46,161 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test
+2014-09-03 23:16:46,162 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test to active filters; recreate = true
+2014-09-03 23:17:07,721 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-03 23:17:07,722 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-03 23:17:07,753 INFO  [MQTT Disc: user2              ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-04 00:05:36,461 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:05:46,054 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = false
+2014-09-04 00:05:46,055 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-04 00:05:46,935 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-04 00:05:47,044 INFO  [MQTT Call: user2              ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-04 00:05:55,156 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 00:06:00,609 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "1"
+2014-09-04 00:06:00,614 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "1"
+2014-09-04 00:06:00,623 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = false
+2014-09-04 00:06:00,982 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = false
+2014-09-04 00:06:01,035 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:06:01,036 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = true
+2014-09-04 00:06:01,055 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:06:01,055 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = true
+2014-09-04 00:06:01,118 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:06:01,119 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = true
+2014-09-04 00:06:01,132 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:06:01,132 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = true
+2014-09-04 00:06:13,980 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "2"
+2014-09-04 00:06:13,982 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "2"
+2014-09-04 00:06:20,701 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "3"
+2014-09-04 00:06:20,703 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "3"
+2014-09-04 00:09:19,828 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-04 00:09:19,829 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-04 00:09:24,855 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:09:30,211 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = false
+2014-09-04 00:09:30,212 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-04 00:09:30,969 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-04 00:09:31,294 INFO  [MQTT Call: user2              ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-04 00:09:35,719 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 00:09:40,389 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test3/". Payload = "1"
+2014-09-04 00:09:40,392 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test3". Payload = "1"
+2014-09-04 00:09:40,397 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test3 to active filters; recreate = false
+2014-09-04 00:09:40,420 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test3 to active filters; recreate = false
+2014-09-04 00:09:40,444 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test3
+2014-09-04 00:09:40,457 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test3
+2014-09-04 00:09:40,488 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test3
+2014-09-04 00:09:40,503 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test3
+2014-09-04 00:11:42,593 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:11:45,013 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-04 00:11:45,014 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-04 00:11:45,027 INFO  [MQTT Disc: user2              ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-04 00:11:48,781 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-04 00:12:16,755 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:12:24,168 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = true
+2014-09-04 00:12:27,032 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection dellik-001220277@127.0.0.1
+2014-09-04 00:12:27,929 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-001220277 to tcp://127.0.0.1
+2014-09-04 00:12:28,034 INFO  [MQTT Call: dellik-001220277   ] [MqttConnectionResultHandler   ]  - dellik-001220277@127.0.0.1 connected
+2014-09-04 00:12:51,506 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 00:12:57,870 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "1"
+2014-09-04 00:12:57,876 INFO  [MQTT Call: dellik-001220277   ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "1"
+2014-09-04 00:12:57,892 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = false
+2014-09-04 00:12:57,914 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters; recreate = false
+2014-09-04 00:12:57,940 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:12:57,953 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:12:57,992 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:12:58,001 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:13:10,741 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-04 00:13:10,742 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-001220277 from tcp://127.0.0.1
+2014-09-04 00:13:10,760 INFO  [MQTT Disc: dellik-001220277   ] [MqttDisconnectionResultHandler]  - dellik-001220277@127.0.0.1 disconnected
+2014-09-04 00:15:37,002 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:23:18,209 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:24:28,902 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:24:51,161 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:25:05,676 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:25:11,243 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Values read. Changed = false
+2014-09-04 00:25:11,245 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-04 00:25:12,167 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user2 to tcp://localhost
+2014-09-04 00:25:12,273 INFO  [MQTT Call: user2              ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-04 00:25:16,488 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 00:25:23,317 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "1"
+2014-09-04 00:25:23,320 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "1"
+2014-09-04 00:25:23,327 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for /#; recreate = false
+2014-09-04 00:25:23,363 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = false
+2014-09-04 00:25:23,397 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:25:23,424 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:25:23,482 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:25:23,497 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:25:25,246 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "12"
+2014-09-04 00:25:25,248 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "12"
+2014-09-04 00:25:27,126 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "123"
+2014-09-04 00:25:27,130 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "123"
+2014-09-04 00:26:07,182 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test1". Payload = "12354"
+2014-09-04 00:26:07,183 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test1". Payload = "12354"
+2014-09-04 00:26:17,720 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Publishing message on topic "/test12". Payload = "123544"
+2014-09-04 00:26:17,722 INFO  [MQTT Call: user2              ] [MqttCallbackHandler           ]  - Received message on topic "/test12". Payload = "123544"
+2014-09-04 00:26:17,733 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test12 to active filters for /#; recreate = false
+2014-09-04 00:26:17,762 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test12 to active filters for user2@localhost; recreate = false
+2014-09-04 00:26:17,778 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:17,783 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:17,789 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:17,792 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:17,797 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:17,801 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:17,810 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:17,813 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:31,025 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:31,026 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test12 from active filters for user2@localhost
+2014-09-04 00:26:32,048 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:32,049 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test12 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:33,443 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:33,444 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test1 from active filters for user2@localhost
+2014-09-04 00:26:34,413 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:34,414 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:35,534 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:35,535 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test1 from active filters for user2@localhost
+2014-09-04 00:26:36,174 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:36,175 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:37,056 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:37,056 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test12 from active filters for user2@localhost
+2014-09-04 00:26:38,191 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:38,191 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test12 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:39,223 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:39,224 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test12 from active filters for user2@localhost
+2014-09-04 00:26:39,655 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test12
+2014-09-04 00:26:39,656 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test12 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:40,121 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:40,122 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test1 from active filters for user2@localhost
+2014-09-04 00:26:40,854 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:40,856 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:41,383 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:41,384 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test1 from active filters for user2@localhost
+2014-09-04 00:26:41,820 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:41,821 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = true
+2014-09-04 00:26:42,289 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:42,293 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Removing /test1 from active filters for user2@localhost
+2014-09-04 00:26:42,762 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /test1
+2014-09-04 00:26:42,762 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /test1 to active filters for user2@localhost; recreate = true
+2014-09-04 00:27:17,634 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-04 00:27:17,635 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user2 from tcp://localhost
+2014-09-04 00:55:56,218 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 00:59:32,224 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:00:57,357 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:02:36,247 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:07:24,983 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:09:17,738 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:12:34,096 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:16:42,379 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-04 01:17:53,234 INFO  [main                          ] [MainController                ]  - test
+2014-09-04 01:17:57,495 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:17:57,510 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:21:01,216 INFO  [main                          ] [MainController                ]  - test
+2014-09-04 01:21:02,974 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:21:02,987 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:22:34,413 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:22:34,435 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:22:34,438 INFO  [main                          ] [MainController                ]  - test
+2014-09-04 01:23:39,153 INFO  [main                          ] [MainController                ]  - test
+2014-09-04 01:23:40,354 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#
+2014-09-04 01:23:40,366 INFO  [main                          ] [MqttConnection                ]  - Subscribed to /#

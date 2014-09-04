@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.CustomLoginDialog;
+import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import org.controlsfx.dialog.Dialogs.UserInfo;
 
@@ -22,6 +23,13 @@ public class DialogUtils
 	{
 		return Dialogs.create().owner(null).title("Unsaved changes detected").masthead(null)
 		.message("You've got unsaved changes for " + message + ". Do you want to save/apply them now?").showConfirm();		
+	}
+	
+	public static Action showDeleteQuestion(final String message)
+	{
+		return Dialogs.create().owner(null).title("Deleting connection").masthead(null)
+		.actions(Dialog.Actions.YES, Dialog.Actions.CANCEL)
+		.message("Are you sure you want to delete connection '" + message + "'? This cannot be undone.").showConfirm();		
 	}
 
 	public static boolean showUsernameAndPasswordDialog(final Object owner,

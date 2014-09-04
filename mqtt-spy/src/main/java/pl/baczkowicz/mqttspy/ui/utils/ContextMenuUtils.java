@@ -15,6 +15,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.SubscriptionTopicSummary;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 
@@ -22,7 +23,7 @@ public class ContextMenuUtils
 {
 
 	public static ContextMenu createSubscriptionTabContextMenu(final Tab tab,
-			final MqttConnection connection, final MqttSubscription subscription)
+			final MqttConnection connection, final MqttSubscription subscription, final EventManager eventManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 
@@ -90,8 +91,10 @@ public class ContextMenuUtils
 		clearItem.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
-			{
-				subscription.messageReceived(null);
+			{				
+				eventManager.notifyClearHistory(subscription);
+				// TODO: this is bad - this sorting
+				// subscription.messageReceived(null);
 				subscription.clear();
 			}
 		});
@@ -101,7 +104,7 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createAllSubscriptionsTabContextMenu(final Tab tab,
-			final MqttConnection connection)
+			final MqttConnection connection, final EventManager eventManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 
@@ -137,7 +140,9 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				connection.messageReceived(null);
+				eventManager.notifyClearHistory(connection);
+				// TODO: this is bad - this sorting				
+				// connection.messageReceived(null);
 				connection.clear();
 			}
 		});

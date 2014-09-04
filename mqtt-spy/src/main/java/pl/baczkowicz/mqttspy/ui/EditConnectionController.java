@@ -19,7 +19,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -304,11 +306,17 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		// Publications
 		publicationTopicColumn.setCellValueFactory(new PropertyValueFactory<PublicationDetails, String>("topic"));
+		//publicationTopicColumn.setCellFactory(TextFieldTableCell.<PublicationDetails>forTableColumn());
 		
 		// Subscriptions
 		createTabSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, Boolean>("createTab"));
+		// createTabSubscriptionColumn.setCellFactory(CheckBoxTableCell.<SubscriptionDetails>forTableColumn(null));
+		
 		subscriptionTopicColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, String>("topic"));
+		// subscriptionTopicColumn.setCellFactory(TextFieldTableCell.<SubscriptionDetails>forTableColumn());
+		
 		qosSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, Integer>("qos"));
+		// qosSubscriptionColumn.setCellFactory(NumberFieldTableCell.<SubscriptionDetails>forTableColumn());
 	}	
 	
 	public void init()
@@ -464,10 +472,9 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			if (editedConnectionDetails.isModified())
 			{	
 				Action response = DialogUtils.showApplyChangesQuestion("connection " + editedConnectionDetails.getName()); 
-				if (response == Dialog.Actions.OK)
+				if (response == Dialog.Actions.YES)
 				{
-					logger.debug("Saving connection " + connectionNameText.getText());
-					configurationManager.saveConfiguration();
+					save();
 				}
 				else if (response == Dialog.Actions.NO)
 				{
@@ -779,7 +786,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	// ===============================
 	// === Setters and getters =======
 	// ===============================
-
 	
 	public MqttManager getManager()
 	{

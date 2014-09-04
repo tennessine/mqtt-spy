@@ -9,6 +9,7 @@
                 <Name>mqtt-spy@localhost</Name>
                 <ServerURI>tcp://127.0.0.1:1883</ServerURI>
                 <ClientID>mqtt-spy</ClientID>
+                <AutoOpen>false</AutoOpen>
                 <AutoConnect>false</AutoConnect>
                 
 				<MaxMessagesStored>5000</MaxMessagesStored>
@@ -22,7 +23,10 @@
                 <Name>mqtt-spy@iot.eclipse.org</Name>
                 <ServerURI>tcp://iot.eclipse.org:1883</ServerURI>
                 <ClientID>mqtt-spy</ClientID>
+                <AutoOpen>true</AutoOpen>
                 <AutoConnect>true</AutoConnect>
+                
+                <Formatter>base64-body-decoder</Formatter>
                 
 				<MaxMessagesStored>5000</MaxMessagesStored>
 				

@@ -182,11 +182,7 @@ public class SearchPaneController implements Initializable, Observer
 
 	public void update(Observable observable, Object update)
 	{
-		if (update == null)
-		{
-			// TODO: clear
-		}
-		else if (update instanceof MqttContent)
+		if (update instanceof MqttContent)
 		{
 			if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(((MqttContent) update).getTopic())))
 			{

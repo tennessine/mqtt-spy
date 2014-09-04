@@ -273,7 +273,7 @@ public class MainController
 				// connectionDetails.getMaxMessagesStored().intValue());
 				
 				final ConnectionController connectionController = TabUtils.loadConnectionTab(this,
-						this, mqttManager, new RuntimeConnectionProperties(connectionDetails, userCredentials));
+						this, mqttManager, new RuntimeConnectionProperties(connectionDetails, userCredentials), eventManager);
 				
 				for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
 				{
