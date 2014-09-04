@@ -173,7 +173,7 @@ public class MainController
 	public void openConfigurationFile()
 	{
 		final FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Select a configuration file to open");
+		fileChooser.setTitle("Select configuration file to open");
 		String extensions = "xml";
 		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("XML file", extensions));
 
@@ -305,6 +305,10 @@ public class MainController
 		if (defaultConfigurationFile.exists())
 		{
 			loadConfigurationFileAndShowErrorWhenApplicable(defaultConfigurationFile);
+		}
+		else
+		{
+			DialogUtils.showDefaultConfigurationFileMissingChoice(this, mainPane.getScene().getWindow());
 		}
 	}
 	

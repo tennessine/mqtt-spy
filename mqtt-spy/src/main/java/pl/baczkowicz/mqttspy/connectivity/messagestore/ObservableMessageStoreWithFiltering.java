@@ -104,6 +104,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 				logger.info("Adding {} to active filters for {}; recreate = {}", topic, name, recreateStore);
 				filters.add(topic);
 				
+				// TODO: optimise
 				if (recreateStore)
 				{
 					initialiseFilteredStore();

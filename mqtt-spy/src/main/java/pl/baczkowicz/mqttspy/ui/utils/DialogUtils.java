@@ -1,23 +1,40 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Platform;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Window;
 
 import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.CustomLoginDialog;
+import org.controlsfx.dialog.CustomDialogs;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
+import org.controlsfx.dialog.Dialogs.CommandLink;
 import org.controlsfx.dialog.Dialogs.UserInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
+import pl.baczkowicz.mqttspy.ui.MainController;
 
 public class DialogUtils
 {
+	private final static Logger logger = LoggerFactory.getLogger(DialogUtils.class);
+	
 	public static void showValidationWarning(final String message)
 	{
 		Dialogs.create().owner(null).title("Invalid value detected").masthead(null)
@@ -43,7 +60,7 @@ public class DialogUtils
 		final UserInfo userInfo = new UserInfo(userCredentials.getUsername(),
 				MqttUtils.decodePassword(userCredentials.getPassword()));
 		
-		final CustomLoginDialog dialog = new CustomLoginDialog();
+		final CustomDialogs dialog = new CustomDialogs();
 		dialog.owner(owner);
 		dialog.masthead("Enter MQTT user name and password:");
 		dialog.title("User credentials for connection " + connectionName);
@@ -114,5 +131,101 @@ public class DialogUtils
 				});
 			}		
 		}).start();
+	}
+
+	public static void showDefaultConfigurationFileMissingChoice(final MainController mainController, final Window window)
+	{	
+		final List<CommandLink> links = Arrays.asList(
+		        new CommandLink( 
+        				"Create mqtt-spy configuration file with sample content", 
+        				System.getProperty("line.separator") + "This creates a configuration file " +  
+                        "in \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        "called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
+                        ", which will include sample connections to localhost and iot.eclipse.org."),
+		                        
+                new CommandLink( 
+        				"Create empty mqtt-spy configuration file", 
+        				System.getProperty("line.separator") + "This creates a configuration file " +  
+                        "in \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\" with no sample connections."),
+		                        
+		        new CommandLink( 
+        				"Copy existing mqtt-spy configuration file", 
+        				System.getProperty("line.separator") + "This copies an existing configuration file (selected in the next step) " +  
+                        "to \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        " and renames it to \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"."),
+		                        
+		        new CommandLink( 
+        				"Don't do anything", 
+        				System.getProperty("line.separator") + "You can still point mqtt-spy at your chosen location " +  
+                        "by using the \"--configuration=my_custom_path\"" + 
+                        " command line parameter or open a configuration file from the main menu."));
+		
+		final CustomDialogs dialog = new CustomDialogs();
+		dialog
+	      .owner(window)
+	      .title("Default configuration file not found")
+	      .masthead(null)
+	      .message("Please select one of the following options with regards to the mqtt-spy configuration file:");
+		
+		Action response = dialog.showCommandLinks(links.get(0), links, 600, 30);
+
+		if (response.textProperty().getValue().toLowerCase().contains("sample"))
+		{
+			createDefaultConfigFromClassPath(mainController, "sample");
+		}
+		else if (response.textProperty().getValue().toLowerCase().contains("empty"))
+		{
+			createDefaultConfigFromClassPath(mainController, "empty");
+		}
+		else if (response.textProperty().getValue().toLowerCase().contains("copy"))
+		{
+			final FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Select configuration file to copy");
+			String extensions = "xml";
+			fileChooser.setSelectedExtensionFilter(new ExtensionFilter("XML file", extensions));
+
+			final File selectedFile = fileChooser.showOpenDialog(window);
+
+			if (selectedFile != null)
+			{
+				createDefaultConfigFromFile(mainController, selectedFile);	
+			}
+		}
+		else
+		{
+			// Do nothing
+		}
+	}
+	
+	private static void createDefaultConfigFromFile(final MainController mainController, final File orig)
+	{
+		try
+		{ 
+			final File dest = ConfigurationManager.getDefaultConfigurationFile();
+		
+			Files.copy(orig.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			
+			mainController.loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
+		}
+		catch (IOException e)
+		{
+			// TODO: show warning dialog for invalid
+			logger.error("Cannot copy configuration file", e);
+		}
+	}
+	
+	private static void createDefaultConfigFromClassPath(final MainController mainController, final String name)
+	{
+		try
+		{
+			final File orig = new File(MainController.class.getResource("/samples/" + name + "-mqtt-spy-configuration.xml").toURI()); 
+			createDefaultConfigFromFile(mainController, orig);
+		}
+		catch (URISyntaxException e)
+		{
+			// TODO: show warning dialog for invalid
+			logger.error("Cannot copy configuration file", e);
+		}
 	}
 }

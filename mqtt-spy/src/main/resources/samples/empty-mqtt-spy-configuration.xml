@@ -5,39 +5,6 @@
 
    <Connectivity>
 
-        <Connection>
-                <Name>mqtt-spy@localhost</Name>
-                <ServerURI>tcp://127.0.0.1:1883</ServerURI>
-                <ClientID>mqtt-spy</ClientID>
-                <AutoOpen>false</AutoOpen>
-                <AutoConnect>false</AutoConnect>
-                
-				<MaxMessagesStored>5000</MaxMessagesStored>
-				
-				<Publication topic="/mqtt-spy/test/" />                
-                <Subscription topic="/mqtt-spy/test/" qos="0" createTab="true" />
-				
-        </Connection>
-        
-        <Connection>
-                <Name>mqtt-spy@iot.eclipse.org</Name>
-                <ServerURI>tcp://iot.eclipse.org:1883</ServerURI>
-                <ClientID>mqtt-spy</ClientID>
-                <AutoOpen>true</AutoOpen>
-                <AutoConnect>true</AutoConnect>
-                
-                <!-- The formatter is optional -->
-				<!--                
-                <Formatter>base64-body-decoder</Formatter>
-                -->
-                
-				<MaxMessagesStored>5000</MaxMessagesStored>
-				
-				<Publication topic="/mqtt-spy/test/" />                
-                <Subscription topic="/mqtt-spy/test/" qos="0" createTab="true" />
-				
-        </Connection>
-
    </Connectivity>
    
    <Formatting>   		

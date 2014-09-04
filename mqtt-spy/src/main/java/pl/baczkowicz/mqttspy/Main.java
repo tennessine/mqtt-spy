@@ -81,9 +81,7 @@ public class Main extends Application
 			else
 			{
 				// If no configuration parameter is specified, use the user's home directory and the default configuration file name
-				// 0.0.8
-				// TODO: when saving to a config file is done
-				// mainController.loadDefaultConfigurationFile();						
+				mainController.loadDefaultConfigurationFile();						
 			}
 		}
 		catch (Exception e)

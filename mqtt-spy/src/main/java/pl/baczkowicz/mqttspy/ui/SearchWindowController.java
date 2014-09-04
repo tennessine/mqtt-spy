@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;

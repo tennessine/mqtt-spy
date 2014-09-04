@@ -7,17 +7,27 @@ import static org.controlsfx.dialog.Dialog.Actions.NO;
 import static org.controlsfx.dialog.Dialog.Actions.OK;
 import static org.controlsfx.dialog.Dialog.Actions.YES;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Platform;
+import javafx.beans.binding.DoubleBinding;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.util.Callback;
 
@@ -28,11 +38,12 @@ import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 import org.controlsfx.dialog.Dialog.ActionTrait;
+import org.controlsfx.dialog.Dialogs.CommandLink;
 import org.controlsfx.dialog.Dialogs.UserInfo;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
-public class CustomLoginDialog
+public class CustomDialogs
 {
 	/**
 	 * USE_DEFAULT can be passed in to {@link #title(String)} and
@@ -44,6 +55,7 @@ public class CustomLoginDialog
 
 	private Object owner;
 	private String title = USE_DEFAULT;
+	private String message;
 	private String masthead;
 	private boolean lightweight;
 	private DialogStyle style;
@@ -59,7 +71,7 @@ public class CustomLoginDialog
 	 *            The dialog owner.
 	 * @return dialog instance.
 	 */
-	public CustomLoginDialog owner(final Object owner)
+	public CustomDialogs owner(final Object owner)
 	{
 		this.owner = owner;
 		return this;
@@ -72,7 +84,7 @@ public class CustomLoginDialog
 	 *            dialog title
 	 * @return dialog instance.
 	 */
-	public CustomLoginDialog title(final String title)
+	public CustomDialogs title(final String title)
 	{
 		this.title = title;
 		return this;
@@ -85,7 +97,7 @@ public class CustomLoginDialog
 	 *            dialog masthead
 	 * @return dialog instance.
 	 */
-	public CustomLoginDialog masthead(final String masthead)
+	public CustomDialogs masthead(final String masthead)
 	{
 		this.masthead = masthead;
 		return this;
@@ -191,14 +203,158 @@ public class CustomLoginDialog
 		return Optional.ofNullable(dlg.show() == actionLogin ? new UserInfo(txUserName.getText(),
 				txPassword.getText()) : null);
 	}
+	
+	/**
+     * Show a dialog filled with provided command links. Command links are used instead of button bar and represent 
+     * a set of available 'radio' buttons
+     * @param defaultCommandLink command is set to be default. Null means no default
+     * @param links list of command links presented in specified sequence
+     * @return action used to close dialog (it is either one of command links or CANCEL) 
+     */
+    public Action showCommandLinks(CommandLink defaultCommandLink, List<CommandLink> links, final int minWidth, final int longMessageMinHeight) 
+    {
+        final CustomDialog dlg = buildDialog(Type.INFORMATION);
+        dlg.setContentWithNoMaxWidth(message);       
+        
+        Node messageNode = dlg.getContent();
+        messageNode.getStyleClass().add("command-link-message");
+        
+        final int gapSize = 10;
+        final List<Button> buttons = new ArrayList<>(links.size());
+        
+		GridPane content = new GridPane()
+		{
+			@Override
+			protected double computePrefWidth(double height)
+			{
+				double pw = 0;
 
-	private Dialog buildDialog(final Type dlgType)
+				for (int i = 0; i < buttons.size(); i++)
+				{
+					Button btn = buttons.get(i);
+					pw = Math.min(pw, btn.prefWidth(-1));
+				}
+				return pw + gapSize;
+			}
+
+			@Override
+			protected double computePrefHeight(double width)
+			{
+				double ph = masthead == null || masthead.isEmpty() ? 0 : 10;
+
+				for (int i = 0; i < buttons.size(); i++)
+				{
+					Button btn = buttons.get(i);
+					ph += btn.prefHeight(width) + gapSize;
+				}
+				return ph * 1.5;
+			}
+		};
+		content.setMinWidth(minWidth);
+        content.setHgap(gapSize);
+        content.setVgap(gapSize);
+        
+        int row = 0;
+        // Node message = dlg.getContent();
+		if (message != null)
+		{
+			content.add(messageNode, 0, row++);
+		}
+        
+		for (final CommandLink commandLink : links)
+		{
+			if (commandLink == null)
+				continue;
+
+			final Button button = buildCommandLinkButton(commandLink, longMessageMinHeight);
+			button.setDefaultButton(commandLink == defaultCommandLink);
+			button.setOnAction(new EventHandler<ActionEvent>()
+			{
+				@Override
+				public void handle(ActionEvent ae)
+				{
+					commandLink.handle(new ActionEvent(dlg, ae.getTarget()));
+				}
+			});
+
+			GridPane.setHgrow(button, Priority.ALWAYS);
+			GridPane.setVgrow(button, Priority.ALWAYS);
+			content.add(button, 0, row++);
+			buttons.add(button);
+		}
+        
+        // last button gets some extra padding (hacky)
+        GridPane.setMargin(buttons.get(buttons.size() - 1), new Insets(0,0,10,0));
+        
+        dlg.setContent(content);
+        dlg.getActions().clear();
+        
+        return dlg.show();
+    }
+    
+    private Button buildCommandLinkButton(CommandLink commandLink, final int longMessageMinHeight) 
+    {
+        // put the content inside a button
+        final Button button = new Button();
+        button.getStyleClass().addAll("command-link-button");
+        button.setMaxHeight(Double.MAX_VALUE);
+        button.setMaxWidth(Double.MAX_VALUE);
+        button.setAlignment(Pos.CENTER_LEFT);
+        
+        final Label titleLabel = new Label(commandLink.getText() );
+        titleLabel.minWidthProperty().bind(new DoubleBinding() {
+            {
+                bind(titleLabel.prefWidthProperty());
+            }
+            
+            @Override protected double computeValue() {
+                return titleLabel.getPrefWidth() + 400;
+            }
+        });
+        titleLabel.getStyleClass().addAll("line-1");
+        titleLabel.setWrapText(true);
+        titleLabel.setAlignment(Pos.TOP_LEFT);
+        GridPane.setVgrow(titleLabel, Priority.NEVER);
+
+        Label messageLabel = new Label(commandLink.getLongText() );
+        messageLabel.setMinHeight(longMessageMinHeight);
+        messageLabel.setPrefHeight(longMessageMinHeight + 10);
+        messageLabel.getStyleClass().addAll("line-2");
+        messageLabel.setWrapText(true);
+        messageLabel.setAlignment(Pos.TOP_LEFT);
+        messageLabel.setMaxHeight(Double.MAX_VALUE);
+        // GridPane.setVgrow(messageLabel, Priority.SOMETIMES);
+        GridPane.setVgrow(messageLabel, Priority.ALWAYS);
+        
+        Node graphic = commandLink.getGraphic();
+        Node view = graphic == null? new ImageView( DialogResources.getImage("command.link.icon")) : graphic;
+        Pane graphicContainer = new Pane(view);
+        graphicContainer.getStyleClass().add("graphic-container");
+        GridPane.setValignment(graphicContainer, VPos.TOP);
+        GridPane.setMargin(graphicContainer, new Insets(0,10,0,0));
+        
+        GridPane grid = new GridPane();
+        grid.minWidthProperty().bind(titleLabel.prefWidthProperty());
+        grid.setMaxHeight(Double.MAX_VALUE);
+        grid.setMaxWidth(Double.MAX_VALUE);
+        grid.getStyleClass().add("container");
+        grid.add(graphicContainer, 0, 0, 1, 2);
+        grid.add(titleLabel, 1, 0);
+        grid.add(messageLabel, 1, 1);
+
+        button.setGraphic(grid);
+        button.minWidthProperty().bind(titleLabel.prefWidthProperty());
+        
+        return button;
+    }
+
+	private CustomDialog buildDialog(final Type dlgType)
 	{
 		String actualTitle = title == null ? null : USE_DEFAULT.equals(title) ? dlgType
 				.getDefaultTitle() : title;
 		String actualMasthead = masthead == null ? null : (USE_DEFAULT.equals(masthead) ? dlgType
 				.getDefaultMasthead() : masthead);
-		Dialog dlg = new Dialog(owner, actualTitle, lightweight, style);
+		CustomDialog dlg = new CustomDialog(owner, actualTitle, lightweight, style);
 		dlg.setResizable(false);
 		dlg.setIconifiable(false);
 		Image image = dlgType.getImage();
@@ -262,4 +418,14 @@ public class CustomLoginDialog
 			return actions;
 		}
 	}
+
+    /**
+     * Assigns dialog's instructions
+     * @param message dialog message
+     * @return dialog instance.
+     */
+    public CustomDialogs message(final String message) {
+        this.message = message;
+        return this;
+    }
 }
