@@ -25,6 +25,56 @@
 	-fx-background-color: white; 
 }
 
+/* Choice box embedded in the table */
+
+
+
+#subscriptionsTable  .list-cell .combo-box
+{
+	-fx-padding: 0 0 0 0;
+	/*-fx-cell-size: 1.0em;*/ 
+	-fx-background-color: grey;
+	-fx-control-inner-background: lightgrey;
+}
+
+#subscriptionsTable  .list-cell .combo-box .list-cell
+{
+	-fx-text-base-color: black;
+	-fx-text-fill: black;
+	-fx-fill: red;
+	-fx-background-color: grey;
+	-fx-control-inner-background: blue;
+}
+
+#subscriptionsTable   .list-cell .combo-box .list-cell:filled
+{
+	-fx-text-base-color: black;
+	-fx-text-fill: black;
+	-fx-fill: red;
+	-fx-background-color: grey;
+	-fx-control-inner-background: green;
+}
+
+#subscriptionsTable  .list-cell .choice-box .list-cell
+{
+	-fx-text-base-color: black;
+	-fx-text-fill: black;
+	-fx-fill: red;
+	-fx-background-color: grey;
+	-fx-control-inner-background: red;
+}
+
+#subscriptionsTable  .list-cell .choice-box .list-cell:filled
+{
+	-fx-text-base-color: black;
+	-fx-text-fill: black;
+	-fx-fill: red;
+	-fx-background-color: grey;
+	-fx-control-inner-background: purple;
+}
+
+/* Rich text area */
+
 .styled-text-area
 {	
     -fx-background-color: -fx-shadow-highlight-color, -fx-text-box-border, -fx-control-inner-background;
@@ -46,20 +96,20 @@
 	-fx-font-weight: normal;
 }
 
-.list-view .list-cell:filled:selected {
+#connectionList .list-cell:filled:selected {
    -fx-background-color: -fx-focus-color;   
 }
 
-.list-view .list-cell:filled:selected .text {
+#connectionList .list-cell:filled:selected .text {
        -fx-fill: white;
 }
 
-.list-view .list-cell:filled:odd {
+#connectionList .list-cell:filled:odd {
     /* -fx-control-inner-background: rgba(233, 222, 255, 0.6); */
     -fx-background-radius: 7;
 }
 
-.list-view .list-cell:filled:even {
+#connectionList .list-cell:filled:even {
     /* -fx-control-inner-background: rgba(233, 222, 255, 0.3); */
     -fx-background-radius: 7;
 }
@@ -97,5 +147,11 @@
 .tab-title-default
 {
 	-fx-base: grey;
+}	
+
+.choice-box .list-cell:filled
+{
+	-fx-text-fill: black;
+	-fx-fill: red;
+	-fx-control-inner-background: grey;
 }
-	

@@ -4,22 +4,35 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.control.cell.ChoiceBoxTableCell;
+import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
@@ -46,6 +59,8 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
+import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
@@ -142,22 +157,22 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	// Tables
 	
 	@FXML
-	private TableView<PublicationDetails> publicationsTable;
+	private TableView<BaseTopicProperty> publicationsTable;
 	
 	@FXML
-	private TableView<SubscriptionDetails> subscriptionsTable;
+	private TableView<AdvancedTopicProperties> subscriptionsTable;
 	
 	@FXML
-	private TableColumn<PublicationDetails, String> publicationTopicColumn;
+	private TableColumn<BaseTopicProperty, String> publicationTopicColumn;
 	
 	@FXML
-	private TableColumn<SubscriptionDetails, String> subscriptionTopicColumn;
+	private TableColumn<AdvancedTopicProperties, String> subscriptionTopicColumn;
 	
 	@FXML
-	private TableColumn<SubscriptionDetails, Integer> qosSubscriptionColumn;
+	private TableColumn<AdvancedTopicProperties, Integer> qosSubscriptionColumn;
 	
 	@FXML
-	private TableColumn<SubscriptionDetails, Boolean> createTabSubscriptionColumn;
+	private TableColumn<AdvancedTopicProperties, Boolean> createTabSubscriptionColumn;
 	
 	// Other fields
 
@@ -305,20 +320,200 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		});
 		
 		// Publications
-		publicationTopicColumn.setCellValueFactory(new PropertyValueFactory<PublicationDetails, String>("topic"));
-		//publicationTopicColumn.setCellFactory(TextFieldTableCell.<PublicationDetails>forTableColumn());
+		publicationTopicColumn.setCellValueFactory(new PropertyValueFactory<BaseTopicProperty, String>("topic"));
+		publicationTopicColumn.setCellFactory(TextFieldTableCell.<BaseTopicProperty>forTableColumn());
+		publicationTopicColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<BaseTopicProperty, String>>()
+		{
+			@Override
+			public void handle(CellEditEvent<BaseTopicProperty, String> event)
+			{
+				BaseTopicProperty p = event.getRowValue();
+	            String newValue = event.getNewValue();
+	            p.topicProperty().set(newValue);            
+				logger.debug("New value = {}", publicationsTable.getSelectionModel().getSelectedItem().topicProperty().getValue());
+				onChange();
+			}		
+		});
 		
 		// Subscriptions
-		createTabSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, Boolean>("createTab"));
-		// createTabSubscriptionColumn.setCellFactory(CheckBoxTableCell.<SubscriptionDetails>forTableColumn(null));
+		createTabSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, Boolean>("show"));
+		createTabSubscriptionColumn.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Boolean>, TableCell<AdvancedTopicProperties, Boolean>>()
+				{
+					public TableCell<AdvancedTopicProperties, Boolean> call(
+							TableColumn<AdvancedTopicProperties, Boolean> p)
+					{
+						final TableCell<AdvancedTopicProperties, Boolean> cell = new TableCell<AdvancedTopicProperties, Boolean>()
+						{
+							@Override
+							public void updateItem(final Boolean item, boolean empty)
+							{
+								if (item == null)
+									return;
+								super.updateItem(item, empty);
+								if (!isEmpty())
+								{
+									final AdvancedTopicProperties shownItem = getTableView().getItems().get(getIndex());
+									CheckBox box = new CheckBox();
+									box.selectedProperty().bindBidirectional(shownItem.showProperty());
+									box.setOnAction(new EventHandler<ActionEvent>()
+									{										
+										@Override
+										public void handle(ActionEvent event)
+										{
+											logger.info("New value = {} {}", 
+													shownItem.topicProperty().getValue(),
+													shownItem.showProperty().getValue());
+											onChange();
+										}
+									});
+									setGraphic(box);
+								}
+							}
+						};
+						cell.setAlignment(Pos.CENTER);
+						return cell;
+					}
+				});
+
+		subscriptionTopicColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, String>("topic"));
+		subscriptionTopicColumn.setCellFactory(TextFieldTableCell.<AdvancedTopicProperties>forTableColumn());
+		subscriptionTopicColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AdvancedTopicProperties, String>>()
+				{
+					@Override
+					public void handle(CellEditEvent<AdvancedTopicProperties, String> event)
+					{
+						BaseTopicProperty p = event.getRowValue();
+			            String newValue = event.getNewValue();
+			            p.topicProperty().set(newValue);            
+						logger.debug("New value = {}", subscriptionsTable.getSelectionModel().getSelectedItem().topicProperty().getValue());
+						onChange();
+					}		
+				});
 		
-		subscriptionTopicColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, String>("topic"));
-		// subscriptionTopicColumn.setCellFactory(TextFieldTableCell.<SubscriptionDetails>forTableColumn());
-		
-		qosSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionDetails, Integer>("qos"));
+		final ObservableList<Integer> qosChoice = FXCollections.observableArrayList (
+			    new Integer(0),
+			    new Integer(1),
+			    new Integer(2)
+			);
+		qosSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, Integer>("qos"));
+//		qosSubscriptionColumn
+//				.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<AdvancedTopicProperties, Integer>, ObservableValue<Integer>>()
+//				{
+//					@Override
+//					public ObservableValue<Integer> call(
+//							CellDataFeatures<AdvancedTopicProperties, Integer> cdf)
+//					{
+//						return new ReadOnlyObjectWrapper<Integer>(cdf, "qos");
+//					}
+//				});
+		//qosSubscriptionColumn.setCellFactory(ChoiceBoxTableCell.<AdvancedTopicProperties, Integer> forTableColumn(qosChoice));
+		qosSubscriptionColumn.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Integer>, TableCell<AdvancedTopicProperties, Integer>>()
+				{
+					public TableCell<AdvancedTopicProperties, Integer> call(
+							TableColumn<AdvancedTopicProperties, Integer> p)
+					{
+						final TableCell<AdvancedTopicProperties, Integer> cell = new TableCell<AdvancedTopicProperties, Integer>()
+						{
+							@Override
+							public void updateItem(final Integer item, boolean empty)
+							{
+								if (item == null)
+									return;
+								super.updateItem(item, empty);
+								if (!isEmpty())
+								{
+									final AdvancedTopicProperties shownItem = getTableView().getItems().get(getIndex());
+									ChoiceBox box = new ChoiceBox();
+									box.setItems(qosChoice);
+									box.setId("subscriptionQosChoice");
+									int qos = shownItem.qosProperty().getValue();
+									box.getSelectionModel().select(qos);
+									//box.selectionModelProperty().setValue(shownItem.qosProperty().getValue());
+									//box.selectedProperty().bindBidirectional(shownItem.showProperty());
+									box.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>()
+									{
+										@Override
+										public void changed(ObservableValue<? extends Integer> observable, Integer oldValue, Integer newValue)
+										{
+											shownItem.qosProperty().setValue(newValue);
+											logger.info("New value = {} {}", 
+													shownItem.topicProperty().getValue(),
+													shownItem.qosProperty().getValue());
+											onChange();
+										}
+									});
+//									box.setOnAction(new EventHandler<ActionEvent>()
+//									{										
+//										@Override
+//										public void handle(ActionEvent event)
+//										{
+//											logger.info("New value = {} {}", 
+//													shownItem.topicProperty().getValue(),
+//													shownItem.showProperty().getValue());
+//											onChange();
+//										}
+//									});
+									setGraphic(box);
+								}
+							}
+						};
+						cell.setAlignment(Pos.CENTER);
+						return cell;
+					}
+				});
+		qosSubscriptionColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AdvancedTopicProperties, Integer>>()
+				{
+					@Override
+					public void handle(CellEditEvent<AdvancedTopicProperties, Integer> event)
+					{
+						AdvancedTopicProperties p = event.getRowValue();
+						Integer newValue = event.getNewValue();
+			            p.qosProperty().set(newValue);            
+						logger.debug("New value = {}", subscriptionsTable.getSelectionModel().getSelectedItem().qosProperty().getValue());
+						onChange();
+					}		
+				});
+//		qosSubscriptionColumn
+//		.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Integer>, TableCell<AdvancedTopicProperties, Integer>>()
+//		{
+//			public TableCell<AdvancedTopicProperties, Integer> call(
+//					TableColumn<AdvancedTopicProperties, Integer> p)
+//			{
+//				final TableCell<AdvancedTopicProperties, Integer> cell = new TableCell<AdvancedTopicProperties, Integer>()
+//				{
+//					@Override
+//					public void updateItem(final Integer item, boolean empty)
+//					{
+//						if (item == null)
+//							return;
+//						super.updateItem(item, empty);
+//						if (!isEmpty())
+//						{
+//							final AdvancedTopicProperties shownItem = getTableView().getItems().get(getIndex());
+//							ComboBox box = new ComboBox(qosChoice);
+//							box.setMaxHeight(10);
+//							box.getSelectionModel().select(shownItem.qosProperty().getValue());
+//							// checkBox.setOnAction(event);
+//							setGraphic(box);
+//						}
+//					}
+//				};
+//				cell.setAlignment(Pos.CENTER);
+//				return cell;
+//			}
+//		});
 		// qosSubscriptionColumn.setCellFactory(NumberFieldTableCell.<SubscriptionDetails>forTableColumn());
-	}	
-	
+		
+//		levelColumn.setOnEditCommit(
+//			    new EventHandler<CellEditEvent<ClassesProperty, String>>() {
+//			        @Override
+//			        public void handle(CellEditEvent<ClassesProperty,String> t) {
+//			            ((ClassesProperty) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLevel(t.getNewValue());
+//			        };
+//			    }
+//			);
+	}
+
 	public void init()
 	{
 		formatter.getItems().clear();		
@@ -417,7 +612,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	@FXML
 	public void removePublication()
 	{
-		final PublicationDetails item = publicationsTable.getSelectionModel().getSelectedItem(); 
+		final BaseTopicProperty item = publicationsTable.getSelectionModel().getSelectedItem(); 
 		if (item != null)
 		{
 			publicationsTable.getItems().remove(item);
@@ -428,7 +623,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	@FXML
 	public void removeSubscription()
 	{
-		final SubscriptionDetails item = subscriptionsTable.getSelectionModel().getSelectedItem(); 
+		final AdvancedTopicProperties item = subscriptionsTable.getSelectionModel().getSelectedItem(); 
 		if (item != null)
 		{
 			subscriptionsTable.getItems().remove(item);
@@ -570,17 +765,19 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			connection.setUserAuthentication(userAuthentication);
 		}
 		
-		for (final PublicationDetails publicationDetails : publicationsTable.getItems())
+		for (final BaseTopicProperty publicationDetails : publicationsTable.getItems())
 		{
 			final PublicationDetails newPublicationDetails = new PublicationDetails();
-			((PublicationDetails) publicationDetails).copyTo(newPublicationDetails);
+			newPublicationDetails.setTopic(publicationDetails.topicProperty().getValue());
 			connection.getPublication().add(newPublicationDetails);
 		}
 		
-		for (final SubscriptionDetails subscriptionDetails : subscriptionsTable.getItems())
+		for (final AdvancedTopicProperties subscriptionDetails : subscriptionsTable.getItems())
 		{
 			final SubscriptionDetails newSubscriptionDetails = new SubscriptionDetails();
-			((SubscriptionDetails) subscriptionDetails).copyTo(newSubscriptionDetails);
+			newSubscriptionDetails.setTopic(subscriptionDetails.topicProperty().getValue());
+			newSubscriptionDetails.setCreateTab(subscriptionDetails.showProperty().getValue());
+			newSubscriptionDetails.setQos(subscriptionDetails.qosProperty().getValue());
 			connection.getSubscription().add(newSubscriptionDetails);
 		}		
 		
@@ -752,7 +949,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// Publications
 		removePublicationButton.setDisable(true);
 		publicationsTable.getItems().clear();
-		publicationsTable.getItems().addAll(connection.getPublication());
+		for (final PublicationDetails pub : connection.getPublication())
+		{
+			publicationsTable.getItems().add(new BaseTopicProperty(pub.getTopic()));
+		}
 		publicationsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
 		{
 			@Override
@@ -765,7 +965,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// Subscriptions
 		removeSubscriptionButton.setDisable(true);
 		subscriptionsTable.getItems().clear();
-		subscriptionsTable.getItems().addAll(connection.getSubscription());
+		for (final SubscriptionDetails sub : connection.getSubscription())
+		{
+			subscriptionsTable.getItems().add(new AdvancedTopicProperties(sub.getTopic(), sub.getQos(), sub.isCreateTab()));
+		}
 		subscriptionsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
 		{
 			@Override

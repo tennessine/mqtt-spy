@@ -131,8 +131,8 @@
                      <children>
                         <TableView fx:id="subscriptionsTable" editable="true" layoutX="6.0" layoutY="4.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                            <columns>
-                              <TableColumn fx:id="subscriptionTopicColumn" minWidth="300.0" prefWidth="399.0" text="Topic" />
-                              <TableColumn fx:id="qosSubscriptionColumn" prefWidth="40.0" text="QoS" />
+                              <TableColumn fx:id="subscriptionTopicColumn" minWidth="300.0" prefWidth="377.0" text="Topic" />
+                              <TableColumn fx:id="qosSubscriptionColumn" prefWidth="62.0" text="QoS" />
                               <TableColumn fx:id="createTabSubscriptionColumn" prefWidth="95.0" text="Create tab" />
                            </columns>
                         </TableView>
