@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="editConnectionsWindow" prefHeight="356.0" prefWidth="938.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.EditConnectionsController">
    <children>
-      <ListView fx:id="connectionList" focusTraversable="false" prefHeight="229.0" prefWidth="344.0" AnchorPane.bottomAnchor="127.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="596.0" AnchorPane.topAnchor="0.0" />
+      <ListView fx:id="connectionList" focusTraversable="false" prefHeight="269.0" prefWidth="342.0" AnchorPane.bottomAnchor="87.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="596.0" AnchorPane.topAnchor="0.0" />
       
       <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       		<children>
@@ -26,12 +26,7 @@
             <Button fx:id="newConnectionButton" focusTraversable="false" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#newConnection" prefHeight="25.0" prefWidth="100.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="230.0" />
          </children>
       </AnchorPane>
-      <Label layoutX="13.0" layoutY="232.0" prefHeight="46.0" prefWidth="322.0" text="Note: this version doesn't support saving configuration to file. Use the --configuration=&quot;path_to_file&quot; command line parameter to automatically load predefined configuration." textFill="#f20404" wrapText="true">
-         <font>
-            <Font size="11.0" />
-         </font>
-      </Label>
-      <Separator layoutX="339.0" layoutY="228.0" orientation="VERTICAL" prefHeight="114.0" prefWidth="7.0" />      
+      <Separator layoutX="340.0" layoutY="269.0" orientation="VERTICAL" prefHeight="70.0" prefWidth="5.0" />      
       
    </children>
 </AnchorPane>

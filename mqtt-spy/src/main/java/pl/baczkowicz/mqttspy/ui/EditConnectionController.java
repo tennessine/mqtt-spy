@@ -4,13 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,13 +24,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.CheckBoxTableCell;
-import javafx.scene.control.cell.ChoiceBoxTableCell;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyEvent;
@@ -347,8 +341,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 							@Override
 							public void updateItem(final Boolean item, boolean empty)
 							{
-								if (item == null)
-									return;
 								super.updateItem(item, empty);
 								if (!isEmpty())
 								{
@@ -367,6 +359,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 										}
 									});
 									setGraphic(box);
+								}
+								else
+								{
+									setGraphic(null);
 								}
 							}
 						};
@@ -396,17 +392,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			    new Integer(2)
 			);
 		qosSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, Integer>("qos"));
-//		qosSubscriptionColumn
-//				.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<AdvancedTopicProperties, Integer>, ObservableValue<Integer>>()
-//				{
-//					@Override
-//					public ObservableValue<Integer> call(
-//							CellDataFeatures<AdvancedTopicProperties, Integer> cdf)
-//					{
-//						return new ReadOnlyObjectWrapper<Integer>(cdf, "qos");
-//					}
-//				});
-		//qosSubscriptionColumn.setCellFactory(ChoiceBoxTableCell.<AdvancedTopicProperties, Integer> forTableColumn(qosChoice));
 		qosSubscriptionColumn.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Integer>, TableCell<AdvancedTopicProperties, Integer>>()
 				{
 					public TableCell<AdvancedTopicProperties, Integer> call(
@@ -417,8 +402,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 							@Override
 							public void updateItem(final Integer item, boolean empty)
 							{
-								if (item == null)
-									return;
 								super.updateItem(item, empty);
 								if (!isEmpty())
 								{
@@ -428,8 +411,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 									box.setId("subscriptionQosChoice");
 									int qos = shownItem.qosProperty().getValue();
 									box.getSelectionModel().select(qos);
-									//box.selectionModelProperty().setValue(shownItem.qosProperty().getValue());
-									//box.selectedProperty().bindBidirectional(shownItem.showProperty());
 									box.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Integer>()
 									{
 										@Override
@@ -442,18 +423,11 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 											onChange();
 										}
 									});
-//									box.setOnAction(new EventHandler<ActionEvent>()
-//									{										
-//										@Override
-//										public void handle(ActionEvent event)
-//										{
-//											logger.info("New value = {} {}", 
-//													shownItem.topicProperty().getValue(),
-//													shownItem.showProperty().getValue());
-//											onChange();
-//										}
-//									});
 									setGraphic(box);
+								}
+								else
+								{
+									setGraphic(null);
 								}
 							}
 						};
@@ -473,45 +447,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 						onChange();
 					}		
 				});
-//		qosSubscriptionColumn
-//		.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Integer>, TableCell<AdvancedTopicProperties, Integer>>()
-//		{
-//			public TableCell<AdvancedTopicProperties, Integer> call(
-//					TableColumn<AdvancedTopicProperties, Integer> p)
-//			{
-//				final TableCell<AdvancedTopicProperties, Integer> cell = new TableCell<AdvancedTopicProperties, Integer>()
-//				{
-//					@Override
-//					public void updateItem(final Integer item, boolean empty)
-//					{
-//						if (item == null)
-//							return;
-//						super.updateItem(item, empty);
-//						if (!isEmpty())
-//						{
-//							final AdvancedTopicProperties shownItem = getTableView().getItems().get(getIndex());
-//							ComboBox box = new ComboBox(qosChoice);
-//							box.setMaxHeight(10);
-//							box.getSelectionModel().select(shownItem.qosProperty().getValue());
-//							// checkBox.setOnAction(event);
-//							setGraphic(box);
-//						}
-//					}
-//				};
-//				cell.setAlignment(Pos.CENTER);
-//				return cell;
-//			}
-//		});
-		// qosSubscriptionColumn.setCellFactory(NumberFieldTableCell.<SubscriptionDetails>forTableColumn());
-		
-//		levelColumn.setOnEditCommit(
-//			    new EventHandler<CellEditEvent<ClassesProperty, String>>() {
-//			        @Override
-//			        public void handle(CellEditEvent<ClassesProperty,String> t) {
-//			            ((ClassesProperty) t.getTableView().getItems().get(t.getTablePosition().getRow())).setLevel(t.getNewValue());
-//			        };
-//			    }
-//			);
 	}
 
 	public void init()
@@ -566,16 +501,20 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		updateButtons();
 	}
 	
+	
 	@FXML
 	private void save()
 	{
 		editedConnectionDetails.apply();
 		editConnectionsController.listConnections();
-		
+				
 		updateButtons();
 		
 		logger.debug("Saving connection " + connectionNameText.getText());
-		configurationManager.saveConfiguration();
+		if (configurationManager.saveConfiguration())
+		{
+			DialogUtils.showTooltip(saveButton, "Changes for connection " + editedConnectionDetails.getName() + " have been saved.");
+		}
 	}	
 	
 	private boolean updateClientId(final boolean addTimestamp)
@@ -610,7 +549,23 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	}
 	
 	@FXML
-	public void removePublication()
+	private void addPublication()
+	{
+		final BaseTopicProperty item = new BaseTopicProperty("/samplePublication/");		
+		publicationsTable.getItems().add(item);
+		onChange();
+	}
+	
+	@FXML
+	private void addSubscription()
+	{
+		final AdvancedTopicProperties item = new AdvancedTopicProperties("/sampleSubscription/", 0, false);		
+		subscriptionsTable.getItems().add(item);
+		onChange();
+	}
+	
+	@FXML
+	private void removePublication()
 	{
 		final BaseTopicProperty item = publicationsTable.getSelectionModel().getSelectedItem(); 
 		if (item != null)
@@ -621,7 +576,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	}
 	
 	@FXML
-	public void removeSubscription()
+	private void removeSubscription()
 	{
 		final AdvancedTopicProperties item = subscriptionsTable.getSelectionModel().getSelectedItem(); 
 		if (item != null)
@@ -789,7 +744,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		final ConnectionDetails connection = readValues();
 		boolean changed = !connection.equals(editedConnectionDetails.getSavedValues());
 			
-		logger.info("Values read. Changed = " + changed);
+		logger.debug("Values read. Changed = " + changed);
 		editedConnectionDetails.setModified(changed);
 		editedConnectionDetails.setConnectionDetails(connection);
 		

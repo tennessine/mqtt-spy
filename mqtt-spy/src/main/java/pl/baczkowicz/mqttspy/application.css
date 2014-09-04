@@ -25,54 +25,6 @@
 	-fx-background-color: white; 
 }
 
-/* Choice box embedded in the table */
-
-
-
-#subscriptionsTable  .list-cell .combo-box
-{
-	-fx-padding: 0 0 0 0;
-	/*-fx-cell-size: 1.0em;*/ 
-	-fx-background-color: grey;
-	-fx-control-inner-background: lightgrey;
-}
-
-#subscriptionsTable  .list-cell .combo-box .list-cell
-{
-	-fx-text-base-color: black;
-	-fx-text-fill: black;
-	-fx-fill: red;
-	-fx-background-color: grey;
-	-fx-control-inner-background: blue;
-}
-
-#subscriptionsTable   .list-cell .combo-box .list-cell:filled
-{
-	-fx-text-base-color: black;
-	-fx-text-fill: black;
-	-fx-fill: red;
-	-fx-background-color: grey;
-	-fx-control-inner-background: green;
-}
-
-#subscriptionsTable  .list-cell .choice-box .list-cell
-{
-	-fx-text-base-color: black;
-	-fx-text-fill: black;
-	-fx-fill: red;
-	-fx-background-color: grey;
-	-fx-control-inner-background: red;
-}
-
-#subscriptionsTable  .list-cell .choice-box .list-cell:filled
-{
-	-fx-text-base-color: black;
-	-fx-text-fill: black;
-	-fx-fill: red;
-	-fx-background-color: grey;
-	-fx-control-inner-background: purple;
-}
-
 /* Rich text area */
 
 .styled-text-area
@@ -148,10 +100,3 @@
 {
 	-fx-base: grey;
 }	
-
-.choice-box .list-cell:filled
-{
-	-fx-text-fill: black;
-	-fx-fill: red;
-	-fx-control-inner-background: grey;
-}

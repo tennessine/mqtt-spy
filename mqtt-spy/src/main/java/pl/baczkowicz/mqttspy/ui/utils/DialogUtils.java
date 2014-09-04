@@ -2,6 +2,11 @@ package pl.baczkowicz.mqttspy.ui.utils;
 
 import java.util.Optional;
 
+import javafx.application.Platform;
+import javafx.geometry.Point2D;
+import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
+
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.CustomLoginDialog;
 import org.controlsfx.dialog.Dialog;
@@ -72,5 +77,42 @@ public class DialogUtils
 								+ ") is read-only. Changes won't be saved. "
 								+ "Please make the file writeable for any changes to be saved.")
 				.showWarning();
+	}
+	
+	public static void showTooltip(final Button button, final String message)
+	{
+		final Tooltip tooltip = new Tooltip(message);
+		button.setTooltip(tooltip);
+		tooltip.setAutoHide(true);
+		tooltip.setAutoFix(true);
+		Point2D p = button.localToScene(0.0, 0.0);	    
+		tooltip.show(button.getScene().getWindow(), 
+				p.getX() + button.getScene().getX() + button.getScene().getWindow().getX() - 50, 
+		        p.getY() + button.getScene().getY() + button.getScene().getWindow().getY() - 50);
+		
+		new Thread(new Runnable()
+		{
+			@Override
+			public void run()			
+			{
+				try
+				{
+					Thread.sleep(5000);
+				}
+				catch (InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				Platform.runLater(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						button.setTooltip(null);
+						tooltip.hide();
+					}				
+				});
+			}		
+		}).start();
 	}
 }

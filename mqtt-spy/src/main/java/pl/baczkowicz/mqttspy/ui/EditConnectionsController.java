@@ -206,20 +206,21 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	{
 		connections.get(getSelectedIndex()).setDeleted(true);
 		
-		if (DialogUtils.showDeleteQuestion(connections.get(getSelectedIndex()).getName()) == Dialog.Actions.YES)
-		{
+		final String connectionName = connections.get(getSelectedIndex()).getName();
+		
+		if (DialogUtils.showDeleteQuestion(connectionName) == Dialog.Actions.YES)
+		{		
 			connections.remove(getSelectedIndex());
 			listConnections();
-			selectFirst();
-		
-			saveAll();
+			selectFirst();		
+				
+			logger.debug("Saving all connections");
+			if (configurationManager.saveConfiguration())
+			{
+				// TODO: for some reason, this is not shown
+				DialogUtils.showTooltip(deleteConnectionButton, "Connection " + connectionName + " deleted.");
+			}
 		}
-	}
-	
-	private void saveAll()
-	{
-		logger.debug("Saving all connections");
-		configurationManager.saveConfiguration();
 	}
 	
 	@FXML
@@ -243,7 +244,11 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		
 		listConnections();
 		
-		saveAll();
+		logger.debug("Saving all connections");
+		if (configurationManager.saveConfiguration())
+		{
+			DialogUtils.showTooltip(applyAllButton, "Changes for all connections have been saved.");
+		}
 	}
 	
 	@FXML

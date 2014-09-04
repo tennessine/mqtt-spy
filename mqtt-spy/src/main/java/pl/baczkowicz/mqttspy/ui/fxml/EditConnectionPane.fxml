@@ -120,7 +120,7 @@
                           </columns>
                         </TableView>
                         <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
-                        <Button fx:id="addPublicationButton" disable="true" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Add" visible="false" />
+                        <Button fx:id="addPublicationButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addPublication" prefHeight="25.0" prefWidth="100.0" text="Add" />
                      </children>
                   </AnchorPane>
               </content>
@@ -137,7 +137,7 @@
                            </columns>
                         </TableView>
                         <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
-                        <Button fx:id="addSubscriptionButton" disable="true" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="100.0" text="Add" visible="false" />
+                        <Button fx:id="addSubscriptionButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addSubscription" prefHeight="25.0" prefWidth="100.0" text="Add" />
                      </children>
                   </AnchorPane>
                </content>
