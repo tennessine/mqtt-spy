@@ -50,7 +50,11 @@ public class ConfigurationManager
 	
 	public static final String DEFAULT_PROPERTIES_FILE_NAME = "/mqtt-spy.properties";
 	
-	public static final String DEFAULT_DIRECTORY = System.getProperty("user.home");
+	public static final String DEFAULT_HOME_DIRECTORY = getDefaultHomeDirectory();
+	
+	// private static final String DEFAULT_DIRECTORY = ;
+	
+	private static final String DEFAULT_HOME_DIRECTORY_NAME = "mqtt-spy";
 	
 	private MqttSpyConfiguration configuration;
 	
@@ -134,16 +138,21 @@ public class ConfigurationManager
 	}
 	
 	public static File getDefaultConfigurationFile()
+	{			
+		return new File(getDefaultHomeDirectory() + ConfigurationManager.DEFAULT_FILE_NAME);
+	}
+	
+	public static String getDefaultHomeDirectory()
 	{
 		final String filePathSeparator = System.getProperty("file.separator");
-		String homeDirectory = DEFAULT_DIRECTORY;
+		String userHomeDirectory = System.getProperty("user.home");
 		
-		if (!homeDirectory.endsWith(filePathSeparator))
+		if (!userHomeDirectory.endsWith(filePathSeparator))
 		{
-			homeDirectory = homeDirectory + filePathSeparator;
+			userHomeDirectory = userHomeDirectory + filePathSeparator;
 		}
 		
-		return new File(homeDirectory + ConfigurationManager.DEFAULT_FILE_NAME);
+		return userHomeDirectory + DEFAULT_HOME_DIRECTORY_NAME + filePathSeparator;
 	}
 
 	public boolean createDefaultConfigurationFile()
@@ -289,5 +298,14 @@ public class ConfigurationManager
 	public List<ConfiguredConnectionDetails> getConnections()
 	{
 		return connections;
+	}
+
+	public void clear()
+	{
+		connections.clear();
+		configuration = null;
+		loadedConfigurationFile = null;
+		lastException =  null;
+		lastUsedId = 0;
 	}
 }

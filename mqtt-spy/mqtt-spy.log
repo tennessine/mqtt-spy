@@ -920,3 +920,108 @@ Caused by: java.net.ConnectException: Connection refused
 2014-09-04 23:51:39,532 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
 2014-09-04 23:51:39,602 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
 2014-09-04 23:51:51,213 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-08 21:21:59,584 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-08 21:22:05,444 ERROR [JavaFX Application Thread     ] [DialogUtils                   ]  - Cannot copy configuration file
+java.nio.file.NoSuchFileException: /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+	at sun.nio.fs.UnixException.translateToIOException(UnixException.java:86)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:102)
+	at sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:107)
+	at sun.nio.fs.UnixCopyFile.copyFile(UnixCopyFile.java:243)
+	at sun.nio.fs.UnixCopyFile.copy(UnixCopyFile.java:581)
+	at sun.nio.fs.UnixFileSystemProvider.copy(UnixFileSystemProvider.java:253)
+	at java.nio.file.Files.copy(Files.java:1271)
+	at pl.baczkowicz.mqttspy.ui.utils.DialogUtils.createDefaultConfigFromFile(DialogUtils.java:207)
+	at pl.baczkowicz.mqttspy.ui.utils.DialogUtils.createDefaultConfigFromClassPath(DialogUtils.java:223)
+	at pl.baczkowicz.mqttspy.ui.utils.DialogUtils.showDefaultConfigurationFileMissingChoice(DialogUtils.java:175)
+	at pl.baczkowicz.mqttspy.ui.MainController.loadDefaultConfigurationFile(MainController.java:311)
+	at pl.baczkowicz.mqttspy.Main.start(Main.java:84)
+	at com.sun.javafx.application.LauncherImpl$8.run(LauncherImpl.java:837)
+	at com.sun.javafx.application.PlatformImpl$7.run(PlatformImpl.java:335)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:301)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:298)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.application.PlatformImpl$6.run(PlatformImpl.java:298)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+	at com.sun.glass.ui.gtk.GtkApplication.access$200(GtkApplication.java:48)
+	at com.sun.glass.ui.gtk.GtkApplication$6$1.run(GtkApplication.java:149)
+	at java.lang.Thread.run(Thread.java:745)
+2014-09-08 21:24:03,240 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-08 21:24:07,356 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:24:08,949 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:24:09,529 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:24:26,634 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:24:26,678 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-08 21:24:45,125 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:27:00,087 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:27:00,091 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:27:01,305 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:27:01,623 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:27:06,419 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:29:05,207 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:29:05,214 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:29:06,977 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:29:07,377 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:29:17,010 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:31:58,902 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:31:58,905 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:32:00,095 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:32:00,443 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:32:04,051 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:32:13,799 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:32:13,808 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:32:15,519 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:32:15,903 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:32:38,756 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:33:40,288 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:33:40,291 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:33:41,515 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:33:41,843 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:33:56,940 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:33:57,222 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:33:57,505 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:33:57,508 INFO  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:33:57,509 ERROR [MQTT Rec: mqtt-spy            ] [MqttCallbackHandler           ]  - Connection mqtt-spy@iot.eclipse.org lost
+Connection lost (32109) - java.io.EOFException
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readByte(DataInputStream.java:267)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-08 21:34:08,057 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:34:08,072 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-08 21:34:10,021 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:34:20,629 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:36:26,679 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:36:26,682 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:36:35,868 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:36:36,727 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:36:37,315 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:37:16,549 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 21:37:16,561 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-08 21:37:49,906 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:37:49,933 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:37:52,299 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:37:52,697 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:38:08,566 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:41:05,746 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:41:05,749 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:41:18,595 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:41:19,458 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:41:19,794 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:41:32,645 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:44:26,717 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:44:26,720 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:44:40,744 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:44:41,826 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 21:44:42,146 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 21:44:56,461 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 21:58:43,598 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-08 21:58:43,601 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 22:00:20,623 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-08 22:00:21,708 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-08 22:00:22,020 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-08 22:01:28,176 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-08 22:01:28,190 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected

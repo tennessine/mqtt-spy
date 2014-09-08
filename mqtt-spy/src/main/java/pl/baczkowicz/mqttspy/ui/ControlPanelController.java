@@ -83,7 +83,7 @@ public class ControlPanelController extends AnchorPane implements Initializable
 		
 	}		
 		
-	public void init() throws XMLException
+	public void init()
 	{			
 		// Item 1
 		button1.setContentDisplay(ContentDisplay.TOP);
@@ -130,7 +130,7 @@ public class ControlPanelController extends AnchorPane implements Initializable
 		{
 			controller.setTitle("No default configuration file found.");
 			controller.setDetails("Click here to create and load a default configuration file from " + 
-					ConfigurationManager.DEFAULT_DIRECTORY + " called " + ConfigurationManager.DEFAULT_FILE_NAME + ".");
+					ConfigurationManager.DEFAULT_HOME_DIRECTORY + " called " + ConfigurationManager.DEFAULT_FILE_NAME + ".");
 			controller.setStatus(ItemStatus.WARN);
 			
 			button.setOnAction(new EventHandler<ActionEvent>()
@@ -149,13 +149,13 @@ public class ControlPanelController extends AnchorPane implements Initializable
 			if (configurationManager.isConfigurationReadOnly())
 			{
 				controller.setTitle("Configuration file loaded, but it's read-only.");
-				controller.setDetails("The file that has been loaded from " + configurationManager.getLoadedConfigurationFile().getAbsolutePath() + " is read-only.");
+				controller.setDetails("The configuration that has been loaded from " + configurationManager.getLoadedConfigurationFile().getAbsolutePath() + " is read-only.");
 				controller.setStatus(ItemStatus.WARN);
 			}
 			else
 			{
 				controller.setTitle("Configuration file loaded successfully.");
-				controller.setDetails("The file has been loaded from " + configurationManager.getLoadedConfigurationFile().getAbsolutePath() + ".");				
+				controller.setDetails("The configuration has been loaded from " + configurationManager.getLoadedConfigurationFile().getAbsolutePath() + ".");				
 				controller.setStatus(ItemStatus.OK);
 			}
 		}
@@ -245,6 +245,7 @@ public class ControlPanelController extends AnchorPane implements Initializable
 				
 				buttons.getChildren().add(connectionButton);
 			}
+			// TODO: this needs to refresh the connections, not recreate them
 			controller.getItems().getChildren().add(buttons);
 			
 			button.setOnAction(new EventHandler<ActionEvent>()

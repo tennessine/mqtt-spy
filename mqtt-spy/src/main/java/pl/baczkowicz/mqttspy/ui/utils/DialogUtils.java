@@ -133,38 +133,38 @@ public class DialogUtils
 		}).start();
 	}
 
-	public static void showDefaultConfigurationFileMissingChoice(final MainController mainController, final Window window)
+	public static void showDefaultConfigurationFileMissingChoice(final String title, final MainController mainController, final Window window)
 	{	
 		final List<CommandLink> links = Arrays.asList(
 		        new CommandLink( 
         				"Create mqtt-spy configuration file with sample content", 
         				System.getProperty("line.separator") + "This creates a configuration file " +  
-                        "in \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
                         "called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
                         ", which will include sample connections to localhost and iot.eclipse.org."),
 		                        
                 new CommandLink( 
         				"Create empty mqtt-spy configuration file", 
         				System.getProperty("line.separator") + "This creates a configuration file " +  
-                        "in \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
                         " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\" with no sample connections."),
 		                        
 		        new CommandLink( 
         				"Copy existing mqtt-spy configuration file", 
         				System.getProperty("line.separator") + "This copies an existing configuration file (selected in the next step) " +  
-                        "to \"" + ConfigurationManager.DEFAULT_DIRECTORY + "\"" + 
+                        "to \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
                         " and renames it to \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"."),
 		                        
 		        new CommandLink( 
         				"Don't do anything", 
-        				System.getProperty("line.separator") + "You can still point mqtt-spy at your chosen location " +  
+        				System.getProperty("line.separator") + "You can still point mqtt-spy at your chosen configuration file " +  
                         "by using the \"--configuration=my_custom_path\"" + 
                         " command line parameter or open a configuration file from the main menu."));
 		
 		final CustomDialogs dialog = new CustomDialogs();
 		dialog
 	      .owner(window)
-	      .title("Default configuration file not found")
+	      .title(title)
 	      .masthead(null)
 	      .message("Please select one of the following options with regards to the mqtt-spy configuration file:");
 		
@@ -204,6 +204,7 @@ public class DialogUtils
 		{ 
 			final File dest = ConfigurationManager.getDefaultConfigurationFile();
 		
+			dest.mkdirs();
 			Files.copy(orig.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			
 			mainController.loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());

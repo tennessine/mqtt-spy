@@ -135,7 +135,10 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 					{
 						try
 						{
-							editConnectionPaneController.createConnection();
+							if (getSelectedIndex() >= 0)
+							{
+								editConnectionPaneController.createConnection();
+							}
 						}
 						catch (ConfigurationException e)
 						{

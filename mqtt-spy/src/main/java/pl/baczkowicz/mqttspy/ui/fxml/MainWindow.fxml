@@ -18,6 +18,8 @@
 				<Menu mnemonicParsing="false" text="Configuration">
 					<items>
 						<MenuItem fx:id="openConfigFileMenu" mnemonicParsing="false" onAction="#openConfigurationFile" text="Open file" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="restoreConfigFileMenu" mnemonicParsing="false" onAction="#restoreConfiguration" text="Restore defaults" />
 						<!-- 
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#restoreConfigurationFile" text="Create/restore sample configuration file" />
@@ -27,8 +29,8 @@
 				
 				<Menu mnemonicParsing="false" text="Connections">
 					<items>
-						<MenuItem 	mnemonicParsing="false" onAction="#createNewConnection" 	text="New connection" />
-						<MenuItem 	mnemonicParsing="false" onAction="#editConnections" 		text="Manage connections" />
+						<MenuItem mnemonicParsing="false" onAction="#createNewConnection" text="New connection" />
+						<MenuItem mnemonicParsing="false" onAction="#editConnections" text="Manage connections" />
 					</items>
 				</Menu>
 				
@@ -42,17 +44,17 @@
 				
 				<Menu mnemonicParsing="false" text="Help">
 					<items>
-						<Menu 		mnemonicParsing="false" 									text="Wiki">
+						<Menu mnemonicParsing="false" text="Wiki">
 							<items>
-								<MenuItem 	mnemonicParsing="false" onAction="#overviewWiki" 	text="Overview" />
-								<MenuItem 	mnemonicParsing="false" onAction="#changelogWiki" 	text="Changelog" />
-								<MenuItem 	mnemonicParsing="false" onAction="#configurationWiki" text="Configuration" />
-								<MenuItem 	mnemonicParsing="false" onAction="#loggingWiki" 	text="Logging" />
+								<MenuItem mnemonicParsing="false" onAction="#overviewWiki" text="Overview" />
+								<MenuItem mnemonicParsing="false" onAction="#changelogWiki" text="Changelog" />
+								<MenuItem mnemonicParsing="false" onAction="#configurationWiki" text="Configuration" />
+								<MenuItem mnemonicParsing="false" onAction="#loggingWiki" text="Logging" />
 							</items>
 						</Menu>
 			
 						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem 	mnemonicParsing="false" onAction="#openProjectWebsite"	text="About" />
+						<MenuItem mnemonicParsing="false" onAction="#openProjectWebsite" text="About" />
 					</items>
 				</Menu>
 			</menus>
@@ -65,7 +67,7 @@
 							<children>
 								<!-- <fx:include source="ConnectionTab.fxml" /> -->
 								<!-- 0.0.8 -->
-								<!-- <fx:include fx:id="controlPanelPane" source="ControlPanelPane.fxml" /> -->
+								<fx:include fx:id="controlPanelPane" source="ControlPanelPane.fxml" />
 							</children>
 						</AnchorPane>
 					</content>
