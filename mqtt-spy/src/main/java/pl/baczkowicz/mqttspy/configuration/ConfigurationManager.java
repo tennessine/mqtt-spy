@@ -142,6 +142,11 @@ public class ConfigurationManager
 		return new File(getDefaultHomeDirectory() + ConfigurationManager.DEFAULT_FILE_NAME);
 	}
 	
+	public static File getDefaultConfigurationFileDirectory()
+	{			
+		return new File(getDefaultHomeDirectory());
+	}
+	
 	public static String getDefaultHomeDirectory()
 	{
 		final String filePathSeparator = System.getProperty("file.separator");

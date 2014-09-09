@@ -66,8 +66,8 @@
 						<AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 							<children>
 								<!-- <fx:include source="ConnectionTab.fxml" /> -->
-								<!-- 0.0.8 -->
-								<fx:include fx:id="controlPanelPane" source="ControlPanelPane.fxml" />
+								<!-- 0.0.9 -->
+								<!-- <fx:include fx:id="controlPanelPane" source="ControlPanelPane.fxml" /> -->
 							</children>
 						</AnchorPane>
 					</content>

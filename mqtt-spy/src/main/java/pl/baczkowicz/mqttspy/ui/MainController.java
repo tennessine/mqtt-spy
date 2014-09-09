@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.ui;
 import java.io.File;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -45,8 +46,8 @@ public class MainController
 	 * The name of this field needs to be set to the name of the pane +
 	 * Controller (i.e. <fx:id>Controller).
 	 */
-	@FXML
-	private ControlPanelController controlPanelPaneController;
+	// @FXML
+	// private ControlPanelController controlPanelPaneController;
 	
 	@FXML
 	private AnchorPane mainPane;
@@ -94,6 +95,12 @@ public class MainController
 	
 	private void initialiseEditConnectionsWindow()
 	{
+		// This is a dirty hack to reload connection settings :) possibly could be removed if all connections are closed before loading a new config file
+		if (editConnectionsController != null)
+		{
+			eventManager.deregisterConnectionStatusObserver(editConnectionsController);
+		}
+		
 		final FXMLLoader loader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "EditConnectionsWindow.fxml");
 		final AnchorPane connectionWindow = Utils.loadAnchorPane(loader);
 		editConnectionsController = ((EditConnectionsController) loader.getController());
@@ -128,7 +135,7 @@ public class MainController
 		editConnectionsStage.showAndWait();
 		
 		// TODO: 0.0.9
-		controlPanelPaneController.refreshConnectionsStatus();
+		// controlPanelPaneController.refreshConnectionsStatus();
 	}
 
 	@FXML
@@ -150,14 +157,14 @@ public class MainController
 
 		// Clear any test tabs
 		// TODO: enable for release
-		// connectionTabs.getTabs().clear();
+		connectionTabs.getTabs().clear();
 		stage.setTitle("mqtt-spy v" + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY));
 		
 		// TODO: 0.0.9
-		controlPanelPaneController.setMainController(this);
-		controlPanelPaneController.setConfigurationMananger(configurationManager);
-		controlPanelPaneController.setApplication(application);
-		controlPanelPaneController.init();
+		// controlPanelPaneController.setMainController(this);
+		// controlPanelPaneController.setConfigurationMananger(configurationManager);
+		// controlPanelPaneController.setApplication(application);
+		// controlPanelPaneController.init();
 	}
 	
 	public TabPane getConnectionTabs()
@@ -193,7 +200,15 @@ public class MainController
 	
 	public void loadConfigurationFileAndShowErrorWhenApplicable(final File selectedFile)
 	{
-		loadConfigurationFile(selectedFile);
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				loadConfigurationFile(selectedFile);				
+			}
+			
+		});		
 	}
 	
 	private void loadConfigurationFile(final File selectedFile)
@@ -227,8 +242,8 @@ public class MainController
 		}
 		
 		// TODO: 0.0.9
-		controlPanelPaneController.refreshConfigurationFileStatus();
-		controlPanelPaneController.refreshConnectionsStatus();
+		// controlPanelPaneController.refreshConfigurationFileStatus();
+		// controlPanelPaneController.refreshConnectionsStatus();
 	}	
 	
 	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
@@ -306,14 +321,20 @@ public class MainController
 		}
 		else
 		{
-			DialogUtils.showDefaultConfigurationFileMissingChoice("Default configuration file not found", this, mainPane.getScene().getWindow());
+			if (DialogUtils.showDefaultConfigurationFileMissingChoice("Default configuration file not found", mainPane.getScene().getWindow()))
+			{
+				loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
+			}
 		}
 	}
 	
 	@FXML
 	private void restoreConfiguration()
 	{
-		DialogUtils.showDefaultConfigurationFileMissingChoice("Restore defaults", this, mainPane.getScene().getWindow());
+		if (DialogUtils.showDefaultConfigurationFileMissingChoice("Restore defaults", mainPane.getScene().getWindow()))
+		{
+			loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());			
+		}
 	}
 	
 	@FXML

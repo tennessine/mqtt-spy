@@ -28,6 +28,11 @@ public class EventManager
 		connectionStatusChangeObserver.put(observer, filter);
 	}
 	
+	public void deregisterConnectionStatusObserver(final ConnectionStatusChangeObserver observer)
+	{
+		connectionStatusChangeObserver.remove(observer);
+	}
+	
 	public void registerClearTabObserver(final ClearTabObserver observer, final ObservableMessageStoreWithFiltering filter)
 	{
 		clearTabObserver.put(observer, filter);

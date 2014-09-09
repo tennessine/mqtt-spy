@@ -4,7 +4,7 @@
 
 	<groupId>pl.baczkowicz</groupId>
 	<artifactId>mqtt-spy</artifactId>
-	<version>0.0.8-beta</version>
+	<version>0.0.8</version>
 	<packaging>jar</packaging>
 
 	<name>mqtt-spy</name>
@@ -41,6 +41,12 @@
 	</repositories>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-codec</groupId>

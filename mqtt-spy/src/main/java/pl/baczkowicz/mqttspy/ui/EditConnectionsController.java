@@ -390,6 +390,9 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	@Override
 	public void onConnectionStatusChanged(final MqttConnection changedConnection)
 	{
-		showSelected();		
+		if (getSelectedIndex() >= 0)
+		{
+			showSelected();
+		}
 	}
 }

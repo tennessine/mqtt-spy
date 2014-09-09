@@ -1,10 +1,6 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -23,18 +19,14 @@ import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import org.controlsfx.dialog.Dialogs.CommandLink;
 import org.controlsfx.dialog.Dialogs.UserInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
+import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
-import pl.baczkowicz.mqttspy.ui.MainController;
 
 public class DialogUtils
 {
-	private final static Logger logger = LoggerFactory.getLogger(DialogUtils.class);
-	
 	public static void showValidationWarning(final String message)
 	{
 		Dialogs.create().owner(null).title("Invalid value detected").masthead(null)
@@ -133,7 +125,7 @@ public class DialogUtils
 		}).start();
 	}
 
-	public static void showDefaultConfigurationFileMissingChoice(final String title, final MainController mainController, final Window window)
+	public static boolean showDefaultConfigurationFileMissingChoice(final String title, final Window window)
 	{	
 		final List<CommandLink> links = Arrays.asList(
 		        new CommandLink( 
@@ -169,14 +161,15 @@ public class DialogUtils
 	      .message("Please select one of the following options with regards to the mqtt-spy configuration file:");
 		
 		Action response = dialog.showCommandLinks(links.get(0), links, 600, 30);
-
+		boolean configurationFileCreated = false;
+		
 		if (response.textProperty().getValue().toLowerCase().contains("sample"))
 		{
-			createDefaultConfigFromClassPath(mainController, "sample");
+			configurationFileCreated = ConfigurationUtils.createDefaultConfigFromClassPath("sample");
 		}
 		else if (response.textProperty().getValue().toLowerCase().contains("empty"))
 		{
-			createDefaultConfigFromClassPath(mainController, "empty");
+			configurationFileCreated = ConfigurationUtils.createDefaultConfigFromClassPath("empty");
 		}
 		else if (response.textProperty().getValue().toLowerCase().contains("copy"))
 		{
@@ -189,44 +182,14 @@ public class DialogUtils
 
 			if (selectedFile != null)
 			{
-				createDefaultConfigFromFile(mainController, selectedFile);	
+				configurationFileCreated = ConfigurationUtils.createDefaultConfigFromFile(selectedFile);
 			}
 		}
 		else
 		{
 			// Do nothing
 		}
-	}
-	
-	private static void createDefaultConfigFromFile(final MainController mainController, final File orig)
-	{
-		try
-		{ 
-			final File dest = ConfigurationManager.getDefaultConfigurationFile();
 		
-			dest.mkdirs();
-			Files.copy(orig.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			
-			mainController.loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
-		}
-		catch (IOException e)
-		{
-			// TODO: show warning dialog for invalid
-			logger.error("Cannot copy configuration file", e);
-		}
-	}
-	
-	private static void createDefaultConfigFromClassPath(final MainController mainController, final String name)
-	{
-		try
-		{
-			final File orig = new File(MainController.class.getResource("/samples/" + name + "-mqtt-spy-configuration.xml").toURI()); 
-			createDefaultConfigFromFile(mainController, orig);
-		}
-		catch (URISyntaxException e)
-		{
-			// TODO: show warning dialog for invalid
-			logger.error("Cannot copy configuration file", e);
-		}
+		return configurationFileCreated;
 	}
 }
