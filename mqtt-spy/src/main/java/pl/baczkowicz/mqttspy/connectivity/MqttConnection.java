@@ -278,5 +278,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	public void setOpened(boolean isOpened)
 	{
 		this.isOpened = isOpened;
+		
+		eventManager.notifyConnectionStatusChanged(this);
 	}
 }

@@ -15,7 +15,7 @@
             <Image url="@../../../../../../resources/images/dialog-ok-apply.png" />
          </image>
       </ImageView>
-      <VBox fx:id="itemsBox" layoutX="104.0" layoutY="19.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="107.0" prefWidth="413.0" spacing="10.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="104.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="19.0">
+      <VBox fx:id="itemsBox" layoutX="104.0" layoutY="19.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="107.0" prefWidth="413.0" spacing="10.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="90.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="15.0">
          <children>
             <Label fx:id="titleText" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="You have 4 connections configured. Some test text here to show two lines." wrapText="true">
                <font>

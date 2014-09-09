@@ -42,11 +42,15 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	public void initialize(URL location, ResourceBundle resources)
 	{		
 		//
+		// this.setStyle("-fx-background-color: red; -fx-border-color: red; -fx-border-width: 2px;");
+		// itemsBox.setStyle("-fx-background-color: #5f5f5f; -fx-border-color: #2e8b57; -fx-border-width: 2px;");
 	}	
 	
 	public void init()
 	{
 		//
+		// this.setStyle("-fx-background-color: red; -fx-border-color: red; -fx-border-width: 2px;");
+		// itemsBox.setStyle("-fx-background-color: #5f5f5f; -fx-border-color: #2e8b57; -fx-border-width: 2px;");
 	}
 	
 	public void refresh()
@@ -70,14 +74,18 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 				imageLocation = "/images/dialog-error.png";
 				break;
 		}
-		statusIcon.setImage(new Image(ControlPanelItemController.class.getResource(imageLocation).toString()));
+		statusIcon.setImage(new Image(ControlPanelItemController.class.getResource(imageLocation).toString()));		
 		if (status == ItemStatus.OK)
 		{
-			statusIcon.setFitHeight(80);
-			statusIcon.setFitWidth(80);
+			statusIcon.setLayoutY(0);
+			statusIcon.setLayoutX(0);
+			statusIcon.setFitHeight(64);
+			statusIcon.setFitWidth(64);
 		}
 		else
 		{
+			statusIcon.setLayoutY(30);
+			statusIcon.setLayoutX(30);
 			statusIcon.setFitHeight(64);
 			statusIcon.setFitWidth(64);
 		}
@@ -117,7 +125,7 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 		this.detailsText.setText(details);
 	}
 	
-	public VBox getItems()
+	public VBox getCustomItems()
 	{
 		return this.itemsBox;
 	}

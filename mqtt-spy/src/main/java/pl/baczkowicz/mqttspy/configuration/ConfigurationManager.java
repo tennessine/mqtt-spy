@@ -42,6 +42,8 @@ public class ConfigurationManager
 	
 	public static final String VERSION_PROPERTY = "application.version";
 	
+	public static final String BUILD_PROPERTY = "application.build";
+	
 	public static final String PACKAGE = "pl.baczkowicz.mqttspy.configuration.generated";
 	
 	public static final String SCHEMA = "/mqtt-spy-configuration.xsd";
@@ -312,5 +314,12 @@ public class ConfigurationManager
 		loadedConfigurationFile = null;
 		lastException =  null;
 		lastUsedId = 0;
+	}
+	
+	public String getFullVersionNumber()
+	{
+		// TODO: change for release
+		return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-" + getProperty(ConfigurationManager.BUILD_PROPERTY);
+		// return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-22";
 	}
 }

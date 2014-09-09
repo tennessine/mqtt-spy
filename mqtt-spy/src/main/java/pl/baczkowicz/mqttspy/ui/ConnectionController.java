@@ -21,6 +21,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class ConnectionController implements Initializable, Observer
 {
@@ -181,7 +182,6 @@ public class ConnectionController implements Initializable, Observer
 			{
 				newSubscriptionPaneController.setActive(false);
 				newPublicationPaneController.setActive(false);
-				String connectionTabStyle;
 				
 				switch ((MqttConnectionStatus) update)
 				{
@@ -189,7 +189,6 @@ public class ConnectionController implements Initializable, Observer
 						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTabStyle = "tab-title-not-connected";
 						break;
 					case CONNECTED:					
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
@@ -197,28 +196,23 @@ public class ConnectionController implements Initializable, Observer
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
 						newSubscriptionPaneController.setActive(true);
 						newPublicationPaneController.setActive(true);
-						connectionTabStyle = "tab-title-connected";
 						break;
 					case CONNECTING:
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
 						connectionTab.getContextMenu().getItems().get(3).setDisable(true);
-						connectionTabStyle = "tab-title-connecting";
 						break;
 					case DISCONNECTED:
 						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTabStyle = "tab-title-disconnected";
 						break;
 					case DISCONNECTING:					
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTabStyle = "tab-title-disconnected";
 						break;
 					default:
-						connectionTabStyle = "tab-title-default";
 						break;
 				}
 
@@ -227,7 +221,7 @@ public class ConnectionController implements Initializable, Observer
 				{
 					connectionTab.getStyleClass().remove(1);
 				}
-				connectionTab.getStyleClass().add(connectionTabStyle);				
+				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));				
 			}
 		}
 	}

@@ -344,31 +344,13 @@ public class ContextMenuUtils
 		ContextMenu contextMenu = new ContextMenu();
 
 		MenuItem reconnectItem = new MenuItem("[Connection] Connect / reconnect");
-		reconnectItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				mqttManager.connectToBroker(connectionId);
-			}
-		});
+		reconnectItem.setOnAction(ConnectionUtils.createConnectAction(mqttManager, connectionId));
 		
 		MenuItem disconnectItem = new MenuItem("[Connection] Disconnect (and keep tab)");
-		disconnectItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				ConnectionUtils.disconnect(mqttManager, connectionId);
-			}
-		});
+		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connectionId));
 
 		MenuItem disconnectAndCloseItem = new MenuItem("[Connection] Disconnect (and close tab)");
-		disconnectAndCloseItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				ConnectionUtils.disconnectAndClose(mqttManager, connectionId, tab);				
-			}
-		});
+		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connectionId, tab));
 
 		contextMenu.getItems().add(reconnectItem);
 		contextMenu.getItems().add(new SeparatorMenuItem());

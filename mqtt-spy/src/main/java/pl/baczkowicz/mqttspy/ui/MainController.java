@@ -41,13 +41,12 @@ public class MainController
 {
 	private final static Logger logger = LoggerFactory.getLogger(MainController.class);
 	
-	// TODO: 0.0.9
 	/**
 	 * The name of this field needs to be set to the name of the pane +
 	 * Controller (i.e. <fx:id>Controller).
 	 */
-	// @FXML
-	// private ControlPanelController controlPanelPaneController;
+	@FXML
+	private ControlPanelController controlPanelPaneController;
 	
 	@FXML
 	private AnchorPane mainPane;
@@ -132,10 +131,8 @@ public class MainController
 			editConnectionsController.newConnection();
 		}
 
-		editConnectionsStage.showAndWait();
-		
-		// TODO: 0.0.9
-		// controlPanelPaneController.refreshConnectionsStatus();
+		editConnectionsStage.showAndWait();		
+		controlPanelPaneController.refreshConnectionsStatus();
 	}
 
 	@FXML
@@ -156,15 +153,14 @@ public class MainController
 		});
 
 		// Clear any test tabs
-		// TODO: enable for release
-		connectionTabs.getTabs().clear();
 		stage.setTitle("mqtt-spy v" + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY));
 		
-		// TODO: 0.0.9
-		// controlPanelPaneController.setMainController(this);
-		// controlPanelPaneController.setConfigurationMananger(configurationManager);
-		// controlPanelPaneController.setApplication(application);
-		// controlPanelPaneController.init();
+		controlPanelPaneController.setMainController(this);
+		controlPanelPaneController.setConfigurationMananger(configurationManager);
+		controlPanelPaneController.setApplication(application);
+		controlPanelPaneController.setEventManager(eventManager);
+		controlPanelPaneController.setMqttManager(mqttManager);
+		controlPanelPaneController.init();
 	}
 	
 	public TabPane getConnectionTabs()
@@ -241,9 +237,8 @@ public class MainController
 			openConfigFileMenu.setDisable(true);
 		}
 		
-		// TODO: 0.0.9
-		// controlPanelPaneController.refreshConfigurationFileStatus();
-		// controlPanelPaneController.refreshConnectionsStatus();
+		controlPanelPaneController.refreshConfigurationFileStatus();
+		controlPanelPaneController.refreshConnectionsStatus();
 	}	
 	
 	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
@@ -319,13 +314,15 @@ public class MainController
 		{
 			loadConfigurationFileAndShowErrorWhenApplicable(defaultConfigurationFile);
 		}
-		else
-		{
-			if (DialogUtils.showDefaultConfigurationFileMissingChoice("Default configuration file not found", mainPane.getScene().getWindow()))
-			{
-				loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
-			}
-		}
+		// else
+		// {
+		// if
+		// (DialogUtils.showDefaultConfigurationFileMissingChoice("Default configuration file not found",
+		// mainPane.getScene().getWindow()))
+		// {
+		// loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
+		// }
+		// }
 	}
 	
 	@FXML

@@ -277,3 +277,826 @@ Caused by: java.io.EOFException
 2014-09-09 20:39:14,638 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
 2014-09-09 20:39:29,003 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
 2014-09-09 20:39:29,008 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-09 21:26:43,875 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 21:27:57,278 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 21:28:14,498 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user1@localhost
+2014-09-09 21:28:26,424 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:28:26,439 WARN  [MQTT Con: user1               ] [MqttConnectionResultHandler   ]  - Connecting to user1@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-09 21:28:32,473 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:28:32,482 WARN  [MQTT Con: user1               ] [MqttConnectionResultHandler   ]  - Connecting to user1@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-09 21:29:04,082 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:29:04,115 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:29:09,989 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:29:10,003 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:29:28,525 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:29:28,545 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:29:33,618 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:29:33,625 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:29:50,549 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user1@localhost
+2014-09-09 21:30:00,338 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:30:00,367 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:30:04,080 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:47:34,589 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 21:48:00,020 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:48:06,350 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:48:06,408 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:48:25,271 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:48:25,285 INFO  [MQTT Rec: user1               ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:48:25,286 ERROR [MQTT Rec: user1               ] [MqttCallbackHandler           ]  - Connection user1@localhost lost
+Connection lost (32109) - java.io.EOFException
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readByte(DataInputStream.java:267)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-09 21:48:25,282 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:48:28,748 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:48:28,755 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:48:32,184 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:48:32,219 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:48:38,696 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user1@localhost
+2014-09-09 21:48:47,060 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:48:49,543 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:48:55,899 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user1@localhost
+2014-09-09 21:49:09,238 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:49:09,250 INFO  [MQTT Rec: user1               ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:49:09,250 ERROR [MQTT Rec: user1               ] [MqttCallbackHandler           ]  - Connection user1@localhost lost
+Connection lost (32109) - java.io.EOFException
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readByte(DataInputStream.java:267)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-09 21:49:09,268 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:49:19,557 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:49:19,568 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:49:20,540 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:49:20,578 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:49:25,207 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:49:25,224 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:51:49,064 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 21:51:58,866 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:51:58,916 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:52:02,380 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:52:02,391 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:52:36,307 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 21:52:41,508 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-09 21:52:41,582 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-09 21:52:46,672 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:52:46,719 INFO  [MQTT Disc: user23             ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-09 21:52:48,898 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-09 21:52:48,943 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-09 21:53:02,922 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:53:02,947 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:53:03,987 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:53:03,994 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:53:05,039 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:53:05,045 INFO  [MQTT Disc: user23             ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-09 21:53:05,811 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:53:05,827 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:53:06,459 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-09 21:53:06,483 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-09 21:53:36,064 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-215318600 to tcp://127.0.0.1
+2014-09-09 21:53:36,107 INFO  [MQTT Call: dellik-215318600   ] [MqttConnectionResultHandler   ]  - dellik-215318600@127.0.0.1 connected
+2014-09-09 21:53:41,951 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-215318600 from tcp://127.0.0.1
+2014-09-09 21:53:41,977 INFO  [MQTT Disc: dellik-215318600   ] [MqttDisconnectionResultHandler]  - dellik-215318600@127.0.0.1 disconnected
+2014-09-09 21:54:39,037 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-215318600 to tcp://127.0.0.1
+2014-09-09 21:54:39,045 INFO  [MQTT Call: dellik-215318600   ] [MqttConnectionResultHandler   ]  - dellik-215318600@127.0.0.1 connected
+2014-09-09 21:54:41,964 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-215318600 from tcp://127.0.0.1
+2014-09-09 21:54:41,970 INFO  [MQTT Disc: dellik-215318600   ] [MqttDisconnectionResultHandler]  - dellik-215318600@127.0.0.1 disconnected
+2014-09-09 21:54:45,229 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:54:45,237 INFO  [MQTT Disc: user23             ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-09 21:54:45,914 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:54:45,965 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:54:46,697 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 21:54:46,707 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 21:54:49,888 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-09 21:54:49,901 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-09 21:54:56,630 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:54:56,636 INFO  [MQTT Disc: user23             ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-09 21:55:01,056 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:55:01,060 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user1@localhost
+2014-09-09 21:55:01,066 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 21:55:07,452 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:55:07,453 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection user2@localhost
+2014-09-09 21:55:07,684 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-09 21:55:07,776 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-09 21:57:15,926 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 21:57:15,931 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-09 21:57:15,934 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-215318600 from tcp://127.0.0.1
+2014-09-09 21:57:49,816 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:07:32,295 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:09:10,523 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:10:03,901 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:10:18,983 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:11:22,675 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:12:07,816 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:13:22,688 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:29:27,989 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:30:00,220 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:31:06,684 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:32:24,820 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:34:00,258 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 22:39:33,464 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:40:30,170 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:41:38,236 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224124535 to tcp://127.0.0.1
+2014-09-09 22:41:38,273 INFO  [MQTT Call: dellik-224124535   ] [MqttConnectionResultHandler   ]  - dellik-224124535@127.0.0.1 connected
+2014-09-09 22:41:44,206 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:41:44,232 INFO  [MQTT Disc: dellik-224124535   ] [MqttDisconnectionResultHandler]  - dellik-224124535@127.0.0.1 disconnected
+2014-09-09 22:41:46,011 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224124535 to tcp://127.0.0.1
+2014-09-09 22:41:46,034 INFO  [MQTT Call: dellik-224124535   ] [MqttConnectionResultHandler   ]  - dellik-224124535@127.0.0.1 connected
+2014-09-09 22:41:46,995 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:41:47,007 INFO  [MQTT Disc: dellik-224124535   ] [MqttDisconnectionResultHandler]  - dellik-224124535@127.0.0.1 disconnected
+2014-09-09 22:41:47,977 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224124535 to tcp://127.0.0.1
+2014-09-09 22:41:48,014 INFO  [MQTT Call: dellik-224124535   ] [MqttConnectionResultHandler   ]  - dellik-224124535@127.0.0.1 connected
+2014-09-09 22:41:49,014 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:41:49,032 INFO  [MQTT Disc: dellik-224124535   ] [MqttDisconnectionResultHandler]  - dellik-224124535@127.0.0.1 disconnected
+2014-09-09 22:41:50,089 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224124535 to tcp://127.0.0.1
+2014-09-09 22:41:50,120 INFO  [MQTT Call: dellik-224124535   ] [MqttConnectionResultHandler   ]  - dellik-224124535@127.0.0.1 connected
+2014-09-09 22:41:52,560 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:41:52,596 INFO  [MQTT Disc: dellik-224124535   ] [MqttDisconnectionResultHandler]  - dellik-224124535@127.0.0.1 disconnected
+2014-09-09 22:41:58,118 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:43:41,912 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224124535 from tcp://127.0.0.1
+2014-09-09 22:43:46,578 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:43:55,026 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224348412 to tcp://127.0.0.1
+2014-09-09 22:43:55,075 INFO  [MQTT Call: dellik-224348412   ] [MqttConnectionResultHandler   ]  - dellik-224348412@127.0.0.1 connected
+2014-09-09 22:43:57,090 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224348412 from tcp://127.0.0.1
+2014-09-09 22:43:57,111 INFO  [MQTT Disc: dellik-224348412   ] [MqttDisconnectionResultHandler]  - dellik-224348412@127.0.0.1 disconnected
+2014-09-09 22:43:59,333 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224348412 from tcp://127.0.0.1
+2014-09-09 22:44:13,295 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224348412 from tcp://127.0.0.1
+2014-09-09 22:44:27,583 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:44:34,620 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224430629 to tcp://127.0.0.1
+2014-09-09 22:44:34,689 INFO  [MQTT Call: dellik-224430629   ] [MqttConnectionResultHandler   ]  - dellik-224430629@127.0.0.1 connected
+2014-09-09 22:44:37,080 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:44:37,100 INFO  [MQTT Disc: dellik-224430629   ] [MqttDisconnectionResultHandler]  - dellik-224430629@127.0.0.1 disconnected
+2014-09-09 22:44:39,446 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:44:41,899 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224430629 to tcp://127.0.0.1
+2014-09-09 22:44:41,917 INFO  [MQTT Call: dellik-224430629   ] [MqttConnectionResultHandler   ]  - dellik-224430629@127.0.0.1 connected
+2014-09-09 22:44:44,081 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:44:44,089 INFO  [MQTT Disc: dellik-224430629   ] [MqttDisconnectionResultHandler]  - dellik-224430629@127.0.0.1 disconnected
+2014-09-09 22:44:47,003 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:44:48,707 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-224430629 to tcp://127.0.0.1
+2014-09-09 22:44:48,722 INFO  [MQTT Call: dellik-224430629   ] [MqttConnectionResultHandler   ]  - dellik-224430629@127.0.0.1 connected
+2014-09-09 22:44:54,588 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:44:54,608 INFO  [MQTT Disc: dellik-224430629   ] [MqttDisconnectionResultHandler]  - dellik-224430629@127.0.0.1 disconnected
+2014-09-09 22:44:56,715 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:46:43,103 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-224430629 from tcp://127.0.0.1
+2014-09-09 22:46:48,096 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:47:02,559 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:49:05,738 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:50:36,006 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:52:55,503 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:54:21,723 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 22:54:42,762 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225424040 to tcp://127.0.0.1
+2014-09-09 22:54:42,799 INFO  [MQTT Call: dellik-225424040   ] [MqttConnectionResultHandler   ]  - dellik-225424040@127.0.0.1 connected
+2014-09-09 22:54:47,240 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225427731 to tcp://127.0.0.1
+2014-09-09 22:54:47,251 INFO  [MQTT Call: dellik-225427731   ] [MqttConnectionResultHandler   ]  - dellik-225427731@127.0.0.1 connected
+2014-09-09 22:54:48,898 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225431002 to tcp://127.0.0.1
+2014-09-09 22:54:48,988 INFO  [MQTT Call: dellik-225431002   ] [MqttConnectionResultHandler   ]  - dellik-225431002@127.0.0.1 connected
+2014-09-09 22:54:59,357 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225424040 from tcp://127.0.0.1
+2014-09-09 22:54:59,379 INFO  [MQTT Disc: dellik-225424040   ] [MqttDisconnectionResultHandler]  - dellik-225424040@127.0.0.1 disconnected
+2014-09-09 22:55:01,547 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225427731 from tcp://127.0.0.1
+2014-09-09 22:55:01,562 INFO  [MQTT Disc: dellik-225427731   ] [MqttDisconnectionResultHandler]  - dellik-225427731@127.0.0.1 disconnected
+2014-09-09 22:55:02,649 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225424040 to tcp://127.0.0.1
+2014-09-09 22:55:02,670 INFO  [MQTT Call: dellik-225424040   ] [MqttConnectionResultHandler   ]  - dellik-225424040@127.0.0.1 connected
+2014-09-09 22:55:03,204 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225427731 to tcp://127.0.0.1
+2014-09-09 22:55:03,258 INFO  [MQTT Call: dellik-225427731   ] [MqttConnectionResultHandler   ]  - dellik-225427731@127.0.0.1 connected
+2014-09-09 22:55:05,355 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225431002 from tcp://127.0.0.1
+2014-09-09 22:55:05,392 INFO  [MQTT Disc: dellik-225431002   ] [MqttDisconnectionResultHandler]  - dellik-225431002@127.0.0.1 disconnected
+2014-09-09 22:55:06,352 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-225434332 to tcp://127.0.0.1
+2014-09-09 22:55:06,419 INFO  [MQTT Call: dellik-225434332   ] [MqttConnectionResultHandler   ]  - dellik-225434332@127.0.0.1 connected
+2014-09-09 22:55:07,705 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225434332 from tcp://127.0.0.1
+2014-09-09 22:55:07,715 INFO  [MQTT Disc: dellik-225434332   ] [MqttDisconnectionResultHandler]  - dellik-225434332@127.0.0.1 disconnected
+2014-09-09 22:55:10,055 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225431002 from tcp://127.0.0.1
+2014-09-09 22:55:12,003 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225434332 from tcp://127.0.0.1
+2014-09-09 22:55:14,014 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225427731 from tcp://127.0.0.1
+2014-09-09 22:55:14,029 INFO  [MQTT Disc: dellik-225427731   ] [MqttDisconnectionResultHandler]  - dellik-225427731@127.0.0.1 disconnected
+2014-09-09 22:55:15,451 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225424040 from tcp://127.0.0.1
+2014-09-09 22:55:15,454 INFO  [MQTT Disc: dellik-225424040   ] [MqttDisconnectionResultHandler]  - dellik-225424040@127.0.0.1 disconnected
+2014-09-09 22:57:01,086 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225424040 from tcp://127.0.0.1
+2014-09-09 22:57:01,095 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225427731 from tcp://127.0.0.1
+2014-09-09 22:57:01,114 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225431002 from tcp://127.0.0.1
+2014-09-09 22:57:01,121 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-225434332 from tcp://127.0.0.1
+2014-09-09 23:00:49,397 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 23:01:36,377 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 23:03:19,793 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-09 23:03:34,250 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-230322177 to tcp://127.0.0.1
+2014-09-09 23:03:34,291 INFO  [MQTT Call: dellik-230322177   ] [MqttConnectionResultHandler   ]  - dellik-230322177@127.0.0.1 connected
+2014-09-09 23:03:39,910 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-230322177 from tcp://127.0.0.1
+2014-09-09 23:03:39,939 INFO  [MQTT Disc: dellik-230322177   ] [MqttDisconnectionResultHandler]  - dellik-230322177@127.0.0.1 disconnected
+2014-09-09 23:03:41,102 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-230322177 to tcp://127.0.0.1
+2014-09-09 23:03:41,112 INFO  [MQTT Call: dellik-230322177   ] [MqttConnectionResultHandler   ]  - dellik-230322177@127.0.0.1 connected
+2014-09-09 23:03:42,946 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-230322177 from tcp://127.0.0.1
+2014-09-09 23:03:42,985 INFO  [MQTT Disc: dellik-230322177   ] [MqttDisconnectionResultHandler]  - dellik-230322177@127.0.0.1 disconnected
+2014-09-09 23:03:43,352 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik-230322177 to tcp://127.0.0.1
+2014-09-09 23:03:43,374 INFO  [MQTT Call: dellik-230322177   ] [MqttConnectionResultHandler   ]  - dellik-230322177@127.0.0.1 connected
+2014-09-09 23:03:56,810 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-230322177 from tcp://127.0.0.1
+2014-09-09 23:03:56,819 INFO  [MQTT Disc: dellik-230322177   ] [MqttDisconnectionResultHandler]  - dellik-230322177@127.0.0.1 disconnected
+2014-09-09 23:04:03,125 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:04:14,841 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 23:04:14,942 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 23:04:17,439 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 23:04:17,476 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 23:04:18,046 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 23:04:18,075 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 23:04:19,127 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 23:04:19,154 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 23:04:19,475 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user1 to tcp://127.0.0.1:1883
+2014-09-09 23:04:19,497 INFO  [MQTT Call: user1              ] [MqttConnectionResultHandler   ]  - user1@localhost connected
+2014-09-09 23:04:28,305 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 23:04:28,324 INFO  [MQTT Disc: user1              ] [MqttDisconnectionResultHandler]  - user1@localhost disconnected
+2014-09-09 23:06:50,012 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-09 23:07:15,038 ERROR [JavaFX Application Thread     ] [ControlPanelController        ]  - Cannot retrieve version info
+pl.baczkowicz.mqttspy.exceptions.XMLException: Cannot load the XML from stream 
+	at pl.baczkowicz.mqttspy.xml.XMLParser.loadFromInputStream(XMLParser.java:64)
+	at pl.baczkowicz.mqttspy.versions.VersionManager.loadVersions(VersionManager.java:40)
+	at pl.baczkowicz.mqttspy.ui.ControlPanelController.checkForUpdates(ControlPanelController.java:407)
+	at pl.baczkowicz.mqttspy.ui.ControlPanelController.init(ControlPanelController.java:150)
+	at pl.baczkowicz.mqttspy.ui.MainController.init(MainController.java:163)
+	at pl.baczkowicz.mqttspy.Main.start(Main.java:66)
+	at com.sun.javafx.application.LauncherImpl$8.run(LauncherImpl.java:837)
+	at com.sun.javafx.application.PlatformImpl$7.run(PlatformImpl.java:335)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:301)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:298)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.application.PlatformImpl$6.run(PlatformImpl.java:298)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+	at com.sun.glass.ui.gtk.GtkApplication.access$200(GtkApplication.java:48)
+	at com.sun.glass.ui.gtk.GtkApplication$6$1.run(GtkApplication.java:149)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: javax.xml.bind.UnmarshalException
+ - with linked exception:
+[org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 20; cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReleasedVersions'. One of '{ReleaseStatuses}' is expected.]
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.createUnmarshalException(AbstractUnmarshallerImpl.java:335)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.createUnmarshalException(UnmarshallerImpl.java:578)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:264)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal(UnmarshallerImpl.java:229)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:157)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:204)
+	at pl.baczkowicz.mqttspy.xml.XMLParser.loadFromInputStream(XMLParser.java:56)
+	... 16 more
+Caused by: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 20; cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReleasedVersions'. One of '{ReleaseStatuses}' is expected.
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:203)
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.error(ErrorHandlerWrapper.java:134)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:437)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:368)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:325)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator$XSIErrorReporter.reportError(XMLSchemaValidator.java:458)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.reportSchemaError(XMLSchemaValidator.java:3237)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleStartElement(XMLSchemaValidator.java:1796)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.startElement(XMLSchemaValidator.java:746)
+	at com.sun.org.apache.xerces.internal.jaxp.validation.ValidatorHandlerImpl.startElement(ValidatorHandlerImpl.java:570)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.ValidatingUnmarshaller.startElement(ValidatingUnmarshaller.java:101)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.SAXConnector.startElement(SAXConnector.java:150)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(AbstractSAXParser.java:509)
+	at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:378)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2770)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(XMLNSDocumentScannerImpl.java:117)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:649)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:258)
+	... 20 more
+2014-09-09 23:07:15,847 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:19:47,050 ERROR [JavaFX Application Thread     ] [ControlPanelController        ]  - Cannot retrieve version info
+pl.baczkowicz.mqttspy.exceptions.XMLException: Cannot load the XML from stream 
+	at pl.baczkowicz.mqttspy.xml.XMLParser.loadFromInputStream(XMLParser.java:64)
+	at pl.baczkowicz.mqttspy.versions.VersionManager.loadVersions(VersionManager.java:40)
+	at pl.baczkowicz.mqttspy.ui.ControlPanelController.checkForUpdates(ControlPanelController.java:407)
+	at pl.baczkowicz.mqttspy.ui.ControlPanelController.init(ControlPanelController.java:150)
+	at pl.baczkowicz.mqttspy.ui.MainController.init(MainController.java:163)
+	at pl.baczkowicz.mqttspy.Main.start(Main.java:66)
+	at com.sun.javafx.application.LauncherImpl$8.run(LauncherImpl.java:837)
+	at com.sun.javafx.application.PlatformImpl$7.run(PlatformImpl.java:335)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:301)
+	at com.sun.javafx.application.PlatformImpl$6$1.run(PlatformImpl.java:298)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.javafx.application.PlatformImpl$6.run(PlatformImpl.java:298)
+	at com.sun.glass.ui.InvokeLaterDispatcher$Future.run(InvokeLaterDispatcher.java:95)
+	at com.sun.glass.ui.gtk.GtkApplication._runLoop(Native Method)
+	at com.sun.glass.ui.gtk.GtkApplication.access$200(GtkApplication.java:48)
+	at com.sun.glass.ui.gtk.GtkApplication$6$1.run(GtkApplication.java:149)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: javax.xml.bind.UnmarshalException
+ - with linked exception:
+[org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 20; cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReleasedVersions'. One of '{ReleaseStatuses}' is expected.]
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.createUnmarshalException(AbstractUnmarshallerImpl.java:335)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.createUnmarshalException(UnmarshallerImpl.java:578)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:264)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal(UnmarshallerImpl.java:229)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:157)
+	at javax.xml.bind.helpers.AbstractUnmarshallerImpl.unmarshal(AbstractUnmarshallerImpl.java:204)
+	at pl.baczkowicz.mqttspy.xml.XMLParser.loadFromInputStream(XMLParser.java:56)
+	... 16 more
+Caused by: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 20; cvc-complex-type.2.4.a: Invalid content was found starting with element 'ReleasedVersions'. One of '{ReleaseStatuses}' is expected.
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.createSAXParseException(ErrorHandlerWrapper.java:203)
+	at com.sun.org.apache.xerces.internal.util.ErrorHandlerWrapper.error(ErrorHandlerWrapper.java:134)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:437)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:368)
+	at com.sun.org.apache.xerces.internal.impl.XMLErrorReporter.reportError(XMLErrorReporter.java:325)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator$XSIErrorReporter.reportError(XMLSchemaValidator.java:458)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.reportSchemaError(XMLSchemaValidator.java:3237)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.handleStartElement(XMLSchemaValidator.java:1796)
+	at com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaValidator.startElement(XMLSchemaValidator.java:746)
+	at com.sun.org.apache.xerces.internal.jaxp.validation.ValidatorHandlerImpl.startElement(ValidatorHandlerImpl.java:570)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.ValidatingUnmarshaller.startElement(ValidatingUnmarshaller.java:101)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.SAXConnector.startElement(SAXConnector.java:150)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.startElement(AbstractSAXParser.java:509)
+	at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.scanStartElement(XMLNSDocumentScannerImpl.java:378)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl$FragmentContentDriver.next(XMLDocumentFragmentScannerImpl.java:2770)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentScannerImpl.next(XMLDocumentScannerImpl.java:606)
+	at com.sun.org.apache.xerces.internal.impl.XMLNSDocumentScannerImpl.next(XMLNSDocumentScannerImpl.java:117)
+	at com.sun.org.apache.xerces.internal.impl.XMLDocumentFragmentScannerImpl.scanDocument(XMLDocumentFragmentScannerImpl.java:510)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:848)
+	at com.sun.org.apache.xerces.internal.parsers.XML11Configuration.parse(XML11Configuration.java:777)
+	at com.sun.org.apache.xerces.internal.parsers.XMLParser.parse(XMLParser.java:141)
+	at com.sun.org.apache.xerces.internal.parsers.AbstractSAXParser.parse(AbstractSAXParser.java:1213)
+	at com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser.parse(SAXParserImpl.java:649)
+	at com.sun.xml.bind.v2.runtime.unmarshaller.UnmarshallerImpl.unmarshal0(UnmarshallerImpl.java:258)
+	... 20 more
+2014-09-09 23:19:47,706 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:21:45,856 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@566dc8f0[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@73486853[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@16fbffe7[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@751843af[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4d8a2fb4[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7db0cca6[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@34fd1030[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@34f383b[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1f244069[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:21:46,413 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:29:41,979 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@7df5c1fa[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@26a89fb6[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@10fc5473[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1523b730[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@460a5e7f[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@243d3c27[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@5610bb1f[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@5e820cda[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4aef48d3[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:29:42,734 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:31:19,900 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@642d817[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@479b1278[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@23642e80[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@a9e5432[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1a8cb716[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@59b7eed[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@78950f0[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7f4ebbf7[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@85870f[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:32:07,968 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:35:29,437 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@301c94d4[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@4f2eed30[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@70d4c61c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@35ac6eef[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6142f6ba[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@593dc0cf[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@f8f19d2[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@5982c5da[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2f831f76[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:35:30,025 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:36:50,270 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@697511f7[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@622e13b9[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@162c0dd1[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1770f4da[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@56cbb56a[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@44eac7d1[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@32de0818[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2218fcbd[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@29f37d71[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:36:50,915 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:37:08,140 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@479b1278[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@23642e80[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@a9e5432[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1a8cb716[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@59b7eed[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78950f0[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7f4ebbf7[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@85870f[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@5eb7ede4[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:38:38,728 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:39:24,327 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@697511f7[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@622e13b9[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@162c0dd1[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1770f4da[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@56cbb56a[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@44eac7d1[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@32de0818[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2218fcbd[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@29f37d71[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:39:24,982 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:39:44,827 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@59204176[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7106e847[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@297218e[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4bc49dbf[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@10b44e40[
+  fromVersion=0.0.9-beta-b1
+  toVersion=0.0.9-beta-b22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@56b6d8c1[
+  fromVersion=0.0.9-beta-b23
+  toVersion=0.0.9-beta-b23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@6d9618c8[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2d049a0[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@30a4d1f4[
+  version=0.0.9-beta-b23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:40:40,986 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:40:49,405 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@2164b7c2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7f6dad6a[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6f01c9be[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7f5e8533[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7b00f7bd[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6994134a[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@8396bff[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@3c510d6[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7f84b20c[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:40:50,205 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-09 23:43:34,964 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@697511f7[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@622e13b9[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@162c0dd1[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1770f4da[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@56cbb56a[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@44eac7d1[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge!
+  updateDetails=You’re on the latest experimental version.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@32de0818[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2218fcbd[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@29f37d71[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-09 23:43:35,636 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml

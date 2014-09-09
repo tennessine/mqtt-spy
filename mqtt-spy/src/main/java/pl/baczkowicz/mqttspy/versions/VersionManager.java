@@ -3,8 +3,11 @@ package pl.baczkowicz.mqttspy.versions;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
+import pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 /**
@@ -52,4 +55,14 @@ public class VersionManager extends XMLParser
 		return versions;
 	}
 
+	public static boolean isInRange(final String currentRelease, final ReleaseStatus release)
+	{
+		if ((new DefaultArtifactVersion(currentRelease).compareTo(new DefaultArtifactVersion(release.getFromVersion())) >= 0)
+			&& (new DefaultArtifactVersion(currentRelease).compareTo(new DefaultArtifactVersion(release.getToVersion())) <= 0))
+		{
+			return true;		
+		}
+		
+		return false;
+	}
 }
