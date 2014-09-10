@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 
 public class ControlPanelItemController extends AnchorPane implements Initializable
@@ -33,6 +34,8 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	private Label detailsText;
 
 	private ItemStatus status = ItemStatus.ERROR;
+
+	private ConfigurationManager configurationManager;
 		
 	// ===============================
 	// === Initialisation ============
@@ -42,15 +45,13 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	public void initialize(URL location, ResourceBundle resources)
 	{		
 		//
-		// this.setStyle("-fx-background-color: red; -fx-border-color: red; -fx-border-width: 2px;");
-		// itemsBox.setStyle("-fx-background-color: #5f5f5f; -fx-border-color: #2e8b57; -fx-border-width: 2px;");
+//		this.setStyle("-fx-background-color: red; -fx-border-color: red; -fx-border-width: 2px;");
+//		itemsBox.setStyle("-fx-background-color: #5f5f5f; -fx-border-color: #2e8b57; -fx-border-width: 2px;");
 	}	
 	
 	public void init()
 	{
 		//
-		// this.setStyle("-fx-background-color: red; -fx-border-color: red; -fx-border-width: 2px;");
-		// itemsBox.setStyle("-fx-background-color: #5f5f5f; -fx-border-color: #2e8b57; -fx-border-width: 2px;");
 	}
 	
 	public void refresh()
@@ -115,18 +116,28 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 		this.status = status;
 	}
 	
+	public String replaceTokens(final String value)
+	{
+		return value.replace("[newline]", System.lineSeparator()).replace("[version]", configurationManager.getFullVersionName());
+	}
+	
 	public void setTitle(final String title)
 	{
-		this.titleText.setText(title);
+		this.titleText.setText(replaceTokens(title));
 	}
 	
 	public void setDetails(final String details)
 	{
-		this.detailsText.setText(details);
+		this.detailsText.setText(replaceTokens(details));
 	}
 	
 	public VBox getCustomItems()
 	{
 		return this.itemsBox;
+	}	
+	
+	public void setConfigurationMananger(final ConfigurationManager configurationManager)
+	{
+		this.configurationManager = configurationManager;
 	}
 }

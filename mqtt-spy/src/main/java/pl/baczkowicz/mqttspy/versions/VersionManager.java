@@ -6,6 +6,7 @@ import java.net.URL;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
 import pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
@@ -23,7 +24,7 @@ public class VersionManager extends XMLParser
 	
 	private static final String SCHEMA = "/mqtt-spy-versions.xsd";
 	
-	private static final String VERSION_INFO_URL = "http://baczkowicz.pl/mqtt-spy/version.xml";
+	private static final String VERSION_INFO_URL = "http://baczkowicz.pl/mqtt-spy/version_0_0_9.xml";
 
 	private MqttSpyVersions versions;
 
@@ -64,5 +65,22 @@ public class VersionManager extends XMLParser
 		}
 		
 		return false;
+	}
+	
+	public static ItemStatus convertVersionStatus(final ReleaseStatus release)
+	{
+		switch (release.getUpdateStatus())
+		{
+			case CRITICAL:
+				return ItemStatus.ERROR;
+			case UPDATE_RECOMMENDED:
+				return ItemStatus.WARN;
+			case NEW_AVAILABLE:
+				return ItemStatus.INFO;
+			case ON_LATEST:
+				return ItemStatus.OK;
+			default:
+				return ItemStatus.ERROR;		
+		}
 	}
 }

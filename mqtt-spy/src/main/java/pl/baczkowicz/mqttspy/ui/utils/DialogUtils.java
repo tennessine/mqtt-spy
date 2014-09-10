@@ -132,7 +132,7 @@ public class DialogUtils
         				"Create mqtt-spy configuration file with sample content", 
         				System.getProperty("line.separator") + "This creates a configuration file " +  
                         "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
-                        "called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
+                        " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
                         ", which will include sample connections to localhost and iot.eclipse.org."),
 		                        
                 new CommandLink( 

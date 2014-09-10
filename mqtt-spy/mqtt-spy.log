@@ -1100,3 +1100,1746 @@ Caused by: org.xml.sax.SAXParseException; lineNumber: 4; columnNumber: 20; cvc-c
 ]
 ]
 2014-09-09 23:43:35,636 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 20:56:52,680 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@6dfdace0[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@1724c271[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7a0f362d[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@46abd04a[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@46b1eed3[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@77b78b3e[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta build 23.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@748a75bb[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@6cbbd2e0[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@25356ed2[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 20:56:56,060 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:04:09,264 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@2a38c534[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@61f9eea0[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3f5c7aec[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5c72d989[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@308fb656[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1e2dd209[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@427a403a[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@88e776d[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@45fe5d2c[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:04:10,008 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:05:24,625 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@4d0675f[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5035b655[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@71099a46[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@643fee34[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63529773[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1ea81252[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@234e706b[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@389b6478[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f058517[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:05:25,820 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:07:57,531 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@772fca7d[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@df94b22[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@20d4a12e[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6b8378da[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@62f62bf5[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2511dcd2[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@2049d48f[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@507c2df4[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@3061d8d[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:07:58,246 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:08:35,783 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@4d0675f[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5035b655[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@71099a46[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@643fee34[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63529773[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1ea81252[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@234e706b[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@389b6478[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f058517[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:08:36,817 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:09:09,819 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@5179ce[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@749dfbbf[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@16b200fc[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@42cf9c98[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@495b1206[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@52004891[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@543307cd[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@6aa67a8f[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7b7c8eff[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:09:10,530 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:09:36,196 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@3c510d6[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7f84b20c[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3643e0f5[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@75661351[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5e0efe8b[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4c03394[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@2dad2fb1[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@68145dce[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@41c71ce1[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:09:37,377 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:10:57,122 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@3e0444cd[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@c8796b6[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3e3f3d2f[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@65a4a7a6[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@799aa5f3[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4918be50[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@e093419[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4ed03be9[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@62c9bafd[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:10:57,833 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:11:57,925 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@4d0675f[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5035b655[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@71099a46[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@643fee34[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63529773[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1ea81252[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@234e706b[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@389b6478[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f058517[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:11:58,605 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:15:40,299 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@34f383b[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@1f244069[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@648a7ad7[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@38aa8ae6[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@425ef328[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7fc4c402[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@482f55ef[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@243e0bb6[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@11cc7baa[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:15:41,052 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:16:21,572 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@2081396d[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@506ac9dd[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2c4a99c4[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7d90b17b[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5473a5f5[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5251ba87[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@2a2d9db0[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@52ceeae7[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1bdba146[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:16:22,330 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:16:59,040 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@21b85241[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7e386118[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@693662eb[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@72708f5[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@64ee680a[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5963f52e[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@398f5d3[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@3c4735f5[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2bfeb44f[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:16:59,711 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:17:43,013 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@3c79aede[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@6b8a3c95[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3edd499[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5f6d54af[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2e930ec2[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1447e111[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7963b61c[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4c9e5db3[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7a4daffc[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:17:43,779 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:18:23,249 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@7739e3e2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7acbb536[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d6a3e7c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4006e195[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78982c84[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5fdd44a4[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@332808fd[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@44d54d44[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7d90a556[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:18:24,028 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:19:44,186 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@56407e4[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@10f87c43[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@11340745[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@47b3ced8[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@62cdaaed[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3184c893[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@3bffc9[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@59a73418[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@56b26703[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:19:44,923 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:20:41,981 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@33074cd1[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@3aa8dd7[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@15ef7781[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63a7b2ae[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6acf0bcf[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d5ce774[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@5361dc21[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@d8d3621[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1f8ed52c[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:20:43,031 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:24:43,649 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@7739e3e2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@7acbb536[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d6a3e7c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4006e195[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78982c84[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5fdd44a4[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@332808fd[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@44d54d44[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@7d90a556[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:24:44,418 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:27:00,488 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@255b2aa2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@65cb2bd9[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@8efefe6[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4c58d437[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@30aaf924[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@c83890b[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! 
+You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7be4d7a2[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@71174d85[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1613f95a[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:27:01,229 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:28:51,534 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@40a16ffb[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5ceaf5cc[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2a53951c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3db4ce8c[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7621a076[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7d6e7feb[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! \u2424 You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@4b23fe2f[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@50788969[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2b21b100[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:28:52,238 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:31:37,784 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@40a16ffb[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5ceaf5cc[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2a53951c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3db4ce8c[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7621a076[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7d6e7feb[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! [newline] You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@4b23fe2f[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@50788969[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2b21b100[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:31:38,597 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:32:24,351 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@34a9199c[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@67b4ddab[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3337a369[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4c0953dc[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3010c638[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@71081c14[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! [newline] You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7f2ad5b7[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@79bbfe3d[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f2cd634[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:32:25,074 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:32:43,742 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@33074cd1[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@3aa8dd7[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@15ef7781[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63a7b2ae[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6acf0bcf[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline] Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d5ce774[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@5361dc21[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@d8d3621[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1f8ed52c[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:32:44,303 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:33:03,466 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@255b2aa2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@65cb2bd9[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@8efefe6[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4c58d437[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@30aaf924[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@c83890b[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7be4d7a2[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@71174d85[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1613f95a[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:33:04,157 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:33:57,986 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-10 21:33:58,019 WARN  [MQTT Con: user23              ] [MqttConnectionResultHandler   ]  - Connecting to user2@localhost failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-10 21:34:11,768 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting user23 to tcp://localhost
+2014-09-10 21:34:11,822 INFO  [MQTT Call: user23             ] [MqttConnectionResultHandler   ]  - user2@localhost connected
+2014-09-10 21:34:26,885 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-10 21:36:21,259 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user1 from tcp://127.0.0.1:1883
+2014-09-10 21:36:21,262 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting user23 from tcp://localhost
+2014-09-10 21:36:21,294 INFO  [MQTT Disc: user23             ] [MqttDisconnectionResultHandler]  - user2@localhost disconnected
+2014-09-10 21:36:25,733 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@33074cd1[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@3aa8dd7[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@15ef7781[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@63a7b2ae[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6acf0bcf[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=NEW_AVAILABLE
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d5ce774[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@5361dc21[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@d8d3621[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1f8ed52c[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:36:26,703 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:36:37,094 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@65bbc986[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@158d4e1[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3e779284[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@987a62a[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@324ba965[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@75738c11[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7712c389[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@43908db7[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2cff0421[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:36:37,763 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 21:37:26,179 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@34a9199c[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@67b4ddab[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3337a369[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4c0953dc[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3010c638[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@71081c14[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7f2ad5b7[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@79bbfe3d[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f2cd634[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 21:37:26,878 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/git/mqtt-spy/mqtt-spy/src/test/resources/test-mqtt-spy-configuration.xml
+2014-09-10 22:17:49,787 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@5a164dbd[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@86da016[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5ce6041b[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1591735b[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7d82aff1[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@188add47[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@7420c491[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@6ab56ae5[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@220ad65[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:17:50,900 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = false
+2014-09-10 22:18:25,957 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:18:27,888 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:18:58,104 WARN  [MQTT Con: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+MqttException (0) - java.net.SocketTimeoutException: connect timed out
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:34)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:553)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	... 1 more
+2014-09-10 22:19:02,080 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:19:20,324 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-10 22:19:20,350 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-10 22:19:52,784 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-10 22:19:52,791 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:19:52,798 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-10 22:19:58,266 INFO  [JavaFX Application Thread     ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@7d026f43[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@6acef82[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2a583298[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is bit dated!
+  updateDetails=There is a new release available!
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@162f2baa[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7839365b[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=New experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@19880621[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@72af2b7a[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1d322cfe[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@2c885aed[
+  version=0.0.9-beta-23
+  name=0.0.9-beta
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:19:58,956 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:19:59,007 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:20:00,170 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:20:30,224 WARN  [MQTT Con: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+MqttException (0) - java.net.SocketTimeoutException: connect timed out
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:34)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:553)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	... 1 more
+2014-09-10 22:28:58,738 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:29:24,470 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:29:24,530 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:29:25,855 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:29:26,286 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:29:39,023 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:30:45,902 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@63dddb39[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@697d819b[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2e957f74[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@42269f5d[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4faf9033[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4adbb104[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@4fb009f4[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@399aab28[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@a879a20[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:30:46,118 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:30:46,214 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:30:47,299 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:30:52,296 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:31:14,588 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:31:14,631 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:31:16,175 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:31:19,764 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@832962[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@61b28b97[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@60fc6100[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78b5298a[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@61e4d7c7[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@147f165f[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@178891b1[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@46a003b3[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@13dbe4f[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:31:20,609 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:32:53,612 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:32:58,390 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:32:58,408 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:32:59,592 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:32:59,896 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:33:02,927 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@5fcdc1e9[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@3f50641e[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4d1891d[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@61e7a77d[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@5014f021[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6cd80ea9[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@64c9fb4e[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@38c974e5[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@4f2b1e25[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:33:04,934 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:33:31,578 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-10 22:33:31,585 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:33:32,805 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:33:33,109 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:33:41,137 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@168a3214[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@381de7c1[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@535f6c9c[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@565621ac[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@110ba3e0[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@467f6def[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@6e6cd230[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@9d0c510[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@45886369[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:33:46,794 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:33:51,121 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:34:08,238 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-10 22:34:08,281 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-10 22:34:14,212 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:34:16,535 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:34:19,810 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:34:20,897 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:34:27,974 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:34:49,843 WARN  [MQTT Con: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+MqttException (0) - java.net.SocketTimeoutException: connect timed out
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:34)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:553)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	... 1 more
+2014-09-10 22:37:45,941 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-10 22:37:45,946 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:38:34,519 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:38:35,752 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:38:44,028 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@19887db2[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@177f1701[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7c6e4e18[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78cc27b1[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2273a0f7[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@4ddb6ca7[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@43cbe58a[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@5a23a3ed[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@6568d446[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:39:05,844 WARN  [MQTT Con: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+MqttException (0) - java.net.SocketTimeoutException: connect timed out
+	at org.eclipse.paho.client.mqttv3.internal.ExceptionHelper.createMqttException(ExceptionHelper.java:34)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:553)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketTimeoutException: connect timed out
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	... 1 more
+2014-09-10 22:39:36,568 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:39:42,631 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:39:44,019 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:39:47,833 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:39:58,886 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-10 22:40:00,159 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-10 22:40:04,547 WARN  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - Connecting to mqtt-spy@iot.eclipse.org failed
+Connection lost (32109) - java.net.SocketException: Connection reset
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(SocketInputStream.java:189)
+	at java.net.SocketInputStream.read(SocketInputStream.java:121)
+	at java.net.SocketInputStream.read(SocketInputStream.java:203)
+	at java.io.DataInputStream.readByte(DataInputStream.java:265)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-10 22:40:07,112 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:40:08,456 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@1bcef881[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@48748cd[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@434902ee[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@446b352b[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@288dc7d7[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-22
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 23).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1672332b[
+  fromVersion=0.0.9-beta-23
+  toVersion=0.0.9-beta-23
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is 0.0.9 beta (build 23).
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@1da70d79[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@78a18b[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@460d6d2c[
+  version=0.0.9-beta-23
+  name=0.0.9 beta (build 23)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-10 22:40:18,894 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-10 22:40:18,918 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-10 22:42:23,289 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-10 22:42:23,295 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-10 22:42:23,298 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected

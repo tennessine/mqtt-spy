@@ -294,7 +294,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		connectionList.getItems().clear();
 		
 		for (final ConfiguredConnectionDetails connection : connections)
-		{
+		{					
 			if (connection.isModified())
 			{
 				connectionList.getItems().add(NEW_ITEM + connection.getName());
@@ -305,6 +305,30 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 			{
 				connectionList.getItems().add(connection.getName());
 			}
+			
+			// Apply styling
+			// MqttConnectionStatus status = null;
+			// boolean opened = false;
+			// for (final MqttConnection openedConnection :
+			// mqttManager.getConnections())
+			// {
+			// if (connection.getId() ==
+			// openedConnection.getProperties().getId())
+			// {
+			// status = openedConnection.getConnectionStatus();
+			// opened = openedConnection.isOpened();
+			// }
+			// }
+			//final S lastItem = connectionLis
+			// if (status != null && opened)
+			// {
+			// .getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(status));
+			//
+			// }
+			// else
+			// {
+			// .getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(null));
+			// }
 		}
 		
 		// Reselect

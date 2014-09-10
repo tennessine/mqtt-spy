@@ -76,27 +76,27 @@
 
 /* Connections */
 
-.tab-title-connected
+.connection-connected
 {
 	-fx-base: lightgreen;
 }
 
-.tab-title-disconnected
+.connection-disconnected
 {
 	-fx-base: red;
 }
 
-.tab-title-connecting
+.connection-connecting
 {
 	-fx-base: yellow;
 }
 
-.tab-title-not-connected
+.connection-not-connected
 {
 	-fx-base: white;
 }
 
-.tab-title-default
+.connection-default
 {
 	-fx-base: grey;
 }	

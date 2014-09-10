@@ -322,4 +322,9 @@ public class ConfigurationManager
 		return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-" + getProperty(ConfigurationManager.BUILD_PROPERTY);
 		// return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-22";
 	}
+	
+	public String getFullVersionName()
+	{
+		return getProperty(ConfigurationManager.VERSION_PROPERTY).replace("-", " ") + " (build " + getProperty(ConfigurationManager.BUILD_PROPERTY) + ")";
+	}
 }

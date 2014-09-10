@@ -1,5 +1,6 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
+import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -54,4 +55,23 @@ public class ConnectionUtils
 			}
 		};
 	}
+
+	public static EventHandler<ActionEvent> createNextAction(final MqttConnectionStatus state, final int connectionId, final MqttManager mqttManager)
+	{
+		switch (state)
+		{
+			case CONNECTED:				
+				return ConnectionUtils.createDisconnectAction(mqttManager, connectionId);
+			case CONNECTING:
+				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+			case DISCONNECTED:
+				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+			case DISCONNECTING:
+				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+			case NOT_CONNECTED:
+				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+			default:
+				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+		}		
+	}		
 }

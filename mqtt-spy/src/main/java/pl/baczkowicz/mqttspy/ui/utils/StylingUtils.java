@@ -6,28 +6,31 @@ public class StylingUtils
 {
 	public static String getStyleForMqttConnectionStatus(final MqttConnectionStatus update)
 	{
-		String style = "";
+		String style = "connection-default";
 		
-		switch ((MqttConnectionStatus) update)
+		if (update != null)
 		{
-			case NOT_CONNECTED:
-				style = "tab-title-not-connected";
-				break;
-			case CONNECTED:					
-				style = "tab-title-connected";
-				break;
-			case CONNECTING:
-				style = "tab-title-connecting";
-				break;
-			case DISCONNECTED:
-				style = "tab-title-disconnected";
-				break;
-			case DISCONNECTING:					
-				style = "tab-title-disconnected";
-				break;
-			default:
-				style = "tab-title-default";
-				break;
+			switch ((MqttConnectionStatus) update)
+			{
+				case NOT_CONNECTED:
+					style = "connection-not-connected";
+					break;
+				case CONNECTED:					
+					style = "connection-connected";
+					break;
+				case CONNECTING:
+					style = "connection-connecting";
+					break;
+				case DISCONNECTED:
+					style = "connection-disconnected";
+					break;
+				case DISCONNECTING:					
+					style = "connection-disconnected";
+					break;
+				default:
+					style = "connection-default";
+					break;
+			}
 		}
 		
 		return style;
