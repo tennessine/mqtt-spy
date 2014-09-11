@@ -75,12 +75,12 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		super.messageReceived(message);
 	}
 	
-	public void publish(final String publicationTopic, final String data, final int qos)
+	public void publish(final String publicationTopic, final String data, final int qos, final boolean retained)
 	{
 		try
 		{
 			logger.info("Publishing message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-			getClient().publish(publicationTopic, data.getBytes(), qos, false);
+			getClient().publish(publicationTopic, data.getBytes(), qos, retained);
 			
 			logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
 		}

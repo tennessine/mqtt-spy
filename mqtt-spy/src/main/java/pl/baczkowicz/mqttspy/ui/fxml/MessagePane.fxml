@@ -6,15 +6,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
+<!-- 
+<?import org.fxmisc.richtext.StyleClassedTextArea?>
+ -->
 
-<AnchorPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.MessageController">
+<AnchorPane prefHeight="79.0" prefWidth="586.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.MessageController">
    <children>
-   	<TextField fx:id="topicField" editable="false" layoutX="48.0" layoutY="10.0" prefHeight="22.0" prefWidth="221.0" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="264.0" AnchorPane.topAnchor="11.0">
+   	<TextField fx:id="topicField" editable="false" layoutX="48.0" layoutY="10.0" prefHeight="22.0" prefWidth="196.0" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="342.0" AnchorPane.topAnchor="11.0">
          <font>
             <Font size="11.0" />
          </font>
       </TextField>
-      <Label layoutX="10.0" layoutY="15.0" text="Topic" AnchorPane.leftAnchor="10.0">
+      <Label layoutX="10.0" layoutY="15.0" text="Topic" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="11.0" />
          </font>
@@ -30,7 +33,7 @@
             <Font size="11.0" />
          </font>
       </TextField>
-      <Label layoutX="275.0" layoutY="15.0" text="QoS" AnchorPane.rightAnchor="235.0">
+      <Label layoutX="275.0" layoutY="15.0" text="QoS" AnchorPane.rightAnchor="235.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="11.0" />
          </font>
@@ -40,7 +43,8 @@
             <Font size="11.0" />
          </font>
       </TextField>
-      <StyleClassedTextArea editable="false" wrapText="true" fx:id="dataField" layoutX="48.0" layoutY="37.0" minHeight="35.0" prefHeight="35.0" prefWidth="478.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="37.0">
+      <!-- StyleClassed -->
+      <StyleClassedTextArea fx:id="dataField" editable="false" layoutX="48.0" layoutY="37.0" minHeight="35.0" prefHeight="35.0" prefWidth="478.0" wrapText="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="37.0">
          <font>
             <Font name="System" size="11.0" />
          </font>
@@ -51,6 +55,16 @@
          </font>
       </Label>
       <Label fx:id="lengthLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="56.0" prefHeight="13.0" prefWidth="47.0" text="(0)">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+      <CheckBox fx:id="retainedField" disable="true" layoutX="305.0" layoutY="14.0" mnemonicParsing="false" style="-fx-opacity: 1;" AnchorPane.rightAnchor="260.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </CheckBox>
+      <Label layoutX="251.0" layoutY="15.0" text="Retained" AnchorPane.rightAnchor="285.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="11.0" />
          </font>

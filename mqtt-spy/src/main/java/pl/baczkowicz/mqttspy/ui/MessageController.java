@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
@@ -33,22 +34,25 @@ public class MessageController implements Initializable, Observer
 	final static Logger logger = LoggerFactory.getLogger(MessageController.class);
 
 	@FXML
-	StyleClassedTextArea dataField;
+	private StyleClassedTextArea dataField;
 
 	@FXML
-	ToggleButton wrapToggle;
+	private ToggleButton wrapToggle;
+	
+	@FXML
+	private CheckBox retainedField;
 
 	@FXML
 	private TextField topicField;
 
 	@FXML
-	TextField timeField;
+	private TextField timeField;
 
 	@FXML
-	TextField qosField;
+	private TextField qosField;
 
 	@FXML
-	Label lengthLabel;
+	private Label lengthLabel;
 
 	private EventDispatcher eventDispatcher;
 	
@@ -73,6 +77,7 @@ public class MessageController implements Initializable, Observer
 		qosField.setText(String.valueOf(message.getMessage().getQos()));
 		timeField.setText(Utils.SDF.format(message.getDate()));
 		lengthLabel.setText("(" + payload.length() + ")");
+		retainedField.setSelected(message.getMessage().isRetained());
 
 		showMessageData();
 	}
@@ -88,6 +93,7 @@ public class MessageController implements Initializable, Observer
 		qosField.setText("");
 		timeField.setText("");
 		lengthLabel.setText("(0)");
+		retainedField.setSelected(false);
 	}
 	
 	public void formatSelection(final FormatterDetails messageFormat)
