@@ -91,6 +91,14 @@ public class MqttUtils
 			}
 		}
 		
+		if (connectionDetails.getLastWillAndTestament() != null)
+		{
+			if (connectionDetails.getLastWillAndTestament().getTopic() == null || connectionDetails.getLastWillAndTestament().getTopic().isEmpty())				
+			{
+				return "With last will and testament enabled, publication topic cannot be empty";
+			}
+		}
+		
 		if (connectionDetails.getConnectionTimeout() < 0)
 		{
 			return "Connection timeout cannot be less than 0";

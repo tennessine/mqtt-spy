@@ -46,6 +46,7 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.Message;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
@@ -168,6 +169,17 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	@FXML
 	private TableColumn<AdvancedTopicProperties, Boolean> createTabSubscriptionColumn;
 	
+	// LWT
+	
+	@FXML
+	private CheckBox lastWillAndTestament;
+	/**
+	 * The name of this field needs to be set to the name of the pane +
+	 * Controller (i.e. <fx:id>Controller).
+	 */
+	@FXML
+	private NewPublicationController lastWillAndTestamentMessageController;
+	
 	// Other fields
 
 	private String lastGeneratedConnectionName = "";
@@ -260,6 +272,13 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		predefinedUsername.selectedProperty().addListener(basicOnChangeListener);
 		predefinedPassword.selectedProperty().addListener(basicOnChangeListener);
 				
+		// LWT
+		lastWillAndTestament.selectedProperty().addListener(basicOnChangeListener);
+		lastWillAndTestamentMessageController.getPublicationTopicText().getSelectionModel().selectedIndexProperty().addListener(basicOnChangeListener);
+		lastWillAndTestamentMessageController.getPublicationData().textProperty().addListener(basicOnChangeListener);
+		lastWillAndTestamentMessageController.getPublicationQosChoice().getSelectionModel().selectedIndexProperty().addListener(basicOnChangeListener);
+		lastWillAndTestamentMessageController.getRetainedBox().selectedProperty().addListener(basicOnChangeListener);
+		
 		// UI
 		autoConnect.selectedProperty().addListener(basicOnChangeListener);
 		autoOpen.selectedProperty().addListener(basicOnChangeListener);
@@ -736,6 +755,15 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			connection.getSubscription().add(newSubscriptionDetails);
 		}		
 		
+		if (lastWillAndTestament.isSelected())
+		{			
+			final Message message = lastWillAndTestamentMessageController.readMessage(false);
+			if (message != null)
+			{
+				connection.setLastWillAndTestament(message);
+			}
+		}		
+		
 		return connection;
 	}
 	
@@ -904,9 +932,11 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// Publications
 		removePublicationButton.setDisable(true);
 		publicationsTable.getItems().clear();
+		lastWillAndTestamentMessageController.clearTopics();
 		for (final PublicationDetails pub : connection.getPublication())
 		{
 			publicationsTable.getItems().add(new BaseTopicProperty(pub.getTopic()));
+			lastWillAndTestamentMessageController.recordPublicationTopic(pub.getTopic());
 		}
 		publicationsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
 		{
@@ -932,6 +962,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 				removeSubscriptionButton.setDisable(false);
 			}		
 		});
+		
+		// LWT
+		lastWillAndTestament.setSelected(connection.getLastWillAndTestament() != null);
+		lastWillAndTestamentMessageController.displayMessage(connection.getLastWillAndTestament());
 		
 		connection.setBeingCreated(false);
 	}		

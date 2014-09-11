@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
+import pl.baczkowicz.mqttspy.configuration.generated.Message;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.ui.format.ConversionException;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
@@ -145,10 +146,28 @@ public class NewPublicationController implements Initializable
 		}
 	}
 	
-	@FXML
-	public void publish()
+	public void displayMessage(final Message message)
 	{
-		if (publicationTopicText.getValue() == null)
+		if (message == null)
+		{
+			publicationTopicText.setValue("");
+			publicationQosChoice.getSelectionModel().select(0);
+			publicationData.clear();
+			retainedBox.setSelected(false);
+		}
+		else
+		{
+			publicationTopicText.setValue(message.getTopic());
+			publicationQosChoice.getSelectionModel().select(message.getQoS());
+			publicationData.clear();
+			publicationData.appendText(message.getPayload());
+			retainedBox.setSelected(message.isRetained());
+		}
+	}
+	
+	public Message readMessage(final boolean verify)
+	{
+		if (verify && (publicationTopicText.getValue() == null || publicationTopicText.getValue().isEmpty()))
 		{
 			logger.error("Cannot publish to an empty topic");
 			
@@ -158,9 +177,10 @@ public class NewPublicationController implements Initializable
 			      .masthead(null)
 			      .message("Cannot publish to an empty topic.")
 			      .showError();
-			return;
+			return null;
 		}
 		
+		final Message message = new Message();
 		try
 		{
 			String data = publicationData.getText();
@@ -170,16 +190,28 @@ public class NewPublicationController implements Initializable
 				data = FormattingUtils.hexToString(data);
 			}
 					
-			final String publicationTopic = publicationTopicText.getValue().toString(); 
+			message.setTopic(publicationTopicText.getValue());
+			message.setQoS(publicationQosChoice.getSelectionModel().getSelectedIndex());
+			message.setPayload(data);
+			message.setRetained(retainedBox.isSelected());
 			
-			connection.publish(publicationTopic, data, publicationQosChoice.getSelectionModel().getSelectedIndex(), retainedBox.isSelected());
-			
-			recordPublicationTopic(publicationTopic);
+			return message;
 		}
 		catch (ConversionException e)
 		{
 			showAndLogHexError();
-		}
+			return null;
+		}		
+	}
+	
+	@FXML
+	public void publish()
+	{						
+		final Message message = readMessage(true);
+				
+		connection.publish(message.getTopic(), message.getPayload(), message.getQoS(), message.isRetained());
+		
+		recordPublicationTopic(message.getTopic());		
 	}
 	
 	private void showAndLogHexError()
@@ -197,5 +229,30 @@ public class NewPublicationController implements Initializable
 	public void setConnection(MqttConnection connection)
 	{
 		this.connection = connection;
+	}
+
+	public void clearTopics()
+	{
+		publicationTopics.clear();		
+	}	
+
+	public ComboBox<String> getPublicationTopicText()
+	{
+		return publicationTopicText;
+	}
+
+	public ChoiceBox<String> getPublicationQosChoice()
+	{
+		return publicationQosChoice;
+	}
+
+	public StyleClassedTextArea getPublicationData()
+	{
+		return publicationData;
+	}
+
+	public CheckBox getRetainedBox()
+	{
+		return retainedBox;
 	}
 }

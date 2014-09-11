@@ -4040,3 +4040,31 @@ Caused by: java.io.EOFException
 2014-09-11 22:12:00,379 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik-221042784 from tcp://127.0.0.1
 2014-09-11 22:12:00,394 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
 2014-09-11 22:12:00,395 INFO  [MQTT Disc: dellik-221042784   ] [MqttDisconnectionResultHandler]  - dellik-221042784@127.0.0.1 disconnected
+2014-09-11 23:11:58,781 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-11 23:11:58,862 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 23:18:20,446 INFO  [JavaFX Application Thread     ] [NewPublicationController      ]  - Converted test to 74657374
+2014-09-11 23:18:21,763 INFO  [JavaFX Application Thread     ] [NewPublicationController      ]  - Converted 74657374 to test
+2014-09-11 23:27:27,136 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 23:40:24,596 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-11 23:40:24,643 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 23:43:14,473 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-11 23:43:14,480 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 23:43:23,171 INFO  [JavaFX Application Thread     ] [NewPublicationController      ]  - Converted 1 to 31
+2014-09-11 23:43:27,890 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot convert 31k to plain text
+2014-09-11 23:43:55,735 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot convert 31k to plain text
+2014-09-11 23:43:58,535 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot convert 31k to plain text
+2014-09-11 23:44:09,762 INFO  [JavaFX Application Thread     ] [NewPublicationController      ]  - Converted 31 to 1
+2014-09-11 23:44:13,722 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:44:17,355 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:44:26,100 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:44:27,973 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:44:52,273 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:45:19,464 INFO  [JavaFX Application Thread     ] [NewPublicationController      ]  - Converted 123 to 313233
+2014-09-11 23:45:23,760 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot convert 313233k to plain text
+2014-09-11 23:45:31,592 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot convert 313233k to plain text
+2014-09-11 23:45:41,939 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-11 23:54:13,821 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-11 23:54:13,899 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 23:54:14,834 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
+2014-09-12 00:01:03,475 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-12 00:01:03,522 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
