@@ -316,15 +316,20 @@ public class ConfigurationManager
 		lastUsedId = 0;
 	}
 	
-	public String getFullVersionNumber()
+	public String getBuildNumber()
 	{
 		// TODO: change for release
-		return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-" + getProperty(ConfigurationManager.BUILD_PROPERTY);
-		// return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-22";
+		return getProperty(ConfigurationManager.BUILD_PROPERTY);
+		// return "26";
+	}
+	
+	public String getFullVersionNumber()
+	{
+		return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-" + getBuildNumber();
 	}
 	
 	public String getFullVersionName()
 	{
-		return getProperty(ConfigurationManager.VERSION_PROPERTY).replace("-", " ") + " (build " + getProperty(ConfigurationManager.BUILD_PROPERTY) + ")";
+		return getProperty(ConfigurationManager.VERSION_PROPERTY).replace("-", " ") + " (build " + getBuildNumber() + ")";
 	}
 }

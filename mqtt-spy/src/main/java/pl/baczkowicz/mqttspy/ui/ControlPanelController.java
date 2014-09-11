@@ -279,6 +279,10 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	public void showConnections(final ControlPanelItemController controller, final Button button)
 	{
 		button.setMaxHeight(MAX_CONNECTIONS_HEIGHT);
+		
+		// Clear any previously displayed connections
+		while (controller.getCustomItems().getChildren().size() > 2) { controller.getCustomItems().getChildren().remove(2); }
+		
 		final int connections = configurationManager.getConnections().size();
 		if (connections > 0)
 		{
@@ -297,8 +301,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 			{
 				buttons.getChildren().add(createConnectionButton(connection));
 			}
-
-			while (controller.getCustomItems().getChildren().size() > 2) { controller.getCustomItems().getChildren().remove(2); }
+			
 			controller.getCustomItems().getChildren().add(buttons);
 			
 			button.setOnAction(new EventHandler<ActionEvent>()
@@ -405,6 +408,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	{
 		if (versionManager.getVersions() != null)
 		{
+			boolean versionFound = false;
+			
 			for (final ReleaseStatus release : versionManager.getVersions().getReleaseStatuses().getReleaseStatus())
 			{
 				if (VersionManager.isInRange(configurationManager.getFullVersionNumber(), release))
@@ -414,8 +419,16 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 					// TODO: might need to append version info
 					controller.setDetails(release.getUpdateDetails());
 					// controller.setDetails(convertVersionStatusToDetails(release, versions.getLatestVersions().getLatestVersion()));
+					versionFound = true;
 					break;
 				}
+			}
+			
+			if (!versionFound)
+			{
+				controller.setStatus(ItemStatus.INFO);
+				controller.setTitle("Couldn't find any information about your version - please check manually.");
+				controller.setDetails("Your version is " + configurationManager.getFullVersionName() + ".");
 			}
 		}	
 		else

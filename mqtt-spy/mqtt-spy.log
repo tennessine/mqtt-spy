@@ -2843,3 +2843,262 @@ Caused by: java.net.SocketException: Connection reset
 2014-09-10 22:42:23,289 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
 2014-09-10 22:42:23,295 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
 2014-09-10 22:42:23,298 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-11 19:34:12,014 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 19:34:14,436 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:34:20,758 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@50880b2c[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@388971bf[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@70d0e5cb[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@d267892[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 25).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@1de7d371[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-24
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 25).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@6e104dfb[
+  fromVersion=0.0.9-beta-25
+  toVersion=0.0.9-beta-99
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is [version].
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@1919034f[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@27451a16[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@49a39d4[
+  version=0.0.9-beta-25
+  name=0.0.9 beta (build 25)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-11 19:34:45,751 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:35:03,415 INFO  [MQTT Rec: mqtt-spy            ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:35:03,419 ERROR [MQTT Rec: mqtt-spy            ] [MqttCallbackHandler           ]  - Connection mqtt-spy@iot.eclipse.org lost
+Connection lost (32109) - java.io.EOFException
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readByte(DataInputStream.java:267)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-11 19:40:51,257 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:40:58,518 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 19:40:59,939 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:41:00,321 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:41:07,957 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@832962[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@61b28b97[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@60fc6100[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@78b5298a[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 25).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@61e4d7c7[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-24
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 25).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@147f165f[
+  fromVersion=0.0.9-beta-25
+  toVersion=0.0.9-beta-99
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is [version].
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@178891b1[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@46a003b3[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@13dbe4f[
+  version=0.0.9-beta-25
+  name=0.0.9 beta (build 25)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-11 19:41:55,042 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:43:47,479 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 19:43:48,927 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:43:49,256 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:43:56,906 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@667dec9f[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@5e6bab6d[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@532ffcda[
+  fromVersion=0.0.1
+  toVersion=0.0.8-beta
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.8.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@34bf501f[
+  fromVersion=0.0.8
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release. There is also an experimental version available - 0.0.9 beta (build 25).
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3d2f5b03[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-24
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 25).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3e1cbf08[
+  fromVersion=0.0.9-beta-25
+  toVersion=0.0.9-beta-99
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is [version].
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@12794d3d[
+  latestRelease=[pl.baczkowicz.mqttspy.versions.generated.LatestRelease@5c88d8c5[
+  version=0.0.8
+  name=0.0.8
+  date=2001-09-09
+  keyFeatures=improved connection management, saving connections
+  downloadLocation=
+], pl.baczkowicz.mqttspy.versions.generated.LatestRelease@1bb87714[
+  version=0.0.9-beta-25
+  name=0.0.9 beta (build 25)
+  date=2001-09-10
+  keyFeatures=control panel, improvements, bug fixes
+  downloadLocation=
+]]
+]
+]
+2014-09-11 19:45:30,122 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:45:30,151 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-11 19:45:42,992 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 19:45:44,491 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:45:44,839 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:45:52,656 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@775d338c[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@4eb2ccba[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@879a339[
+  fromVersion=0.0.1
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.9.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@3bbd8f34[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-24
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 25).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@25e20a9c[
+  fromVersion=0.0.9-beta-25
+  toVersion=0.0.9-beta-99
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is [version].
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@7dedc586[
+  fromVersion=0.0.9-26
+  toVersion=0.0.9
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@3848d169[
+  latestRelease=[]
+]
+]
+2014-09-11 19:46:16,854 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:46:26,715 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/kamil/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-11 19:46:28,079 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:46:28,423 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:46:36,106 INFO  [Thread-4                      ] [ControlPanelController        ]  - pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions@5f74524c[
+  releaseStatuses=pl.baczkowicz.mqttspy.versions.generated.ReleaseStatuses@3eb3aa7c[
+  releaseStatus=[pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@494bd94a[
+  fromVersion=0.0.1
+  toVersion=0.0.8
+  updateTitle=Your mqtt-spy is a bit dated now!
+  updateDetails=There is a new release available for download, 0.0.9.
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@72f42405[
+  fromVersion=0.0.9-beta-1
+  toVersion=0.0.9-beta-24
+  updateTitle=Getting out of date here! [newline]Your cutting edge version is getting a bit rusty!
+  updateDetails=A new experimental version is now available - 0.0.9 beta (build 25).
+  updateStatus=UPDATE_RECOMMENDED
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@fefee25[
+  fromVersion=0.0.9-beta-25
+  toVersion=0.0.9-beta-99
+  updateTitle=Living on the edge! You’re on the latest experimental version.
+  updateDetails=Your mqtt-spy version is [version].
+  updateStatus=ON_LATEST
+], pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus@2cac45ee[
+  fromVersion=0.0.9-26
+  toVersion=0.0.9-26
+  updateTitle=Your mqtt-spy is up to date!
+  updateDetails=You are on the latest stable release.
+  updateStatus=ON_LATEST
+]]
+]
+  latestReleases=pl.baczkowicz.mqttspy.versions.generated.LatestReleases@3b3a58b8[
+  latestRelease=[]
+]
+]
+2014-09-11 19:47:24,253 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-11 19:47:24,273 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-11 19:47:25,433 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:47:25,458 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-11 19:47:33,245 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:47:36,001 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:47:36,014 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-11 19:47:41,038 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:47:41,342 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:47:43,797 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-11 19:47:43,808 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-11 19:47:44,840 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:47:44,845 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-11 19:47:47,595 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-11 19:47:47,626 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-11 19:47:49,771 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:47:49,801 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-11 19:47:52,612 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:48:00,589 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
+2014-09-11 19:48:00,594 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@iot.eclipse.org disconnected
+2014-09-11 19:48:04,412 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://iot.eclipse.org:1883
+2014-09-11 19:48:04,696 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@iot.eclipse.org connected
+2014-09-11 19:49:47,550 ERROR [MQTT Rec: mqtt-spy            ] [MqttCallbackHandler           ]  - Connection mqtt-spy@iot.eclipse.org lost
+Connection lost (32109) - java.io.EOFException
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:138)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.io.EOFException
+	at java.io.DataInputStream.readByte(DataInputStream.java:267)
+	at org.eclipse.paho.client.mqttv3.internal.wire.MqttInputStream.readMqttWireMessage(MqttInputStream.java:56)
+	at org.eclipse.paho.client.mqttv3.internal.CommsReceiver.run(CommsReceiver.java:100)
+	... 1 more
+2014-09-11 19:49:57,664 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-11 19:49:57,667 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://iot.eclipse.org:1883
