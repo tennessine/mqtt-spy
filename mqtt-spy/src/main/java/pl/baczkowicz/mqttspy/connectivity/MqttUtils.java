@@ -20,7 +20,7 @@ public class MqttUtils
 	
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(TIMESTAMP_FORMAT);
 	
-	private static final String CLIENT_TIMESTAMP_DELIMITER = "-";
+	private static final String CLIENT_TIMESTAMP_DELIMITER = "_";
 	
 	public static String removeLastDelimiter(String topic)
 	{
@@ -49,7 +49,7 @@ public class MqttUtils
 			newClientId = newClientId.substring(0, 23 - addedLength);
 		}
 
-		newClientId = newClientId + "-" + SDF.format(new Date());
+		newClientId = newClientId + CLIENT_TIMESTAMP_DELIMITER + SDF.format(new Date());
 
 		return newClientId;
 	}

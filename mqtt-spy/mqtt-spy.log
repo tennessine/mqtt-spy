@@ -4068,3 +4068,126 @@ Caused by: java.io.EOFException
 2014-09-11 23:54:14,834 ERROR [JavaFX Application Thread     ] [NewPublicationController      ]  - Cannot publish to an empty topic
 2014-09-12 00:01:03,475 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
 2014-09-12 00:01:03,522 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 15:51:16,948 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 15:51:17,003 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 15:52:59,794 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 15:52:59,840 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 15:54:41,820 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 15:54:41,863 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 15:56:00,409 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection dellik_155521983@127.0.0.1
+2014-09-15 15:56:01,194 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik_155521983 to tcp://127.0.0.1
+2014-09-15 15:56:01,217 WARN  [MQTT Con: dellik_155521983    ] [MqttConnectionResultHandler   ]  - Connecting to dellik_155521983@127.0.0.1 failed
+Unable to connect to server (32103) - java.net.ConnectException: Connection refused
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:75)
+	at org.eclipse.paho.client.mqttv3.internal.ClientComms$ConnectBG.run(ClientComms.java:538)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:345)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at org.eclipse.paho.client.mqttv3.internal.TCPNetworkModule.start(TCPNetworkModule.java:66)
+	... 2 more
+2014-09-15 15:56:23,151 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik_155521983 to tcp://127.0.0.1
+2014-09-15 15:56:23,200 INFO  [MQTT Call: dellik_155521983   ] [MqttConnectionResultHandler   ]  - dellik_155521983@127.0.0.1 connected
+2014-09-15 15:56:27,606 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 15:56:27,618 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 15:56:35,378 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-15 15:56:38,139 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-15 15:56:49,232 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-15 15:56:49,233 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 15:56:49,264 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-15 15:56:55,084 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 15:56:55,106 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 15:57:27,756 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 15:57:27,773 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-15 15:57:30,532 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 15:57:30,582 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 15:58:28,953 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 15:58:28,993 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-15 15:58:28,997 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-15 15:58:28,999 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik_155521983 from tcp://127.0.0.1
+2014-09-15 15:58:29,043 INFO  [MQTT Disc: dellik_155521983   ] [MqttDisconnectionResultHandler]  - dellik_155521983@127.0.0.1 disconnected
+2014-09-15 15:58:32,179 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 15:58:32,260 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:20:06,810 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:20:06,847 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:32:17,537 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:32:17,563 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:36:34,294 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:36:34,360 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:37:49,425 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:37:49,479 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:45:50,176 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:45:50,244 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:46:31,100 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:46:31,177 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:47:37,650 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:47:37,672 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:49:33,347 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:49:33,420 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:51:14,349 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:51:14,400 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:53:27,095 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:53:27,141 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 16:58:35,674 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 16:58:35,767 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:00:00,243 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:00:00,301 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:16:59,588 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:16:59,700 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:17:20,861 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection mqtt-spy@localhost
+2014-09-15 17:17:29,305 INFO  [JavaFX Application Thread     ] [EditConnectionController      ]  - Opening connection dellik_171726467@127.0.0.1
+2014-09-15 17:17:29,762 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik_171726467 to tcp://127.0.0.1
+2014-09-15 17:17:30,232 INFO  [MQTT Call: dellik_171726467   ] [MqttConnectionResultHandler   ]  - dellik_171726467@127.0.0.1 connected
+2014-09-15 17:17:33,298 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 17:17:33,307 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 17:17:37,423 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-15 17:17:40,313 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-15 17:17:43,566 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-15 17:17:43,567 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 17:17:43,596 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-15 17:17:48,443 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 17:17:48,449 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 17:18:59,901 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 17:18:59,928 INFO  [MQTT Disc: mqtt-spy           ] [MqttDisconnectionResultHandler]  - mqtt-spy@localhost disconnected
+2014-09-15 17:19:14,908 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:19:14,967 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:19:22,680 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting mqtt-spy to tcp://127.0.0.1:1883
+2014-09-15 17:19:22,766 INFO  [MQTT Call: mqtt-spy           ] [MqttConnectionResultHandler   ]  - mqtt-spy@localhost connected
+2014-09-15 17:19:33,142 INFO  [MQTT Call: dellik_171726467   ] [MqttCallbackHandler           ]  - Received message on topic "/mqtt-spy/test/". Payload = "I'm dead"
+2014-09-15 17:19:33,254 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /mqtt-spy/test/ to active filters for /#; recreate = false
+2014-09-15 17:19:33,334 INFO  [JavaFX Application Thread     ] [ObservableMessageStoreWithFiltering]  - Adding /mqtt-spy/test/ to active filters for dellik_171726467@127.0.0.1; recreate = false
+2014-09-15 17:19:33,367 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /mqtt-spy/test/
+2014-09-15 17:19:33,447 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /mqtt-spy/test/
+2014-09-15 17:19:33,584 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /mqtt-spy/test/
+2014-09-15 17:19:33,603 INFO  [JavaFX Application Thread     ] [SubscriptionSummaryTableController]  - Item changed = /mqtt-spy/test/
+2014-09-15 17:19:54,740 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-15 17:19:54,741 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik_171726467 from tcp://127.0.0.1
+2014-09-15 17:19:54,750 INFO  [MQTT Disc: dellik_171726467   ] [MqttDisconnectionResultHandler]  - dellik_171726467@127.0.0.1 disconnected
+2014-09-15 17:19:56,343 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Connecting dellik_171726467 to tcp://127.0.0.1
+2014-09-15 17:19:56,355 INFO  [MQTT Call: dellik_171726467   ] [MqttConnectionResultHandler   ]  - dellik_171726467@127.0.0.1 connected
+2014-09-15 17:20:00,828 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Subscribed to /#
+2014-09-15 17:20:00,831 INFO  [MQTT Call: dellik_171726467   ] [MqttCallbackHandler           ]  - Received message on topic "/mqtt-spy/test/". Payload = "I'm dead"
+2014-09-15 17:21:01,090 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting mqtt-spy from tcp://127.0.0.1:1883
+2014-09-15 17:21:01,101 INFO  [JavaFX Application Thread     ] [MqttConnection                ]  - Unsubscribed from /#
+2014-09-15 17:21:01,102 INFO  [JavaFX Application Thread     ] [MqttManager                   ]  - Disconnecting dellik_171726467 from tcp://127.0.0.1
+2014-09-15 17:21:01,109 INFO  [MQTT Disc: dellik_171726467   ] [MqttDisconnectionResultHandler]  - dellik_171726467@127.0.0.1 disconnected
+2014-09-15 17:22:04,609 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:22:04,659 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:22:34,642 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:22:34,717 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:22:52,278 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:22:52,320 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:23:52,584 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:23:52,609 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:24:40,592 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:24:40,671 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:25:08,707 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:25:08,757 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:26:24,113 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:26:24,201 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml
+2014-09-15 17:26:38,587 INFO  [JavaFX Application Thread     ] [MainController                ]  - Default configuration file present (/home/dellik/mqtt-spy/mqtt-spy-configuration.xml) = true
+2014-09-15 17:26:38,658 INFO  [JavaFX Application Thread     ] [MainController                ]  - Loading configuration file from /home/dellik/mqtt-spy/mqtt-spy-configuration.xml

@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
+import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 
@@ -17,6 +18,7 @@ public class MqttConnectionProperties
 
 	public MqttConnectionProperties(final String name, final String serverURI, final String clientId, 
 			final UserCredentials userCredentials,
+			final ConfiguredMessage lwt,
 			final Boolean cleanSession, final Integer connectionTimeout,
 			final Integer keepAliveInterval) throws ConfigurationException
 	{
@@ -32,6 +34,10 @@ public class MqttConnectionProperties
 			{
 				this.options.setUserName(userCredentials.getUsername());
 				this.options.setPassword(userCredentials.getPassword().toCharArray());
+			}
+			if (lwt != null)
+			{
+				this.options.setWill(lwt.getTopic(), lwt.getPayload().getBytes(), lwt.getQoS(), lwt.isRetained());
 			}
 			this.options.setCleanSession(cleanSession);
 			this.options.setConnectionTimeout(connectionTimeout);

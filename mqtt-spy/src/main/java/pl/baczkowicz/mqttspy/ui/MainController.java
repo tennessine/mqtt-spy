@@ -214,7 +214,11 @@ public class MainController
 		configurationManager.clear();
 		if (configurationManager.loadConfiguration(selectedFile))
 		{
-			initialiseEditConnectionsWindow();
+			// Only re-initialise if it has been initialised already
+			if (editConnectionsController  != null)
+			{
+				initialiseEditConnectionsWindow();
+			}			
 			
 			// Process the connection settings		
 			for (final ConfiguredConnectionDetails connection : configurationManager.getConnections())

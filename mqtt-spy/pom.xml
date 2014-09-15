@@ -205,7 +205,6 @@
 
 	<build>
 	
-		<!-- <finalname>${project.artifactId}${project.version}_${buildNumber}</finalname> -->
 		<finalName>${project.artifactId}-${project.version}-b${buildNumber}</finalName>
 		 
 		<!-- Populate version number in the properties file -->
@@ -291,21 +290,10 @@
 					<doCheck>true</doCheck>
 					<doUpdate>true</doUpdate>
 					<buildNumberPropertiesFileLocation>buildNumber.properties</buildNumberPropertiesFileLocation>					
-					 <!-- .{1,number}.{2,number} -->
 					<format>{0,number,###}</format>
 					<items>
 						<item>buildNumber</item>
-					</items>
-					<!-- will put the entries into META-INF/MANIFEST.MF file -->	
-					<!-- 	
-					<archive>
-				      
-				      <manifestentries>
-				       <implementation-version>${project.version}</implementation-version>
-				       <implementation-build>${buildNumber}</implementation-build>
-				      </manifestentries>
-				     </archive>
-				      -->	       
+					</items>					
 				</configuration>
 			</plugin>
 
@@ -334,11 +322,6 @@
 			                <generateDirectory>src/main/java/</generateDirectory>			                
 			                <generatePackage>pl.baczkowicz.mqttspy.configuration.generated</generatePackage>
 			                <removeOldOutput>false</removeOldOutput>
-			                <!-- 
-			                <readOnly>true</readOnly>			                
-			                <verbose>true</verbose>
-			                <extension>true</extension>
-			                 -->
 			                <args>			                
 						        <arg>-XtoString</arg>
 						        <arg>-Xequals</arg>
@@ -369,11 +352,6 @@
 			                <generateDirectory>src/main/java/</generateDirectory>			                
 			                <generatePackage>pl.baczkowicz.mqttspy.versions.generated</generatePackage>
 			                <removeOldOutput>false</removeOldOutput>
-			                <!-- 
-			                <readOnly>true</readOnly>			                
-			                <verbose>true</verbose>
-			                <extension>true</extension>
-			                 -->
 			                <args>			                
 						        <arg>-XtoString</arg>
 						        <arg>-Xequals</arg>

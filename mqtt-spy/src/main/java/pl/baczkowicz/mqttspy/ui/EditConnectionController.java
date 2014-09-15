@@ -43,10 +43,10 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.Message;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
@@ -208,6 +208,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private boolean openNewMode;
 
 	private MqttConnection existingConnection;
+
+	private int noModificationsLock;
 	
 	// ===============================
 	// === Initialisation ============
@@ -274,7 +276,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 				
 		// LWT
 		lastWillAndTestament.selectedProperty().addListener(basicOnChangeListener);
-		lastWillAndTestamentMessageController.getPublicationTopicText().getSelectionModel().selectedIndexProperty().addListener(basicOnChangeListener);
+		lastWillAndTestamentMessageController.getPublicationTopicText().valueProperty().addListener(basicOnChangeListener);
 		lastWillAndTestamentMessageController.getPublicationData().textProperty().addListener(basicOnChangeListener);
 		lastWillAndTestamentMessageController.getPublicationQosChoice().getSelectionModel().selectedIndexProperty().addListener(basicOnChangeListener);
 		lastWillAndTestamentMessageController.getRetainedBox().selectedProperty().addListener(basicOnChangeListener);
@@ -515,7 +517,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		editedConnectionDetails.undo();
 		editConnectionsController.listConnections();
 		
-		editConnection(editedConnectionDetails);
+		// Note: listing connections should display the existing one
+		// editConnection(editedConnectionDetails);
 		
 		updateButtons();
 	}
@@ -757,7 +760,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		if (lastWillAndTestament.isSelected())
 		{			
-			final Message message = lastWillAndTestamentMessageController.readMessage(false);
+			final ConfiguredMessage message = lastWillAndTestamentMessageController.readMessage(false);
 			if (message != null)
 			{
 				connection.setLastWillAndTestament(message);
@@ -965,7 +968,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		// LWT
 		lastWillAndTestament.setSelected(connection.getLastWillAndTestament() != null);
-		lastWillAndTestamentMessageController.displayMessage(connection.getLastWillAndTestament());
+		lastWillAndTestamentMessageController.displayMessage(connection.getLastWillAndTestament());				
 		
 		connection.setBeingCreated(false);
 	}		
@@ -1006,7 +1009,20 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	
 	public void setRecordModifications(boolean recordModifications)
 	{
-		this.recordModifications = recordModifications;
+		if (!recordModifications)
+		{
+			noModificationsLock++;
+			this.recordModifications = recordModifications;
+		}
+		else
+		{ 
+			noModificationsLock--;
+			// Only allow modifications once the parent caller removes the lock
+			if (noModificationsLock == 0)
+			{
+				this.recordModifications = recordModifications;
+			}
+		}
 	}
 		
 	public TextField getConnectionName()

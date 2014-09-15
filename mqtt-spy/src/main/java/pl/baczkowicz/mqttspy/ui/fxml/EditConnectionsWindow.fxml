@@ -26,7 +26,7 @@
             <Button fx:id="newConnectionButton" focusTraversable="false" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#newConnection" prefHeight="25.0" prefWidth="100.0" text="New" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="230.0" />
          </children>
       </AnchorPane>
-      <Separator layoutX="340.0" layoutY="269.0" orientation="VERTICAL" prefHeight="70.0" prefWidth="5.0" />      
+      <Separator layoutX="340.0" layoutY="269.0" orientation="VERTICAL" prefHeight="70.0" prefWidth="5.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="592.0"/>      
       
    </children>
 </AnchorPane>

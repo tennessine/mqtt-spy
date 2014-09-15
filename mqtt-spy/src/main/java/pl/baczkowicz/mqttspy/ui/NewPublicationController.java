@@ -22,8 +22,8 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
-import pl.baczkowicz.mqttspy.configuration.generated.Message;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.ui.format.ConversionException;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
@@ -146,11 +146,12 @@ public class NewPublicationController implements Initializable
 		}
 	}
 	
-	public void displayMessage(final Message message)
+	public void displayMessage(final ConfiguredMessage message)
 	{
 		if (message == null)
 		{
 			publicationTopicText.setValue("");
+			publicationTopicText.setPromptText("(cannot be empty)");
 			publicationQosChoice.getSelectionModel().select(0);
 			publicationData.clear();
 			retainedBox.setSelected(false);
@@ -165,7 +166,7 @@ public class NewPublicationController implements Initializable
 		}
 	}
 	
-	public Message readMessage(final boolean verify)
+	public ConfiguredMessage readMessage(final boolean verify)
 	{
 		if (verify && (publicationTopicText.getValue() == null || publicationTopicText.getValue().isEmpty()))
 		{
@@ -180,7 +181,7 @@ public class NewPublicationController implements Initializable
 			return null;
 		}
 		
-		final Message message = new Message();
+		final ConfiguredMessage message = new ConfiguredMessage();
 		try
 		{
 			String data = publicationData.getText();
@@ -207,7 +208,7 @@ public class NewPublicationController implements Initializable
 	@FXML
 	public void publish()
 	{						
-		final Message message = readMessage(true);
+		final ConfiguredMessage message = readMessage(true);
 				
 		connection.publish(message.getTopic(), message.getPayload(), message.getQoS(), message.isRetained());
 		
