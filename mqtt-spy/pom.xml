@@ -239,8 +239,7 @@
 		                <configuration>
 		                    <classifier>exclusions</classifier>
 		                    <excludes>
-		                        <exclude>**/*.xml</exclude>
-		                        <exclude>**/*.properties</exclude>
+		                        <exclude>**/log4j.properties</exclude>
 		                    </excludes>
 		                </configuration>
 		                <goals>
