@@ -115,10 +115,8 @@ public class MessageController implements Initializable, Observer
 	{
 		if (message != null)
 		{
-			final String payload = new String(message.getMessage().getPayload());
-
 			dataField.clear();
-			dataField.appendText(FormattingUtils.convertText(store.getFormatter(), payload));
+			dataField.appendText(message.getFormattedPayload(store.getFormatter()));
 
 			dataField.setStyleClass(0, dataField.getText().length(), "messageText");
 			
@@ -189,7 +187,19 @@ public class MessageController implements Initializable, Observer
 	{
 		if (messageIndex > 0)
 		{
-			populate((MqttContent) store.getMessages().toArray()[store.getMessages().size() - messageIndex]);
+			MqttContent message = null; 
+		
+			// Optimised for showing the latest message
+			if (messageIndex == 1)
+			{
+				message = store.getMessages().getLast();
+			}
+			else
+			{
+				final Object[] messages = store.getMessages().toArray();
+				message = (MqttContent) messages[messages.length - messageIndex];
+			}
+			populate(message);
 		}
 		else
 		{

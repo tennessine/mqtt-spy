@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
-import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class ObservableMqttContent
@@ -60,7 +59,7 @@ public class ObservableMqttContent
 		this.mqttContent = message;
 				
 		this.lastReceivedTimestamp.set(Utils.SDF.format(mqttContent.getDate()));		
-		this.lastReceivedPayload.set(FormattingUtils.convertText(format, new String(mqttContent.getMessage().getPayload())));
+		this.lastReceivedPayload.set(mqttContent.getFormattedPayload(format));
 	}
 
 	public long getId()

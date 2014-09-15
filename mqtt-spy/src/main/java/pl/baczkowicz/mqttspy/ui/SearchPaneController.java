@@ -31,7 +31,6 @@ import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
 import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
-import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
 public class SearchPaneController implements Initializable, Observer
 {
@@ -118,9 +117,7 @@ public class SearchPaneController implements Initializable, Observer
 	
 	private void processMessage(final MqttContent message)
 	{
-		final String formattedPayload = FormattingUtils.convertText(store.getFormatter(), new String(message.getMessage().getPayload()));
-		
-		if (matches(formattedPayload, searchField.getText()))
+		if (matches(message.getFormattedPayload(store.getFormatter()), searchField.getText()))
 		{
 			foundMessage(message);
 		}

@@ -4,7 +4,9 @@ import java.util.Date;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
+import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
 public class MqttContent
 {
@@ -18,12 +20,17 @@ public class MqttContent
 	
 	private final long id;
 	
+	private FormatterDetails lastUsedFormatter;
+	
+	private String formattedPayload;
+	
 	public MqttContent(final long id, final String topic, final MqttMessage message)
 	{
 		this.id = id;
 		this.topic = topic;
 		this.message = message;
 		this.setDate(new Date());
+		this.formattedPayload = new String(message.getPayload());
 	}
 
 	public MqttMessage getMessage()
@@ -69,5 +76,31 @@ public class MqttContent
 	public long getId()
 	{
 		return id;
+	}
+
+	public void format(final FormatterDetails formatter)
+	{
+		if (formatter == null)
+		{
+			formattedPayload = new String(message.getPayload());
+		}		
+		else if (!formatter.equals(lastUsedFormatter))
+		{
+			lastUsedFormatter = formatter;
+			formattedPayload = FormattingUtils.convertText(formatter, new String(message.getPayload()));
+		}
+		
+	}
+	
+	public String getFormattedPayload(final FormatterDetails formatter)
+	{
+		format(formatter);
+		
+		return formattedPayload;
+	}
+	
+	public String getFormattedPayload()
+	{
+		return formattedPayload;
 	}
 }

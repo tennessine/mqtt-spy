@@ -66,25 +66,27 @@ public class SubscriptionSummaryTableController implements Initializable
 						final CheckBoxTableCell<SubscriptionTopicSummary, Boolean> cell = new CheckBoxTableCell<SubscriptionTopicSummary, Boolean>()
 						{
 							@Override
-							public void updateItem(Boolean checked, boolean empty)
+							public void updateItem(final Boolean checked, boolean empty)
 							{
 								super.updateItem(checked, empty);
 								if (!isEmpty() && checked != null && this.getTableRow() != null)
 								{
 									final SubscriptionTopicSummary item = (SubscriptionTopicSummary) this.getTableRow().getItem();
 									
-									// if (checked != item.showProperty().getValue())
-									{																		
-										logger.info("Item changed = " + item.topicProperty().getValue());
-										if (checked)
-										{
-											store.applyFilter(item.topicProperty().getValue());
-										}
-										else
-										{
-											store.removeFilter(item.topicProperty().getValue());
-										}
+									logger.info("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
+									boolean filteringChanged = false;
 									
+									if (checked)
+									{
+										store.applyFilter(item.topicProperty().getValue());
+									}
+									else
+									{
+										store.removeFilter(item.topicProperty().getValue());
+									}
+									
+									if (filteringChanged)
+									{
 										// Wouldn't get updated properly if this is in the same thread 
 										Platform.runLater(new Runnable()
 										{
@@ -94,10 +96,8 @@ public class SubscriptionSummaryTableController implements Initializable
 												navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());	
 											}											
 										});
-																			
-									}
-								}	
-								
+									}																			
+								}									
 							}
 						};
 						cell.setAlignment(Pos.TOP_CENTER);

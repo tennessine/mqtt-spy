@@ -1,8 +1,8 @@
 package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashSet;
-import java.util.Queue;
 import java.util.Set;
 
 import javafx.application.Platform;
@@ -17,6 +17,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 {
 	final static Logger logger = LoggerFactory.getLogger(ObservableMessageStoreWithFiltering.class);
 	
+	/** This is the same as 'show' flag on messages per topic. */
 	private final Set<String> filters = new HashSet<String>();
 	
 	private final MqttMessageStore filteredStore;
@@ -36,12 +37,22 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	public void messageReceived(final MqttContent message)
 	{						
 		// Note: this is not FX thread yet
-		final boolean noFilters = !filtersEnabled();
+		final boolean allMessagesShown = !filtersEnabled();
 		final boolean topicAlreadyExists = messagesPerTopic.topicExists(message.getTopic());			
-		final boolean remove = store.isMaxSize();
+		
+		// Add the message to 'all messages' store
+		final MqttContent removed = storeMessage(message);
+		
+		// Add it to the filtered store if all messages are shown or the topic is already on the list
+		if (allMessagesShown || filters.contains(message.getTopic()))
+		{
+			filteredStore.add(message);				
+		}
+
+		// Formats the message with the currently selected formatter
+		message.format(getFormatter());
 		
 		final ObservableMessageStore thisStore = this;
-		thisStore.storeMessage(message);
 		
 		// Note: following require the FX thread
 		// TODO: still needs to be optimised
@@ -50,29 +61,33 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			@Override
 			public void run()
 			{				
-				messagesPerTopic.addAndRemove(message, remove, messageFormat);
+				// Remove old message from stats
+				if (removed != null)
+				{
+					messagesPerTopic.removeOldest(removed);
+				}
 				
-				if (noFilters)
+				// Calculate the overall message count per topic
+				messagesPerTopic.addAndRemove(message, messageFormat);
+				
+				// Update the 'show' property and filter list
+				if (allMessagesShown)
 				{			
 					if (!topicAlreadyExists)
 					{
-						setShowValue(message.getTopic(), true);
+						messagesPerTopic.setShowValue(message.getTopic(), true);
 						applyFilter(message.getTopic(), false);
 					}							
 				}
 				
-				if (message != null && filters.contains(message.getTopic()))
-				{
-					filteredStore.add(message);				
-				}
-								
+				// Notify any observers there is a new message				
 				thisStore.notify(message);				
 			}		
 		});
 	}	
 	
 	@Override
-	public Queue<MqttContent> getMessages()
+	public Deque<MqttContent> getMessages()
 	{		
 		return filteredStore.getMessages();
 	}
@@ -90,12 +105,12 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		}
 	}
 	
-	public void applyFilter(final String topic)
+	public boolean applyFilter(final String topic)
 	{
-		applyFilter(topic, true);
+		return applyFilter(topic, true);
 	}
 	
-	private void applyFilter(final String topic, final boolean recreateStore)
+	private boolean applyFilter(final String topic, final boolean recreateStore)
 	{
 		synchronized (filters)
 		{
@@ -107,9 +122,14 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 				// TODO: optimise
 				if (recreateStore)
 				{
+					logger.warn("Recreating store for {} because of {}", name, topic);
 					initialiseFilteredStore();
 				}
+				
+				return true;
 			}
+			
+			return false;
 		}
 	}
 	
@@ -118,14 +138,21 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		return Collections.unmodifiableSet(filters);
 	}
 	
-	public void removeFilter(final String topic)
+	public boolean removeFilter(final String topic)
 	{
 		synchronized (filters)
 		{
-			logger.info("Removing {} from active filters for {}", topic, name);
-			filters.remove(topic);
+			if (filters.contains(topic))
+			{
+				logger.info("Removing {} from active filters for {}", topic, name);
+				filters.remove(topic);
 		
-			initialiseFilteredStore();
+				initialiseFilteredStore();
+				
+				return true;
+			}
+			
+			return false;
 		}
 	}
 	
@@ -149,39 +176,31 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		return messagesPerTopic.getObservableMessagesPerTopic();
 	}
 	
-	public void toggleAllShowValues()
-	{
-		for (final SubscriptionTopicSummary item : messagesPerTopic.getObservableMessagesPerTopic())
-		{
-			item.showProperty().set(!item.showProperty().get());
-		}
-	}
-	
-	public void setShowValue(final String topic, final boolean value)
-	{
-		for (final SubscriptionTopicSummary item : messagesPerTopic.getObservableMessagesPerTopic())
-		{
-			if (item.topicProperty().getValue().equals(topic))
-			{
-				item.showProperty().set(value);
-				break;
-			}
-		}
-	}
-	
-	public void setAllShowValues(final boolean value)
-	{
-		for (final SubscriptionTopicSummary item : messagesPerTopic.getObservableMessagesPerTopic())
-		{
-			item.showProperty().set(value);
-		}
-	}
-	
 	@Override
 	public void clear()
 	{
 		super.clear();
 		messagesPerTopic.clear();
 		removeAllFilters();
+	}
+
+	public void setAllShowValues(boolean value)
+	{
+		messagesPerTopic.setAllShowValues(value);		
+	}
+
+	public void toggleAllShowValues()
+	{
+		messagesPerTopic.toggleAllShowValues();		
+	}
+
+	public void setShowValue(final String topic, final boolean value)
+	{
+		messagesPerTopic.setShowValue(topic, value);		
+	}
+	
+	public String getName()
+	{
+		return name;
 	}
 }

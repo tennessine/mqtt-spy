@@ -1,7 +1,7 @@
 package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Deque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,14 +14,14 @@ public class MqttMessageStore
 
 	public static final int DEFAULT_MAX_SIZE = 5000;
 
-	private final Queue<MqttContent> messages;
+	private final Deque<MqttContent> messages;
 
 	private final int maxSize;
 	
 	public MqttMessageStore(final int maxSize)
 	{
 		this.maxSize = maxSize;
-		this.messages = new LinkedBlockingQueue<MqttContent>();
+		this.messages = new LinkedBlockingDeque<MqttContent>();
 	}
 	
 	public void clear()
@@ -29,14 +29,13 @@ public class MqttMessageStore
 		messages.clear();
 	}
 
-	public boolean add(final MqttContent message)
+	public MqttContent add(final MqttContent message)
 	{
-		boolean removed = false;
+		MqttContent removed = null;
 		
 		if (isMaxSize())
 		{
-			messages.remove();
-			removed = true;
+			removed = messages.remove();
 		}
 
 		// Store the message
@@ -49,7 +48,7 @@ public class MqttMessageStore
 		return messages.size() == maxSize;
 	}
 
-	public Queue<MqttContent> getMessages()
+	public Deque<MqttContent> getMessages()
 	{
 		return messages;
 	}

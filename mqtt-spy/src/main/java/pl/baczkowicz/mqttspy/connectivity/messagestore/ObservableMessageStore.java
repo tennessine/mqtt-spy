@@ -1,7 +1,7 @@
 package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
+import java.util.Deque;
 import java.util.Observable;
-import java.util.Queue;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
@@ -20,12 +20,14 @@ public class ObservableMessageStore extends Observable implements MessageStore
 		this.store = new MqttMessageStore(maxSize);
 	}
 	
-	public void storeMessage(final MqttContent message)
+	public MqttContent storeMessage(final MqttContent message)
 	{
 		if (message != null)
 		{
-			store.add(message);
-		}		
+			return store.add(message);
+		}	
+		
+		return null;
 	}
 	
 	public void notify(final MqttContent message)
@@ -35,7 +37,7 @@ public class ObservableMessageStore extends Observable implements MessageStore
 		this.notifyObservers(message);
 	}
 
-	public Queue<MqttContent> getMessages()
+	public Deque<MqttContent> getMessages()
 	{
 		return store.getMessages();
 	}

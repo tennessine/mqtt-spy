@@ -16,10 +16,9 @@ public class MessagesPerTopic
 {
 	final static Logger logger = LoggerFactory.getLogger(MessagesPerTopic.class);
 	
-	private Map<String, SubscriptionTopicSummary> messagesPerTopic = new HashMap<String, SubscriptionTopicSummary>();
+	private Map<String, SubscriptionTopicSummary> topicToSummaryMapping = new HashMap<String, SubscriptionTopicSummary>();
 
-	private final ObservableList<SubscriptionTopicSummary> observableMessagesPerTopic = FXCollections
-			.observableArrayList();
+	private final ObservableList<SubscriptionTopicSummary> observableTopicSummaryList = FXCollections.observableArrayList();
 
 	private final String name;
 
@@ -30,23 +29,25 @@ public class MessagesPerTopic
 	
 	public void clear()
 	{
-		messagesPerTopic.clear();
-		observableMessagesPerTopic.clear();
+		topicToSummaryMapping.clear();
+		observableTopicSummaryList.clear();
 	}
 	
 	public boolean topicExists(final String topic)
 	{
-		return messagesPerTopic.containsKey(topic);
+		return topicToSummaryMapping.containsKey(topic);
 	}
 	
-	private void remove(final MqttContent message)
+	public void removeOldest(final MqttContent message)
 	{
-		final SubscriptionTopicSummary value = messagesPerTopic.get(message.getTopic());
+		final SubscriptionTopicSummary value = topicToSummaryMapping.get(message.getTopic());
 
 		// There should be something in
 		if (value != null)
 		{
 			value.setCount(value.countProperty().intValue() - 1);
+			
+			// TODO: repopulate the observable list
 		}
 		else
 		{
@@ -54,32 +55,57 @@ public class MessagesPerTopic
 		}		
 	}
 	
-	public void addAndRemove(final MqttContent message, final boolean removeFirst, final FormatterDetails messageFormat)
+	public void addAndRemove(final MqttContent message, final FormatterDetails messageFormat)
 	{
-		if (removeFirst)
-		{
-			remove(message);
-		}
-
-		SubscriptionTopicSummary value = messagesPerTopic.get(message.getTopic());
+		SubscriptionTopicSummary value = topicToSummaryMapping.get(message.getTopic());
 
 		if (value == null)
 		{
 			value = new SubscriptionTopicSummary(false, 1, message, messageFormat);
-			messagesPerTopic.put(message.getTopic(), value);
-			observableMessagesPerTopic.add(value);
+			topicToSummaryMapping.put(message.getTopic(), value);
+			observableTopicSummaryList.add(value);
 		}
 		else
 		{
+			// TODO: this might not be enough, because the list needs to be updated, not just the value
 			value.setCount(value.countProperty().intValue() + 1);	
 			value.setMessage(message, messageFormat);
 		}
 		
 		logger.trace(name + " has " + (value.countProperty().intValue()) + " messages");
 	}
+	
+
+	public void toggleAllShowValues()
+	{
+		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		{
+			item.showProperty().set(!item.showProperty().get());
+		}
+	}
+	
+	public void setShowValue(final String topic, final boolean value)
+	{
+		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		{
+			if (item.topicProperty().getValue().equals(topic))
+			{
+				item.showProperty().set(value);
+				break;
+			}
+		}
+	}
+	
+	public void setAllShowValues(final boolean value)
+	{
+		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		{
+			item.showProperty().set(value);
+		}
+	}
 
 	public ObservableList<SubscriptionTopicSummary> getObservableMessagesPerTopic()
 	{
-		return observableMessagesPerTopic;
+		return observableTopicSummaryList;
 	}
 }

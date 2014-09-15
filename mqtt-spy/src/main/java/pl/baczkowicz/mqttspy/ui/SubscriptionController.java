@@ -150,10 +150,10 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 					eventDispatcher.dispatchEvent(new NewMessageEvent());
 				}
 			}
-			else
-			{
-				logger.info("No match for " + ((MqttContent) update).getTopic());
-			}
+			// else
+			// {
+			// logger.info("No match for " + ((MqttContent) update).getTopic());
+			// }
 		}
 		else if (update instanceof MqttSubscription)
 		{

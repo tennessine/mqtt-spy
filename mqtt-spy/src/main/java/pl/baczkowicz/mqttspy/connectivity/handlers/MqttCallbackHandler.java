@@ -25,6 +25,7 @@ public class MqttCallbackHandler implements MqttCallback
 {
 	private final static Logger logger = LoggerFactory.getLogger(MqttCallbackHandler.class);
 	
+	/** Stores all received messages, so that we don't block the receiving thread. */
 	private final Queue<MqttContent> queue = new LinkedBlockingQueue<MqttContent>();
 	
 	private MqttConnection connection;
@@ -48,12 +49,9 @@ public class MqttCallbackHandler implements MqttCallback
 
 	public void messageArrived(String topic, MqttMessage message)
 	{
-		logger.info("Received message on topic \"" + topic + "\". Payload = \"" + new String(message.getPayload()) + "\"");
+		logger.debug("[{}] Received message on topic \"{}\". Payload = \"{}\"", queue.size(), topic, new String(message.getPayload()));
 		queue.add(new MqttContent(currentId, topic, message));
 		currentId++;
-		
-		// TODO: don't run it on FX 
-		// Platform.runLater(messageHandler);
 	}
 
 	public void deliveryComplete(IMqttDeliveryToken token)
