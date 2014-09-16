@@ -32,6 +32,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
@@ -71,11 +72,14 @@ public class MainController
 
 	private EventManager eventManager;
 	
+	private StatisticsManager statisticsManager;
+	
 	public MainController() throws XMLException
 	{
 		this.eventManager = new EventManager();
 		this.mqttManager = new MqttManager(eventManager);
 		this.configurationManager = new ConfigurationManager(eventManager);
+		this.statisticsManager = new StatisticsManager();
 	}
 
 	@FXML
@@ -138,12 +142,14 @@ public class MainController
 	@FXML
 	public void exit()
 	{
-		mqttManager.disconnectAll();
+		mqttManager.disconnectAll();		
+		statisticsManager.saveStats();
 		System.exit(0);
 	}
 
 	public void init()
 	{
+		statisticsManager.loadStats();
 		getParentWindow().setOnCloseRequest(new EventHandler<WindowEvent>()
 		{
 			public void handle(WindowEvent t)
@@ -160,7 +166,13 @@ public class MainController
 		controlPanelPaneController.setApplication(application);
 		controlPanelPaneController.setEventManager(eventManager);
 		controlPanelPaneController.setMqttManager(mqttManager);
-		controlPanelPaneController.init();
+		controlPanelPaneController.init();	
+		
+		final StatsChartWindow statsWindow = new StatsChartWindow();
+		
+		// Scene scene = new Scene(statsWindow);
+		// scene.getStylesheets().addAll(mainPane.getScene().getStylesheets());		
+		statsWindow.start(new Stage());
 	}
 	
 	public TabPane getConnectionTabs()

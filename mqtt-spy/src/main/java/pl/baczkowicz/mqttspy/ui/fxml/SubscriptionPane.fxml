@@ -8,21 +8,21 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="282.0" prefWidth="776.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.SubscriptionController">
+<AnchorPane prefHeight="282.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.SubscriptionController">
 	<children>
-      <AnchorPane layoutX="-2.0" layoutY="4.0" prefHeight="31.0" prefWidth="554.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="5.0">
+      <AnchorPane layoutX="-2.0" layoutY="4.0" prefHeight="31.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="224.0" AnchorPane.topAnchor="5.0">
       		<children>
       			<fx:include fx:id="messageNavigationPane" source="MessageNavigationPane.fxml" />
     		</children>
       </AnchorPane>
       
-      <SplitPane fx:id="splitPane" dividerPositions="0.42" layoutX="11.0" layoutY="45.0" orientation="VERTICAL" prefHeight="229.0" prefWidth="636.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="40.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.42" layoutX="11.0" layoutY="45.0" orientation="VERTICAL" prefHeight="229.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="40.0">
          <items>
          	<fx:include fx:id="messagePane" prefHeight="1000.0" source="MessagePane.fxml" />
             
-            <TitledPane fx:id="summaryTitledPane" alignment="TOP_LEFT" animated="false" maxHeight="1000.0" minHeight="26.0" prefHeight="151.0" prefWidth="626.0" text="Received messages summary" SplitPane.resizableWithParent="false">
+            <TitledPane fx:id="summaryTitledPane" alignment="TOP_LEFT" animated="false" maxHeight="1000.0" minHeight="26.0" prefHeight="151.0" text="Received messages summary" SplitPane.resizableWithParent="false">
               <content>
-              		<fx:include fx:id="summaryTablePane" minHeight="101.0" prefHeight="118.0" prefWidth="624.0" source="SubscriptionSummaryTablePane.fxml" />
+              		<fx:include fx:id="summaryTablePane" minHeight="101.0" prefHeight="118.0" source="SubscriptionSummaryTablePane.fxml" />
               </content>
                <padding>
                   <Insets top="5.0" />

@@ -18,6 +18,7 @@ import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttConnection extends ObservableMessageStoreWithFiltering
@@ -91,6 +92,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			getClient().publish(publicationTopic, data.getBytes(), qos, retained);
 			
 			logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
+			StatisticsManager.messagePublished(properties.getId());
 		}
 		catch (MqttException e)
 		{

@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionLostEvent;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 /**
  * One MQTT callback handler per connection.
@@ -49,6 +50,7 @@ public class MqttCallbackHandler implements MqttCallback
 
 	public void messageArrived(String topic, MqttMessage message)
 	{
+		StatisticsManager.messageReceived(connection.getProperties().getId());
 		logger.debug("[{}] Received message on topic \"{}\". Payload = \"{}\"", queue.size(), topic, new String(message.getPayload()));
 		queue.add(new MqttContent(currentId, topic, message));
 		currentId++;

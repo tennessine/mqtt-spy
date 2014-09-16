@@ -37,6 +37,9 @@ public class ConnectionController implements Initializable, Observer
 	final static Logger logger = LoggerFactory.getLogger(ConnectionController.class);
 
 	@FXML
+	AnchorPane connectionPane;
+	
+	@FXML
 	AnchorPane newPublicationPane;
 	
 	@FXML
@@ -117,6 +120,11 @@ public class ConnectionController implements Initializable, Observer
 		newSubscriptionPaneController.setConnectionController(this);
 		newSubscriptionPaneController.setEventManager(eventManager);
 		newSubscriptionPaneController.setConnectionProperties(connectionProperties);
+		
+		// connectionPane.setMaxWidth(500);
+		// subscriptionsTitledPane.setMaxWidth(500);
+		// subscriptionTabs.setMaxWidth(500);
+		// TODO: how not to resize the tab pane on too many tabs? All max sizes seems to be ignored
 	}
 	
 	public void setEventManager(final EventManager eventManager)

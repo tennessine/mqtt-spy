@@ -8,9 +8,9 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.control.ComboBox?>
 
-<AnchorPane prefHeight="640.0" prefWidth="691.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.ConnectionController">
+<AnchorPane fx:id="connectionPane" prefHeight="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.ConnectionController">
 	<children>
-      <SplitPane dividerPositions="0.5, 0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.5, 0.5" orientation="VERTICAL" prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
             <TitledPane fx:id="publishMessageTitledPane" alignment="TOP_LEFT" animated="false" text="Publish message" SplitPane.resizableWithParent="false">
                <content>
@@ -28,15 +28,15 @@
               <content>
                  <AnchorPane minHeight="250.0" prefHeight="1000.0">
                      <children> 
-    						<TabPane fx:id="subscriptionTabs" layoutX="0.0" layoutY="42.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-    							<tabs>
-    								<Tab closable="false" text="All">
-    									<content>
-    										<fx:include source="SubscriptionPane.fxml" />
-    									</content>
-    								</Tab>
-    							</tabs>
-    						</TabPane>
+   						<TabPane fx:id="subscriptionTabs" layoutX="0.0" layoutY="42.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+   							<tabs>
+   								<Tab closable="false" text="All">
+   									<content>
+   										<fx:include source="SubscriptionPane.fxml" />
+   									</content>
+   								</Tab>
+   							</tabs>
+   						</TabPane>
                      </children>
                   </AnchorPane>
               </content>

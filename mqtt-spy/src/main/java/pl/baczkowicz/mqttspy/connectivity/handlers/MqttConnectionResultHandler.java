@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionAttemptSuccessEvent;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 public class MqttConnectionResultHandler implements IMqttActionListener
 {
@@ -18,6 +19,7 @@ public class MqttConnectionResultHandler implements IMqttActionListener
 	public void onSuccess(IMqttToken asyncActionToken)
 	{
 		final MqttConnection connection = (MqttConnection) asyncActionToken.getUserContext();
+		StatisticsManager.newConnection();
 		Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptSuccessEvent(connection)));
 		logger.info(connection.getProperties().getName() + " connected");
 	}

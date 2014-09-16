@@ -11,6 +11,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
@@ -128,6 +129,7 @@ public class TabUtils
 		if (subscription.isActive())
 		{
 			tab.getGraphic().getStyleClass().add("subscribed");
+			StatisticsManager.newSubscription();
 		}
 		else
 		{
