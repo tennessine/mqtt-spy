@@ -89,14 +89,18 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 				selectFirst();
 				return;
 			}
-
-			duplicateConnectionButton.setDisable(true);
-			deleteConnectionButton.setDisable(true);
-
-			if (connectionList.getItems().size() > 0)
+			
+			if (connectionList.getItems().isEmpty())
+			{
+				duplicateConnectionButton.setDisable(true);
+				deleteConnectionButton.setDisable(true);
+				editConnectionPaneController.setNoConnectionMode(true);
+			}
+			else 
 			{
 				deleteConnectionButton.setDisable(false);
 				duplicateConnectionButton.setDisable(false);
+				editConnectionPaneController.setNoConnectionMode(false);
 				
 				if (!connections.get(getSelectedIndex()).isBeingCreated())
 				{

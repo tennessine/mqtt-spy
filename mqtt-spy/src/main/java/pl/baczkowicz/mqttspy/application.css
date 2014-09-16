@@ -100,3 +100,20 @@
 {
 	-fx-base: grey;
 }	
+
+/* Subscriptions */
+
+.subscribed .text
+{
+	-fx-strikethrough: false;
+}
+
+.unsubscribed
+{
+	-fx-text-fill: 	grey;	
+}
+
+.unsubscribed .text
+{
+	-fx-strikethrough: true;	
+}

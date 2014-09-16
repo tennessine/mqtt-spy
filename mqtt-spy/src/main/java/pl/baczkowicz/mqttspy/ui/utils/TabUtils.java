@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.ui.utils;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
@@ -20,7 +21,7 @@ import com.sun.javafx.scene.control.skin.TabPaneSkin;
 
 public class TabUtils
 {
-	final static String CANCELLED_SUBSCRIPTION = " [cancelled]";
+	public static String ALL_TAB = "All";
 	
 	public static ConnectionController loadConnectionTab(final MainController mainController,
 			final Object parent, final MqttManager mqttManager, 
@@ -41,6 +42,11 @@ public class TabUtils
 		connection.setOpened(true);
 		connection.setTab(connectionTab);
 
+		connectionController.setConnection(connection);
+		connectionController.setConnectionProperties(connectionProperties);
+		connectionController.setEventManager(eventManager);
+		connectionController.init();
+		
 		// Connect
 		if (connectionProperties.isAutoConnect())
 		{
@@ -51,14 +57,10 @@ public class TabUtils
 			connection.setConnectionStatus(MqttConnectionStatus.NOT_CONNECTED);
 		}	
 		
-		connectionController.setConnection(connection);
-		connectionController.setConnectionProperties(connectionProperties);
-		connectionController.setEventManager(eventManager);
-		connectionController.init();
-
 		// Add "All" subscription tab
 		connectionController.getSubscriptionTabs().getTabs().clear();
-		connectionController.getSubscriptionTabs().getTabs().add(TabUtils.createSubscriptionTab(true, parent, connection, connection, null, connectionProperties, connectionController, eventManager));
+		final SubscriptionController subscriptionController = TabUtils.createSubscriptionTab(true, parent, connection, connection, null, connectionProperties, connectionController, eventManager);
+		connectionController.getSubscriptionTabs().getTabs().add(subscriptionController.getTab());
 		
 		return connectionController;
 	}
@@ -76,7 +78,7 @@ public class TabUtils
 		return tab;
 	}
 
-	public static Tab createSubscriptionTab(final boolean allTab, final Object parent,
+	public static SubscriptionController createSubscriptionTab(final boolean allTab, final Object parent,
 			final ObservableMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
 			final MqttSubscription subscription, final RuntimeConnectionProperties connectionProperties, final ConnectionController connectionController,
 			final EventManager eventManager)
@@ -106,31 +108,54 @@ public class TabUtils
 		if (allTab)
 		{
 			tab.setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(tab, connection, eventManager));
-			tab.setText("All");
+			tab.setGraphic(new Label(ALL_TAB));
+			tab.getGraphic().getStyleClass().add("subscribed");
 		}
 		else
 		{
 			tab.setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(tab, connection, subscription, eventManager));
-			tab.setText(subscription.getTopic());
-		}
+			tab.setGraphic(new Label(subscription.getTopic()));
+			tab.getGraphic().getStyleClass().add("unsubscribed");
+		}		
 
-		return tab;
+		return subscriptionController;
 	}
 
-	public static void updateSubscriptionTab(final Tab tab, final MqttSubscription subscription)
+	public static void updateSubscriptionTabContextMenu(final Tab tab, final MqttSubscription subscription)
 	{
+		// Update title style
+		tab.getGraphic().getStyleClass().remove(tab.getGraphic().getStyleClass().size() - 1);
 		if (subscription.isActive())
 		{
-			tab.setText(tab.getText().replace(CANCELLED_SUBSCRIPTION, ""));
-			tab.getContextMenu().getItems().get(0).setDisable(false);
-			tab.getContextMenu().getItems().get(1).setDisable(true);
+			tab.getGraphic().getStyleClass().add("subscribed");
 		}
 		else
 		{
-			tab.setText(tab.getText() + CANCELLED_SUBSCRIPTION);
-			tab.getContextMenu().getItems().get(0).setDisable(true);
-			tab.getContextMenu().getItems().get(1).setDisable(false);
+			tab.getGraphic().getStyleClass().add("unsubscribed");
 		}
+
+		// Set menu items
+		if (subscription.getConnection().getConnectionStatus().equals(MqttConnectionStatus.CONNECTED))
+		{									
+			if (subscription.isActive())
+			{
+				tab.getContextMenu().getItems().get(0).setDisable(false);
+				tab.getContextMenu().getItems().get(1).setDisable(true);
+			}
+			else
+			{
+				tab.getContextMenu().getItems().get(0).setDisable(true);
+				tab.getContextMenu().getItems().get(1).setDisable(false);
+			}
+			
+			tab.getContextMenu().getItems().get(2).setDisable(false);
+		}
+		else
+		{
+			tab.getContextMenu().getItems().get(0).setDisable(true);
+			tab.getContextMenu().getItems().get(1).setDisable(true);
+			tab.getContextMenu().getItems().get(2).setDisable(true);			
+		}			
 	}
 
 	public static void requestClose(final Tab tab)

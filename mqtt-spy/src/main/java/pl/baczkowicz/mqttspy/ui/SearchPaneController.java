@@ -72,8 +72,6 @@ public class SearchPaneController implements Initializable, Observer
 
 	private Tab tab;
 
-	// private SearchWindowController searchWindowController;
-	
 	private final ObservableList<ObservableMqttContent> foundMessages = FXCollections.observableArrayList();
 
 	private EventDispatcher searchPaneEventDispatcher;
@@ -115,12 +113,15 @@ public class SearchPaneController implements Initializable, Observer
 		return value.toLowerCase().contains(substring.toLowerCase());
 	}
 	
-	private void processMessage(final MqttContent message)
+	private boolean processMessage(final MqttContent message)
 	{
 		if (matches(message.getFormattedPayload(store.getFormatter()), searchField.getText()))
 		{
 			foundMessage(message);
+			return true;
 		}
+		
+		return false;
 	}
 	
 	private void foundMessage(final MqttContent message)
@@ -183,17 +184,19 @@ public class SearchPaneController implements Initializable, Observer
 		{
 			if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(((MqttContent) update).getTopic())))
 			{
-				processMessage((MqttContent) update);
-				updateTabTitle();
+				if (processMessage((MqttContent) update))														
+				{
+					if (messageNavigationPaneController.showLatest())
+					{
+						searchPaneEventDispatcher.dispatchEvent(new ShowFirstEvent());
+					}
+					else
+					{
+						searchPaneEventDispatcher.dispatchEvent(new NewMessageEvent());
+					}
+				}
 				
-				if (messageNavigationPaneController.showLatest())
-				{
-					searchPaneEventDispatcher.dispatchEvent(new ShowFirstEvent());
-				}
-				else
-				{
-					searchPaneEventDispatcher.dispatchEvent(new NewMessageEvent());
-				}
+				updateTabTitle();
 			}
 			else
 			{

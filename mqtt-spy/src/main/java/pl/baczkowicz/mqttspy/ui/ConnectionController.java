@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
+import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
@@ -169,11 +170,6 @@ public class ConnectionController implements Initializable, Observer
 		return subscriptionTabs;
 	}
 
-	public void setSubscriptionTabs(TabPane subscriptionTabs)
-	{
-		this.subscriptionTabs = subscriptionTabs;
-	}
-
 	public void update(Observable observable, Object update)
 	{
 		if (observable instanceof MqttConnection)
@@ -182,6 +178,11 @@ public class ConnectionController implements Initializable, Observer
 			{
 				newSubscriptionPaneController.setActive(false);
 				newPublicationPaneController.setActive(false);
+				
+				for (final MqttSubscription sub : connection.getSubscriptions().values())
+				{
+					sub.getSubscriptionController().updateContextMenu();
+				}
 				
 				switch ((MqttConnectionStatus) update)
 				{

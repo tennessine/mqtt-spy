@@ -60,17 +60,18 @@ public class Utils
 		}
 	}
 	
-	public static void recordTopic(final String newTopic, final List<String> topics)
+	public static boolean recordTopic(final String newTopic, final List<String> topics)
 	{
 		for (final String topic : topics)
 		{
 			if (topic.equals(newTopic))
 			{
 				// If the topic is already on the list, don't add it again
-				return;
+				return false;
 			}
 		}
 
 		topics.add(newTopic);
+		return true;
 	}
 }

@@ -27,6 +27,11 @@ import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 
 public class DialogUtils
 {
+	public static void showError(final String title, final String message)
+	{
+		Dialogs.create().owner(null).title(title).masthead(null).message(message).showError();
+	}
+	
 	public static void showValidationWarning(final String message)
 	{
 		Dialogs.create().owner(null).title("Invalid value detected").masthead(null)

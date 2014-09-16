@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import javafx.scene.paint.Color;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 
 public class MqttSubscription extends ObservableMessageStoreWithFiltering
 {
@@ -12,6 +13,10 @@ public class MqttSubscription extends ObservableMessageStoreWithFiltering
 	private Color color;
 	
 	private Boolean active;
+
+	private SubscriptionController subscriptionController;
+
+	private MqttConnection connection;
 
 	public MqttSubscription(final String topic, final Integer qos, final Color color, final int maxMessageStoreSize)
 	{
@@ -69,5 +74,25 @@ public class MqttSubscription extends ObservableMessageStoreWithFiltering
 		// Notifies the observers
 		this.setChanged();
 		this.notifyObservers(this);
+	}
+
+	public void setSubscriptionController(final SubscriptionController subscriptionController)
+	{
+		this.subscriptionController = subscriptionController;		
+	}
+	
+	public SubscriptionController getSubscriptionController()
+	{
+		return subscriptionController;
+	}
+
+	public void setConnection(MqttConnection connection)
+	{
+		this.connection = connection;		
+	}
+	
+	public MqttConnection getConnection()	
+	{
+		return connection;
 	}
 }

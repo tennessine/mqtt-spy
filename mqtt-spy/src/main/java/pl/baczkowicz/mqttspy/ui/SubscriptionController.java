@@ -158,7 +158,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		else if (update instanceof MqttSubscription)
 		{
 			subscription = (MqttSubscription) update;
-			TabUtils.updateSubscriptionTab(tab, subscription);
+			updateContextMenu();
 		}
 	}
 	
@@ -270,7 +270,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			searchWindowController = (SearchWindowController) searchLoader.getController();
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);
-			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : tab.getText());
+			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : TabUtils.ALL_TAB);
 			searchWindowController.setEventDispatcher(eventDispatcher);
 			eventDispatcher.addObserver(searchWindowController);
 		
@@ -362,5 +362,15 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 	public void setConnectionProperties(RuntimeConnectionProperties connectionProperties)
 	{
 		this.connectionProperties = connectionProperties;		
+	}
+
+	public Tab getTab()
+	{
+		return tab;
+	}
+
+	public void updateContextMenu()
+	{
+		TabUtils.updateSubscriptionTabContextMenu(tab, subscription);
 	}
 }

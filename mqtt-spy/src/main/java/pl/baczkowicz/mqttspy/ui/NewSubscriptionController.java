@@ -14,12 +14,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
-import org.controlsfx.dialog.Dialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +26,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -117,9 +116,9 @@ public class NewSubscriptionController implements Initializable
 		this.subscriptionTopicText.setDisable(!active);
 	}
 
-	public void recordSubscriptionTopic(final String subscriptionTopic)
+	public boolean recordSubscriptionTopic(final String subscriptionTopic)
 	{
-		Utils.recordTopic(subscriptionTopic, subscriptionTopics);
+		return Utils.recordTopic(subscriptionTopic, subscriptionTopics);
 	}
 	
 	@FXML
@@ -131,18 +130,19 @@ public class NewSubscriptionController implements Initializable
 			final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
 			subscriptionDetails.setTopic(subscriptionTopic);
 			subscriptionDetails.setQos(subscriptionQosChoice.getSelectionModel().getSelectedIndex());
-			subscribe(subscriptionDetails, true);
-
-			recordSubscriptionTopic(subscriptionTopic);	
+			
+			if (recordSubscriptionTopic(subscriptionTopic))
+			{
+				subscribe(subscriptionDetails, true);
+			}
+			else
+			{
+				DialogUtils.showError("Duplicate topic", "You already have a subscription tab with " + subscriptionTopic + " topic.");
+			}
 		}
 		else
 		{
-			Dialogs.create()
-		      .owner(null)
-		      .title("Invalid topic")
-		      .masthead(null)
-		      .message("Cannot subscribe to an empty topic.")
-		      .showError();
+			DialogUtils.showError("Invalid topic", "Cannot subscribe to an empty topic.");
 		}
 	}
 	
@@ -153,14 +153,16 @@ public class NewSubscriptionController implements Initializable
 				subscriptionDetails.getQos(), colorPicker.getValue(), connection.getMaxMessageStoreSize());
 
 		// Add a new tab
-		final Tab tab = TabUtils.createSubscriptionTab(false, this, subscription, connection,
+		final SubscriptionController subscriptionController = TabUtils.createSubscriptionTab(false, this, subscription, connection,
 				subscription, connectionProperties, connectionController, eventManager);
 
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
 
 		colorPicker.setValue(colors.get(subscriptionTabs.getTabs().size() % 16));
-		subscriptionTabs.getTabs().add(tab);
+		subscriptionTabs.getTabs().add(subscriptionController.getTab());
 
+		subscription.setSubscriptionController(subscriptionController);
+		subscription.setConnection(connection);
 		if (subscribe)
 		{
 			connection.subscribe(subscription);

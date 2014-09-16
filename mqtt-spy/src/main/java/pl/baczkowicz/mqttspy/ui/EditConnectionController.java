@@ -826,7 +826,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	
 	private void updateButtons()
 	{
-		if (editedConnectionDetails.isModified())
+		if (editedConnectionDetails != null && editedConnectionDetails.isModified())
 		{
 			saveButton.setDisable(false);
 			undoButton.setDisable(false);
@@ -1028,5 +1028,21 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	public TextField getConnectionName()
 	{
 		return connectionNameText;
+	}
+	
+	public void setNoConnectionMode(boolean noConnection)
+	{
+		if (noConnection)
+		{
+			setRecordModifications(false);
+			connectButton.setDisable(true);
+		}
+		else
+		{
+			noModificationsLock = 1;
+			setRecordModifications(true);
+			connectButton.setDisable(false);
+		}
+		updateButtons();
 	}
 }

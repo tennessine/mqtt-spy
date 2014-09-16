@@ -28,7 +28,7 @@ public class ContextMenuUtils
 		final ContextMenu contextMenu = new ContextMenu();
 
 		// Cancel
-		MenuItem cancelItem = new MenuItem("[Subscription] Cancel active subscription (and keep the tab)");
+		MenuItem cancelItem = new MenuItem("[Subscription] Unsubscribe (and keep the tab)");
 		cancelItem.setDisable(false);
 
 		cancelItem.setOnAction(new EventHandler<ActionEvent>()
@@ -41,7 +41,7 @@ public class ContextMenuUtils
 		contextMenu.getItems().add(cancelItem);
 
 		// Re-subscribe
-		MenuItem resubscribeItem = new MenuItem("[Subscription] Re-subscribe to cancelled subscription");
+		MenuItem resubscribeItem = new MenuItem("[Subscription] Re-subscribe");
 		resubscribeItem.setDisable(true);
 
 		resubscribeItem.setOnAction(new EventHandler<ActionEvent>()
@@ -93,8 +93,6 @@ public class ContextMenuUtils
 			public void handle(ActionEvent e)
 			{				
 				eventManager.notifyClearHistory(subscription);
-				// TODO: this is bad - this sorting
-				// subscription.messageReceived(null);
 				subscription.clear();
 			}
 		});
@@ -108,7 +106,7 @@ public class ContextMenuUtils
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 
-		MenuItem cancelItem = new MenuItem("[Subscriptions] Cancel all active subscriptions (if any)");
+		MenuItem cancelItem = new MenuItem("[Subscriptions] Unsubscribe from all active subscriptions (if any)");
 		cancelItem.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
@@ -119,7 +117,7 @@ public class ContextMenuUtils
 		contextMenu.getItems().add(cancelItem);
 
 		MenuItem resubscribeItem = new MenuItem(
-				"[Subscriptions] Re-subscribe to all cancelled subscriptions (if any)");
+				"[Subscriptions] Re-subscribe to all non-active subscriptions (if any)");
 
 		resubscribeItem.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -141,8 +139,6 @@ public class ContextMenuUtils
 			public void handle(ActionEvent e)
 			{
 				eventManager.notifyClearHistory(connection);
-				// TODO: this is bad - this sorting				
-				// connection.messageReceived(null);
 				connection.clear();
 			}
 		});
@@ -353,9 +349,27 @@ public class ContextMenuUtils
 		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connectionId, tab));
 
 		contextMenu.getItems().add(reconnectItem);
+
+		// Separator
 		contextMenu.getItems().add(new SeparatorMenuItem());
+
 		contextMenu.getItems().add(disconnectItem);		
 		contextMenu.getItems().add(disconnectAndCloseItem);
+		
+		// // Separator
+		// contextMenu.getItems().add(new SeparatorMenuItem());
+		//
+		// // Show statistics
+		// final MenuItem stats = new
+		// MenuItem("[Statistics] Show broker's $SYS/# statistics");
+		// stats.setOnAction(new EventHandler<ActionEvent>()
+		// {
+		// public void handle(ActionEvent e)
+		// {
+		// // TODO: create a new subscription
+		// }
+		// });
+		// contextMenu.getItems().add(stats);
 
 		return contextMenu;
 	}
