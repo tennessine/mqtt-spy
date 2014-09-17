@@ -27,7 +27,10 @@ public class MqttEventHandler implements Runnable
 		// This also covers sub-types of the failure event
 		if (event instanceof MqttConnectionFailureEvent)
 		{
-			((MqttConnectionFailureEvent) event).getConnection().setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
+			final MqttConnectionFailureEvent mqttConnectionFailureEvent = (MqttConnectionFailureEvent) event;
+			
+			mqttConnectionFailureEvent.getConnection().setDisconnectionReason(mqttConnectionFailureEvent.getCause().getMessage());
+			mqttConnectionFailureEvent.getConnection().setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
 		}
 		
 		if (event instanceof MqttConnectionAttemptSuccessEvent)
@@ -37,7 +40,10 @@ public class MqttEventHandler implements Runnable
 		
 		if (event instanceof MqttDisconnectionAttemptSuccessEvent)
 		{
-			((MqttDisconnectionAttemptSuccessEvent) event).getConnection().setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
+			final MqttDisconnectionAttemptSuccessEvent mqttDisconnectionAttemptSuccessEvent = (MqttDisconnectionAttemptSuccessEvent) event;
+			
+			mqttDisconnectionAttemptSuccessEvent.getConnection().setDisconnectionReason("");
+			mqttDisconnectionAttemptSuccessEvent.getConnection().setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
 		}
 	}
 }

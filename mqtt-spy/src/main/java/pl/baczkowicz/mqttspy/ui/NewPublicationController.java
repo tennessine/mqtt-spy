@@ -95,10 +95,10 @@ public class NewPublicationController implements Initializable
 		Utils.recordTopic(publicationTopic, publicationTopics);
 	}
 	
-	public void setActive(final boolean active)
+	public void setConnected(final boolean connected)
 	{
-		this.publishButton.setDisable(!active);
-		this.publicationTopicText.setDisable(!active);
+		this.publishButton.setDisable(!connected);
+		this.publicationTopicText.setDisable(!connected);
 	}
 	
 	@FXML

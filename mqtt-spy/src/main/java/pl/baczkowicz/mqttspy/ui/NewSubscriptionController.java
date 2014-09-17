@@ -56,7 +56,7 @@ public class NewSubscriptionController implements Initializable
 
 	private RuntimeConnectionProperties connectionProperties;
 
-	private boolean active;
+	private boolean connected;
 
 	private EventManager eventManager;
 
@@ -96,7 +96,7 @@ public class NewSubscriptionController implements Initializable
 	        	{
 		        	case ENTER:
 		        	{
-		        		if (active)
+		        		if (connected)
 		        		{
 		        			subscribe();
 		        		}
@@ -109,11 +109,11 @@ public class NewSubscriptionController implements Initializable
 	    });
 	}
 	
-	public void setActive(final boolean active)
+	public void setConnected(final boolean connected)
 	{
-		this.active = active;
-		this.subscribeButton.setDisable(!active);
-		this.subscriptionTopicText.setDisable(!active);
+		this.connected = connected;
+		this.subscribeButton.setDisable(!connected);
+		this.subscriptionTopicText.setDisable(!connected);
 	}
 
 	public boolean recordSubscriptionTopic(final String subscriptionTopic)
@@ -131,8 +131,9 @@ public class NewSubscriptionController implements Initializable
 			subscriptionDetails.setTopic(subscriptionTopic);
 			subscriptionDetails.setQos(subscriptionQosChoice.getSelectionModel().getSelectedIndex());
 			
-			if (recordSubscriptionTopic(subscriptionTopic))
+			if (!connection.getSubscriptions().keySet().contains(subscriptionTopic))		
 			{
+				recordSubscriptionTopic(subscriptionTopic);
 				subscribe(subscriptionDetails, true);
 			}
 			else
@@ -158,7 +159,7 @@ public class NewSubscriptionController implements Initializable
 
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
 
-		colorPicker.setValue(colors.get(subscriptionTabs.getTabs().size() % 16));
+		colorPicker.setValue(colors.get(connection.getLastUsedSubscriptionId() % 16));
 		subscriptionTabs.getTabs().add(subscriptionController.getTab());
 
 		subscription.setSubscriptionController(subscriptionController);

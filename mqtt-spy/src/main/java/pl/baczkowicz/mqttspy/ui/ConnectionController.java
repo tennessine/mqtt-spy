@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class ConnectionController implements Initializable, Observer
@@ -74,6 +76,8 @@ public class ConnectionController implements Initializable, Observer
 	private MqttConnection connection;
 
 	private Tab connectionTab;
+	
+	private Tooltip tooltip;
 
 	private RuntimeConnectionProperties connectionProperties;
 
@@ -109,8 +113,7 @@ public class ConnectionController implements Initializable, Observer
 			}
 		});
 		
-		updateMinHeights();
-		
+		updateMinHeights();		
 	}
 	
 	public void init()
@@ -119,7 +122,11 @@ public class ConnectionController implements Initializable, Observer
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
 		newSubscriptionPaneController.setEventManager(eventManager);
-		newSubscriptionPaneController.setConnectionProperties(connectionProperties);
+		newSubscriptionPaneController.setConnectionProperties(connectionProperties);		
+		connection.setConnectionController(this);
+		
+		tooltip = new Tooltip();
+		connectionTab.setTooltip(tooltip);
 		
 		// connectionPane.setMaxWidth(500);
 		// subscriptionsTitledPane.setMaxWidth(500);
@@ -184,8 +191,8 @@ public class ConnectionController implements Initializable, Observer
 		{
 			if (update instanceof MqttConnectionStatus)
 			{
-				newSubscriptionPaneController.setActive(false);
-				newPublicationPaneController.setActive(false);
+				newSubscriptionPaneController.setConnected(false);
+				newPublicationPaneController.setConnected(false);
 				
 				for (final MqttSubscription sub : connection.getSubscriptions().values())
 				{
@@ -203,8 +210,8 @@ public class ConnectionController implements Initializable, Observer
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(false);
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						newSubscriptionPaneController.setActive(true);
-						newPublicationPaneController.setActive(true);
+						newSubscriptionPaneController.setConnected(true);
+						newPublicationPaneController.setConnected(true);
 						break;
 					case CONNECTING:
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
@@ -230,9 +237,15 @@ public class ConnectionController implements Initializable, Observer
 				{
 					connectionTab.getStyleClass().remove(1);
 				}
-				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));				
+				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));
+				updateConnectionTooltip();
 			}
 		}
+	}
+	
+	public void updateConnectionTooltip()
+	{
+		DialogUtils.updateConnectionTooltip(connection, tooltip);
 	}
 
 	public void setConnectionProperties(final RuntimeConnectionProperties properties)

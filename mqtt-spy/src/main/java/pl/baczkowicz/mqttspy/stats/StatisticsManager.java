@@ -2,9 +2,12 @@ package pl.baczkowicz.mqttspy.stats;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -32,20 +35,42 @@ public class StatisticsManager
 	
 	private static final String STATS_FILENAME = "mqtt-spy-stats.xml";
 	
+	private static final int MAX_PERIOD = 60;
+	
 	private final XMLParser parser;
 
 	private File statsFile;
 
 	public static MqttSpyStats stats;
 	
-	public static Map<Integer, Long> runtimeMessagesPublished = new HashMap<>();
+	public static Map<Integer, List<ConnectionStats>> runtimeMessagesPublished = new HashMap<>();
 	
-	public static Map<Integer, Long> runtimeMessagesReceived = new HashMap<>();
+	public static Map<Integer, List<ConnectionStats>> runtimeMessagesReceived = new HashMap<>();	
 	
 	public StatisticsManager() throws XMLException
 	{
 		this.parser = new XMLParser(SCHEMA, PACKAGE);
 		statsFile = new File(ConfigurationManager.getDefaultHomeDirectory() + STATS_FILENAME);
+
+		new Thread(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				while (true)
+				{
+					try
+					{
+						Thread.sleep(1000);
+						nextSecond();
+					}
+					catch (InterruptedException e)
+					{
+						break;
+					}
+				}				
+			}
+		}).start();
 	}
 	
 	public boolean loadStats()
@@ -88,11 +113,15 @@ public class StatisticsManager
 	{
 		try
 		{
+			if(!statsFile.exists()) 
+			{
+				statsFile.createNewFile();
+			} 
 			parser.saveToFile(statsFile, 
 					new JAXBElement(new QName("http://baczkowicz.pl/mqtt-spy-stats", "MqttSpyStats"), MqttSpyStats.class, stats));
 			return true;
 		}
-		catch (XMLException e)
+		catch (XMLException | IOException e)
 		{
 			logger.error("Cannot save the statistics file", e);
 		}
@@ -110,40 +139,112 @@ public class StatisticsManager
 		stats.setSubscriptions(stats.getSubscriptions() + 1);		
 	}
 	
-	public static void messageReceived(final int connectionId)
+	public static void messageReceived(final int connectionId, final List<String> subscriptions)
 	{
 		stats.setMessagesReceived(stats.getMessagesReceived() + 1);
-		
-		// Count runtime stats (per connection)
+				
 		if (runtimeMessagesReceived.get(connectionId) == null)
 		{
-			runtimeMessagesReceived.put(connectionId, (long) 0);
+			runtimeMessagesReceived.put(connectionId, new ArrayList<ConnectionStats>());
+			runtimeMessagesReceived.get(connectionId).add(new ConnectionStats());
 		}		
-		runtimeMessagesReceived.put(connectionId, runtimeMessagesReceived.get(connectionId) + 1);
+			
+		runtimeMessagesReceived.get(connectionId).get(0).add(subscriptions);		
 	}
 	
-	public static void messagePublished(final int connectionId)
+	public static void messagePublished(final int connectionId, final String topic)
 	{
 		stats.setMessagesPublished(stats.getMessagesPublished() + 1);		
 
-		// Count runtime stats (per connection)
-		if (runtimeMessagesPublished.get(connectionId) == null)
-		{
-			runtimeMessagesPublished.put(connectionId, (long) 0);
-		}		
-		runtimeMessagesPublished.put(connectionId, runtimeMessagesPublished.get(connectionId) + 1);
+		// TODO:
+//		for (final int interval : runtimeMessagesPublished.keySet())
+//		{
+//			// Count runtime stats (per connection)
+//			if (runtimeMessagesPublished.get(interval).get(connectionId) == null)
+//			{
+//				runtimeMessagesPublished.get(interval).put(connectionId, new ConnectionStats());
+//			}		
+//			runtimeMessagesPublished.get(interval).get(connectionId).add(topic);
+//		}
 	}
 	
-	public static void resetRuntimeStats()
+	public void nextSecond()
 	{
-		for (final Integer id : runtimeMessagesReceived.keySet())
+		for (final Integer connectionId : runtimeMessagesReceived.keySet())
 		{
-			runtimeMessagesReceived.put(id, (long) 0);
+			runtimeMessagesReceived.get(connectionId).add(0, new ConnectionStats());
+			if (runtimeMessagesReceived.get(connectionId).size() > MAX_PERIOD)
+			{
+				runtimeMessagesReceived.get(connectionId).remove(MAX_PERIOD - 1);
+			}
 		}
 		
-		for (final Integer id : runtimeMessagesPublished.keySet())
+		for (final Integer connectionId : runtimeMessagesReceived.keySet())
 		{
-			runtimeMessagesPublished.put(id, (long) 0);
+			runtimeMessagesReceived.get(connectionId).add(0, new ConnectionStats());
+			if (runtimeMessagesReceived.get(connectionId).size() > MAX_PERIOD)
+			{
+				runtimeMessagesReceived.get(connectionId).remove(MAX_PERIOD - 1);
+			}
 		}
+	}
+	
+//	public static void resetRuntimeStats(final int interval)
+//	{
+//		for (final Integer id : runtimeMessagesReceived.keySet())
+//		{
+//			runtimeMessagesReceived.get(interval).get(id).reset();
+//		}
+//		
+//		for (final Integer id : runtimeMessagesPublished.keySet())
+//		{
+//			runtimeMessagesPublished.get(interval).get(id).reset();
+//		}
+//	}
+	
+	public static ConnectionStats getMessagesPublished(final int interval, final int connectionId)
+	{
+		if (runtimeMessagesPublished.get(connectionId) == null)
+		{
+			return new ConnectionStats();
+		}
+		
+		final ConnectionStats aggregatedConnectionStats = new ConnectionStats();
+		for (int i = 0; i < interval; i++)
+		{
+			if (i == runtimeMessagesPublished.get(connectionId).size())
+			{
+				break;
+			}
+			
+			final ConnectionStats cs = runtimeMessagesPublished.get(connectionId).get(i);
+			
+			aggregatedConnectionStats.add(cs);
+		}
+		aggregatedConnectionStats.average(interval);
+		return aggregatedConnectionStats;
+	}
+	
+	public static ConnectionStats getMessagesReceived(final int interval, final int connectionId)
+	{
+		if (runtimeMessagesReceived.get(connectionId) == null)
+		{
+			return new ConnectionStats();
+		}
+		
+		final ConnectionStats aggregatedConnectionStats = new ConnectionStats();
+		for (int i = 0; i < interval; i++)
+		{
+			if (i == runtimeMessagesReceived.get(connectionId).size())
+			{
+				break;
+			}
+			
+			final ConnectionStats cs = runtimeMessagesReceived.get(connectionId).get(i);
+			
+			aggregatedConnectionStats.add(cs);
+		}
+		aggregatedConnectionStats.average(interval);
+		return aggregatedConnectionStats;
 	}
 }

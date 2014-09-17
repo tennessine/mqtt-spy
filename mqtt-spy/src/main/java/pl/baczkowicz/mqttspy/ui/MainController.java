@@ -27,6 +27,7 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
+import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -168,11 +169,51 @@ public class MainController
 		controlPanelPaneController.setMqttManager(mqttManager);
 		controlPanelPaneController.init();	
 		
-		final StatsChartWindow statsWindow = new StatsChartWindow();
-		
+		// TODO: experimenting with stats window
+		// final StatsChartWindow statsWindow = new StatsChartWindow();		
 		// Scene scene = new Scene(statsWindow);
 		// scene.getStylesheets().addAll(mainPane.getScene().getStylesheets());		
-		statsWindow.start(new Stage());
+		// statsWindow.start(new Stage());
+		
+		new Thread(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				while (true)
+				{
+					try
+					{
+						Thread.sleep(1000);
+					}
+					catch (InterruptedException e)
+					{
+						break;
+					}
+				
+					// TODO: calculations outside the fx thread
+					Platform.runLater(new Runnable()
+					{					
+						@Override
+						public void run()
+						{
+							updateConnectionTooltips();					
+						}
+					});						
+				}
+			}
+		}).start();
+	}
+	
+	public void updateConnectionTooltips()
+	{
+		for (final MqttConnection connection : mqttManager.getConnections())
+		{
+			if (connection.getConnectionController() != null)
+			{
+				connection.getConnectionController().updateConnectionTooltip();
+			}
+		}	
 	}
 	
 	public TabPane getConnectionTabs()

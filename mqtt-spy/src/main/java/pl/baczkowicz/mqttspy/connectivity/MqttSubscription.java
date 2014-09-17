@@ -6,6 +6,8 @@ import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 
 public class MqttSubscription extends ObservableMessageStoreWithFiltering
 {
+	private int id;
+	
 	private String topic;
 
 	private Integer qos;
@@ -94,5 +96,15 @@ public class MqttSubscription extends ObservableMessageStoreWithFiltering
 	public MqttConnection getConnection()	
 	{
 		return connection;
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(final int id)
+	{
+		this.id = id;		
 	}
 }

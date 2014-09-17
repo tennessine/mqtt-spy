@@ -23,7 +23,10 @@ import org.controlsfx.dialog.Dialogs.UserInfo;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
+import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 public class DialogUtils
 {
@@ -91,6 +94,30 @@ public class DialogUtils
 								+ ") is read-only. Changes won't be saved. "
 								+ "Please make the file writeable for any changes to be saved.")
 				.showWarning();
+	}
+	
+	public static void updateConnectionTooltip(final MqttConnection connection, final Tooltip tooltip)
+	{
+		final StringBuffer sb = new StringBuffer();
+		sb.append("Status: " + connection.getConnectionStatus().toString().toLowerCase());
+		if (connection.getConnectionStatus().equals(MqttConnectionStatus.DISCONNECTED))
+		{
+			if (!connection.getDisconnectionReason().isEmpty())
+			{
+				sb.append(System.getProperty("line.separator") + "Reason: " + connection.getDisconnectionReason().toLowerCase());
+			}
+		}
+
+		sb.append(System.getProperty("line.separator") + "Published/sec [5s/30s/5m]: " + 
+				StatisticsManager.getMessagesPublished(5, connection.getProperties().getId()).overallCount + "/" + 
+				StatisticsManager.getMessagesPublished(30, connection.getProperties().getId()).overallCount + "/" +
+				StatisticsManager.getMessagesPublished(300, connection.getProperties().getId()).overallCount);
+		sb.append(System.getProperty("line.separator") + "Received/sec [5s/30s/5m]: " + 
+				StatisticsManager.getMessagesReceived(5, connection.getProperties().getId()).overallCount + "/" + 
+				StatisticsManager.getMessagesReceived(30, connection.getProperties().getId()).overallCount + "/" +
+				StatisticsManager.getMessagesReceived(300, connection.getProperties().getId()).overallCount);
+		
+		tooltip.setText(sb.toString());
 	}
 	
 	public static void showTooltip(final Button button, final String message)

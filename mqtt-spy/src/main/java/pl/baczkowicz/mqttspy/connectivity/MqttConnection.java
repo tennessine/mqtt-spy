@@ -1,5 +1,6 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWit
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttConnection extends ObservableMessageStoreWithFiltering
@@ -28,6 +30,8 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	private MqttConnectionStatus connectionStatus;
 
 	private final Map<String, MqttSubscription> subscriptions = new HashMap<String, MqttSubscription>();
+	
+	private int lastUsedSubscriptionId = 1;
 
 	private SubscriptionsStore subscriptionsStore;
 
@@ -43,6 +47,10 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	private EventManager eventManager;
 
 	private Tab connectionTab;
+	
+	private ConnectionController connectionController;
+
+	private String disconnectionReason;
 
 	public MqttConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager)
@@ -61,11 +69,15 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	public void messageReceived(final MqttContent message)
 	{		
 		// Check matching subscription, based on moquette
-		List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
+		final List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
+		
+		final List<String> matchingSubscriptionTopics = new ArrayList<String>();
 		
 		// For all found subscriptions
 		for (final Subscription matchingSubscription : matchingSubscriptions)
 		{
+			matchingSubscriptionTopics.add(matchingSubscription.getTopic());
+			
 			// Get the mqtt-spy's subscription object
 			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription.getTopic());
 
@@ -79,6 +91,8 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 				mqttSubscription.messageReceived(message);
 			}
 		}		
+		
+		StatisticsManager.messageReceived(properties.getId(), matchingSubscriptionTopics);
 
 		// Pass the message for connection (all subscriptions) handling
 		super.messageReceived(message);
@@ -92,7 +106,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			getClient().publish(publicationTopic, data.getBytes(), qos, retained);
 			
 			logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-			StatisticsManager.messagePublished(properties.getId());
+			StatisticsManager.messagePublished(properties.getId(), publicationTopic);
 		}
 		catch (MqttException e)
 		{
@@ -102,8 +116,19 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 
 	public void connectionLost(Throwable cause)
 	{
+		setDisconnectionReason(cause.getMessage());
 		setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
 		unsubscribeAll();
+	}
+
+	public void setDisconnectionReason(final String message)
+	{
+		this.disconnectionReason = message;	
+	}
+	
+	public String getDisconnectionReason()
+	{
+		return disconnectionReason;
 	}
 
 	public void addSubscription(final MqttSubscription subscription)
@@ -111,6 +136,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		// Add it to the store if it hasn't been created before
 		if (subscriptions.put(subscription.getTopic(), subscription) == null)
 		{
+			subscription.setId(lastUsedSubscriptionId++);			
 			subscriptionsStore.add(new Subscription(properties.getClientId(), subscription
 					.getTopic(), QOSType.MOST_ONE, true));
 		}
@@ -290,5 +316,20 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		this.isOpened = isOpened;
 		
 		eventManager.notifyConnectionStatusChanged(this);
+	}
+	
+	public int getLastUsedSubscriptionId()
+	{
+		return lastUsedSubscriptionId;
+	}
+
+	public ConnectionController getConnectionController()
+	{
+		return connectionController;
+	}
+
+	public void setConnectionController(ConnectionController connectionController)
+	{
+		this.connectionController = connectionController;
 	}
 }
