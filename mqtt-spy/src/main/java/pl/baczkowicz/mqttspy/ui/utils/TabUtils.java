@@ -26,7 +26,7 @@ public class TabUtils
 	
 	public static ConnectionController loadConnectionTab(final MainController mainController,
 			final Object parent, final MqttManager mqttManager, 
-			final RuntimeConnectionProperties connectionProperties, final EventManager eventManager)
+			final RuntimeConnectionProperties connectionProperties, final EventManager eventManager, final StatisticsManager statisticsManager)
 	{		
 		// Create connection
 		final MqttConnection connection = mqttManager.createConnection(connectionProperties);
@@ -46,6 +46,7 @@ public class TabUtils
 		connectionController.setConnection(connection);
 		connectionController.setConnectionProperties(connectionProperties);
 		connectionController.setEventManager(eventManager);
+		connectionController.setStatisticsManager(statisticsManager);
 		connectionController.init();
 		
 		// Connect

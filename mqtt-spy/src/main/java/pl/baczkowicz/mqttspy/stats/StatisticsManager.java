@@ -3,7 +3,7 @@ package pl.baczkowicz.mqttspy.stats;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -25,7 +25,7 @@ import pl.baczkowicz.mqttspy.stats.generated.MqttSpyStats;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class StatisticsManager
+public class StatisticsManager implements Runnable
 {
 	final static Logger logger = LoggerFactory.getLogger(StatisticsManager.class);
 	
@@ -35,7 +35,9 @@ public class StatisticsManager
 	
 	private static final String STATS_FILENAME = "mqtt-spy-stats.xml";
 	
-	private static final int MAX_PERIOD = 60;
+	public final static List<Integer> periods = Arrays.asList(5, 30, 300);
+	
+	private final static int removeAfter = 301;
 	
 	private final XMLParser parser;
 
@@ -43,34 +45,17 @@ public class StatisticsManager
 
 	public static MqttSpyStats stats;
 	
-	public static Map<Integer, List<ConnectionStats>> runtimeMessagesPublished = new HashMap<>();
+	public static Map<Integer, ConnectionStats> runtimeMessagesPublished = new HashMap<>();
 	
-	public static Map<Integer, List<ConnectionStats>> runtimeMessagesReceived = new HashMap<>();	
+	public static Map<Integer, ConnectionStats> runtimeMessagesReceived = new HashMap<>();	
 	
 	public StatisticsManager() throws XMLException
 	{
 		this.parser = new XMLParser(SCHEMA, PACKAGE);
+		
 		statsFile = new File(ConfigurationManager.getDefaultHomeDirectory() + STATS_FILENAME);
 
-		new Thread(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				while (true)
-				{
-					try
-					{
-						Thread.sleep(1000);
-						nextSecond();
-					}
-					catch (InterruptedException e)
-					{
-						break;
-					}
-				}				
-			}
-		}).start();
+		new Thread(this).start();
 	}
 	
 	public boolean loadStats()
@@ -113,6 +98,7 @@ public class StatisticsManager
 	{
 		try
 		{
+			statsFile.mkdirs();
 			if(!statsFile.exists()) 
 			{
 				statsFile.createNewFile();
@@ -123,7 +109,7 @@ public class StatisticsManager
 		}
 		catch (XMLException | IOException e)
 		{
-			logger.error("Cannot save the statistics file", e);
+			logger.error("Cannot save the statistics file - " + statsFile.getAbsolutePath(), e);
 		}
 		
 		return false;
@@ -141,110 +127,102 @@ public class StatisticsManager
 	
 	public static void messageReceived(final int connectionId, final List<String> subscriptions)
 	{
+		// Global stats (saved to XML)
 		stats.setMessagesReceived(stats.getMessagesReceived() + 1);
 				
+		// Runtime stats
 		if (runtimeMessagesReceived.get(connectionId) == null)
 		{
-			runtimeMessagesReceived.put(connectionId, new ArrayList<ConnectionStats>());
-			runtimeMessagesReceived.get(connectionId).add(new ConnectionStats());
+			runtimeMessagesReceived.put(connectionId, new ConnectionStats(periods));
+			runtimeMessagesReceived.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
 		}		
 			
-		runtimeMessagesReceived.get(connectionId).get(0).add(subscriptions);		
+		runtimeMessagesReceived.get(connectionId).runtimeStats.get(0).add(subscriptions);
 	}
 	
 	public static void messagePublished(final int connectionId, final String topic)
 	{
+		// Global stats (saved to XML)
 		stats.setMessagesPublished(stats.getMessagesPublished() + 1);		
 
-		// TODO:
-//		for (final int interval : runtimeMessagesPublished.keySet())
-//		{
-//			// Count runtime stats (per connection)
-//			if (runtimeMessagesPublished.get(interval).get(connectionId) == null)
-//			{
-//				runtimeMessagesPublished.get(interval).put(connectionId, new ConnectionStats());
-//			}		
-//			runtimeMessagesPublished.get(interval).get(connectionId).add(topic);
-//		}
+		// Runtime stats
+		if (runtimeMessagesPublished.get(connectionId) == null)
+		{
+			runtimeMessagesPublished.put(connectionId, new ConnectionStats(periods));
+			runtimeMessagesPublished.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
+		}		
+			
+		runtimeMessagesPublished.get(connectionId).runtimeStats.get(0).add(topic);
 	}
 	
-	public void nextSecond()
+	public static void nextInterval(final Map<Integer, ConnectionStats> runtimeMessages)
 	{
-		for (final Integer connectionId : runtimeMessagesReceived.keySet())
+		for (final Integer connectionId : runtimeMessages.keySet())
 		{
-			runtimeMessagesReceived.get(connectionId).add(0, new ConnectionStats());
-			if (runtimeMessagesReceived.get(connectionId).size() > MAX_PERIOD)
+			final Map<Integer, ConnectionIntervalStats> avgs = runtimeMessages.get(connectionId).avgPeriods;
+			final List<ConnectionIntervalStats> runtime = runtimeMessages.get(connectionId).runtimeStats;	
+			
+			final ConnectionIntervalStats lastComplete = runtime.size() > 0 ? runtime.get(0) : new ConnectionIntervalStats(); 
+					
+			// Add the last complete and subtract over the interval
+			for (final int period : avgs.keySet())
 			{
-				runtimeMessagesReceived.get(connectionId).remove(MAX_PERIOD - 1);
+				avgs.get(period).plus(lastComplete);
+				if (runtime.size() > period)
+				{
+					avgs.get(period).minus(runtime.get(period));
+				}
 			}
-		}
-		
-		for (final Integer connectionId : runtimeMessagesReceived.keySet())
-		{
-			runtimeMessagesReceived.get(connectionId).add(0, new ConnectionStats());
-			if (runtimeMessagesReceived.get(connectionId).size() > MAX_PERIOD)
+			
+			runtime.add(0, new ConnectionIntervalStats());
+			
+			if (runtime.size() > removeAfter)
 			{
-				runtimeMessagesReceived.get(connectionId).remove(MAX_PERIOD - 1);
+				runtime.remove(removeAfter);
 			}
 		}
 	}
 	
-//	public static void resetRuntimeStats(final int interval)
-//	{
-//		for (final Integer id : runtimeMessagesReceived.keySet())
-//		{
-//			runtimeMessagesReceived.get(interval).get(id).reset();
-//		}
-//		
-//		for (final Integer id : runtimeMessagesPublished.keySet())
-//		{
-//			runtimeMessagesPublished.get(interval).get(id).reset();
-//		}
-//	}
+	public static void nextInterval()
+	{		
+		nextInterval(runtimeMessagesPublished);
+		nextInterval(runtimeMessagesReceived);		
+	}
 	
-	public static ConnectionStats getMessagesPublished(final int interval, final int connectionId)
+	public ConnectionIntervalStats getMessagesPublished(final int connectionId, final int period)
 	{
 		if (runtimeMessagesPublished.get(connectionId) == null)
 		{
-			return new ConnectionStats();
+			return new ConnectionIntervalStats();
 		}
-		
-		final ConnectionStats aggregatedConnectionStats = new ConnectionStats();
-		for (int i = 0; i < interval; i++)
-		{
-			if (i == runtimeMessagesPublished.get(connectionId).size())
-			{
-				break;
-			}
-			
-			final ConnectionStats cs = runtimeMessagesPublished.get(connectionId).get(i);
-			
-			aggregatedConnectionStats.add(cs);
-		}
-		aggregatedConnectionStats.average(interval);
-		return aggregatedConnectionStats;
+				
+		return runtimeMessagesPublished.get(connectionId).avgPeriods.get(period).average(period);
 	}
 	
-	public static ConnectionStats getMessagesReceived(final int interval, final int connectionId)
+	public ConnectionIntervalStats getMessagesReceived(final int connectionId, final int period)
 	{
 		if (runtimeMessagesReceived.get(connectionId) == null)
 		{
-			return new ConnectionStats();
+			return new ConnectionIntervalStats();
 		}
 		
-		final ConnectionStats aggregatedConnectionStats = new ConnectionStats();
-		for (int i = 0; i < interval; i++)
+		return runtimeMessagesReceived.get(connectionId).avgPeriods.get(period).average(period);
+	}
+
+	@Override
+	public void run()
+	{
+		while (true)
 		{
-			if (i == runtimeMessagesReceived.get(connectionId).size())
+			try
+			{
+				Thread.sleep(1000);
+				nextInterval();
+			}
+			catch (InterruptedException e)
 			{
 				break;
 			}
-			
-			final ConnectionStats cs = runtimeMessagesReceived.get(connectionId).get(i);
-			
-			aggregatedConnectionStats.add(cs);
-		}
-		aggregatedConnectionStats.average(interval);
-		return aggregatedConnectionStats;
+		}					
 	}
 }

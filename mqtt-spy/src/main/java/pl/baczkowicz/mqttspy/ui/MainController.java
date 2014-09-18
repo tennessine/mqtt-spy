@@ -338,7 +338,8 @@ public class MainController
 			else
 			{
 				final ConnectionController connectionController = TabUtils.loadConnectionTab(this,
-						this, mqttManager, new RuntimeConnectionProperties(connectionDetails, userCredentials), eventManager);
+						this, mqttManager, new RuntimeConnectionProperties(connectionDetails, userCredentials), 
+						eventManager, statisticsManager);
 				
 				for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
 				{

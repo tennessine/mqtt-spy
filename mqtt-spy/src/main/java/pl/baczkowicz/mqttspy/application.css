@@ -105,7 +105,7 @@
 
 .subscribed .text
 {
-	-fx-strikethrough: false;
+	/*-fx-strikethrough: false;*/
 	-fx-underline: false;
 	-fx-font-style: normal;
 }
@@ -117,7 +117,7 @@
 
 .unsubscribed .text
 {
-	-fx-strikethrough: true;	
+	/*-fx-strikethrough: true;*/	
 	-fx-underline: true;
 	-fx-font-style: italic;
 }

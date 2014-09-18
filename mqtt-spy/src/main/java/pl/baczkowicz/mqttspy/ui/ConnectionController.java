@@ -22,6 +22,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
@@ -82,6 +83,8 @@ public class ConnectionController implements Initializable, Observer
 	private RuntimeConnectionProperties connectionProperties;
 
 	private EventManager eventManager;
+
+	private StatisticsManager statisticsManager;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{		
@@ -245,11 +248,21 @@ public class ConnectionController implements Initializable, Observer
 	
 	public void updateConnectionTooltip()
 	{
-		DialogUtils.updateConnectionTooltip(connection, tooltip);
+		DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
 	}
 
 	public void setConnectionProperties(final RuntimeConnectionProperties properties)
 	{
 		this.connectionProperties = properties;		
+	}	
+
+	public StatisticsManager getStatisticsManager()
+	{
+		return statisticsManager;
+	}
+
+	public void setStatisticsManager(StatisticsManager statisticsManager)
+	{
+		this.statisticsManager = statisticsManager;
 	}
 }

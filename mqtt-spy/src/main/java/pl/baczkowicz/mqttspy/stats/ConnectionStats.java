@@ -1,71 +1,21 @@
 package pl.baczkowicz.mqttspy.stats;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ConnectionStats
 {
-	public Map<String, Long> messageCount = new HashMap<>();
+	final public List<ConnectionIntervalStats> runtimeStats = new ArrayList<>();
 	
-	public long overallCount = 0;
+	final public Map<Integer, ConnectionIntervalStats> avgPeriods = new HashMap<>();
 	
-	public void add(final String topic)
+	public ConnectionStats(List<Integer> periods)
 	{
-		overallCount++;
-		
-		if (messageCount.get(topic) == null)
+		for (final int period : periods)
 		{
-			messageCount.put(topic, (long) 1);
+			avgPeriods.put(period, new ConnectionIntervalStats());
 		}
-		else
-		{
-			messageCount.put(topic, messageCount.get(topic) + 1);
-		}		
-	}
-	
-	public void add(final List<String> topics)
-	{
-		overallCount++;
-		
-		for (final String topic : topics)
-		{
-			if (messageCount.get(topic) == null)
-			{
-				messageCount.put(topic, (long) 1);
-			}
-			else
-			{
-				messageCount.put(topic, messageCount.get(topic) + 1);
-			}
-		}
-	}
-	
-	public void reset()
-	{
-		overallCount = 0;
-		messageCount.clear();
-	}
-
-	public void add(final ConnectionStats cs)
-	{
-		overallCount = overallCount + cs.overallCount;
-		for (final String topic : cs.messageCount.keySet())
-		{
-			if (messageCount.containsKey(topic))
-			{
-				messageCount.put(topic, messageCount.get(topic) + cs.messageCount.get(topic));
-			}
-			else
-			{
-				messageCount.put(topic, cs.messageCount.get(topic));
-			}
-		}
-	}
-
-	public void average(final int interval)
-	{
-		overallCount = overallCount / interval;
-		// TODO: for topics
 	}
 }

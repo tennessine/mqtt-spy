@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.ui.utils;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,6 +31,53 @@ import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 public class DialogUtils
 {
+	private static final String STATS_FORMAT = "%s/sec " + getPeriodList() + ": " + getPeriodValues();
+	
+	private static String getPeriodList()
+	{
+		final StringBuffer sb = new StringBuffer();
+		
+		final Iterator<Integer> iterator = StatisticsManager.periods.iterator();
+		while (iterator.hasNext()) 
+		{
+			final int period = (int) iterator.next();
+			if (period > 60)
+			{
+				sb.append((period / 60) + "m");
+			}
+			else
+			{
+				sb.append(period + "s");
+			}
+			
+			if (iterator.hasNext())
+			{
+				sb.append(",");
+			}
+		}
+		
+		return "[" + sb.toString() + "]";
+	}
+	
+	private static String getPeriodValues()
+	{
+		final StringBuffer sb = new StringBuffer();
+		
+		final Iterator<Integer> iterator = StatisticsManager.periods.iterator();
+		while (iterator.hasNext()) 
+		{
+			sb.append("%.1f");	
+			iterator.next();
+			
+			if (iterator.hasNext())
+			{
+				sb.append("/");
+			}
+		}
+		
+		return sb.toString();
+	}
+	
 	public static void showError(final String title, final String message)
 	{
 		Dialogs.create().owner(null).title(title).masthead(null).message(message).showError();
@@ -96,7 +144,7 @@ public class DialogUtils
 				.showWarning();
 	}
 	
-	public static void updateConnectionTooltip(final MqttConnection connection, final Tooltip tooltip)
+	public static void updateConnectionTooltip(final MqttConnection connection, final Tooltip tooltip, final StatisticsManager statisticsManager)
 	{
 		final StringBuffer sb = new StringBuffer();
 		sb.append("Status: " + connection.getConnectionStatus().toString().toLowerCase());
@@ -108,14 +156,14 @@ public class DialogUtils
 			}
 		}
 
-		sb.append(System.getProperty("line.separator") + "Published/sec [5s/30s/5m]: " + 
-				StatisticsManager.getMessagesPublished(5, connection.getProperties().getId()).overallCount + "/" + 
-				StatisticsManager.getMessagesPublished(30, connection.getProperties().getId()).overallCount + "/" +
-				StatisticsManager.getMessagesPublished(300, connection.getProperties().getId()).overallCount);
-		sb.append(System.getProperty("line.separator") + "Received/sec [5s/30s/5m]: " + 
-				StatisticsManager.getMessagesReceived(5, connection.getProperties().getId()).overallCount + "/" + 
-				StatisticsManager.getMessagesReceived(30, connection.getProperties().getId()).overallCount + "/" +
-				StatisticsManager.getMessagesReceived(300, connection.getProperties().getId()).overallCount);
+		sb.append(System.getProperty("line.separator") + String.format(STATS_FORMAT, "Published", 
+				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 5).overallCount, 
+				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 30).overallCount,
+				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 300).overallCount));
+		sb.append(System.getProperty("line.separator") + String.format(STATS_FORMAT, "Received", 
+				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 5).overallCount, 
+				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 30).overallCount,
+				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 300).overallCount));
 		
 		tooltip.setText(sb.toString());
 	}
