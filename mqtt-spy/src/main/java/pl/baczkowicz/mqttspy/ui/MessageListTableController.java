@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.MessageStore;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContent;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageIndexChangedEvent;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
@@ -32,48 +32,48 @@ public class MessageListTableController implements Initializable, Observer
 {
 	final static Logger logger = LoggerFactory.getLogger(MessageListTableController.class);
 	
-	private ObservableList<ObservableMqttContent> items; 
+	private ObservableList<ObservableMqttContentProperties> items; 
 	
 	private EventDispatcher navigationEventDispatcher;
 
 	@FXML
-	private TableView<ObservableMqttContent> messageTable;
+	private TableView<ObservableMqttContentProperties> messageTable;
 
 	@FXML
-	private TableColumn<ObservableMqttContent, String> messageTopicColumn;
+	private TableColumn<ObservableMqttContentProperties, String> messageTopicColumn;
 	
 	@FXML
-	private TableColumn<ObservableMqttContent, String> messageContentColumn;
+	private TableColumn<ObservableMqttContentProperties, String> messageContentColumn;
 
 	@FXML
-	private TableColumn<ObservableMqttContent, String> messageReceivedAtColumn;
+	private TableColumn<ObservableMqttContentProperties, String> messageReceivedAtColumn;
 
 	private MessageStore store;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{				
 		// Table
-		messageTopicColumn.setCellValueFactory(new PropertyValueFactory<ObservableMqttContent, String>(
+		messageTopicColumn.setCellValueFactory(new PropertyValueFactory<ObservableMqttContentProperties, String>(
 				"topic"));
 
 		messageContentColumn
-				.setCellValueFactory(new PropertyValueFactory<ObservableMqttContent, String>(
+				.setCellValueFactory(new PropertyValueFactory<ObservableMqttContentProperties, String>(
 						"lastReceivedPayload"));
 
 		messageReceivedAtColumn
-				.setCellValueFactory(new PropertyValueFactory<ObservableMqttContent, String>(
+				.setCellValueFactory(new PropertyValueFactory<ObservableMqttContentProperties, String>(
 						"lastReceivedTimestamp"));
 
 		messageTable
-				.setRowFactory(new Callback<TableView<ObservableMqttContent>, TableRow<ObservableMqttContent>>()
+				.setRowFactory(new Callback<TableView<ObservableMqttContentProperties>, TableRow<ObservableMqttContentProperties>>()
 				{
-					public TableRow<ObservableMqttContent> call(
-							TableView<ObservableMqttContent> tableView)
+					public TableRow<ObservableMqttContentProperties> call(
+							TableView<ObservableMqttContentProperties> tableView)
 					{
-						final TableRow<ObservableMqttContent> row = new TableRow<ObservableMqttContent>()
+						final TableRow<ObservableMqttContentProperties> row = new TableRow<ObservableMqttContentProperties>()
 						{
 							@Override
-							protected void updateItem(ObservableMqttContent item, boolean empty)
+							protected void updateItem(ObservableMqttContentProperties item, boolean empty)
 							{
 								super.updateItem(item, empty);
 								if (!isEmpty() && item.getSubscription() != null)
@@ -98,7 +98,7 @@ public class MessageListTableController implements Initializable, Observer
 			@Override
 			public void changed(ObservableValue observable, Number oldValue, Number newValue)
 			{
-				final ObservableMqttContent item = messageTable.getSelectionModel().getSelectedItem();
+				final ObservableMqttContentProperties item = messageTable.getSelectionModel().getSelectedItem();
 				if (item != null)
 				{
 					final Object[] array = store.getMessages().toArray();
@@ -125,7 +125,7 @@ public class MessageListTableController implements Initializable, Observer
 				final long id = ((MqttContent) store.getMessages().toArray()[store.getMessages().size()
 						- messageIndex]).getId();
 	
-				for (final ObservableMqttContent item : items)
+				for (final ObservableMqttContentProperties item : items)
 				{
 					if (item.getId() == id)
 					{
@@ -148,7 +148,7 @@ public class MessageListTableController implements Initializable, Observer
 		messageTable.setItems(items);	
 	}
 
-	public void setItems(final ObservableList<ObservableMqttContent> items)
+	public void setItems(final ObservableList<ObservableMqttContentProperties> items)
 	{
 		this.items = items;
 	}

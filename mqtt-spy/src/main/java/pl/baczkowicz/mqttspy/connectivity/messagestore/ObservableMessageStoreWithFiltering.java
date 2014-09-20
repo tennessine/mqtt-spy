@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 
 public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
@@ -31,6 +32,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		super(maxSize);
 		this.name = name;
 		this.messagesPerTopic = new MessagesPerTopic(name);
+		this.messagesPerTopic.setFormatter(messageFormat);
 		this.filteredStore = new MqttMessageStore(maxSize);
 	}
 	
@@ -40,13 +42,19 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		final boolean allMessagesShown = !filtersEnabled();
 		final boolean topicAlreadyExists = messagesPerTopic.topicExists(message.getTopic());			
 		
-		// Add the message to 'all messages' store
+		// Add the message to 'all messages' store - oldest could be removed if the store has reached its max size 
 		final MqttContent removed = storeMessage(message);
 		
 		// Add it to the filtered store if all messages are shown or the topic is already on the list
 		if (allMessagesShown || filters.contains(message.getTopic()))
 		{
-			filteredStore.add(message);				
+			filteredStore.add(message);
+		}
+
+		// If the topic doesn't exist yet, add it (e.g. all shown but this is the first message for this topic)
+		if (allMessagesShown && !topicAlreadyExists)
+		{
+			applyFilter(message.getTopic(), false);	
 		}
 
 		// Formats the message with the currently selected formatter
@@ -56,11 +64,15 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		
 		// Note: following require the FX thread
 		// TODO: still needs to be optimised
+		final boolean selectNewTopic = allMessagesShown && !topicAlreadyExists;
+		
 		Platform.runLater(new Runnable()
 		{
 			@Override
 			public void run()
 			{				
+				// Stage 1 - table update - required are: removed message, new message, and whether to show the topic
+				
 				// Remove old message from stats
 				if (removed != null)
 				{
@@ -68,17 +80,15 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 				}
 				
 				// Calculate the overall message count per topic
-				messagesPerTopic.addAndRemove(message, messageFormat);
+				messagesPerTopic.addAndRemove(message);
 				
-				// Update the 'show' property and filter list
-				if (allMessagesShown)
+				// Update the 'show' property if required
+				if (selectNewTopic)
 				{			
-					if (!topicAlreadyExists)
-					{
-						messagesPerTopic.setShowValue(message.getTopic(), true);
-						applyFilter(message.getTopic(), false);
-					}							
+					messagesPerTopic.setShowValue(message.getTopic(), true);											
 				}
+				
+				// Stage 2 - message browsing update
 				
 				// Notify any observers there is a new message				
 				thisStore.notify(message);				
@@ -90,6 +100,13 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	public Deque<MqttContent> getMessages()
 	{		
 		return filteredStore.getMessages();
+	}
+	
+	@Override
+	public void setFormatter(final FormatterDetails messageFormat)
+	{
+		super.setFormatter(messageFormat);
+		messagesPerTopic.setFormatter(messageFormat);
 	}
 	
 	private void initialiseFilteredStore()
@@ -171,7 +188,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		return filters.size() != getObservableMessagesPerTopic().size();
 	}
 	
-	public ObservableList<SubscriptionTopicSummary> getObservableMessagesPerTopic()
+	public ObservableList<ObservableSubscriptionTopicSummaryProperties> getObservableMessagesPerTopic()
 	{
 		return messagesPerTopic.getObservableMessagesPerTopic();
 	}

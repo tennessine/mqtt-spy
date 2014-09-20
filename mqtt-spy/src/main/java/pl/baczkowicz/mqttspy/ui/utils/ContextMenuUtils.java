@@ -15,8 +15,8 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.SubscriptionTopicSummary;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContentProperties;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableSubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
@@ -152,7 +152,7 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createTopicTableContextMenu(
-			final TableView<SubscriptionTopicSummary> filterTable, final ObservableMessageStoreWithFiltering store, final EventDispatcher navigationEventDispatcher)
+			final TableView<ObservableSubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, final EventDispatcher navigationEventDispatcher)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		
@@ -162,7 +162,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -183,7 +183,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -204,7 +204,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -221,7 +221,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -238,7 +238,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -256,7 +256,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionTopicSummary item = filterTable.getSelectionModel()
+				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -271,7 +271,7 @@ public class ContextMenuUtils
 	}
 	
 	public static ContextMenu createMessageListTableContextMenu(
-			final TableView<ObservableMqttContent> messageTable, final EventDispatcher navigationEventDispatcher)
+			final TableView<ObservableMqttContentProperties> messageTable, final EventDispatcher navigationEventDispatcher)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		
@@ -281,7 +281,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableMqttContent item = messageTable.getSelectionModel()
+				final ObservableMqttContentProperties item = messageTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -302,7 +302,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableMqttContent item = messageTable.getSelectionModel()
+				final ObservableMqttContentProperties item = messageTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{

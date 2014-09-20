@@ -16,11 +16,13 @@ public class MessagesPerTopic
 {
 	final static Logger logger = LoggerFactory.getLogger(MessagesPerTopic.class);
 	
-	private Map<String, SubscriptionTopicSummary> topicToSummaryMapping = new HashMap<String, SubscriptionTopicSummary>();
+	private Map<String, ObservableSubscriptionTopicSummaryProperties> topicToSummaryMapping = new HashMap<String, ObservableSubscriptionTopicSummaryProperties>();
 
-	private final ObservableList<SubscriptionTopicSummary> observableTopicSummaryList = FXCollections.observableArrayList();
+	private final ObservableList<ObservableSubscriptionTopicSummaryProperties> observableTopicSummaryList = FXCollections.observableArrayList();
 
 	private final String name;
+
+	private FormatterDetails messageFormat;
 
 	public MessagesPerTopic(final String name)
 	{
@@ -40,14 +42,12 @@ public class MessagesPerTopic
 	
 	public void removeOldest(final MqttContent message)
 	{
-		final SubscriptionTopicSummary value = topicToSummaryMapping.get(message.getTopic());
+		final ObservableSubscriptionTopicSummaryProperties value = topicToSummaryMapping.get(message.getTopic());
 
 		// There should be something in
 		if (value != null)
 		{
 			value.setCount(value.countProperty().intValue() - 1);
-			
-			// TODO: repopulate the observable list
 		}
 		else
 		{
@@ -55,19 +55,18 @@ public class MessagesPerTopic
 		}		
 	}
 	
-	public void addAndRemove(final MqttContent message, final FormatterDetails messageFormat)
+	public void addAndRemove(final MqttContent message)
 	{
-		SubscriptionTopicSummary value = topicToSummaryMapping.get(message.getTopic());
+		ObservableSubscriptionTopicSummaryProperties value = topicToSummaryMapping.get(message.getTopic());
 
 		if (value == null)
 		{
-			value = new SubscriptionTopicSummary(false, 1, message, messageFormat);
+			value = new ObservableSubscriptionTopicSummaryProperties(false, 1, message, messageFormat);
 			topicToSummaryMapping.put(message.getTopic(), value);
 			observableTopicSummaryList.add(value);
 		}
 		else
 		{
-			// TODO: this might not be enough, because the list needs to be updated, not just the value
 			value.setCount(value.countProperty().intValue() + 1);	
 			value.setMessage(message, messageFormat);
 		}
@@ -78,7 +77,7 @@ public class MessagesPerTopic
 
 	public void toggleAllShowValues()
 	{
-		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		for (final ObservableSubscriptionTopicSummaryProperties item : observableTopicSummaryList)
 		{
 			item.showProperty().set(!item.showProperty().get());
 		}
@@ -86,7 +85,7 @@ public class MessagesPerTopic
 	
 	public void setShowValue(final String topic, final boolean value)
 	{
-		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		for (final ObservableSubscriptionTopicSummaryProperties item : observableTopicSummaryList)
 		{
 			if (item.topicProperty().getValue().equals(topic))
 			{
@@ -98,14 +97,19 @@ public class MessagesPerTopic
 	
 	public void setAllShowValues(final boolean value)
 	{
-		for (final SubscriptionTopicSummary item : observableTopicSummaryList)
+		for (final ObservableSubscriptionTopicSummaryProperties item : observableTopicSummaryList)
 		{
 			item.showProperty().set(value);
 		}
 	}
 
-	public ObservableList<SubscriptionTopicSummary> getObservableMessagesPerTopic()
+	public ObservableList<ObservableSubscriptionTopicSummaryProperties> getObservableMessagesPerTopic()
 	{
 		return observableTopicSummaryList;
+	}
+
+	public void setFormatter(final FormatterDetails messageFormat)
+	{
+		this.messageFormat = messageFormat;		
 	}
 }

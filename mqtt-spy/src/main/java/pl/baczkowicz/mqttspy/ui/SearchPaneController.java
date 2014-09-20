@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContent;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
 import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
@@ -72,7 +72,7 @@ public class SearchPaneController implements Initializable, Observer
 
 	private Tab tab;
 
-	private final ObservableList<ObservableMqttContent> foundMessages = FXCollections.observableArrayList();
+	private final ObservableList<ObservableMqttContentProperties> foundMessages = FXCollections.observableArrayList();
 
 	private EventDispatcher searchPaneEventDispatcher;
 	
@@ -126,7 +126,7 @@ public class SearchPaneController implements Initializable, Observer
 	
 	private void foundMessage(final MqttContent message)
 	{
-		foundMessages.add(0, new ObservableMqttContent(message, store.getFormatter()));
+		foundMessages.add(0, new ObservableMqttContentProperties(message, store.getFormatter()));
 		foundMessageStore.storeMessage(message);		
 	}
 	

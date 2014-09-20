@@ -39,6 +39,7 @@ public class MqttMessageHandler implements Runnable
 				{
 					final MqttContent content = queue.remove();
 					connection.messageReceived(content);
+					
 					// Let other threads do stuff
 					Thread.sleep(1);
 				}

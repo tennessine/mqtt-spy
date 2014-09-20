@@ -2,42 +2,38 @@ package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class ObservableMqttContent
+public class ObservableMqttContentProperties
 {
-	final static Logger logger = LoggerFactory.getLogger(ObservableMqttContent.class);
-		
 	private StringProperty topic;
+	
 	private StringProperty lastReceivedTimestamp;
+	
 	private StringProperty lastReceivedPayload;
-	
+
 	private MqttContent mqttContent;
-	
-	public ObservableMqttContent(final MqttContent message, final FormatterDetails format)
-	{			
-        this.topic = new SimpleStringProperty(message.getTopic());        
-        this.lastReceivedTimestamp = new SimpleStringProperty();
-        this.lastReceivedPayload = new SimpleStringProperty();
-        setMessage(message, format);               
+
+	public ObservableMqttContentProperties(final MqttContent message, final FormatterDetails format)
+	{
+		this.topic = new SimpleStringProperty(message.getTopic());
+		this.lastReceivedTimestamp = new SimpleStringProperty();
+		this.lastReceivedPayload = new SimpleStringProperty();
+		setMessage(message, format);
 	}
 
 	public StringProperty topicProperty()
 	{
 		return topic;
 	}
-	
+
 	public StringProperty lastReceivedTimestampProperty()
 	{
 		return lastReceivedTimestamp;
-	}	
+	}
 
 	public StringProperty lastReceivedPayloadProperty()
 	{
@@ -48,7 +44,7 @@ public class ObservableMqttContent
 	{
 		this.topic.set(topic);
 	}
-	
+
 	public MqttSubscription getSubscription()
 	{
 		return mqttContent.getSubscription();
@@ -57,8 +53,9 @@ public class ObservableMqttContent
 	public void setMessage(final MqttContent message, final FormatterDetails format)
 	{
 		this.mqttContent = message;
-				
-		this.lastReceivedTimestamp.set(Utils.DATE_WITH_MILLISECONDS_SDF.format(mqttContent.getDate()));		
+
+		this.lastReceivedTimestamp.set(Utils.DATE_WITH_MILLISECONDS_SDF.format(mqttContent
+				.getDate()));
 		this.lastReceivedPayload.set(mqttContent.getFormattedPayload(format));
 	}
 
