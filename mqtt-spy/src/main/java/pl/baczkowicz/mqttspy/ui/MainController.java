@@ -27,16 +27,15 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
-import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class MainController
@@ -74,13 +73,17 @@ public class MainController
 	private EventManager eventManager;
 	
 	private StatisticsManager statisticsManager;
+
+	private ConnectionManager connectionManager;
 	
 	public MainController() throws XMLException
 	{
-		this.eventManager = new EventManager();
-		this.mqttManager = new MqttManager(eventManager);
-		this.configurationManager = new ConfigurationManager(eventManager);
 		this.statisticsManager = new StatisticsManager();
+		this.eventManager = new EventManager();
+		
+		this.mqttManager = new MqttManager(eventManager);
+		this.configurationManager = new ConfigurationManager(eventManager);		
+		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager);
 	}
 
 	@FXML
@@ -111,6 +114,7 @@ public class MainController
 		editConnectionsController.setManager(mqttManager); 		
 		editConnectionsController.setMainController(this);
 		editConnectionsController.setEventManager(eventManager);
+		editConnectionsController.setConnectionManager(connectionManager);
 		editConnectionsController.setConfigurationManager(configurationManager);
 		editConnectionsController.init();
 		
@@ -197,7 +201,7 @@ public class MainController
 						@Override
 						public void run()
 						{
-							updateConnectionTooltips();					
+							updateConnectionStats();					
 						}
 					});						
 				}
@@ -205,14 +209,11 @@ public class MainController
 		}).start();
 	}
 	
-	public void updateConnectionTooltips()
-	{
-		for (final MqttConnection connection : mqttManager.getConnections())
+	private void updateConnectionStats()
+	{		
+		for (final ConnectionController connectionController : connectionManager.getConnectionControllers().values())
 		{
-			if (connection.getConnectionController() != null)
-			{
-				connection.getConnectionController().updateConnectionTooltip();
-			}
+			connectionController.updateConnectionStats();
 		}	
 	}
 	
@@ -337,9 +338,8 @@ public class MainController
 			}
 			else
 			{
-				final ConnectionController connectionController = TabUtils.loadConnectionTab(this,
-						this, mqttManager, new RuntimeConnectionProperties(connectionDetails, userCredentials), 
-						eventManager, statisticsManager);
+				final ConnectionController connectionController = connectionManager.loadConnectionTab(this,
+						this, new RuntimeConnectionProperties(connectionDetails, userCredentials));
 				
 				for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
 				{

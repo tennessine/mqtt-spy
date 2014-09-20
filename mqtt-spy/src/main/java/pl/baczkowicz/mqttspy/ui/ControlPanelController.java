@@ -232,7 +232,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		boolean opened = false;
 		for (final MqttConnection openedConnection : mqttManager.getConnections())
 		{					
-			if (connection.getId() == openedConnection.getProperties().getId())
+			if (connection.getId() == openedConnection.getId())
 			{
 				status = openedConnection.getConnectionStatus();
 				opened = openedConnection.isOpened();
@@ -345,6 +345,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		// Set the default state
 		controller.setStatus(ItemStatus.INFO);
 		controller.setTitle("Connecting to the mqtt-spy update server...");
+		controller.setShowProgress(true);
 		controller.setDetails("Please wait while mqtt-spy retrieves information about available updates.");
 
 		// Run the version check in a separate thread, so that it doesn't block JavaFX
@@ -406,6 +407,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	
 	public void showUpdateInfo(final ControlPanelItemController controller, final Button button)
 	{
+		controller.setShowProgress(false);
 		if (versionManager.getVersions() != null)
 		{
 			boolean versionFound = false;

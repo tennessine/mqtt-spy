@@ -1,11 +1,10 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.scene.control.Tab;
 
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.SubscriptionsStore;
@@ -20,8 +19,8 @@ import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWit
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
-import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class MqttConnection extends ObservableMessageStoreWithFiltering
 {
@@ -46,11 +45,20 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 
 	private EventManager eventManager;
 
-	private Tab connectionTab;
+	// TODO: is that needed?
+	// private Tab connectionTab;
 	
-	private ConnectionController connectionController;
+	// TODO: is that needed?
+	// private ConnectionController connectionController;
 
 	private String disconnectionReason;
+
+	private StatisticsManager statisticsManager;
+
+	public void setStatisticsManager(StatisticsManager statisticsManager)
+	{
+		this.statisticsManager = statisticsManager;
+	}
 
 	public MqttConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager)
@@ -92,7 +100,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			}
 		}		
 		
-		StatisticsManager.messageReceived(properties.getId(), matchingSubscriptionTopics);
+		statisticsManager.messageReceived(getId(), matchingSubscriptionTopics);
 
 		// Pass the message for connection (all subscriptions) handling
 		super.messageReceived(message);
@@ -106,7 +114,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			getClient().publish(publicationTopic, data.getBytes(), qos, retained);
 			
 			logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-			StatisticsManager.messagePublished(properties.getId(), publicationTopic);
+			statisticsManager.messagePublished(getId(), publicationTopic);
 		}
 		catch (MqttException e)
 		{
@@ -123,7 +131,12 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 
 	public void setDisconnectionReason(final String message)
 	{
-		this.disconnectionReason = message;	
+		this.disconnectionReason = message;
+		if (!message.isEmpty())
+		{
+			this.disconnectionReason = this.disconnectionReason + " ("
+					+ Utils.DATE_WITH_SECONDS_SDF.format(new Date()) + ")";
+		}
 	}
 	
 	public String getDisconnectionReason()
@@ -296,14 +309,19 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		this.maxMessageStoreSize = maxMessageStoreSize;
 	}
 
-	public void setTab(final Tab connectionTab)
-	{
-		this.connectionTab = connectionTab;		
-	}
+	// public void setTab(final Tab connectionTab)
+	// {
+	// this.connectionTab = connectionTab;
+	// }
+	//
+	// public Tab getConnectionTab()
+	// {
+	// return this.connectionTab;
+	// }
 	
-	public Tab getConnectionTab()
+	public int getId()
 	{
-		return this.connectionTab;
+		return properties.getId();
 	}
 
 	public boolean isOpened()
@@ -323,13 +341,14 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		return lastUsedSubscriptionId;
 	}
 
-	public ConnectionController getConnectionController()
-	{
-		return connectionController;
-	}
-
-	public void setConnectionController(ConnectionController connectionController)
-	{
-		this.connectionController = connectionController;
-	}
+	// public ConnectionController getConnectionController()
+	// {
+	// return connectionController;
+	// }
+	//
+	// public void setConnectionController(ConnectionController
+	// connectionController)
+	// {
+	// this.connectionController = connectionController;
+	// }
 }

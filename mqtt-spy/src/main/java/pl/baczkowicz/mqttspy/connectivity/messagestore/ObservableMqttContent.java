@@ -58,7 +58,7 @@ public class ObservableMqttContent
 	{
 		this.mqttContent = message;
 				
-		this.lastReceivedTimestamp.set(Utils.SDF.format(mqttContent.getDate()));		
+		this.lastReceivedTimestamp.set(Utils.DATE_WITH_MILLISECONDS_SDF.format(mqttContent.getDate()));		
 		this.lastReceivedPayload.set(mqttContent.getFormattedPayload(format));
 	}
 

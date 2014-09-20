@@ -15,9 +15,13 @@ public class Utils
 
 	public static final String FXML_LOCATION = "fxml/";
 
-	public final static String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss:SSS";
+	public final static String WITH_MILLISECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss:SSS";
+	
+	public final static String WITH_SECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
-	public final static SimpleDateFormat SDF = new SimpleDateFormat(DATE_FORMAT);
+	public final static SimpleDateFormat DATE_WITH_MILLISECONDS_SDF = new SimpleDateFormat(WITH_MILLISECONDS_DATE_FORMAT);
+	
+	public final static SimpleDateFormat DATE_WITH_SECONDS_SDF = new SimpleDateFormat(WITH_SECONDS_DATE_FORMAT);
 
 	public static String createBaseRGBString(Color c)
 	{

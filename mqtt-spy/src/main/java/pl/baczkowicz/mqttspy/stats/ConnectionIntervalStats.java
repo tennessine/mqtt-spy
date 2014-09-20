@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ConnectionIntervalStats
 {
-	public Map<String, Long> messageCount = new HashMap<>();
+	public Map<String, Double> messageCount = new HashMap<>();
 	
 	public double overallCount = 0;
 	
@@ -16,7 +16,7 @@ public class ConnectionIntervalStats
 		
 		if (messageCount.get(topic) == null)
 		{
-			messageCount.put(topic, (long) 1);
+			messageCount.put(topic, (double) 1);
 		}
 		else
 		{
@@ -32,7 +32,7 @@ public class ConnectionIntervalStats
 		{
 			if (messageCount.get(topic) == null)
 			{
-				messageCount.put(topic, (long) 1);
+				messageCount.put(topic, (double) 1);
 			}
 			else
 			{
@@ -54,7 +54,10 @@ public class ConnectionIntervalStats
 		final ConnectionIntervalStats avg = new ConnectionIntervalStats();
 		avg.overallCount = overallCount / interval;
 		
-		// TODO: for topics
+		for (final String topic : messageCount.keySet())
+		{
+			avg.messageCount.put(topic, messageCount.get(topic) / interval);			
+		}
 		
 		return avg;
 	}

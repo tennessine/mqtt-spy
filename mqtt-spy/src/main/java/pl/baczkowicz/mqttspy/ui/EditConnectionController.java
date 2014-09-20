@@ -54,6 +54,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
 import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
@@ -210,11 +211,14 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private MqttConnection existingConnection;
 
 	private int noModificationsLock;
+
+	private ConnectionManager connectionManager;
+
+	private boolean emptyConnectionList;
 	
 	// ===============================
 	// === Initialisation ============
 	// ===============================
-
 
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -660,7 +664,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			
 			if (!openNewMode)
 			{
-				ConnectionUtils.disconnectAndClose(mqttManager, existingConnection.getProperties().getId(), existingConnection.getConnectionTab());
+				ConnectionUtils.disconnectAndClose(mqttManager, existingConnection.getId(), 
+						connectionManager.getConnectionTabs().get(existingConnection.getId()));
 			}
 			
 			logger.info("Opening connection " + connectionNameText.getText());
@@ -698,7 +703,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 
 	private void onChange()
 	{
-		if (recordModifications)
+		if (recordModifications && !emptyConnectionList)
 		{					
 			if (readAndDetectChanges())
 			{
@@ -775,7 +780,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		final ConnectionDetails connection = readValues();
 		boolean changed = !connection.equals(editedConnectionDetails.getSavedValues());
 			
-		logger.debug("Values read. Changed = " + changed);
+		// TODO:
+		logger.info("Values read. Changed = " + changed);
 		editedConnectionDetails.setModified(changed);
 		editedConnectionDetails.setConnectionDetails(connection);
 		
@@ -805,7 +811,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 					break;
 				}				
 			}
-			
 			
 			if (editedConnectionDetails.getName().equals(composeConnectionName(editedConnectionDetails.getClientID(), editedConnectionDetails.getServerURI())))
 			{
@@ -973,7 +978,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		connection.setBeingCreated(false);
 	}		
 		
-	private String composeConnectionName(final String cliendId, final String serverURI)
+	public static String composeConnectionName(final String cliendId, final String serverURI)
 	{
 		return cliendId + "@" + serverURI;
 	}
@@ -1011,6 +1016,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	{
 		if (!recordModifications)
 		{
+			logger.trace("Modifications suspended...");
 			noModificationsLock++;
 			this.recordModifications = recordModifications;
 		}
@@ -1020,9 +1026,15 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			// Only allow modifications once the parent caller removes the lock
 			if (noModificationsLock == 0)
 			{
+				logger.trace("Modifications restored...");
 				this.recordModifications = recordModifications;
 			}
 		}
+	}
+	
+	public boolean isRecordModifications()	
+	{
+		return recordModifications;
 	}
 		
 	public TextField getConnectionName()
@@ -1030,19 +1042,16 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		return connectionNameText;
 	}
 	
-	public void setNoConnectionMode(boolean noConnection)
+	public void setEmptyConnectionListMode(boolean emptyConnectionList)
 	{
-		if (noConnection)
-		{
-			setRecordModifications(false);
-			connectButton.setDisable(true);
-		}
-		else
-		{
-			noModificationsLock = 1;
-			setRecordModifications(true);
-			connectButton.setDisable(false);
-		}
+		this.emptyConnectionList = emptyConnectionList;
+		connectButton.setDisable(emptyConnectionList);
 		updateButtons();
 	}
+
+	public void setConnectionManager(final ConnectionManager connectionManager)
+	{
+		this.connectionManager = connectionManager;
+	}
+
 }

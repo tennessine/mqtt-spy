@@ -31,9 +31,9 @@ import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 public class DialogUtils
 {
-	private static final String STATS_FORMAT = "%s/sec " + getPeriodList() + ": " + getPeriodValues();
+	public static final String STATS_FORMAT = "load: " + getPeriodValues();
 	
-	private static String getPeriodList()
+	public static String getPeriodList()
 	{
 		final StringBuffer sb = new StringBuffer();
 		
@@ -52,14 +52,14 @@ public class DialogUtils
 			
 			if (iterator.hasNext())
 			{
-				sb.append(",");
+				sb.append(", ");
 			}
 		}
 		
-		return "[" + sb.toString() + "]";
+		return sb.toString();
 	}
 	
-	private static String getPeriodValues()
+	public static String getPeriodValues()
 	{
 		final StringBuffer sb = new StringBuffer();
 		
@@ -155,15 +155,6 @@ public class DialogUtils
 				sb.append(System.getProperty("line.separator") + "Reason: " + connection.getDisconnectionReason().toLowerCase());
 			}
 		}
-
-		sb.append(System.getProperty("line.separator") + String.format(STATS_FORMAT, "Published", 
-				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 5).overallCount, 
-				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 30).overallCount,
-				statisticsManager.getMessagesPublished(connection.getProperties().getId(), 300).overallCount));
-		sb.append(System.getProperty("line.separator") + String.format(STATS_FORMAT, "Received", 
-				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 5).overallCount, 
-				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 30).overallCount,
-				statisticsManager.getMessagesReceived(connection.getProperties().getId(), 300).overallCount));
 		
 		tooltip.setText(sb.toString());
 	}

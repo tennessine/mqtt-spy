@@ -21,10 +21,8 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
-import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
-import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class ConnectionController implements Initializable, Observer
@@ -80,11 +78,9 @@ public class ConnectionController implements Initializable, Observer
 	
 	private Tooltip tooltip;
 
-	private RuntimeConnectionProperties connectionProperties;
-
-	private EventManager eventManager;
-
 	private StatisticsManager statisticsManager;
+
+	private ConnectionManager connectionManager;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{		
@@ -124,9 +120,10 @@ public class ConnectionController implements Initializable, Observer
 		newPublicationPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
-		newSubscriptionPaneController.setEventManager(eventManager);
-		newSubscriptionPaneController.setConnectionProperties(connectionProperties);		
-		connection.setConnectionController(this);
+		newSubscriptionPaneController.setConnectionManager(connectionManager);
+		// newSubscriptionPaneController.setConnectionProperties(connectionProperties);		
+		// connection.setConnectionController(this);
+		connection.setStatisticsManager(statisticsManager);
 		
 		tooltip = new Tooltip();
 		connectionTab.setTooltip(tooltip);
@@ -137,9 +134,9 @@ public class ConnectionController implements Initializable, Observer
 		// TODO: how not to resize the tab pane on too many tabs? All max sizes seems to be ignored
 	}
 	
-	public void setEventManager(final EventManager eventManager)
+	public void setConnectionManager(final ConnectionManager connectionManager)
 	{
-		this.eventManager = eventManager;
+		this.connectionManager = connectionManager;
 	}
 	
 	public void updateMinHeights()
@@ -241,20 +238,18 @@ public class ConnectionController implements Initializable, Observer
 					connectionTab.getStyleClass().remove(1);
 				}
 				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));
-				updateConnectionTooltip();
+				updateConnectionStats();
 			}
 		}
 	}
 	
-	public void updateConnectionTooltip()
+	public void updateConnectionStats()
 	{
-		DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
+		for (final SubscriptionController subscriptionController : connectionManager.getSubscriptionManager(connection.getId()).getSubscriptionControllers().values())
+		{
+			subscriptionController.updateSubscriptionStats();
+		}
 	}
-
-	public void setConnectionProperties(final RuntimeConnectionProperties properties)
-	{
-		this.connectionProperties = properties;		
-	}	
 
 	public StatisticsManager getStatisticsManager()
 	{

@@ -9,6 +9,8 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.paint.Color;
+import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
@@ -16,6 +18,8 @@ import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWit
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.SubscriptionTopicSummary;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.ui.ConnectionController;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 
@@ -333,20 +337,20 @@ public class ContextMenuUtils
 		return contextMenu;
 	}
 
-	public static ContextMenu createConnectionMenu(final MqttManager mqttManager,
-			final int connectionId, final Tab tab)
+	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final ConnectionManager connectionManager, final MqttConnection connection, 
+			final ConnectionController connectionController, final Tab tab, final Object parent)
 	{
 		// Context menu
 		ContextMenu contextMenu = new ContextMenu();
 
 		MenuItem reconnectItem = new MenuItem("[Connection] Connect / reconnect");
-		reconnectItem.setOnAction(ConnectionUtils.createConnectAction(mqttManager, connectionId));
+		reconnectItem.setOnAction(ConnectionUtils.createConnectAction(mqttManager, connection.getProperties().getId()));
 		
 		MenuItem disconnectItem = new MenuItem("[Connection] Disconnect (and keep tab)");
-		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connectionId));
+		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connection.getProperties().getId()));
 
 		MenuItem disconnectAndCloseItem = new MenuItem("[Connection] Disconnect (and close tab)");
-		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connectionId, tab));
+		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connection.getProperties().getId(), tab));
 
 		contextMenu.getItems().add(reconnectItem);
 
@@ -356,20 +360,24 @@ public class ContextMenuUtils
 		contextMenu.getItems().add(disconnectItem);		
 		contextMenu.getItems().add(disconnectAndCloseItem);
 		
-		// // Separator
-		// contextMenu.getItems().add(new SeparatorMenuItem());
-		//
-		// // Show statistics
-		// final MenuItem stats = new
-		// MenuItem("[Statistics] Show broker's $SYS/# statistics");
-		// stats.setOnAction(new EventHandler<ActionEvent>()
-		// {
-		// public void handle(ActionEvent e)
-		// {
-		// // TODO: create a new subscription
-		// }
-		// });
-		// contextMenu.getItems().add(stats);
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+
+		// Show statistics
+		final MenuItem stats = new MenuItem("[Statistics] Show broker's statistics");
+		stats.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+				subscriptionDetails.setTopic("$SYS/#");
+				subscriptionDetails.setQos(0);
+				
+				connectionManager.getSubscriptionManager(connection.getId()).
+					createSubscription(Color.web("e6ccff"), true, subscriptionDetails, connection, connectionController, parent);		
+			}
+		});
+		contextMenu.getItems().add(stats);
 
 		return contextMenu;
 	}

@@ -68,18 +68,22 @@ public class MessageController implements Initializable, Observer
 
 	public void populate(final MqttContent message)
 	{
-		this.message = message;
-
-		final String payload = new String(message.getMessage().getPayload());
-		logger.trace("Message payload = " + payload);
-
-		topicField.setText(message.getTopic());
-		qosField.setText(String.valueOf(message.getMessage().getQos()));
-		timeField.setText(Utils.SDF.format(message.getDate()));
-		lengthLabel.setText("(" + payload.length() + ")");
-		retainedField.setSelected(message.getMessage().isRetained());
-
-		showMessageData();
+		// Don't populate with the same message object
+		if (!message.equals(this.message))
+		{
+			this.message = message;
+	
+			final String payload = new String(message.getMessage().getPayload());
+			logger.trace("Message payload = " + payload);
+	
+			topicField.setText(message.getTopic());
+			qosField.setText(String.valueOf(message.getMessage().getQos()));
+			timeField.setText(Utils.DATE_WITH_MILLISECONDS_SDF.format(message.getDate()));
+			lengthLabel.setText("(" + payload.length() + ")");
+			retainedField.setSelected(message.getMessage().isRetained());
+	
+			showMessageData();
+		}
 	}
 
 	public void clear()
@@ -115,24 +119,29 @@ public class MessageController implements Initializable, Observer
 	{
 		if (message != null)
 		{
-			dataField.clear();
-			dataField.appendText(message.getFormattedPayload(store.getFormatter()));
+			final String textToDisplay = message.getFormattedPayload(store.getFormatter());
 
-			dataField.setStyleClass(0, dataField.getText().length(), "messageText");
-			
-			if (searchOptions != null && searchOptions.getSearchValue().length() > 0)
+			// Won't refresh the text if it is the same...
+			if (!textToDisplay.equals(dataField.getText()))
 			{
-				final String textToSearch = searchOptions.isMatchCase() ? dataField.getText() : dataField.getText().toLowerCase();
-				
-				int pos = textToSearch.indexOf(searchOptions.getSearchValue());
-				while (pos >= 0)
-				{
-					dataField.setStyleClass(pos, pos + searchOptions.getSearchValue().length(), "messageTextHighlighted");
-					pos = textToSearch.indexOf(searchOptions.getSearchValue(), pos + 1);
-				}
-			}
+				dataField.clear();
+				dataField.appendText(textToDisplay);
+				dataField.setStyleClass(0, dataField.getText().length(), "messageText");
 			
-			updateTooltipText();
+				if (searchOptions != null && searchOptions.getSearchValue().length() > 0)
+				{
+					final String textToSearch = searchOptions.isMatchCase() ? dataField.getText() : dataField.getText().toLowerCase();
+					
+					int pos = textToSearch.indexOf(searchOptions.getSearchValue());
+					while (pos >= 0)
+					{
+						dataField.setStyleClass(pos, pos + searchOptions.getSearchValue().length(), "messageTextHighlighted");
+						pos = textToSearch.indexOf(searchOptions.getSearchValue(), pos + 1);
+					}
+				}
+				
+				updateTooltipText();
+			}						
 		}
 	}
 	
@@ -193,13 +202,19 @@ public class MessageController implements Initializable, Observer
 			if (messageIndex == 1)
 			{
 				message = store.getMessages().getLast();
+				populate(message);
 			}
 			else
 			{
 				final Object[] messages = store.getMessages().toArray();
-				message = (MqttContent) messages[messages.length - messageIndex];
-			}
-			populate(message);
+				
+				// Make sure we don't try to re-display a message that is not in the store anymore
+				if (messageIndex <= messages.length)
+				{
+					message = (MqttContent) messages[messages.length - messageIndex];
+					populate(message);
+				}
+			}			
 		}
 		else
 		{

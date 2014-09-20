@@ -1,11 +1,7 @@
 package pl.baczkowicz.mqttspy.xml;
 
-import static org.junit.Assert.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-
-import jdk.nashorn.internal.ir.annotations.Ignore;
 
 import org.junit.Before;
 import org.junit.Test;

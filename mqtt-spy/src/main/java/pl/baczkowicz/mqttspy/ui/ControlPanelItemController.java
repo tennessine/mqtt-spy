@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -33,9 +34,14 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	@FXML
 	private Label detailsText;
 
+	@FXML
+	private ProgressIndicator progressIndicator;
+	
 	private ItemStatus status = ItemStatus.ERROR;
 
 	private ConfigurationManager configurationManager;
+	
+	private boolean showProgress;
 		
 	// ===============================
 	// === Initialisation ============
@@ -75,20 +81,32 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 				imageLocation = "/images/dialog-error.png";
 				break;
 		}
-		statusIcon.setImage(new Image(ControlPanelItemController.class.getResource(imageLocation).toString()));		
-		if (status == ItemStatus.OK)
+		
+		if (showProgress)
 		{
-			statusIcon.setLayoutY(0);
-			statusIcon.setLayoutX(0);
-			statusIcon.setFitHeight(64);
-			statusIcon.setFitWidth(64);
+			progressIndicator.setVisible(true);
+			statusIcon.setVisible(false);
 		}
 		else
 		{
-			statusIcon.setLayoutY(30);
-			statusIcon.setLayoutX(30);
-			statusIcon.setFitHeight(64);
-			statusIcon.setFitWidth(64);
+			progressIndicator.setVisible(false);
+			statusIcon.setVisible(true);
+			
+			statusIcon.setImage(new Image(ControlPanelItemController.class.getResource(imageLocation).toString()));		
+			if (status == ItemStatus.OK)
+			{
+				statusIcon.setLayoutY(0);
+				statusIcon.setLayoutX(0);
+				statusIcon.setFitHeight(64);
+				statusIcon.setFitWidth(64);
+			}
+			else
+			{
+				statusIcon.setLayoutY(30);
+				statusIcon.setLayoutX(30);
+				statusIcon.setFitHeight(64);
+				statusIcon.setFitWidth(64);
+			}
 		}
 	}
 
@@ -104,6 +122,16 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	// === Setters and getters =======
 	// ===============================
 	
+	public boolean isShowProgress()
+	{
+		return showProgress;
+	}
+
+	public void setShowProgress(boolean showProgress)
+	{
+		this.showProgress = showProgress;
+	}
+
 	public void setValues(final ItemStatus status, final String title, final String details)
 	{
 		this.status = status;		

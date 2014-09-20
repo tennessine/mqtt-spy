@@ -14,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
@@ -23,11 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.events.EventManager;
-import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
-import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class NewSubscriptionController implements Initializable
@@ -54,11 +50,9 @@ public class NewSubscriptionController implements Initializable
 
 	private ConnectionController connectionController;
 
-	private RuntimeConnectionProperties connectionProperties;
-
 	private boolean connected;
 
-	private EventManager eventManager;
+	private ConnectionManager connectionManager;
 
 	public NewSubscriptionController()
 	{
@@ -150,34 +144,15 @@ public class NewSubscriptionController implements Initializable
 
 	public void subscribe(final SubscriptionDetails subscriptionDetails, final boolean subscribe)
 	{
-		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
-				subscriptionDetails.getQos(), colorPicker.getValue(), connection.getMaxMessageStoreSize());
-
-		// Add a new tab
-		final SubscriptionController subscriptionController = TabUtils.createSubscriptionTab(false, this, subscription, connection,
-				subscription, connectionProperties, connectionController, eventManager);
-
-		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
-
+		connectionManager.getSubscriptionManager(connection.getId()).
+			createSubscription(colorPicker.getValue(), subscribe, subscriptionDetails, connection, connectionController, this);
+		
 		colorPicker.setValue(colors.get(connection.getLastUsedSubscriptionId() % 16));
-		subscriptionTabs.getTabs().add(subscriptionController.getTab());
-
-		subscription.setSubscriptionController(subscriptionController);
-		subscription.setConnection(connection);
-		if (subscribe)
-		{
-			connection.subscribe(subscription);
-		}
-		else
-		{
-			connection.addSubscription(subscription);
-			subscription.setActive(false);
-		}
 	}
 	
-	public void setEventManager(final EventManager eventManager)
+	public void setConnectionManager(final ConnectionManager connectionManager)
 	{
-		this.eventManager = eventManager;
+		this.connectionManager = connectionManager;
 	}
 	
 	public void setConnectionController(ConnectionController connectionController)
@@ -188,10 +163,5 @@ public class NewSubscriptionController implements Initializable
 	public void setConnection(MqttConnection connection)
 	{
 		this.connection = connection;
-	}
-	
-	public void setConnectionProperties(final RuntimeConnectionProperties connectionProperties)
-	{
-		this.connectionProperties = connectionProperties;		
 	}
 }

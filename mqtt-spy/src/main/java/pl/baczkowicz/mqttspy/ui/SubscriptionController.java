@@ -21,6 +21,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -37,13 +38,15 @@ import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
 import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionController implements Observer, Initializable, ClearTabObserver
@@ -53,6 +56,9 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 	private static final int MIN_EXPANDED_SUMMARY_PANE_HEIGHT = 130;
 
 	private static final int MIN_COLLAPSED_SUMMARY_PANE_HEIGHT = 31;
+
+	/** Received messages summary (10 topics; average message rates per second [5s,30s,5m]: 0.1/0.5/5.0). */
+	private static final String SUMMARY_PANE_TITLE_FORMAT = "Received messages summary (%s, " + DialogUtils.STATS_FORMAT + ")";
 
 	@FXML
 	private SplitPane splitPane;
@@ -117,6 +123,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 	private EventDispatcher eventDispatcher;
 
 	private EventManager eventManager;
+
+	private StatisticsManager statisticsManager;
 
 	@Override
 	public void onClearTab(final ObservableMessageStoreWithFiltering subscription)
@@ -270,7 +278,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			searchWindowController = (SearchWindowController) searchLoader.getController();
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);
-			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : TabUtils.ALL_TAB);
+			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : SubscriptionManager.ALL_SUBSCRIPTIONS_TAB_TITLE);
 			searchWindowController.setEventDispatcher(eventDispatcher);
 			eventDispatcher.addObserver(searchWindowController);
 		
@@ -315,6 +323,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		summaryTablePaneController.setStore(store);
 		summaryTablePaneController.setNavigationEventDispatcher(eventDispatcher);
 		summaryTablePaneController.init();
+		summaryTitledPane.setTooltip(new Tooltip("The average number of messages per second is calculated over the following intervals: " +  DialogUtils.getPeriodList() + "."));
 		
 		messagePaneController.setStore(store);
 		messagePaneController.setEventDispatcher(eventDispatcher);
@@ -335,7 +344,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			customFormatterMenu.getItems().add(customFormatterMenuItem);
 		}
 		
-		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());			
+		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());		
 	}
 
 	public void setStore(final ObservableMessageStoreWithFiltering store)
@@ -369,8 +378,39 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		return tab;
 	}
 
+	public void setStatisticsManager(StatisticsManager statisticsManager)
+	{
+		this.statisticsManager = statisticsManager;
+	}
+	
 	public void updateContextMenu()
 	{
-		TabUtils.updateSubscriptionTabContextMenu(tab, subscription);
+		SubscriptionManager.updateSubscriptionTabContextMenu(tab, subscription);
+	}
+
+	public void updateSubscriptionStats()
+	{
+		final int topics = store.getObservableMessagesPerTopic().size();
+		
+		if (subscription == null)
+		{
+			summaryTitledPane.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
+				topics == 1 ? "1 topic" : topics + " topics",
+				statisticsManager.getMessagesReceived(connectionProperties.getId(), 5).overallCount,
+				statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).overallCount,
+				statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).overallCount));
+		}
+		else
+		{
+			final Double avg5sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 5).messageCount.get(subscription.getTopic());
+			final Double avg30sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).messageCount.get(subscription.getTopic());
+			final Double avg300sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).messageCount.get(subscription.getTopic());
+			
+			summaryTitledPane.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
+					topics == 1 ? "1 topic" : topics + " topics",
+					avg5sec == null ? 0 : avg5sec, 
+					avg30sec == null ? 0 : avg30sec, 
+					avg300sec == null ? 0 : avg300sec));
+		}
 	}
 }

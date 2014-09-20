@@ -25,5 +25,6 @@
             <Label fx:id="detailsText" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Your version is 0.0.8.  Some very long text here. Some very long text here.Some very long text here." wrapText="true" />
          </children>
       </VBox>
+      <ProgressIndicator fx:id="progressIndicator" layoutX="16.0" layoutY="15.0" />
    </children>
 </AnchorPane>

@@ -109,7 +109,7 @@ public class MqttManager
 		{
 			Platform.runLater(new MqttEventHandler(new MqttDisconnectionAttemptFailureEvent(connection, e)));
 			logger.error("Cannot disconnect from connection {} {}", 
-					connection.getProperties().getId(), connection.getProperties().getName(), e);
+					connection.getId(), connection.getProperties().getName(), e);
 		}
 	}
 
@@ -117,7 +117,7 @@ public class MqttManager
 	{
 		for (final MqttConnection connection : connections.values())
 		{
-			disconnectFromBroker(connection.getProperties().getId());
+			disconnectFromBroker(connection.getId());
 		}
 	}
 	

@@ -125,37 +125,43 @@ public class StatisticsManager implements Runnable
 		stats.setSubscriptions(stats.getSubscriptions() + 1);		
 	}
 	
-	public static void messageReceived(final int connectionId, final List<String> subscriptions)
+	public void messageReceived(final int connectionId, final List<String> subscriptions)
 	{
 		// Global stats (saved to XML)
 		stats.setMessagesReceived(stats.getMessagesReceived() + 1);
-				
-		// Runtime stats
-		if (runtimeMessagesReceived.get(connectionId) == null)
+
+		synchronized (runtimeMessagesReceived)
 		{
-			runtimeMessagesReceived.put(connectionId, new ConnectionStats(periods));
-			runtimeMessagesReceived.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
-		}		
-			
-		runtimeMessagesReceived.get(connectionId).runtimeStats.get(0).add(subscriptions);
+			// Runtime stats
+			if (runtimeMessagesReceived.get(connectionId) == null)
+			{
+				runtimeMessagesReceived.put(connectionId, new ConnectionStats(periods));
+				runtimeMessagesReceived.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
+			}		
+				
+			runtimeMessagesReceived.get(connectionId).runtimeStats.get(0).add(subscriptions);
+		}
 	}
 	
-	public static void messagePublished(final int connectionId, final String topic)
+	public void messagePublished(final int connectionId, final String topic)
 	{
 		// Global stats (saved to XML)
 		stats.setMessagesPublished(stats.getMessagesPublished() + 1);		
-
-		// Runtime stats
-		if (runtimeMessagesPublished.get(connectionId) == null)
-		{
-			runtimeMessagesPublished.put(connectionId, new ConnectionStats(periods));
-			runtimeMessagesPublished.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
-		}		
-			
-		runtimeMessagesPublished.get(connectionId).runtimeStats.get(0).add(topic);
+					
+		synchronized (runtimeMessagesPublished)
+		{			
+			// Runtime stats
+			if (runtimeMessagesPublished.get(connectionId) == null)
+			{
+				runtimeMessagesPublished.put(connectionId, new ConnectionStats(periods));
+				runtimeMessagesPublished.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
+			}		
+				
+			runtimeMessagesPublished.get(connectionId).runtimeStats.get(0).add(topic);
+		}
 	}
 	
-	public static void nextInterval(final Map<Integer, ConnectionStats> runtimeMessages)
+	public void nextInterval(final Map<Integer, ConnectionStats> runtimeMessages)
 	{
 		for (final Integer connectionId : runtimeMessages.keySet())
 		{
@@ -183,10 +189,17 @@ public class StatisticsManager implements Runnable
 		}
 	}
 	
-	public static void nextInterval()
+	public void nextInterval()
 	{		
-		nextInterval(runtimeMessagesPublished);
-		nextInterval(runtimeMessagesReceived);		
+		synchronized (runtimeMessagesPublished)
+		{
+			nextInterval(runtimeMessagesPublished);
+		}
+		
+		synchronized (runtimeMessagesReceived)
+		{
+			nextInterval(runtimeMessagesReceived);
+		}
 	}
 	
 	public ConnectionIntervalStats getMessagesPublished(final int connectionId, final int period)

@@ -29,12 +29,13 @@ import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class EditConnectionsController extends AnchorPane implements Initializable, ConnectionStatusChangeObserver
 {
-	private final static String NEW_ITEM = "* ";
+	private final static String MODIFIED_ITEM = "* ";
 	
 	private final static Logger logger = LoggerFactory.getLogger(EditConnectionsController.class);
 
@@ -76,6 +77,8 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 
 	private EventManager eventManager;
 
+	private ConnectionManager connectionManager;
+
 	// ===============================
 	// === Initialisation ============
 	// ===============================
@@ -84,32 +87,38 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	{
 		synchronized (connections)
 		{
-			if (connectionList.getItems().size() > 0 && getSelectedIndex() == -1)
-			{
-				selectFirst();
-				return;
-			}
+			updateSelected();
+		}
+	}
+	
+	private void updateSelected()	
+	{
+		if (connectionList.getItems().size() > 0 && getSelectedIndex() == -1)
+		{
+			selectFirst();
+			return;
+		}
+		
+		if (connectionList.getItems().isEmpty())
+		{
+			duplicateConnectionButton.setDisable(true);
+			deleteConnectionButton.setDisable(true);
+			editConnectionPaneController.setEmptyConnectionListMode(true);
+		}
+		else 
+		{
+			deleteConnectionButton.setDisable(false);
+			duplicateConnectionButton.setDisable(false);
+			editConnectionPaneController.setEmptyConnectionListMode(false);
 			
-			if (connectionList.getItems().isEmpty())
+			if (!connections.get(getSelectedIndex()).isBeingCreated())
 			{
-				duplicateConnectionButton.setDisable(true);
-				deleteConnectionButton.setDisable(true);
-				editConnectionPaneController.setNoConnectionMode(true);
-			}
-			else 
-			{
-				deleteConnectionButton.setDisable(false);
-				duplicateConnectionButton.setDisable(false);
-				editConnectionPaneController.setNoConnectionMode(false);
+				// TODO:
+				// logger.info("Editing connection {}", connections.get(getSelectedIndex()).getName());
 				
-				if (!connections.get(getSelectedIndex()).isBeingCreated())
-				{
-					// logger.info("Editing connection {}", connections.get(getSelectedIndex()).getName());
-					
-					editConnectionPaneController.setRecordModifications(false);
-					editConnectionPaneController.editConnection(connections.get(getSelectedIndex()));
-					editConnectionPaneController.setRecordModifications(true);							
-				}
+				editConnectionPaneController.setRecordModifications(false);
+				editConnectionPaneController.editConnection(connections.get(getSelectedIndex()));
+				editConnectionPaneController.setRecordModifications(true);							
 			}
 		}
 	}
@@ -162,6 +171,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		
 		editConnectionPaneController.setConfigurationManager(configurationManager);
 		editConnectionPaneController.setManager(mqttManager);
+		editConnectionPaneController.setConnectionManager(connectionManager);
 		editConnectionPaneController.setMainController(mainController);
 		editConnectionPaneController.setEditConnectionsController(this);
 		editConnectionPaneController.init();
@@ -171,7 +181,10 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue)
 			{
-				connectionNameChanged();
+				if (editConnectionPaneController.isRecordModifications())
+				{
+					connectionNameChanged();
+				}
 			}
 		
 		});
@@ -188,10 +201,10 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	@FXML
 	public void newConnection()
 	{
-		final ConnectionDetails baseConnection = new ConnectionDetails();		
-		baseConnection.setName("");
+		final ConnectionDetails baseConnection = new ConnectionDetails();				
 		baseConnection.setServerURI("127.0.0.1");
 		baseConnection.setClientID(MqttUtils.generateClientIdWithTimestamp(System.getProperty("user.name")));
+		baseConnection.setName(EditConnectionController.composeConnectionName(baseConnection.getClientID(), baseConnection.getServerURI()));
 		baseConnection.setAutoConnect(true);
 		
 		final ConfiguredConnectionDetails connection = new ConfiguredConnectionDetails(configurationManager.getNextAvailableId(), true, true, true, baseConnection);
@@ -216,10 +229,12 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		final String connectionName = connections.get(getSelectedIndex()).getName();
 		
 		if (DialogUtils.showDeleteQuestion(connectionName) == Dialog.Actions.YES)
-		{		
-			connections.remove(getSelectedIndex());
-			listConnections();
-			selectFirst();		
+		{	
+			editConnectionPaneController.setRecordModifications(false);
+			connections.remove(getSelectedIndex());			
+			listConnections();			
+			selectFirst();
+			editConnectionPaneController.setRecordModifications(true);
 				
 			logger.debug("Saving all connections");
 			if (configurationManager.saveConfiguration())
@@ -289,25 +304,34 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	
 	public void listConnections()
 	{
-		// logger.info("Listing connections: {}", connections.size());
-		
 		final int selected = getSelectedIndex();
 
 		applyAllButton.setDisable(true);
 		undoAllButton.setDisable(true);
-		connectionList.getItems().clear();
 		
-		for (final ConfiguredConnectionDetails connection : connections)
-		{					
+		// Adjust the list size
+		while (connectionList.getItems().size() > connections.size())
+		{
+			connectionList.getItems().remove(connectionList.getItems().size() - 1);
+		}
+		while (connectionList.getItems().size() < connections.size())
+		{
+			connectionList.getItems().add("");
+		}
+		
+		for (int i = 0; i < connections.size(); i++)
+		{	
+			final ConfiguredConnectionDetails connection = connections.get(i);
+			
 			if (connection.isModified())
 			{
-				connectionList.getItems().add(NEW_ITEM + connection.getName());
+				connectionList.getItems().set(i, MODIFIED_ITEM + connection.getName());
 				applyAllButton.setDisable(false);
 				undoAllButton.setDisable(false);
 			}
 			else
 			{
-				connectionList.getItems().add(connection.getName());
+				connectionList.getItems().set(i, connection.getName());
 			}
 			
 			// Apply styling
@@ -344,6 +368,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		{
 			selectFirst();
 		}
+		updateSelected();
 		
 		if (connectionList.getItems().size() > 0)
 		{			
@@ -367,22 +392,11 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	}
 	
 	private void newConnectionMode(final ConfiguredConnectionDetails createdConnection)
-	{			
+	{	
+		editConnectionPaneController.setRecordModifications(false);		
 		listConnections();
 		selectLast();
-		
-		// Put an entry for the new connection and select it
-		// editConnectionPaneController.setNewConnectionMode(true);						
-		editConnectionPaneController.setRecordModifications(false);	
-		
-		if (createdConnection.getName() != null)
-		{
-			editConnectionPaneController.editConnection(createdConnection);
-		}
-		else
-		{
-			editConnectionPaneController.editConnection(createdConnection);			
-		}
+		editConnectionPaneController.editConnection(createdConnection);
 		editConnectionPaneController.setRecordModifications(true);
 	}
 	
@@ -422,5 +436,10 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		{
 			showSelected();
 		}
+	}
+	
+	public void setConnectionManager(final ConnectionManager connectionManager)
+	{
+		this.connectionManager = connectionManager;
 	}
 }
