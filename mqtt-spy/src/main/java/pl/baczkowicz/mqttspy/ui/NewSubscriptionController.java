@@ -136,6 +136,7 @@ public class NewSubscriptionController implements Initializable
 
 	public void subscribe(final SubscriptionDetails subscriptionDetails, final boolean subscribe)
 	{
+		logger.info("Subscribing to " + subscriptionDetails.getTopic());
 		if (!connection.getSubscriptions().keySet().contains(subscriptionDetails.getTopic()))		
 		{
 			recordSubscriptionTopic(subscriptionDetails.getTopic());

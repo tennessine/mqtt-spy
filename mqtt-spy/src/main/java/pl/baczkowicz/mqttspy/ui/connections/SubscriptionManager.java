@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -26,6 +29,8 @@ import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionManager
 {
+	private final static Logger logger = LoggerFactory.getLogger(SubscriptionManager.class);
+	
 	public static String ALL_SUBSCRIPTIONS_TAB_TITLE = "All";
 		
 	private final EventManager eventManager;
@@ -46,6 +51,7 @@ public class SubscriptionManager
 	public void createSubscription(final Color color, final boolean subscribe, final SubscriptionDetails subscriptionDetails, 
 			final MqttConnection connection, final ConnectionController connectionController, Object parent)
 	{
+		logger.info("Creating subscription for " + subscriptionDetails.getTopic());
 		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
 				subscriptionDetails.getQos(), color, connection.getMaxMessageStoreSize(), uiEventQueue);
 		subscription.setConnection(connection);
