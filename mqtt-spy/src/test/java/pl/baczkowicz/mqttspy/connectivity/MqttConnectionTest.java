@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.scene.paint.Color;
 import junit.framework.TestCase;
@@ -16,8 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
@@ -67,13 +68,13 @@ public class MqttConnectionTest extends TestCase
 			}
 		});
 		
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager);
+		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
 		context.assertIsSatisfied();
 		
 		connection.setClient(mockClient);
 
 		// This should add a subscription
-		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100);
+		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100, new LinkedBlockingQueue<MqttSpyUIEvent>());
 
 		context.checking(new Expectations()
 		{
@@ -127,13 +128,13 @@ public class MqttConnectionTest extends TestCase
 			}
 		});
 		
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager);
+		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
 		context.assertIsSatisfied();
 		
 		connection.setClient(mockClient);
 
 		// This should add a subscription
-		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100);
+		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100, new LinkedBlockingQueue<MqttSpyUIEvent>());
 		subscription.addObserver(mockObserver);
 		
 		context.checking(new Expectations()

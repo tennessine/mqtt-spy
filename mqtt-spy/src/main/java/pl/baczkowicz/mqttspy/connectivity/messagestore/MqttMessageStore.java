@@ -6,7 +6,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 
 public class MqttMessageStore
 {

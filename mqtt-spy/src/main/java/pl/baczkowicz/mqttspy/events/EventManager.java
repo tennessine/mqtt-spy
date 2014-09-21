@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.events;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.application.Platform;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
@@ -40,15 +41,23 @@ public class EventManager
 	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
 	{
-		for (final ConnectionStatusChangeObserver observer : connectionStatusChangeObserver.keySet())
-		{
-			final MqttConnection filter = connectionStatusChangeObserver.get(observer);
-			
-			if (filter == null || filter.equals(changedConnection))
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
 			{
-				observer.onConnectionStatusChanged(changedConnection);
+				for (final ConnectionStatusChangeObserver observer : connectionStatusChangeObserver.keySet())
+				{
+					final MqttConnection filter = connectionStatusChangeObserver.get(observer);
+					
+					if (filter == null || filter.equals(changedConnection))
+					{				
+						observer.onConnectionStatusChanged(changedConnection);
+					}
+				}				
 			}
-		}
+		});
+		
 	}
 
 	public void notifyConfigurationFileWriteFailure()

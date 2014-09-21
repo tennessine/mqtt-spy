@@ -1,17 +1,17 @@
 package pl.baczkowicz.mqttspy.connectivity.handlers;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionAttemptSuccessEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionFailureEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionLostEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttDisconnectionAttemptSuccessEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttEvent;
+import pl.baczkowicz.mqttspy.events.MqttSpyEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptSuccessEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionFailureEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionLostEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptSuccessEvent;
 
 public class MqttEventHandler implements Runnable
 {
-	private MqttEvent event;
+	private MqttSpyEvent event;
 
-	public MqttEventHandler(final MqttEvent event)
+	public MqttEventHandler(final MqttSpyEvent event)
 	{
 		this.event = event;
 	}

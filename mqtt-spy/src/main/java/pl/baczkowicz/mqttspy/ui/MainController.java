@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
@@ -79,11 +80,11 @@ public class MainController
 	public MainController() throws XMLException
 	{
 		this.statisticsManager = new StatisticsManager();
-		this.eventManager = new EventManager();
+		this.eventManager = new EventManager();		
 		
 		this.mqttManager = new MqttManager(eventManager);
 		this.configurationManager = new ConfigurationManager(eventManager);		
-		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager);
+		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager);			
 	}
 
 	@FXML
@@ -273,13 +274,14 @@ public class MainController
 			{
 				initialiseEditConnectionsWindow();
 			}			
+		
+			controlPanelPaneController.refreshConnectionsStatus();
 			
 			// Process the connection settings		
 			for (final ConfiguredConnectionDetails connection : configurationManager.getConnections())
 			{
 				if (connection.isAutoOpen() != null && connection.isAutoOpen())
-				{
-					
+				{					
 					try
 					{
 						openConnection(connection, mqttManager);
@@ -295,22 +297,11 @@ public class MainController
 			openConfigFileMenu.setDisable(true);
 		}
 		
-		controlPanelPaneController.refreshConfigurationFileStatus();
-		controlPanelPaneController.refreshConnectionsStatus();
+		controlPanelPaneController.refreshConfigurationFileStatus();		
 	}	
 	
-	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
+	private boolean completeUserAuthenticationCredentials(final ConnectionDetails connectionDetails, UserAuthentication userCredentials)
 	{
-		// Note: this is not a complete ConfiguredConnectionDetails copy but ConnectionDetails copy
-		final ConfiguredConnectionDetails connectionDetails = new ConfiguredConnectionDetails();
-		configuredConnectionDetails.copyTo(connectionDetails);
-		connectionDetails.setId(configuredConnectionDetails.getId());
-		
-		// Populates the undefined properties with MQTT defaults
-		// ConfigurationUtils.populateConnectionDefaults(connectionDetails);
-		
-		UserAuthentication userCredentials = null;
-		
 		boolean cancelled = false;
 		if (connectionDetails.getUserAuthentication() != null)
 		{
@@ -329,6 +320,20 @@ public class MainController
 			}
 		}
 		
+		return cancelled;
+	}
+	
+	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
+	{
+		// Note: this is not a complete ConfiguredConnectionDetails copy but ConnectionDetails copy
+		final ConfiguredConnectionDetails connectionDetails = new ConfiguredConnectionDetails();
+		configuredConnectionDetails.copyTo(connectionDetails);
+		connectionDetails.setId(configuredConnectionDetails.getId());
+				
+		UserAuthentication userCredentials = null;
+		
+		final boolean cancelled = completeUserAuthenticationCredentials(connectionDetails, userCredentials);		
+		
 		if (!cancelled)
 		{
 			final String validationResult = MqttUtils.validateConnectionDetails(connectionDetails, true);
@@ -338,27 +343,38 @@ public class MainController
 			}
 			else
 			{
-				final ConnectionController connectionController = connectionManager.loadConnectionTab(this,
-						this, new RuntimeConnectionProperties(connectionDetails, userCredentials));
-				
-				for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
-				{
-					// Add it to the list of pre-defined topics
-					connectionController.newPublicationPaneController.recordPublicationTopic(publicationDetails.getTopic());
-				}
-				
-				for (final SubscriptionDetails subscriptionDetails : connectionDetails.getSubscription())
-				{
-					// Check if we should create a tab for the subscription
-					if (subscriptionDetails.isCreateTab())
+				final MainController mainController = this;
+				final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(connectionDetails, userCredentials);
+				new Thread(new Runnable()
+				{					
+					@Override
+					public void run()
 					{
-						connectionController.newSubscriptionPaneController.subscribe(subscriptionDetails, false);
+						connectionManager.loadConnectionTab(mainController, mainController, connectionProperties);					
 					}
-					
-					// Add it to the list of pre-defined topics
-					connectionController.newSubscriptionPaneController.recordSubscriptionTopic(subscriptionDetails.getTopic());
-				}
+				}).start();											
 			}
+		}
+	}
+	
+	public void populateConnectionPanes(final ConnectionDetails connectionDetails, final ConnectionController connectionController)
+	{
+		for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
+		{
+			// Add it to the list of pre-defined topics
+			connectionController.newPublicationPaneController.recordPublicationTopic(publicationDetails.getTopic());
+		}
+		
+		for (final SubscriptionDetails subscriptionDetails : connectionDetails.getSubscription())
+		{
+			// Check if we should create a tab for the subscription
+			if (subscriptionDetails.isCreateTab())
+			{
+				connectionController.newSubscriptionPaneController.subscribe(subscriptionDetails, false);
+			}
+			
+			// Add it to the list of pre-defined topics
+			connectionController.newSubscriptionPaneController.recordSubscriptionTopic(subscriptionDetails.getTopic());
 		}
 	}
 

@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.ui;
 import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Queue;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -22,14 +23,15 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContentProperties;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
 import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 
 public class SearchPaneController implements Initializable, Observer
@@ -68,13 +70,15 @@ public class SearchPaneController implements Initializable, Observer
 	
 	private ObservableMessageStoreWithFiltering store; 
 	
-	private ObservableMessageStore foundMessageStore = new ObservableMessageStore(Integer.MAX_VALUE);
+	private ObservableMessageStore foundMessageStore;
 
 	private Tab tab;
 
-	private final ObservableList<ObservableMqttContentProperties> foundMessages = FXCollections.observableArrayList();
+	private final ObservableList<MqttContentProperties> foundMessages = FXCollections.observableArrayList();
 
 	private EventDispatcher searchPaneEventDispatcher;
+
+	private Queue<MqttSpyUIEvent> uiEventQueue;
 	
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -126,7 +130,7 @@ public class SearchPaneController implements Initializable, Observer
 	
 	private void foundMessage(final MqttContent message)
 	{
-		foundMessages.add(0, new ObservableMqttContentProperties(message, store.getFormatter()));
+		foundMessages.add(0, new MqttContentProperties(message, store.getFormatter()));
 		foundMessageStore.storeMessage(message);		
 	}
 	
@@ -177,6 +181,11 @@ public class SearchPaneController implements Initializable, Observer
 		this.store = store;
 		store.addObserver(this);
 	}
+	
+	public void setUIQueue(final Queue<MqttSpyUIEvent> uiEventQueue)
+	{
+		this.uiEventQueue = uiEventQueue;
+	}
 
 	public void update(Observable observable, Object update)
 	{
@@ -212,6 +221,7 @@ public class SearchPaneController implements Initializable, Observer
 
 	public void init()
 	{
+		foundMessageStore = new ObservableMessageStore(Integer.MAX_VALUE, uiEventQueue);
 		foundMessageStore.setFormatter(store.getFormatter());
 		
 		searchPaneEventDispatcher = new EventDispatcher();

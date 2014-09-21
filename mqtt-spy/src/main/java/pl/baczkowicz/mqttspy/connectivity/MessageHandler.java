@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 
 /**
  * Interface for handling received messages.

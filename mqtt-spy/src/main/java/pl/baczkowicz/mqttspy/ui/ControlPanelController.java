@@ -11,9 +11,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
@@ -169,6 +173,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	
 	public void refreshConnectionsStatus()
 	{
+		logger.info("Refreshing connection status...");
 		showConnections(controlPanelItem2Controller, button2);				
 	}
 
@@ -226,6 +231,22 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		controller.refresh();		
 	}	
 	
+	private void showOpening(String buttonText, Button connectionButton)
+	{
+		buttonText = " Opening " + buttonText; 			
+		connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(null));	
+		
+		final HBox buttonBox = new HBox();			
+		final ProgressIndicator buttonProgress = new ProgressIndicator();
+		buttonProgress.setMaxSize(15, 15);
+					
+		buttonBox.getChildren().add(buttonProgress);
+		buttonBox.getChildren().add(new Label(buttonText));
+
+		connectionButton.setGraphic(buttonBox);
+		connectionButton.setText(null);
+	}
+	
 	private Button createConnectionButton(final ConfiguredConnectionDetails connection)
 	{
 		MqttConnectionStatus status = null;
@@ -236,22 +257,31 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 			{
 				status = openedConnection.getConnectionStatus();
 				opened = openedConnection.isOpened();
+				logger.info("Match for " + connection.getName());
 			}
 		}
 		
-		String buttonText = connection.getName();
+		// String buttonText = connection.getName();
 		final Button connectionButton = new Button();
 		connectionButton.setFocusTraversable(false);
 		
+		logger.info("Button for " + connection.getName() + " " + status + "/" + opened);
 		if (status != null && opened)
 		{
-			buttonText = nextActionTitle.get(status) + " " + buttonText; 
+			final String buttonText = nextActionTitle.get(status) + " " + connection.getName(); 
 			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(status));	
 			connectionButton.setOnAction(ConnectionUtils.createNextAction(status, connection.getId(), mqttManager));
+			
+			connectionButton.setGraphic(null);
+			connectionButton.setText(buttonText);
+		}
+		else if (status != null && !opened)
+		{
+			showOpening(connection.getName(), connectionButton);
 		}
 		else
 		{
-			buttonText = "Open " + buttonText; 
+			final String buttonText = "Open " + connection.getName(); 
 			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(null));	
 			connectionButton.setOnAction(new EventHandler<ActionEvent>()
 			{						
@@ -259,7 +289,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 				public void handle(ActionEvent event)
 				{
 					try
-					{
+					{				
+						showOpening(connection.getName(), connectionButton);
 						mainController.openConnection(connection, mqttManager);
 						event.consume();
 					}
@@ -270,8 +301,11 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 					}							
 				}
 			});
-		}					
-		connectionButton.setText(buttonText);
+			
+			connectionButton.setText(buttonText);
+		}		
+		
+
 		
 		return connectionButton;
 	}
@@ -359,7 +393,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 					// Wait some time for the app to start properly
 					try
 					{
-						Thread.sleep(10000);
+						Thread.sleep(5000);
 					}
 					catch (InterruptedException e)
 					{

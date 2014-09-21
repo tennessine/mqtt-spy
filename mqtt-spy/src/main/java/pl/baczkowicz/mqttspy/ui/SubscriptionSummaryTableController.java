@@ -19,9 +19,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableSubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -34,36 +34,36 @@ public class SubscriptionSummaryTableController implements Initializable
 	private EventDispatcher navigationEventDispatcher;
 
 	@FXML
-	private TableView<ObservableSubscriptionTopicSummaryProperties> filterTable;
+	private TableView<SubscriptionTopicSummaryProperties> filterTable;
 
 	@FXML
-	private TableColumn<ObservableSubscriptionTopicSummaryProperties, Boolean> showColumn;
+	private TableColumn<SubscriptionTopicSummaryProperties, Boolean> showColumn;
 
 	@FXML
-	private TableColumn<ObservableSubscriptionTopicSummaryProperties, String> topicColumn;
+	private TableColumn<SubscriptionTopicSummaryProperties, String> topicColumn;
 	
 	@FXML
-	private TableColumn<ObservableSubscriptionTopicSummaryProperties, String> contentColumn;
+	private TableColumn<SubscriptionTopicSummaryProperties, String> contentColumn;
 
 	@FXML
-	private TableColumn<ObservableSubscriptionTopicSummaryProperties, Integer> messageCountColumn;
+	private TableColumn<SubscriptionTopicSummaryProperties, Integer> messageCountColumn;
 
 	@FXML
-	private TableColumn<ObservableSubscriptionTopicSummaryProperties, String> lastReceivedColumn;
+	private TableColumn<SubscriptionTopicSummaryProperties, String> lastReceivedColumn;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{				
 		// Table
-		showColumn.setCellValueFactory(new PropertyValueFactory<ObservableSubscriptionTopicSummaryProperties, Boolean>(
+		showColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, Boolean>(
 				"show"));
 		showColumn
-				.setCellFactory(new Callback<TableColumn<ObservableSubscriptionTopicSummaryProperties, Boolean>, TableCell<ObservableSubscriptionTopicSummaryProperties, Boolean>>()
+				.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, Boolean>, TableCell<SubscriptionTopicSummaryProperties, Boolean>>()
 				{
 
-					public TableCell<ObservableSubscriptionTopicSummaryProperties, Boolean> call(
-							TableColumn<ObservableSubscriptionTopicSummaryProperties, Boolean> param)
+					public TableCell<SubscriptionTopicSummaryProperties, Boolean> call(
+							TableColumn<SubscriptionTopicSummaryProperties, Boolean> param)
 					{
-						final CheckBoxTableCell<ObservableSubscriptionTopicSummaryProperties, Boolean> cell = new CheckBoxTableCell<ObservableSubscriptionTopicSummaryProperties, Boolean>()
+						final CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean> cell = new CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean>()
 						{
 							@Override
 							public void updateItem(final Boolean checked, boolean empty)
@@ -71,21 +71,11 @@ public class SubscriptionSummaryTableController implements Initializable
 								super.updateItem(checked, empty);
 								if (!isEmpty() && checked != null && this.getTableRow() != null)
 								{
-									final ObservableSubscriptionTopicSummaryProperties item = (ObservableSubscriptionTopicSummaryProperties) this.getTableRow().getItem();
+									final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
 									
 									logger.info("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
-									boolean filteringChanged = false;
-									
-									if (checked)
-									{
-										store.applyFilter(item.topicProperty().getValue());
-									}
-									else
-									{
-										store.removeFilter(item.topicProperty().getValue());
-									}
-									
-									if (filteringChanged)
+																
+									if (store.updateFilter(item.topicProperty().getValue(), checked))
 									{
 										// Wouldn't get updated properly if this is in the same thread 
 										Platform.runLater(new Runnable()
@@ -106,23 +96,23 @@ public class SubscriptionSummaryTableController implements Initializable
 					}
 				});
 
-		topicColumn.setCellValueFactory(new PropertyValueFactory<ObservableSubscriptionTopicSummaryProperties, String>(
+		topicColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
 				"topic"));
 
 		contentColumn
-				.setCellValueFactory(new PropertyValueFactory<ObservableSubscriptionTopicSummaryProperties, String>(
+				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
 						"lastReceivedPayload"));
 
 		messageCountColumn
-				.setCellValueFactory(new PropertyValueFactory<ObservableSubscriptionTopicSummaryProperties, Integer>(
+				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, Integer>(
 						"count"));
 		messageCountColumn
-				.setCellFactory(new Callback<TableColumn<ObservableSubscriptionTopicSummaryProperties, Integer>, TableCell<ObservableSubscriptionTopicSummaryProperties, Integer>>()
+				.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, Integer>, TableCell<SubscriptionTopicSummaryProperties, Integer>>()
 				{
-					public TableCell<ObservableSubscriptionTopicSummaryProperties, Integer> call(
-							TableColumn<ObservableSubscriptionTopicSummaryProperties, Integer> param)
+					public TableCell<SubscriptionTopicSummaryProperties, Integer> call(
+							TableColumn<SubscriptionTopicSummaryProperties, Integer> param)
 					{
-						final TableCell<ObservableSubscriptionTopicSummaryProperties, Integer> cell = new TableCell<ObservableSubscriptionTopicSummaryProperties, Integer>()
+						final TableCell<SubscriptionTopicSummaryProperties, Integer> cell = new TableCell<SubscriptionTopicSummaryProperties, Integer>()
 						{
 							@Override
 							public void updateItem(Integer item, boolean empty)
@@ -145,19 +135,19 @@ public class SubscriptionSummaryTableController implements Initializable
 				});
 
 		lastReceivedColumn
-				.setCellValueFactory(new PropertyValueFactory<ObservableSubscriptionTopicSummaryProperties, String>(
+				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
 						"lastReceivedTimestamp"));
 
 		filterTable
-				.setRowFactory(new Callback<TableView<ObservableSubscriptionTopicSummaryProperties>, TableRow<ObservableSubscriptionTopicSummaryProperties>>()
+				.setRowFactory(new Callback<TableView<SubscriptionTopicSummaryProperties>, TableRow<SubscriptionTopicSummaryProperties>>()
 				{
-					public TableRow<ObservableSubscriptionTopicSummaryProperties> call(
-							TableView<ObservableSubscriptionTopicSummaryProperties> tableView)
+					public TableRow<SubscriptionTopicSummaryProperties> call(
+							TableView<SubscriptionTopicSummaryProperties> tableView)
 					{
-						final TableRow<ObservableSubscriptionTopicSummaryProperties> row = new TableRow<ObservableSubscriptionTopicSummaryProperties>()
+						final TableRow<SubscriptionTopicSummaryProperties> row = new TableRow<SubscriptionTopicSummaryProperties>()
 						{
 							@Override
-							protected void updateItem(ObservableSubscriptionTopicSummaryProperties item, boolean empty)
+							protected void updateItem(SubscriptionTopicSummaryProperties item, boolean empty)
 							{
 								super.updateItem(item, empty);
 								if (!isEmpty() && item.getSubscription() != null)

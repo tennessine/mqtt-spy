@@ -2,7 +2,7 @@ package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
 import java.util.Queue;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 
 public interface MessageStore
 {

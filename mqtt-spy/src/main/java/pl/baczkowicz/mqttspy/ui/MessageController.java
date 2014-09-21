@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
@@ -164,10 +164,7 @@ public class MessageController implements Initializable, Observer
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
-	{
-		tooltip = new Tooltip("");
-		tooltip.setWrapText(true);
-		
+	{		
 		dataField.selectedTextProperty().addListener(new ChangeListener<String>()
 		{
 			@Override
@@ -229,6 +226,9 @@ public class MessageController implements Initializable, Observer
 	
 	public void init()
 	{
+		tooltip = new Tooltip("");
+		tooltip.setWrapText(true);
+		
 		eventDispatcher.addObserver(this);
 	}
 	

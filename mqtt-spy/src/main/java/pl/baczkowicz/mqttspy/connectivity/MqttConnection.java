@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.SubscriptionsStore;
@@ -14,10 +15,10 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -45,12 +46,6 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 
 	private EventManager eventManager;
 
-	// TODO: is that needed?
-	// private Tab connectionTab;
-	
-	// TODO: is that needed?
-	// private ConnectionController connectionController;
-
 	private String disconnectionReason;
 
 	private StatisticsManager statisticsManager;
@@ -61,9 +56,9 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	}
 
 	public MqttConnection(final RuntimeConnectionProperties properties, 
-			final MqttConnectionStatus status, final EventManager eventManager)
+			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
-		super(properties.getName(), properties.getMaxMessagesStored());
+		super(properties.getName(), properties.getMaxMessagesStored(), uiEventQueue);
 		this.setMaxMessageStoreSize(properties.getMaxMessagesStored());
 		this.properties = properties;
 		this.eventManager = eventManager;
@@ -90,7 +85,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription.getTopic());
 
 			// If a match has been found, and the subscription is active
-			if (mqttSubscription != null && mqttSubscription.isActive())
+			if (mqttSubscription != null && (mqttSubscription.isSubscribing() || mqttSubscription.isActive()))
 			{
 				// Set subscription reference on the message
 				message.setSubscription(mqttSubscription);
@@ -186,13 +181,18 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 
 		try
 		{
-			logger.debug("Subscribing to " + subscription.getTopic());
-			getClient().subscribe(subscription.getTopic(), subscription.getQos());
-
 			addSubscription(subscription);
+			
+			// Retained messages can be received very quickly, even so quickly we still haven't set the subscription's state to active
+			subscription.setSubscribing(true);
+			
+			logger.debug("Subscribing to " + subscription.getTopic());			
+			getClient().subscribe(subscription.getTopic(), subscription.getQos());			
 			logger.info("Subscribed to " + subscription.getTopic());
-
+			
 			subscription.setActive(true);
+			subscription.setSubscribing(false);
+			
 			logger.trace("Subscription " + subscription.getTopic() + " is active = "
 					+ subscription.isActive());
 
@@ -200,7 +200,9 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		}
 		catch (MqttException e)
 		{
+			subscription.setSubscribing(false);
 			logger.error("Cannot subscribe to " + subscription.getTopic(), e);
+			removeSubscription(subscription);
 			return false;
 		}
 	}
@@ -308,16 +310,6 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	{
 		this.maxMessageStoreSize = maxMessageStoreSize;
 	}
-
-	// public void setTab(final Tab connectionTab)
-	// {
-	// this.connectionTab = connectionTab;
-	// }
-	//
-	// public Tab getConnectionTab()
-	// {
-	// return this.connectionTab;
-	// }
 	
 	public int getId()
 	{
@@ -340,15 +332,4 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	{
 		return lastUsedSubscriptionId;
 	}
-
-	// public ConnectionController getConnectionController()
-	// {
-	// return connectionController;
-	// }
-	//
-	// public void setConnectionController(ConnectionController
-	// connectionController)
-	// {
-	// this.connectionController = connectionController;
-	// }
 }

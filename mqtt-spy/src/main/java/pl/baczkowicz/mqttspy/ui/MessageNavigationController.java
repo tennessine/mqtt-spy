@@ -211,12 +211,7 @@ public class MessageNavigationController implements Observer, Initializable
 	}
 
 	public void initialize(URL location, ResourceBundle resources)
-	{		
-		moreRecentButton.setTooltip(new Tooltip("Show more recent message"));
-		lessRecentButton.setTooltip(new Tooltip("Show less recent message"));
-		showFirstButton.setTooltip(new Tooltip("Show the latest message"));
-		showLastButton.setTooltip(new Tooltip("Show the oldest message"));
-		
+	{				
 		messageIndexValueField = new TextField();
 		messageIndexValueField.setEditable(false);
 		messageIndexValueField.textProperty().addListener(new ChangeListener<String>()
@@ -326,6 +321,11 @@ public class MessageNavigationController implements Observer, Initializable
 
 	public void init()
 	{
+		moreRecentButton.setTooltip(new Tooltip("Show more recent message"));
+		lessRecentButton.setTooltip(new Tooltip("Show less recent message"));
+		showFirstButton.setTooltip(new Tooltip("Show the latest message"));
+		showLastButton.setTooltip(new Tooltip("Show the oldest message"));
+		
 		navigationEventDispatcher.addObserver(this);			
 	}
 

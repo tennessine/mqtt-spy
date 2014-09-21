@@ -23,6 +23,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class ConnectionController implements Initializable, Observer
@@ -121,8 +122,6 @@ public class ConnectionController implements Initializable, Observer
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
 		newSubscriptionPaneController.setConnectionManager(connectionManager);
-		// newSubscriptionPaneController.setConnectionProperties(connectionProperties);		
-		// connection.setConnectionController(this);
 		connection.setStatisticsManager(statisticsManager);
 		
 		tooltip = new Tooltip();
@@ -238,7 +237,8 @@ public class ConnectionController implements Initializable, Observer
 					connectionTab.getStyleClass().remove(1);
 				}
 				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));
-				updateConnectionStats();
+				
+				DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
 			}
 		}
 	}
@@ -259,5 +259,10 @@ public class ConnectionController implements Initializable, Observer
 	public void setStatisticsManager(StatisticsManager statisticsManager)
 	{
 		this.statisticsManager = statisticsManager;
+	}
+	
+	public NewSubscriptionController getNewSubscriptionPaneController()
+	{
+		return newSubscriptionPaneController;
 	}
 }

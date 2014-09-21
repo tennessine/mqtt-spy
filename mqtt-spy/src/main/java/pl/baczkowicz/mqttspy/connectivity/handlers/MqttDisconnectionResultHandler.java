@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionAttemptFailureEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttDisconnectionAttemptSuccessEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptFailureEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptSuccessEvent;
 
 public class MqttDisconnectionResultHandler implements IMqttActionListener
 {

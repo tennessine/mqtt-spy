@@ -9,19 +9,17 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.paint.Color;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMqttContentProperties;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableSubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
-import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
+import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ContextMenuUtils
 {
@@ -152,7 +150,7 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createTopicTableContextMenu(
-			final TableView<ObservableSubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, final EventDispatcher navigationEventDispatcher)
+			final TableView<SubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, final EventDispatcher navigationEventDispatcher)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		
@@ -162,7 +160,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -183,7 +181,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -204,7 +202,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -221,7 +219,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -238,7 +236,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -256,7 +254,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableSubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -271,7 +269,7 @@ public class ContextMenuUtils
 	}
 	
 	public static ContextMenu createMessageListTableContextMenu(
-			final TableView<ObservableMqttContentProperties> messageTable, final EventDispatcher navigationEventDispatcher)
+			final TableView<MqttContentProperties> messageTable, final EventDispatcher navigationEventDispatcher)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		
@@ -281,7 +279,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableMqttContentProperties item = messageTable.getSelectionModel()
+				final MqttContentProperties item = messageTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -302,7 +300,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final ObservableMqttContentProperties item = messageTable.getSelectionModel()
+				final MqttContentProperties item = messageTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -337,8 +335,8 @@ public class ContextMenuUtils
 		return contextMenu;
 	}
 
-	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final ConnectionManager connectionManager, final MqttConnection connection, 
-			final ConnectionController connectionController, final Tab tab, final Object parent)
+	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttConnection connection, 
+			final ConnectionController connectionController, final Tab tab)
 	{
 		// Context menu
 		ContextMenu contextMenu = new ContextMenu();
@@ -373,8 +371,7 @@ public class ContextMenuUtils
 				subscriptionDetails.setTopic("$SYS/#");
 				subscriptionDetails.setQos(0);
 				
-				connectionManager.getSubscriptionManager(connection.getId()).
-					createSubscription(Color.web("e6ccff"), true, subscriptionDetails, connection, connectionController, parent);		
+				connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
 			}
 		});
 		contextMenu.getItems().add(stats);

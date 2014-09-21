@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.ui.connections;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -16,6 +17,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
@@ -32,22 +34,26 @@ public class SubscriptionManager
 	
 	private final Map<String, SubscriptionController> subscriptionControllers = new HashMap<>();
 	
-	public SubscriptionManager(final EventManager eventManager, final StatisticsManager statisticsManager)
+	private final Queue<MqttSpyUIEvent> uiEventQueue;
+	
+	public SubscriptionManager(final EventManager eventManager, final StatisticsManager statisticsManager, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		this.eventManager = eventManager;
 		this.statisticsManager = statisticsManager;
+		this.uiEventQueue = uiEventQueue;
 	}
 	
 	public void createSubscription(final Color color, final boolean subscribe, final SubscriptionDetails subscriptionDetails, 
 			final MqttConnection connection, final ConnectionController connectionController, Object parent)
 	{
 		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
-				subscriptionDetails.getQos(), color, connection.getMaxMessageStoreSize());
+				subscriptionDetails.getQos(), color, connection.getMaxMessageStoreSize(), uiEventQueue);
 		subscription.setConnection(connection);
 		
 		// Add a new tab
 		final SubscriptionController subscriptionController = createSubscriptionTab(false, parent, subscription, connection,
 				subscription, connectionController);
+		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(subscriptionController.getTab(), connection, subscription, eventManager));
 		subscription.setSubscriptionController(subscriptionController);
 		
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
@@ -87,7 +93,6 @@ public class SubscriptionManager
 		subscriptionController.setTab(tab);
 		subscriptionController.setStatisticsManager(statisticsManager);
 		subscriptionController.setConnectionProperties(connection.getProperties());
-		subscriptionController.init();
 				
 		tab.setClosable(false);
 		tab.setContent(subscriptionPane);
@@ -99,17 +104,13 @@ public class SubscriptionManager
 
 		if (allTab)
 		{
-			subscriptionControllers.put(ALL_SUBSCRIPTIONS_TAB_TITLE, subscriptionController);
-			
-			tab.setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(tab, connection, eventManager));
+			subscriptionControllers.put(ALL_SUBSCRIPTIONS_TAB_TITLE, subscriptionController);						
 			tab.setGraphic(new Label(ALL_SUBSCRIPTIONS_TAB_TITLE));
 			tab.getGraphic().getStyleClass().add("subscribed");
 		}
 		else
 		{
-			subscriptionControllers.put(subscription.getTopic(), subscriptionController);
-			
-			tab.setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(tab, connection, subscription, eventManager));
+			subscriptionControllers.put(subscription.getTopic(), subscriptionController);						
 			tab.setGraphic(new Label(subscription.getTopic()));
 			tab.getGraphic().getStyleClass().add("unsubscribed");
 			tab.setTooltip(new Tooltip("Status: " + "unsubscribed"));

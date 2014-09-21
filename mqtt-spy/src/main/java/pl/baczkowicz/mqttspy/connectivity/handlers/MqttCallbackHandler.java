@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionLostEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionLostEvent;
 
 /**
  * One MQTT callback handler per connection.

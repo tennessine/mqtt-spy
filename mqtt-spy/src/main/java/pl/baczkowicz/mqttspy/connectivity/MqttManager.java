@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 import javafx.application.Platform;
 
@@ -11,13 +12,14 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttConnectionAttemptFailureEvent;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttDisconnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttConnectionResultHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttDisconnectionResultHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttEventHandler;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptFailureEvent;
+import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptFailureEvent;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttManager
@@ -30,16 +32,16 @@ public class MqttManager
 	private Map<Integer, MqttConnection> connections = new HashMap<Integer, MqttConnection>();
 	
 	private EventManager eventManager;
-
+		
 	public MqttManager(final EventManager eventManager)
 	{
 		this.eventManager = eventManager;
 	}
 	
-	public MqttConnection createConnection(final RuntimeConnectionProperties connectionProperties)
+	public MqttConnection createConnection(final RuntimeConnectionProperties connectionProperties, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		// Storing all client properties in a simple object
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager);
+		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager, uiEventQueue);
 
 		// Store the created connection
 		connections.put(connectionProperties.getConfiguredProperties().getId(), connection);

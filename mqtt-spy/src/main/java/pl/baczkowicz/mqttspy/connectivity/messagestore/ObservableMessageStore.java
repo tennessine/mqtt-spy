@@ -2,10 +2,12 @@ package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
 import java.util.Deque;
 import java.util.Observable;
+import java.util.Queue;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
 public class ObservableMessageStore extends Observable implements MessageStore
@@ -15,9 +17,13 @@ public class ObservableMessageStore extends Observable implements MessageStore
 	/** The message format used for this message store. */
 	protected FormatterDetails messageFormat = FormattingUtils.createBasicFormatter("default", "Plain", ConversionMethod.PLAIN);
 
-	public ObservableMessageStore(final int maxSize)
+	/** Stores events for the UI to be updated. */
+	protected Queue<MqttSpyUIEvent> uiEventQueue;
+
+	public ObservableMessageStore(final int maxSize, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		this.store = new MqttMessageStore(maxSize);
+		this.uiEventQueue = uiEventQueue;
 	}
 	
 	public MqttContent storeMessage(final MqttContent message)

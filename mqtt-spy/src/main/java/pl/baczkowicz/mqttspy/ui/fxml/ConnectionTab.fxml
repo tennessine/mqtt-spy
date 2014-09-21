@@ -30,11 +30,13 @@
                      <children> 
    						<TabPane fx:id="subscriptionTabs" layoutX="0.0" layoutY="42.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
    							<tabs>
+   								<!-- Leaving it in slows down loading process, particularly that we're clearing it...
    								<Tab closable="false" text="All">
    									<content>
    										<fx:include source="SubscriptionPane.fxml" />
    									</content>
    								</Tab>
+   								-->
    							</tabs>
    						</TabPane>
                      </children>

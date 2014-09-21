@@ -1,12 +1,17 @@
 package pl.baczkowicz.mqttspy.connectivity.messagestore;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 
 public class ObservableMessageStoreWithFilteringTest
 {
@@ -16,7 +21,7 @@ public class ObservableMessageStoreWithFilteringTest
 	@Before
 	public void setUp() throws Exception
 	{
-		store = new ObservableMessageStoreWithFiltering("test", 5);
+		store = new ObservableMessageStoreWithFiltering("test", 5, new LinkedBlockingQueue<MqttSpyUIEvent>());
 	}
 
 	@Test
@@ -55,7 +60,7 @@ public class ObservableMessageStoreWithFilteringTest
 	public final void testActiveFiltersWhenNotAllEnabled()	
 	{
 		testDefaultActiveFilters();
-		store.removeFilter("t2");
+		store.updateFilter("t2", false);
 		
 		final MqttContent message = new MqttContent(3, "t3", new MqttMessage("test3".getBytes()));
 		store.messageReceived(message);

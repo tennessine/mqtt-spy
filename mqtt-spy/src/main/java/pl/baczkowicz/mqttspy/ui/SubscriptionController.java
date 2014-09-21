@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.RadioMenuItem;
@@ -33,8 +34,8 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.connectivity.events.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
@@ -126,6 +127,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	private StatisticsManager statisticsManager;
 
+	private Label summaryTitledPaneTitleLabel;
+
 	@Override
 	public void onClearTab(final ObservableMessageStoreWithFiltering subscription)
 	{	
@@ -211,6 +214,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	public void initialize(URL location, ResourceBundle resources)
 	{		
+		summaryTitledPaneTitleLabel = new Label();
+		
 		wholeMessageFormat.getToggles().get(0).setUserData(FormattingUtils.createBasicFormatter("default", 				"Plain", ConversionMethod.PLAIN));
 		wholeMessageFormat.getToggles().get(1).setUserData(FormattingUtils.createBasicFormatter("default-hexDecoder", 	"HEX decoder", ConversionMethod.HEX_DECODE));
 		wholeMessageFormat.getToggles().get(2).setUserData(FormattingUtils.createBasicFormatter("default-hexEncoder", 	"HEX encoder", ConversionMethod.HEX_ENCODE));
@@ -311,11 +316,18 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		else
 		{
 			searchStage.close();
-		}
+		}			
 	}
 
 	public void init()
 	{
+		final Tooltip summaryTitledPaneTooltip = new Tooltip(
+				"Load, the average number of messages per second, is calculated over the following intervals: " +  DialogUtils.getPeriodList() + ".");
+		
+		summaryTitledPaneTitleLabel.setTooltip(summaryTitledPaneTooltip);
+		summaryTitledPane.setText(null);
+		summaryTitledPane.setGraphic(summaryTitledPaneTitleLabel);
+		
 		eventDispatcher = new EventDispatcher();
 		eventDispatcher.addObserver(this);
 		eventManager.registerClearTabObserver(this, store);
@@ -323,7 +335,6 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		summaryTablePaneController.setStore(store);
 		summaryTablePaneController.setNavigationEventDispatcher(eventDispatcher);
 		summaryTablePaneController.init();
-		summaryTitledPane.setTooltip(new Tooltip("The average number of messages per second is calculated over the following intervals: " +  DialogUtils.getPeriodList() + "."));
 		
 		messagePaneController.setStore(store);
 		messagePaneController.setEventDispatcher(eventDispatcher);
@@ -344,7 +355,10 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			customFormatterMenu.getItems().add(customFormatterMenuItem);
 		}
 		
-		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());		
+		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
+		updateSubscriptionStats();
+		
+		// logger.info("init(); finished on SubscriptionController");
 	}
 
 	public void setStore(final ObservableMessageStoreWithFiltering store)
@@ -390,12 +404,12 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	public void updateSubscriptionStats()
 	{
-		final int topics = store.getObservableMessagesPerTopic().size();
+		final int topicCount = store.getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)
 		{
-			summaryTitledPane.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
-				topics == 1 ? "1 topic" : topics + " topics",
+			summaryTitledPaneTitleLabel.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
+				topicCount == 1 ? "1 topic" : topicCount + " topics",
 				statisticsManager.getMessagesReceived(connectionProperties.getId(), 5).overallCount,
 				statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).overallCount,
 				statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).overallCount));
@@ -406,8 +420,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			final Double avg30sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).messageCount.get(subscription.getTopic());
 			final Double avg300sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).messageCount.get(subscription.getTopic());
 			
-			summaryTitledPane.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
-					topics == 1 ? "1 topic" : topics + " topics",
+			summaryTitledPaneTitleLabel.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
+					topicCount == 1 ? "1 topic" : topicCount + " topics",
 					avg5sec == null ? 0 : avg5sec, 
 					avg30sec == null ? 0 : avg30sec, 
 					avg300sec == null ? 0 : avg300sec));
