@@ -51,6 +51,8 @@ public class SubscriptionSummaryTableController implements Initializable
 	@FXML
 	private TableColumn<SubscriptionTopicSummaryProperties, String> lastReceivedColumn;
 
+	private ConnectionController connectionController;
+
 	public void initialize(URL location, ResourceBundle resources)
 	{				
 		// Table
@@ -73,7 +75,7 @@ public class SubscriptionSummaryTableController implements Initializable
 								{
 									final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
 									
-									logger.info("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
+									logger.trace("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
 																
 									if (store.updateFilter(item.topicProperty().getValue(), checked))
 									{
@@ -170,7 +172,7 @@ public class SubscriptionSummaryTableController implements Initializable
 	
 	public void init()
 	{
-		filterTable.setContextMenu(ContextMenuUtils.createTopicTableContextMenu(filterTable, store, navigationEventDispatcher));
+		filterTable.setContextMenu(ContextMenuUtils.createTopicTableContextMenu(filterTable, store, navigationEventDispatcher, connectionController));
 		filterTable.setItems(store.getObservableMessagesPerTopic());	
 	}
 
@@ -182,5 +184,10 @@ public class SubscriptionSummaryTableController implements Initializable
 	public void setNavigationEventDispatcher(final EventDispatcher navigationEventDispatcher)
 	{
 		this.navigationEventDispatcher = navigationEventDispatcher;
+	}
+	
+	public void setConnectionController(final ConnectionController connectionController)
+	{
+		this.connectionController = connectionController;
 	}
 }

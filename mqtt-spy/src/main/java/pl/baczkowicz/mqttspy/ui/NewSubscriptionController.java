@@ -124,16 +124,8 @@ public class NewSubscriptionController implements Initializable
 			final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
 			subscriptionDetails.setTopic(subscriptionTopic);
 			subscriptionDetails.setQos(subscriptionQosChoice.getSelectionModel().getSelectedIndex());
-			
-			if (!connection.getSubscriptions().keySet().contains(subscriptionTopic))		
-			{
-				recordSubscriptionTopic(subscriptionTopic);
-				subscribe(subscriptionDetails, true);
-			}
-			else
-			{
-				DialogUtils.showError("Duplicate topic", "You already have a subscription tab with " + subscriptionTopic + " topic.");
-			}
+						
+			subscribe(subscriptionDetails, true);			
 		}
 		else
 		{
@@ -144,10 +136,19 @@ public class NewSubscriptionController implements Initializable
 
 	public void subscribe(final SubscriptionDetails subscriptionDetails, final boolean subscribe)
 	{
-		connectionManager.getSubscriptionManager(connection.getId()).
-			createSubscription(colorPicker.getValue(), subscribe, subscriptionDetails, connection, connectionController, this);
-		
-		colorPicker.setValue(colors.get(connection.getLastUsedSubscriptionId() % 16));
+		if (!connection.getSubscriptions().keySet().contains(subscriptionDetails.getTopic()))		
+		{
+			recordSubscriptionTopic(subscriptionDetails.getTopic());
+			
+			connectionManager.getSubscriptionManager(connection.getId()).
+				createSubscription(colorPicker.getValue(), subscribe, subscriptionDetails, connection, connectionController, this);
+			
+			colorPicker.setValue(colors.get(connection.getLastUsedSubscriptionId() % 16));
+		}
+		else
+		{
+			DialogUtils.showError("Duplicate topic", "You already have a subscription tab with " + subscriptionDetails.getTopic() + " topic.");
+		}
 	}
 	
 	public void setConnectionManager(final ConnectionManager connectionManager)

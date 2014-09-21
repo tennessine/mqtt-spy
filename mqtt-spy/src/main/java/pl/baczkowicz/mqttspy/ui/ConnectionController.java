@@ -9,11 +9,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -183,6 +187,26 @@ public class ConnectionController implements Initializable, Observer
 	{
 		return subscriptionTabs;
 	}
+	
+	public void showTabTile(final boolean pending)
+	{
+		if (pending)
+		{
+			final HBox title = new HBox();
+			title.setAlignment(Pos.CENTER);
+			final ProgressIndicator progressIndicator = new ProgressIndicator();
+			progressIndicator.setMaxSize(15, 15);												
+			title.getChildren().add(progressIndicator);
+			title.getChildren().add(new Label(" " + connection.getName()));
+			connectionTab.setGraphic(title);
+			connectionTab.setText(null);
+		}
+		else
+		{
+			connectionTab.setGraphic(null);
+			connectionTab.setText(connection.getName());
+		}
+	}
 
 	public void update(Observable observable, Object update)
 	{
@@ -204,28 +228,33 @@ public class ConnectionController implements Initializable, Observer
 						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+						showTabTile(false);
 						break;
 					case CONNECTED:					
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+						connectionTab.getContextMenu().getItems().get(3).setDisable(false);											
 						newSubscriptionPaneController.setConnected(true);
 						newPublicationPaneController.setConnected(true);
+						showTabTile(false);
 						break;
 					case CONNECTING:
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
 						connectionTab.getContextMenu().getItems().get(3).setDisable(true);
+						showTabTile(true);						
 						break;
 					case DISCONNECTED:
 						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+						showTabTile(false);
 						break;
 					case DISCONNECTING:					
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+						showTabTile(true);
 						break;
 					default:
 						break;

@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
@@ -111,10 +110,10 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		nextActionTitle.put(MqttConnectionStatus.NOT_CONNECTED, "Connect to");
-		nextActionTitle.put(MqttConnectionStatus.CONNECTING, "Connect to");
+		nextActionTitle.put(MqttConnectionStatus.CONNECTING, "Connecting to");
 		nextActionTitle.put(MqttConnectionStatus.CONNECTED, "Disconnect from");
 		nextActionTitle.put(MqttConnectionStatus.DISCONNECTED, "Connect to");
-		nextActionTitle.put(MqttConnectionStatus.DISCONNECTING, "Connect to");
+		nextActionTitle.put(MqttConnectionStatus.DISCONNECTING, "Disconnecting from");
 	}
 		
 	public void init()
@@ -173,7 +172,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	
 	public void refreshConnectionsStatus()
 	{
-		logger.info("Refreshing connection status...");
+		logger.trace("Refreshing connection status...");
 		showConnections(controlPanelItem2Controller, button2);				
 	}
 
@@ -231,57 +230,50 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		controller.refresh();		
 	}	
 	
-	private void showOpening(String buttonText, Button connectionButton)
-	{
-		buttonText = " Opening " + buttonText; 			
-		connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(null));	
+	private void showPending(final String statusText, final MqttConnectionStatus status, 
+			final ConfiguredConnectionDetails connection, final Button connectionButton)
+	{			
+		connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(status));	
+		connectionButton.setOnAction(ConnectionUtils.createNextAction(status, connection.getId(), mqttManager));
 		
 		final HBox buttonBox = new HBox();			
 		final ProgressIndicator buttonProgress = new ProgressIndicator();
 		buttonProgress.setMaxSize(15, 15);
 					
 		buttonBox.getChildren().add(buttonProgress);
-		buttonBox.getChildren().add(new Label(buttonText));
+		buttonBox.getChildren().add(new Label(" " + statusText + " " + connection.getName()));
 
 		connectionButton.setGraphic(buttonBox);
 		connectionButton.setText(null);
 	}
 	
-	private Button createConnectionButton(final ConfiguredConnectionDetails connection)
+	private Button createConnectionButton(final ConfiguredConnectionDetails connectionDetails)
 	{
-		MqttConnectionStatus status = null;
-		boolean opened = false;
+		MqttConnection connection = null; 
+		//MqttConnectionStatus status = null;
+		//boolean opening = false;
 		for (final MqttConnection openedConnection : mqttManager.getConnections())
 		{					
-			if (connection.getId() == openedConnection.getId())
+			if (connectionDetails.getId() == openedConnection.getId())
 			{
-				status = openedConnection.getConnectionStatus();
-				opened = openedConnection.isOpened();
-				logger.info("Match for " + connection.getName());
+				connection = openedConnection;
+				//status = openedConnection.getConnectionStatus();
+				//opening = openedConnection.isOpening();
 			}
 		}
 		
-		// String buttonText = connection.getName();
 		final Button connectionButton = new Button();
 		connectionButton.setFocusTraversable(false);
 		
-		logger.info("Button for " + connection.getName() + " " + status + "/" + opened);
-		if (status != null && opened)
+		if (connection != null)
 		{
-			final String buttonText = nextActionTitle.get(status) + " " + connection.getName(); 
-			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(status));	
-			connectionButton.setOnAction(ConnectionUtils.createNextAction(status, connection.getId(), mqttManager));
-			
-			connectionButton.setGraphic(null);
-			connectionButton.setText(buttonText);
+			logger.trace("Button for " + connectionDetails.getName() + " " 
+				+ connection.getConnectionStatus() + "/" + connection.isOpening() + "/" + connection.isOpened());
 		}
-		else if (status != null && !opened)
+		
+		if (connection == null || (!connection.isOpened() && !connection.isOpening()))
 		{
-			showOpening(connection.getName(), connectionButton);
-		}
-		else
-		{
-			final String buttonText = "Open " + connection.getName(); 
+			final String buttonText = "Open " + connectionDetails.getName(); 
 			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(null));	
 			connectionButton.setOnAction(new EventHandler<ActionEvent>()
 			{						
@@ -290,8 +282,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 				{
 					try
 					{				
-						showOpening(connection.getName(), connectionButton);
-						mainController.openConnection(connection, mqttManager);
+						showPending("Opening", null, connectionDetails, connectionButton);
+						mainController.openConnection(connectionDetails, mqttManager);
 						event.consume();
 					}
 					catch (ConfigurationException e)
@@ -304,9 +296,28 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 			
 			connectionButton.setText(buttonText);
 		}		
-		
-
-		
+		else if (connection.isOpening())
+		{
+			showPending("Opening", null, connectionDetails, connectionButton);
+		}
+		else if (connection.getConnectionStatus() == MqttConnectionStatus.CONNECTING)
+		{
+			showPending("Connecting to", connection.getConnectionStatus(), connectionDetails, connectionButton);
+		}
+		else if (connection.getConnectionStatus() == MqttConnectionStatus.DISCONNECTING)
+		{
+			showPending("Disconnecting from", connection.getConnectionStatus(), connectionDetails, connectionButton);
+		}
+		else if (connection.getConnectionStatus() != null)
+		{
+			final String buttonText = nextActionTitle.get(connection.getConnectionStatus()) + " " + connectionDetails.getName(); 
+			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(connection.getConnectionStatus()));	
+			connectionButton.setOnAction(ConnectionUtils.createNextAction(connection.getConnectionStatus(), connectionDetails.getId(), mqttManager));
+			
+			connectionButton.setGraphic(null);
+			connectionButton.setText(buttonText);
+		}		
+				
 		return connectionButton;
 	}
 	

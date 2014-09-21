@@ -121,7 +121,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	private SearchWindowController searchWindowController;
 
-	private EventDispatcher eventDispatcher;
+	private final EventDispatcher eventDispatcher;
 
 	private EventManager eventManager;
 
@@ -129,6 +129,14 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	private Label summaryTitledPaneTitleLabel;
 
+	private ConnectionController connectionController;
+
+	public SubscriptionController()
+	{
+		eventDispatcher = new EventDispatcher();
+		eventDispatcher.addObserver(this);
+	}
+	
 	@Override
 	public void onClearTab(final ObservableMessageStoreWithFiltering subscription)
 	{	
@@ -324,16 +332,15 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		final Tooltip summaryTitledPaneTooltip = new Tooltip(
 				"Load, the average number of messages per second, is calculated over the following intervals: " +  DialogUtils.getPeriodList() + ".");
 		
+		eventManager.registerClearTabObserver(this, store);
+		
 		summaryTitledPaneTitleLabel.setTooltip(summaryTitledPaneTooltip);
 		summaryTitledPane.setText(null);
 		summaryTitledPane.setGraphic(summaryTitledPaneTitleLabel);
 		
-		eventDispatcher = new EventDispatcher();
-		eventDispatcher.addObserver(this);
-		eventManager.registerClearTabObserver(this, store);
-		
 		summaryTablePaneController.setStore(store);
 		summaryTablePaneController.setNavigationEventDispatcher(eventDispatcher);
+		summaryTablePaneController.setConnectionController(connectionController);
 		summaryTablePaneController.init();
 		
 		messagePaneController.setStore(store);
@@ -397,6 +404,11 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		this.statisticsManager = statisticsManager;
 	}
 	
+	public void setConnectionController(final ConnectionController connectionController)
+	{
+		this.connectionController = connectionController;
+	}
+	
 	public void updateContextMenu()
 	{
 		SubscriptionManager.updateSubscriptionTabContextMenu(tab, subscription);
@@ -404,6 +416,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	public void updateSubscriptionStats()
 	{
+		logger.info("Stats update" + (subscription != null ? subscription.getName() : "All"));
 		final int topicCount = store.getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)

@@ -40,6 +40,8 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	private MqttAsyncClient client;
 	
 	private boolean isOpened;
+	
+	private boolean isOpening;
 
 	/** Maximum number of messages to store for this connection in each message store. */
 	private int maxMessageStoreSize;
@@ -331,5 +333,17 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	public int getLastUsedSubscriptionId()
 	{
 		return lastUsedSubscriptionId;
+	}
+
+	public boolean isOpening()
+	{
+		return isOpening;
+	}
+
+	public void setOpening(boolean isOpening)
+	{
+		eventManager.notifyConnectionStatusChanged(this);
+		
+		this.isOpening = isOpening;
 	}
 }

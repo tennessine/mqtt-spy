@@ -22,6 +22,7 @@ import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
@@ -79,6 +80,8 @@ public class MainController
 	
 	public MainController() throws XMLException
 	{
+		Thread.setDefaultUncaughtExceptionHandler(new MqttSpyUncaughtExceptionHandler());
+		 
 		this.statisticsManager = new StatisticsManager();
 		this.eventManager = new EventManager();		
 		

@@ -65,10 +65,31 @@ public class MqttManager
 			connection.setClient(client);
 			connection.setConnectionStatus(MqttConnectionStatus.CONNECTING);
 			
-			// Asynch connect
-			logger.info("Connecting " + connection.getProperties().getClientId() + " to "
-					+ connection.getProperties().getServerURI());
-			connection.getClient().connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
+			new Thread(new Runnable()
+			{				
+				@Override
+				public void run()
+				{
+					try
+					{
+						Thread.sleep(1000);
+
+						// Asynch connect
+						logger.info("Connecting " + connection.getProperties().getClientId() + " to "
+								+ connection.getProperties().getServerURI());
+						connection.getClient().connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
+					}
+					catch (MqttException | IllegalArgumentException e)
+					{
+						Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptFailureEvent(connection, e)));
+						logger.error("Cannot connect to " + connection.getProperties().getServerURI(), e);
+					}
+					catch (InterruptedException e)
+					{
+						return;
+					}				
+				}
+			}).start();
 
 			return connection;
 		}
@@ -91,28 +112,42 @@ public class MqttManager
 		final MqttConnection connection = connections.get(connectionId);
 
 		// TODO: check if connected?
-		try
-		{
-			connection.setConnectionStatus(MqttConnectionStatus.DISCONNECTING);
-			connection.unsubscribeAll();
 
-			logger.info("Disconnecting " + connection.getProperties().getClientId() + " from "
-					+ connection.getProperties().getServerURI());
-			if (connection.getClient() != null && connection.getClient().isConnected())
+		connection.setConnectionStatus(MqttConnectionStatus.DISCONNECTING);
+		connection.unsubscribeAll();
+
+		new Thread(new Runnable()
+		{				
+			@Override
+			public void run()
 			{
-				connection.getClient().disconnect(connection, new MqttDisconnectionResultHandler());
+				try
+				{
+					Thread.sleep(1000);
+					
+					logger.info("Disconnecting " + connection.getProperties().getClientId() + " from "
+							+ connection.getProperties().getServerURI());
+					if (connection.getClient() != null && connection.getClient().isConnected())
+					{
+						connection.getClient().disconnect(connection, new MqttDisconnectionResultHandler());
+					}
+					else
+					{
+						logger.debug("Already disconnected");
+					}
+				}
+				catch (MqttException e)
+				{
+					Platform.runLater(new MqttEventHandler(new MqttDisconnectionAttemptFailureEvent(connection, e)));
+					logger.error("Cannot disconnect from connection {} {}", 
+							connection.getId(), connection.getProperties().getName(), e);
+				}
+				catch (InterruptedException e)
+				{
+					return;
+				}				
 			}
-			else
-			{
-				logger.debug("Already disconnected");
-			}
-		}
-		catch (MqttException e)
-		{
-			Platform.runLater(new MqttEventHandler(new MqttDisconnectionAttemptFailureEvent(connection, e)));
-			logger.error("Cannot disconnect from connection {} {}", 
-					connection.getId(), connection.getProperties().getName(), e);
-		}
+		}).start();
 	}
 
 	public void disconnectAll()

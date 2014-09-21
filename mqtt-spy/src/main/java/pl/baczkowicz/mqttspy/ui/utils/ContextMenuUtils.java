@@ -150,7 +150,9 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createTopicTableContextMenu(
-			final TableView<SubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, final EventDispatcher navigationEventDispatcher)
+			final TableView<SubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, 
+			final EventDispatcher navigationEventDispatcher,
+			final ConnectionController connectionController)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		
@@ -171,6 +173,26 @@ public class ContextMenuUtils
 			}
 		});
 		contextMenu.getItems().add(copyTopicItem);
+		
+		// Subscribe to topic
+		final MenuItem subscribeToTopicItem = new MenuItem("[Topic] Subscribe");
+		subscribeToTopicItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+					subscriptionDetails.setTopic(item.topicProperty().getValue());
+					subscriptionDetails.setQos(0);
+					
+					connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
+				}
+			}
+		});
+		contextMenu.getItems().add(subscribeToTopicItem);
 
 		// Separator
 		contextMenu.getItems().add(new SeparatorMenuItem());

@@ -32,6 +32,17 @@ public class ConnectionUtils
 		};
 	}
 	
+	public static EventHandler<ActionEvent> createEmptyAction()
+	{
+		return new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent event)
+			{				
+				event.consume();
+			}
+		};
+	}
+	
 	public static EventHandler<ActionEvent> createDisconnectAndCloseAction(final MqttManager mqttManager, final int connectionId, final Tab tab)
 	{
 		return new EventHandler<ActionEvent>()
@@ -58,20 +69,25 @@ public class ConnectionUtils
 
 	public static EventHandler<ActionEvent> createNextAction(final MqttConnectionStatus state, final int connectionId, final MqttManager mqttManager)
 	{
+		if (state == null)
+		{
+			return createEmptyAction();
+		}
+		
 		switch (state)
 		{
 			case CONNECTED:				
 				return ConnectionUtils.createDisconnectAction(mqttManager, connectionId);
 			case CONNECTING:
-				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+				return ConnectionUtils.createEmptyAction();
 			case DISCONNECTED:
 				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
 			case DISCONNECTING:
-				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+				return ConnectionUtils.createEmptyAction();
 			case NOT_CONNECTED:
 				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
 			default:
-				return ConnectionUtils.createConnectAction(mqttManager, connectionId);
+				return ConnectionUtils.createEmptyAction();
 		}		
 	}		
 }

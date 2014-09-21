@@ -58,12 +58,11 @@ public class ConnectionManager
 	{		
 		// Create connection
 		final MqttConnection connection = mqttManager.createConnection(connectionProperties, uiEventQueue);
+		connection.setOpening(true);
 
 		// Load a new tab and connection pane
-		logger.info("Loading connection tab FXML");
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
 		AnchorPane connectionPane = Utils.loadAnchorPane(loader);
-		// logger.info("Finished loading connection tab FXML");
 		
 		final ConnectionController connectionController = (ConnectionController) loader.getController();
 		connectionController.setConnection(connection);
@@ -75,7 +74,7 @@ public class ConnectionManager
 		
 		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
 				true, parent, connection, connection, null, connectionController);
-		// logger.info("Finished loading subscription tab FXML");
+		subscriptionController.setConnectionController(connectionController);
 		
 		Platform.runLater(new Runnable()
 		{			
@@ -89,8 +88,9 @@ public class ConnectionManager
 				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionTab));
 				subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
 				
-				connection.addObserver(connectionController);
-				connection.setOpened(true);				
+				connection.addObserver(connectionController);											
+				connection.setOpening(false);
+				connection.setOpened(true);
 				
 				// Connect
 				if (connection.getProperties().isAutoConnect())
@@ -111,8 +111,7 @@ public class ConnectionManager
 				subscriptionManagers.put(connection.getId(), subscriptionManager);
 								
 				// Populate panes
-				mainController.populateConnectionPanes(connectionProperties.getConfiguredProperties(), connectionController);
-				// logger.info("Finished all for connection tab");			
+				mainController.populateConnectionPanes(connectionProperties.getConfiguredProperties(), connectionController);	
 			}
 		});		
 	}
