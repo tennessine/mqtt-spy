@@ -1,18 +1,18 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
-import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Tab;
+import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
+import pl.baczkowicz.mqttspy.connectivity.MqttManager;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 
 public class ConnectionUtils
 {
-	public static void disconnectAndClose(final MqttManager mqttManager, final int connectionId, final Tab tab)
+	public static void disconnectAndClose(final MqttManager mqttManager, final int connectionId, final ConnectionManager connectionManager)
 	{
 		disconnect(mqttManager, connectionId);
 		mqttManager.close(connectionId);
-		TabUtils.requestClose(tab);
+		connectionManager.removeConnectionTab(connectionId);		
 	}
 	
 	public static void disconnect(final MqttManager mqttManager, final int connectionId)
@@ -43,13 +43,13 @@ public class ConnectionUtils
 		};
 	}
 	
-	public static EventHandler<ActionEvent> createDisconnectAndCloseAction(final MqttManager mqttManager, final int connectionId, final Tab tab)
+	public static EventHandler<ActionEvent> createDisconnectAndCloseAction(final MqttManager mqttManager, final int connectionId, final ConnectionManager connectionManager)
 	{
 		return new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent event)
 			{
-				ConnectionUtils.disconnectAndClose(mqttManager, connectionId, tab);
+				ConnectionUtils.disconnectAndClose(mqttManager, connectionId, connectionManager);
 				event.consume();
 			}
 		};

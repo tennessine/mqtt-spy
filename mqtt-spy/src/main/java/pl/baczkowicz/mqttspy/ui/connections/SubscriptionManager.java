@@ -1,8 +1,13 @@
 package pl.baczkowicz.mqttspy.ui.connections;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -22,10 +27,13 @@ import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
+import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionManager
 {
+	private final static Logger logger = LoggerFactory.getLogger(SubscriptionManager.class);
+	
 	public static String ALL_SUBSCRIPTIONS_TAB_TITLE = "All";
 		
 	private final EventManager eventManager;
@@ -46,6 +54,7 @@ public class SubscriptionManager
 	public void createSubscription(final Color color, final boolean subscribe, final SubscriptionDetails subscriptionDetails, 
 			final MqttConnection connection, final ConnectionController connectionController, Object parent)
 	{
+		logger.info("Creating subscription for " + subscriptionDetails.getTopic());
 		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
 				subscriptionDetails.getQos(), color, connection.getMaxMessageStoreSize(), uiEventQueue);
 		subscription.setConnection(connection);
@@ -53,7 +62,8 @@ public class SubscriptionManager
 		// Add a new tab
 		final SubscriptionController subscriptionController = createSubscriptionTab(false, parent, subscription, connection,
 				subscription, connectionController);
-		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(subscriptionController.getTab(), connection, subscription, eventManager));
+		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(
+				connection, subscription, eventManager, this));
 		subscriptionController.init();
 		
 		subscription.setSubscriptionController(subscriptionController);
@@ -73,9 +83,23 @@ public class SubscriptionManager
 		}
 	}
 	
-	public Map<String, SubscriptionController> getSubscriptionControllers()
+	public void removeSubscription(final String topic)	
 	{
-		return subscriptionControllers;
+		synchronized (subscriptionControllers)
+		{
+			final MqttSubscription subscription = subscriptionControllers.get(topic).getSubscription();
+			subscription.getConnection().unsubscribeAndRemove(subscription);
+			TabUtils.requestClose(subscriptionControllers.get(topic).getTab());
+			subscriptionControllers.remove(topic);
+		}
+	}
+	
+	public Collection<SubscriptionController> getSubscriptionControllers()
+	{
+		synchronized (subscriptionControllers)
+		{
+			return Collections.unmodifiableCollection(subscriptionControllers.values());
+		}
 	}
 
 	public SubscriptionController createSubscriptionTab(final boolean allTab, final Object parent,

@@ -16,6 +16,8 @@ import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
+import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
+import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
@@ -24,8 +26,9 @@ import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 public class ContextMenuUtils
 {
 
-	public static ContextMenu createSubscriptionTabContextMenu(final Tab tab,
-			final MqttConnection connection, final MqttSubscription subscription, final EventManager eventManager)
+	public static ContextMenu createSubscriptionTabContextMenu(
+			final MqttConnection connection, final MqttSubscription subscription, 
+			final EventManager eventManager, final SubscriptionManager subscriptionManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 
@@ -61,9 +64,8 @@ public class ContextMenuUtils
 		closeItem.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
-			{
-				connection.unsubscribeAndRemove(subscription);
-				TabUtils.requestClose(tab);
+			{				
+				subscriptionManager.removeSubscription(subscription.getTopic());				
 			}
 		});
 		contextMenu.getItems().add(closeItem);
@@ -175,7 +177,7 @@ public class ContextMenuUtils
 		contextMenu.getItems().add(copyTopicItem);
 		
 		// Subscribe to topic
-		final MenuItem subscribeToTopicItem = new MenuItem("[Topic] Subscribe");
+		final MenuItem subscribeToTopicItem = new MenuItem("[Topic] Subscribe (and create tab)");
 		subscribeToTopicItem.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
@@ -358,7 +360,7 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttConnection connection, 
-			final ConnectionController connectionController, final Tab tab)
+			final ConnectionController connectionController, final ConnectionManager connectionManager)
 	{
 		// Context menu
 		ContextMenu contextMenu = new ContextMenu();
@@ -370,7 +372,7 @@ public class ContextMenuUtils
 		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connection.getProperties().getId()));
 
 		MenuItem disconnectAndCloseItem = new MenuItem("[Connection] Disconnect (and close tab)");
-		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connection.getProperties().getId(), tab));
+		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connection.getProperties().getId(), connectionManager));
 
 		contextMenu.getItems().add(reconnectItem);
 

@@ -664,8 +664,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			
 			if (!openNewMode)
 			{
-				ConnectionUtils.disconnectAndClose(mqttManager, existingConnection.getId(), 
-						connectionManager.getConnectionTabs().get(existingConnection.getId()));
+				ConnectionUtils.disconnectAndClose(mqttManager, existingConnection.getId(), connectionManager);
 			}
 			
 			logger.info("Opening connection " + connectionNameText.getText());

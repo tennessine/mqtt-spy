@@ -274,7 +274,7 @@ public class ConnectionController implements Initializable, Observer
 	
 	public void updateConnectionStats()
 	{
-		for (final SubscriptionController subscriptionController : connectionManager.getSubscriptionManager(connection.getId()).getSubscriptionControllers().values())
+		for (final SubscriptionController subscriptionController : connectionManager.getSubscriptionManager(connection.getId()).getSubscriptionControllers())
 		{
 			subscriptionController.updateSubscriptionStats();
 		}

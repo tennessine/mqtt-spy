@@ -304,10 +304,10 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		{
 			showPending("Connecting to", connection.getConnectionStatus(), connectionDetails, connectionButton);
 		}
-		else if (connection.getConnectionStatus() == MqttConnectionStatus.DISCONNECTING)
-		{
-			showPending("Disconnecting from", connection.getConnectionStatus(), connectionDetails, connectionButton);
-		}
+//		else if (connection.getConnectionStatus() == MqttConnectionStatus.DISCONNECTING)
+//		{
+//			showPending("Disconnecting from", connection.getConnectionStatus(), connectionDetails, connectionButton);
+//		}
 		else if (connection.getConnectionStatus() != null)
 		{
 			final String buttonText = nextActionTitle.get(connection.getConnectionStatus()) + " " + connectionDetails.getName(); 

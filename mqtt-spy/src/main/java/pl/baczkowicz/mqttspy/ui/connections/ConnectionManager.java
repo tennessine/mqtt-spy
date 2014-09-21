@@ -5,9 +5,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -25,11 +22,12 @@ import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
+import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class ConnectionManager
 {
-	private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
+	// private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
 	private final MqttManager mqttManager;
 	
@@ -76,6 +74,8 @@ public class ConnectionManager
 				true, parent, connection, connection, null, connectionController);
 		subscriptionController.setConnectionController(connectionController);
 		
+		final ConnectionManager connectionManager = this;
+		
 		Platform.runLater(new Runnable()
 		{			
 			@Override
@@ -85,7 +85,7 @@ public class ConnectionManager
 				subscriptionController.init();
 								
 				mainController.addConnectionTab(connectionTab);
-				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionTab));
+				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
 				subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
 				
 				connection.addObserver(connectionController);											
@@ -116,10 +116,9 @@ public class ConnectionManager
 		});		
 	}
 	
-	// TODO: this needs to be called on closing connection tab
-	// TODO: similar one for subscriptions
-	public void closeConnectionTab(final int connectionId)
-	{
+	public void removeConnectionTab(final int connectionId)
+	{		
+		TabUtils.requestClose(connectionControllers.get(connectionId).getTab());
 		connectionControllers.remove(connectionId);
 		connectionTabs.remove(connectionId);
 		subscriptionManagers.remove(connectionId);

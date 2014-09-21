@@ -52,6 +52,11 @@ import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionController implements Observer, Initializable, ClearTabObserver
 {
+	public MqttSubscription getSubscription()
+	{
+		return subscription;
+	}
+
 	final static Logger logger = LoggerFactory.getLogger(SubscriptionController.class);
 
 	private static final int MIN_EXPANDED_SUMMARY_PANE_HEIGHT = 130;
