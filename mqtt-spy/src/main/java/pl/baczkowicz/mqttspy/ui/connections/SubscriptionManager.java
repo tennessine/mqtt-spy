@@ -54,6 +54,8 @@ public class SubscriptionManager
 		final SubscriptionController subscriptionController = createSubscriptionTab(false, parent, subscription, connection,
 				subscription, connectionController);
 		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(subscriptionController.getTab(), connection, subscription, eventManager));
+		subscriptionController.init();
+		
 		subscription.setSubscriptionController(subscriptionController);
 		
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();

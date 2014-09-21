@@ -416,7 +416,6 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	public void updateSubscriptionStats()
 	{
-		logger.info("Stats update" + (subscription != null ? subscription.getName() : "All"));
 		final int topicCount = store.getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)

@@ -254,7 +254,7 @@ public class ConnectionController implements Initializable, Observer
 						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
 						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						showTabTile(true);
+						showTabTile(false);
 						break;
 					default:
 						break;

@@ -282,7 +282,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 				{
 					try
 					{				
-						showPending("Opening", null, connectionDetails, connectionButton);
+						// showPending("Opening", null, connectionDetails, connectionButton);
 						mainController.openConnection(connectionDetails, mqttManager);
 						event.consume();
 					}

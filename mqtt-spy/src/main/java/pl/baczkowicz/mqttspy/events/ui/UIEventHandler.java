@@ -23,17 +23,17 @@ public class UIEventHandler implements Runnable
 	{
 		while (true)
 		{
-			Platform.runLater(new Runnable()
-			{				
-				@Override
-				public void run()
-				{
-					if (uiEventQueue.size() > 0)
-					{
-						showUpdates();
+			if (uiEventQueue.size() > 0)
+			{
+				Platform.runLater(new Runnable()
+				{				
+					@Override
+					public void run()
+					{					
+						showUpdates();					
 					}
-				}
-			});				
+				});	
+			}
 			
 			// Sleep so that we don't run all the time - updating the UI 20 times a second should be more than enough
 			try

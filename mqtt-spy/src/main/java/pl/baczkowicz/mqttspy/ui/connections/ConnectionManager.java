@@ -116,7 +116,8 @@ public class ConnectionManager
 		});		
 	}
 	
-	// TODO: this needs to be called
+	// TODO: this needs to be called on closing connection tab
+	// TODO: similar one for subscriptions
 	public void closeConnectionTab(final int connectionId)
 	{
 		connectionControllers.remove(connectionId);
