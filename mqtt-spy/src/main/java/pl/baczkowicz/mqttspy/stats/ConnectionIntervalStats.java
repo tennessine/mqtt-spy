@@ -47,7 +47,10 @@ public class ConnectionIntervalStats
 		messageCount.clear();
 	}
 
-
+	public void resetTopic(final String topic)
+	{
+		messageCount.put(topic, (double) 0);
+	}
 
 	public ConnectionIntervalStats average(final int interval)
 	{

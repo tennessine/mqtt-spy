@@ -145,7 +145,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		{
 			if (shownTopics.contains(topic))
 			{
-				logger.info("Removing {} from active filters for {}", topic, name);
+				logger.debug("Removing {} from active filters for {}", topic, name);
 				shownTopics.remove(topic);
 		
 				initialiseFilteredStore();

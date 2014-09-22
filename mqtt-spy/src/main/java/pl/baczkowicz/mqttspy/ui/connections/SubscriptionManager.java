@@ -64,6 +64,7 @@ public class SubscriptionManager
 				subscription, connectionController);
 		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(
 				connection, subscription, eventManager, this));
+		subscriptionController.setConnectionController(connectionController);
 		subscriptionController.init();
 		
 		subscription.setSubscriptionController(subscriptionController);

@@ -15,6 +15,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
@@ -25,7 +26,8 @@ import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ContextMenuUtils
 {
-
+	// private final static Logger logger = LoggerFactory.getLogger(ContextMenuUtils.class);
+	
 	public static ContextMenu createSubscriptionTabContextMenu(
 			final MqttConnection connection, final MqttSubscription subscription, 
 			final EventManager eventManager, final SubscriptionManager subscriptionManager)
@@ -97,6 +99,7 @@ public class ContextMenuUtils
 			public void handle(ActionEvent e)
 			{				
 				eventManager.notifyClearHistory(subscription);
+				StatisticsManager.resetMessagesReceived(connection.getId(), subscription.getTopic());
 				subscription.clear();
 			}
 		});
@@ -143,6 +146,7 @@ public class ContextMenuUtils
 			public void handle(ActionEvent e)
 			{
 				eventManager.notifyClearHistory(connection);
+				StatisticsManager.resetMessagesReceived(connection.getId());
 				connection.clear();
 			}
 		});

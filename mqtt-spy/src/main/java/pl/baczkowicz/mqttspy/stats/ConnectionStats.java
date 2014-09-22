@@ -18,4 +18,17 @@ public class ConnectionStats
 			avgPeriods.put(period, new ConnectionIntervalStats());
 		}
 	}
+	
+	public void resetTopic(final String topic)
+	{
+		for (final ConnectionIntervalStats stats : runtimeStats)
+		{
+			stats.resetTopic(topic);
+		}
+		
+		for (final ConnectionIntervalStats stats : avgPeriods.values())
+		{
+			stats.resetTopic(topic);
+		}
+	}
 }

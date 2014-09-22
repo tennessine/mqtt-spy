@@ -182,7 +182,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		}
 
 		try
-		{
+		{			
 			addSubscription(subscription);
 			
 			// Retained messages can be received very quickly, even so quickly we still haven't set the subscription's state to active

@@ -168,7 +168,8 @@ public class MainController
 		});
 
 		// Clear any test tabs
-		stage.setTitle("mqtt-spy v" + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY));
+		stage.setTitle("mqtt-spy");
+		// v" + configurationManager.getProperty(ConfigurationManager.VERSION_PROPERTY));
 		
 		controlPanelPaneController.setMainController(this);
 		controlPanelPaneController.setConfigurationMananger(configurationManager);

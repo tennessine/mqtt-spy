@@ -135,8 +135,7 @@ public class StatisticsManager implements Runnable
 			// Runtime stats
 			if (runtimeMessagesReceived.get(connectionId) == null)
 			{
-				runtimeMessagesReceived.put(connectionId, new ConnectionStats(periods));
-				runtimeMessagesReceived.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
+				resetConnection(runtimeMessagesReceived, connectionId);
 			}		
 				
 			runtimeMessagesReceived.get(connectionId).runtimeStats.get(0).add(subscriptions);
@@ -161,7 +160,7 @@ public class StatisticsManager implements Runnable
 		}
 	}
 	
-	public void nextInterval(final Map<Integer, ConnectionStats> runtimeMessages)
+	public static void nextInterval(final Map<Integer, ConnectionStats> runtimeMessages)
 	{
 		for (final Integer connectionId : runtimeMessages.keySet())
 		{
@@ -189,7 +188,7 @@ public class StatisticsManager implements Runnable
 		}
 	}
 	
-	public void nextInterval()
+	public static void nextInterval()
 	{		
 		synchronized (runtimeMessagesPublished)
 		{
@@ -202,7 +201,7 @@ public class StatisticsManager implements Runnable
 		}
 	}
 	
-	public ConnectionIntervalStats getMessagesPublished(final int connectionId, final int period)
+	public static ConnectionIntervalStats getMessagesPublished(final int connectionId, final int period)
 	{
 		if (runtimeMessagesPublished.get(connectionId) == null)
 		{
@@ -212,7 +211,7 @@ public class StatisticsManager implements Runnable
 		return runtimeMessagesPublished.get(connectionId).avgPeriods.get(period).average(period);
 	}
 	
-	public ConnectionIntervalStats getMessagesReceived(final int connectionId, final int period)
+	public static ConnectionIntervalStats getMessagesReceived(final int connectionId, final int period)
 	{
 		if (runtimeMessagesReceived.get(connectionId) == null)
 		{
@@ -220,6 +219,27 @@ public class StatisticsManager implements Runnable
 		}
 		
 		return runtimeMessagesReceived.get(connectionId).avgPeriods.get(period).average(period);
+	}
+	
+	public static void resetMessagesReceived(final int connectionId, final String topic)
+	{
+		if (runtimeMessagesReceived.get(connectionId) == null)
+		{
+			return;
+		}
+		
+		runtimeMessagesReceived.get(connectionId).resetTopic(topic);
+	}
+	
+	public static void resetMessagesReceived(final int connectionId)
+	{
+		resetConnection(runtimeMessagesReceived, connectionId);
+	}
+	
+	private static void resetConnection(final Map<Integer, ConnectionStats> runtimeMessages, final int connectionId)
+	{
+		runtimeMessages.put(connectionId, new ConnectionStats(periods));
+		runtimeMessages.get(connectionId).runtimeStats.add(new ConnectionIntervalStats());
 	}
 
 	@Override

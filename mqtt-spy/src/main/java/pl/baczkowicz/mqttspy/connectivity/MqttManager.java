@@ -26,6 +26,7 @@ public class MqttManager
 {
 	public final static String TCP_PREFIX = "tcp://";
 	public final static String SSL_PREFIX = "ssl://";
+	public final static int CONNECT_DELAY = 500;
 
 	private final static Logger logger = LoggerFactory.getLogger(MqttManager.class);
 
@@ -72,7 +73,7 @@ public class MqttManager
 				{
 					try
 					{
-						Thread.sleep(1000);
+						Thread.sleep(CONNECT_DELAY);
 
 						// Asynch connect
 						logger.info("Connecting " + connection.getProperties().getClientId() + " to "
