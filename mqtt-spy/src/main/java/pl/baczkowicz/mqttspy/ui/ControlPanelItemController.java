@@ -3,8 +3,11 @@ package pl.baczkowicz.mqttspy.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
@@ -33,6 +36,12 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	
 	@FXML
 	private Label detailsText;
+	
+	@FXML
+	private Button smallButton1;
+	
+	@FXML
+	private Button smallButton2;
 
 	@FXML
 	private ProgressIndicator progressIndicator;
@@ -59,6 +68,41 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	{
 		//
 	}
+	
+	public static void setButtonProperties(final Button button, final String imageLocation, final boolean visibility, final EventHandler<ActionEvent> action)
+	{
+		button.setVisible(true);
+		button.setGraphic(new ImageView(new Image(ControlPanelItemController.class.getResource(imageLocation).toString())));
+		button.setOnAction(action);
+	}
+	
+	public static void setButtonProperties(final Button button, final String imageLocation, final boolean visibility)
+	{
+		button.setVisible(true);
+		button.setGraphic(new ImageView(new Image(ControlPanelItemController.class.getResource(imageLocation).toString())));
+	}
+	
+	public Button getButton1()	
+	{
+		return smallButton1;
+	}
+	
+	public Button getButton2()	
+	{
+		return smallButton2;
+	}
+	
+	// public void setButton1Properties(final String imageLocation, final
+	// EventHandler<ActionEvent> action)
+	// {
+	// setButtonProperites(smallButton1, imageLocation, true, action);
+	// }
+	//
+	// public void setButton2Image(final String imageLocation, final
+	// EventHandler<ActionEvent> action)
+	// {
+	// setButtonProperites(smallButton2, imageLocation, true, action);
+	// }
 	
 	public void refresh()
 	{

@@ -1,8 +1,12 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javafx.application.Application;
@@ -32,6 +36,7 @@ import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
@@ -89,6 +94,15 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	private MqttManager mqttManager;
 	
 	private Map<MqttConnectionStatus, String> nextActionTitle = new HashMap<MqttConnectionStatus, String>();
+
+	private boolean statsPlaying;
+	
+	private List<String> unicefDetails = new ArrayList<String>(Arrays.asList(
+			"Finding mqtt-spy useful? Donate to UNICEF this month!", 
+			"Like your mqtt-spy? Why not to donate to UNICEF this month?", 
+			"If you use mqtt-spy on a regular basis, please donate to UNICEF every month!"));
+
+	private int statTitleIndex;
 	
 	// ===============================
 	// === Initialisation ============
@@ -155,11 +169,118 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	// === Logic =====================
 	// ===============================	
 
+	private void refreshStatsTitle()
+	{
+		if (statTitleIndex == 0)
+		{
+			if (StatisticsManager.stats.getConnections() > 1)
+			{
+				controlPanelItem4Controller.setTitle(String.format(						
+						"Your mqtt-spy made %d connections to MQTT brokers since XXXX.", 
+						StatisticsManager.stats.getConnections()));
+			}
+			else
+			{
+				moveToNextStatTitle();
+			}
+		}		
+		else if (statTitleIndex == 1)
+		{
+			if (StatisticsManager.stats.getMessagesPublished() > 1)
+			{
+				controlPanelItem4Controller.setTitle(String.format(
+						"Your mqtt-spy published %d messages to MQTT brokers since XXXX.", 
+						StatisticsManager.stats.getMessagesPublished()));
+			}
+			else
+			{
+				moveToNextStatTitle();
+			}
+		}		
+		else if (statTitleIndex == 2)
+		{
+			if (StatisticsManager.stats.getSubscriptions() > 1)
+			{
+				controlPanelItem4Controller.setTitle(String.format(
+						"Your mqtt-spy made %d subscriptions to MQTT brokers since XXXX.", 
+						StatisticsManager.stats.getSubscriptions()));
+			}
+			else
+			{
+				moveToNextStatTitle();
+			}
+		}
+		else if (statTitleIndex == 3)
+		{
+			if (StatisticsManager.stats.getMessagesReceived() > 1)
+			{
+				controlPanelItem4Controller.setTitle(String.format(
+						"Your mqtt-spy received %d messages since XXXX.", 
+						StatisticsManager.stats.getMessagesReceived()));
+			}
+			else
+			{
+				moveToNextStatTitle();
+			}
+		}
+		
+		// TODO: runtime stats
+		
+
+		
+		// controlPanelItem4Controller.setTitle("Coming in the next version...");
+	}
+	
+	private void moveToNextStatTitle()
+	{								
+		statTitleIndex++;
+		if (statTitleIndex == 4)
+		{
+			statTitleIndex = 0;
+		}
+		refreshStatsTitle();
+	}
+	
 	private void showStats(final ControlPanelItemController controller, final Button button)
 	{
+		// Stats title
+		statTitleIndex = 0;
 		controller.setTitle("Coming in the next version...");
-		controller.setDetails("A new secret feature... ;-)");
+		
+		// UNICEF details
+		final Random r = new Random();
+		controller.setDetails(unicefDetails.get(r.nextInt(unicefDetails.size())));
+		// TODO: add "(click here)"
+		
 		controller.setStatus(ItemStatus.INFO);
+		
+		statsPlaying = true;
+		ControlPanelItemController.setButtonProperties(controller.getButton1(), "/images/pause.png", true, new EventHandler<ActionEvent>()
+		{			
+			@Override
+			public void handle(ActionEvent event)
+			{
+				if (statsPlaying)
+				{
+					ControlPanelItemController.setButtonProperties(controller.getButton1(), "/images/play.png", true);
+					statsPlaying = false;
+				}
+				else
+				{
+					ControlPanelItemController.setButtonProperties(controller.getButton1(), "/images/pause.png", true);
+					statsPlaying = true;
+				}
+			}
+		});
+		
+		ControlPanelItemController.setButtonProperties(controller.getButton2(), "/images/next.png", true, new EventHandler<ActionEvent>()
+		{			
+			@Override
+			public void handle(ActionEvent event)
+			{
+				moveToNextStatTitle();
+			}
+		});
 		
 		controller.refresh();
 	}

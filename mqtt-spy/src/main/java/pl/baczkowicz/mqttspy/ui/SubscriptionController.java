@@ -427,15 +427,15 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		{
 			summaryTitledPaneTitleLabel.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
 				topicCount == 1 ? "1 topic" : topicCount + " topics",
-				statisticsManager.getMessagesReceived(connectionProperties.getId(), 5).overallCount,
-				statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).overallCount,
-				statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).overallCount));
+				StatisticsManager.getMessagesReceived(connectionProperties.getId(), 5).overallCount,
+				StatisticsManager.getMessagesReceived(connectionProperties.getId(), 30).overallCount,
+				StatisticsManager.getMessagesReceived(connectionProperties.getId(), 300).overallCount));
 		}
 		else
 		{
-			final Double avg5sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 5).messageCount.get(subscription.getTopic());
-			final Double avg30sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 30).messageCount.get(subscription.getTopic());
-			final Double avg300sec = statisticsManager.getMessagesReceived(connectionProperties.getId(), 300).messageCount.get(subscription.getTopic());
+			final Double avg5sec = StatisticsManager.getMessagesReceived(connectionProperties.getId(), 5).messageCount.get(subscription.getTopic());
+			final Double avg30sec = StatisticsManager.getMessagesReceived(connectionProperties.getId(), 30).messageCount.get(subscription.getTopic());
+			final Double avg300sec = StatisticsManager.getMessagesReceived(connectionProperties.getId(), 300).messageCount.get(subscription.getTopic());
 			
 			summaryTitledPaneTitleLabel.setText(String.format(SUMMARY_PANE_TITLE_FORMAT, 
 					topicCount == 1 ? "1 topic" : topicCount + " topics",

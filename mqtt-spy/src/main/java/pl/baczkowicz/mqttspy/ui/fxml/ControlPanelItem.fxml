@@ -26,5 +26,7 @@
          </children>
       </VBox>
       <ProgressIndicator fx:id="progressIndicator" layoutX="16.0" layoutY="15.0" />
+      <Button fx:id="smallButton2" focusTraversable="false" layoutX="789.0" layoutY="0.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" visible="false" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0" />
+      <Button fx:id="smallButton1" focusTraversable="false" layoutX="807.0" layoutY="0.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" visible="false" AnchorPane.rightAnchor="26.0" AnchorPane.topAnchor="2.0" />
    </children>
 </AnchorPane>
