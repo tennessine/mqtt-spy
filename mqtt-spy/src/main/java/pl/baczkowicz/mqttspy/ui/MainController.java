@@ -37,6 +37,7 @@ import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -184,43 +185,9 @@ public class MainController
 		// scene.getStylesheets().addAll(mainPane.getScene().getStylesheets());		
 		// statsWindow.start(new Stage());
 		
-		new Thread(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				while (true)
-				{
-					try
-					{
-						Thread.sleep(1000);
-					}
-					catch (InterruptedException e)
-					{
-						break;
-					}
-				
-					// TODO: calculations outside the fx thread
-					Platform.runLater(new Runnable()
-					{					
-						@Override
-						public void run()
-						{
-							updateConnectionStats();					
-						}
-					});						
-				}
-			}
-		}).start();
+		new Thread(new ConnectionStatsUpdater(connectionManager)).start();
 	}
 	
-	private void updateConnectionStats()
-	{		
-		for (final ConnectionController connectionController : connectionManager.getConnectionControllers().values())
-		{
-			connectionController.updateConnectionStats();
-		}	
-	}
 	
 	public TabPane getConnectionTabs()
 	{
@@ -266,19 +233,25 @@ public class MainController
 		});		
 	}
 	
+	
+	private void clear()
+	{
+		connectionManager.disconnectAndCloseAll();
+		
+		// Only re-initialise if it has been initialised already
+		if (editConnectionsController  != null)
+		{
+			initialiseEditConnectionsWindow();
+		}	
+	}
+	
 	private void loadConfigurationFile(final File selectedFile)
 	{
 		logger.info("Loading configuration file from " + selectedFile.getAbsolutePath());
-
-		configurationManager.clear();
+		
 		if (configurationManager.loadConfiguration(selectedFile))
 		{
-			// Only re-initialise if it has been initialised already
-			if (editConnectionsController  != null)
-			{
-				initialiseEditConnectionsWindow();
-			}			
-		
+			clear();
 			controlPanelPaneController.refreshConnectionsStatus();
 			
 			// Process the connection settings		
@@ -296,9 +269,7 @@ public class MainController
 						logger.error("Cannot open conection {}", connection.getName(), e);
 					}
 				}
-			}
-			
-			openConfigFileMenu.setDisable(true);
+			}			
 		}
 		
 		controlPanelPaneController.refreshConfigurationFileStatus();		

@@ -376,7 +376,7 @@ public class ContextMenuUtils
 		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connection.getProperties().getId()));
 
 		MenuItem disconnectAndCloseItem = new MenuItem("[Connection] Disconnect (and close tab)");
-		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(mqttManager, connection.getProperties().getId(), connectionManager));
+		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(connection.getProperties().getId(), connectionManager));
 
 		contextMenu.getItems().add(reconnectItem);
 

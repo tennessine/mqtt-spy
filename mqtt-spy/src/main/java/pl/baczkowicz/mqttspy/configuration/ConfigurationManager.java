@@ -97,6 +97,7 @@ public class ConfigurationManager
 	{
 		try
 		{
+			clear();
 			configuration = (MqttSpyConfiguration) parser.loadFromFile(file);
 			createConnections();
 			createConfigurationDefaults();

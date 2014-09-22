@@ -57,7 +57,6 @@ import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
 import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
-import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.KeyboardUtils;
@@ -664,7 +663,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			
 			if (!openNewMode)
 			{
-				ConnectionUtils.disconnectAndClose(mqttManager, existingConnection.getId(), connectionManager);
+				connectionManager.disconnectAndCloseTab(existingConnection.getId());
 			}
 			
 			logger.info("Opening connection " + connectionNameText.getText());

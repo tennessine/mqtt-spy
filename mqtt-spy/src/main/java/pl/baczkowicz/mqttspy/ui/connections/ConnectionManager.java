@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.ui.connections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.application.Platform;
@@ -116,12 +117,20 @@ public class ConnectionManager
 		});		
 	}
 	
-	public void removeConnectionTab(final int connectionId)
+	public void disconnectAndCloseTab(final int connectionId)
 	{		
+		disconnect(mqttManager, connectionId);
+		mqttManager.close(connectionId);	
+		
 		TabUtils.requestClose(connectionControllers.get(connectionId).getTab());
 		connectionControllers.remove(connectionId);
 		connectionTabs.remove(connectionId);
 		subscriptionManagers.remove(connectionId);
+	}
+	
+	public static void disconnect(final MqttManager mqttManager, final int connectionId)
+	{
+		mqttManager.disconnectFromBroker(connectionId);
 	}
 
 	private Tab createConnectionTab(final MqttConnection connection, final Node content,
@@ -138,6 +147,19 @@ public class ConnectionManager
 	public Map<Integer, ConnectionController> getConnectionControllers()
 	{
 		return connectionControllers;
+	}
+
+	private Set<Integer> getConnectionIds()
+	{
+		return connectionControllers.keySet();
+	}
+	
+	public void disconnectAndCloseAll()
+	{
+		for (final Integer connectionId : getConnectionIds())
+		{
+			disconnectAndCloseTab(connectionId);
+		}
 	}
 
 	public Map<Integer, Tab> getConnectionTabs()

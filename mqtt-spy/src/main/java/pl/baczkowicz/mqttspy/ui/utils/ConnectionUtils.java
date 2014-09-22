@@ -7,26 +7,14 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 
 public class ConnectionUtils
-{
-	public static void disconnectAndClose(final MqttManager mqttManager, final int connectionId, final ConnectionManager connectionManager)
-	{
-		disconnect(mqttManager, connectionId);
-		mqttManager.close(connectionId);
-		connectionManager.removeConnectionTab(connectionId);		
-	}
-	
-	public static void disconnect(final MqttManager mqttManager, final int connectionId)
-	{
-		mqttManager.disconnectFromBroker(connectionId);
-	}
-	
+{	
 	public static EventHandler<ActionEvent> createDisconnectAction(final MqttManager mqttManager, final int connectionId)
 	{
 		return new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent event)
 			{
-				ConnectionUtils.disconnect(mqttManager, connectionId);
+				ConnectionManager.disconnect(mqttManager, connectionId);
 				event.consume();
 			}
 		};
@@ -43,13 +31,13 @@ public class ConnectionUtils
 		};
 	}
 	
-	public static EventHandler<ActionEvent> createDisconnectAndCloseAction(final MqttManager mqttManager, final int connectionId, final ConnectionManager connectionManager)
+	public static EventHandler<ActionEvent> createDisconnectAndCloseAction(final int connectionId, final ConnectionManager connectionManager)
 	{
 		return new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent event)
 			{
-				ConnectionUtils.disconnectAndClose(mqttManager, connectionId, connectionManager);
+				connectionManager.disconnectAndCloseTab(connectionId);
 				event.consume();
 			}
 		};
