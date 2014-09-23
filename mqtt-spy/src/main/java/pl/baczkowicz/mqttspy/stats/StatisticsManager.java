@@ -211,6 +211,36 @@ public class StatisticsManager implements Runnable
 		return runtimeMessagesPublished.get(connectionId).avgPeriods.get(period).average(period);
 	}
 	
+	public static int getMessagesPublished()
+	{
+		int total = 0;
+		
+		for (final ConnectionStats stats : runtimeMessagesPublished.values())
+		{
+			if (stats.runtimeStats.size() > 1)
+			{
+				total = (int) stats.runtimeStats.get(1).overallCount;
+			}
+		}
+		
+		return total;
+	}
+	
+	public static int getMessagesReceived()
+	{
+		int total = 0;
+		
+		for (final ConnectionStats stats : runtimeMessagesReceived.values())
+		{
+			if (stats.runtimeStats.size() > 1)
+			{
+				total = (int) stats.runtimeStats.get(1).overallCount;
+			}
+		}
+		
+		return total;
+	}
+	
 	public static ConnectionIntervalStats getMessagesReceived(final int connectionId, final int period)
 	{
 		if (runtimeMessagesReceived.get(connectionId) == null)

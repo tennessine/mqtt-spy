@@ -13,6 +13,7 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import org.slf4j.Logger;
@@ -40,6 +41,9 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	@FXML
 	private Button smallButton1;
 	
+	@FXML
+	private FlowPane details;
+
 	@FXML
 	private Button smallButton2;
 
@@ -121,6 +125,9 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 			case ERROR:
 				imageLocation = "/images/dialog-error.png";
 				break;
+			case STATS:
+				imageLocation = "/images/stats.png";
+				break;
 			default:
 				imageLocation = "/images/dialog-error.png";
 				break;
@@ -139,15 +146,22 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 			statusIcon.setImage(new Image(ControlPanelItemController.class.getResource(imageLocation).toString()));		
 			if (status == ItemStatus.OK)
 			{
-				statusIcon.setLayoutY(0);
-				statusIcon.setLayoutX(0);
+				statusIcon.setLayoutY(5);
+				statusIcon.setLayoutX(5);
 				statusIcon.setFitHeight(64);
 				statusIcon.setFitWidth(64);
 			}
+			else if (status == ItemStatus.STATS)
+			{
+				statusIcon.setLayoutY(20);
+				statusIcon.setLayoutX(20);
+				statusIcon.setFitHeight(55);
+				statusIcon.setFitWidth(55);
+			}
 			else
 			{
-				statusIcon.setLayoutY(30);
-				statusIcon.setLayoutX(30);
+				statusIcon.setLayoutY(10);
+				statusIcon.setLayoutX(10);
 				statusIcon.setFitHeight(64);
 				statusIcon.setFitWidth(64);
 			}
@@ -211,5 +225,10 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 	public void setConfigurationMananger(final ConfigurationManager configurationManager)
 	{
 		this.configurationManager = configurationManager;
+	}
+	
+	public FlowPane getDetails()
+	{
+		return details;
 	}
 }
