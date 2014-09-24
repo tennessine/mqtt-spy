@@ -3,8 +3,6 @@ package pl.baczkowicz.mqttspy.ui;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.event.Event;
@@ -23,12 +21,12 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
+import pl.baczkowicz.mqttspy.events.ui.EventDispatcher;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SearchWindowController extends AnchorPane implements Initializable, Observer
+public class SearchWindowController extends AnchorPane implements Initializable, NewMessageObserver
 {
 	/** Initial and minimal scene/stage width. */	
 	public final static int WIDTH = 780;
@@ -57,6 +55,8 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	private Stage stage;
 
 	private EventDispatcher subscriptionPaneEventDispatcher;
+
+	private EventManager eventManager;
 	
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -89,17 +89,29 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 			{
 				searchPaneControllers.get(tab).cleanup();
 				searchPaneControllers.remove(tab);		
+				
+				// That's for getting new messages in
 				subscriptionPaneEventDispatcher.deleteObserver(searchPaneController);
 			}
 		});
 		
 		searchPaneController.setStore(store);
 		searchPaneController.setTab(tab);
+		searchPaneController.setEventManager(eventManager);
+		
+		// That's for getting new messages in
 		subscriptionPaneEventDispatcher.addObserver(searchPaneController);
+		
 		searchPaneController.init();
-		searchPaneControllers.put(tab, searchPaneController);
+		
+		searchPaneControllers.put(tab, searchPaneController);		
 
 		return tab;
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 
 	public void handleClose()
@@ -136,19 +148,30 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		}		
 	}
 
+//	@Override
+//	public void onDisplayFirstMessageRequested()
+//	{
+//		updateTitle();		
+//	}
+	
 	@Override
-	public void update(Observable observable, Object update)
+	public void onNewMessageReceived()
 	{
-		if (update instanceof ShowFirstEvent)
-		{
-			updateTitle();
-		}
-		else if (update instanceof NewMessageEvent)
-		{
-			updateTitle();			
-		}
-		
+		updateTitle();		
 	}
+	
+	// @Override
+	// public void update(Observable observable, Object update)
+	// {
+	// if (update instanceof ShowFirstMessageEvent)
+	// {
+	// updateTitle();
+	// }
+	// // else if (update instanceof NewMessageEvent)
+	// // {
+	// // updateTitle();
+	// // }
+	// }
 
 	public void setStore(ObservableMessageStoreWithFiltering store)
 	{

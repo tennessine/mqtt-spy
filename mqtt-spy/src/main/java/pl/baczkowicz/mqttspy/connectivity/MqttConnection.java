@@ -76,19 +76,19 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		// Check matching subscription, based on moquette
 		final List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
 		
-		final List<String> matchingSubscriptionTopics = new ArrayList<String>();
+		final List<String> matchingActiveSubscriptionTopics = new ArrayList<String>();
 		
 		// For all found subscriptions
 		for (final Subscription matchingSubscription : matchingSubscriptions)
-		{
-			matchingSubscriptionTopics.add(matchingSubscription.getTopic());
-			
+		{						
 			// Get the mqtt-spy's subscription object
 			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription.getTopic());
 
 			// If a match has been found, and the subscription is active
 			if (mqttSubscription != null && (mqttSubscription.isSubscribing() || mqttSubscription.isActive()))
 			{
+				matchingActiveSubscriptionTopics.add(matchingSubscription.getTopic());
+				
 				// Set subscription reference on the message
 				message.setSubscription(mqttSubscription);
 				
@@ -97,7 +97,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			}
 		}		
 		
-		statisticsManager.messageReceived(getId(), matchingSubscriptionTopics);
+		statisticsManager.messageReceived(getId(), matchingActiveSubscriptionTopics);
 
 		// Pass the message for connection (all subscriptions) handling
 		super.messageReceived(message);

@@ -1,8 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -26,14 +24,13 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.messagestore.MessageStore;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.MessageIndexChangedEvent;
-import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
 import pl.baczkowicz.mqttspy.ui.utils.TextUtils;
 
-public class MessageNavigationController implements Observer, Initializable
+public class MessageNavigationController implements Initializable, MessageIndexToFirstObserver, MessageIndexIncrementObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(MessageNavigationController.class);
 
@@ -78,13 +75,13 @@ public class MessageNavigationController implements Observer, Initializable
 
 	private int selectedMessage;
 
-	private MessageStore store; 
+	private ObservableMessageStore store; 
 	
 	private TextField messageIndexValueField;
 	
 	private Label totalMessagesValueLabel;
 	
-	private EventDispatcher navigationEventDispatcher;
+	private EventManager eventManager;
 
 	// ===================
 	// === FXML methods ==
@@ -117,26 +114,34 @@ public class MessageNavigationController implements Observer, Initializable
 	// === Other methods ==
 	// ====================
 		
-	public void update(Observable observable, Object update)
+	@Override
+	public void onMessageIndexChange(final int newSelectedMessage)
 	{
-		if (update instanceof ShowFirstEvent)
+		// logger.info("{} Index change = " + newSelectedMessage, store.getName()); 
+		if (selectedMessage != newSelectedMessage)
 		{
-			showFirstMessage();			
-		}
-		else if (update instanceof NewMessageEvent)
-		{
-			selectedMessage++;
-			updateIndex();			
-		}
-		else if (update instanceof MessageIndexChangedEvent)
-		{
-			final int newSelectedMessage = ((MessageIndexChangedEvent) update).getIndex(); 
-			if (selectedMessage != newSelectedMessage)
-			{
-				selectedMessage = newSelectedMessage;
-				updateIndex();
-			}
-		}
+			selectedMessage = newSelectedMessage;
+			updateIndex();
+		}		
+	}
+	
+	@Override
+	public void onMessageIndexToFirstChange()
+	{
+		// logger.info("{} Index change to first", store.getName());
+		showFirstMessage();				
+	}
+	
+	@Override
+	public void onMessageIndexIncrement()
+	{
+		// logger.info("{} Index increment", store.getName());
+		
+		selectedMessage++;
+		
+		// Because this is an event saying a new message is available, but we don't want to display it,
+		// so by not refreshing the content of the old one we allow uninterrupted interaction with UI fields (e.g. selection, etc.)
+		updateIndex(false);			
 	}
 	
 	private void showFirstMessage()
@@ -184,6 +189,11 @@ public class MessageNavigationController implements Observer, Initializable
 
 	private void updateIndex()
 	{
+		updateIndex(true);
+	}
+	
+	private void updateIndex(final boolean refreshMessageDetails)
+	{
 		final String selectedIndexValue = selectedMessage > 0 ? String.valueOf(selectedMessage) : "-";
 		final String totalMessagesValue = "/ " + store.getMessages().size(); 		
 		
@@ -207,7 +217,10 @@ public class MessageNavigationController implements Observer, Initializable
 			filterStatusLabel.setText("(filter is on)");		
 		}
 		
-		navigationEventDispatcher.dispatchEvent(new MessageIndexChangedEvent(selectedMessage));
+		if (refreshMessageDetails)
+		{
+			eventManager.changeMessageIndex(store, this, selectedMessage);
+		}
 	}
 
 	public void initialize(URL location, ResourceBundle resources)
@@ -324,19 +337,12 @@ public class MessageNavigationController implements Observer, Initializable
 		moreRecentButton.setTooltip(new Tooltip("Show more recent message"));
 		lessRecentButton.setTooltip(new Tooltip("Show less recent message"));
 		showFirstButton.setTooltip(new Tooltip("Show the latest message"));
-		showLastButton.setTooltip(new Tooltip("Show the oldest message"));
-		
-		navigationEventDispatcher.addObserver(this);			
+		showLastButton.setTooltip(new Tooltip("Show the oldest message"));	
 	}
 
-	public void setStore(final MessageStore store)
+	public void setStore(final ObservableMessageStore store)
 	{
 		this.store = store;
-	}
-	
-	public void setNavigationEventDispatcher(final EventDispatcher navigationEventDispatcher)
-	{
-		this.navigationEventDispatcher = navigationEventDispatcher;
 	}
 
 	public void clear()
@@ -354,5 +360,10 @@ public class MessageNavigationController implements Observer, Initializable
 	public int getSelectedMessageIndex()
 	{
 		return selectedMessage;
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 }

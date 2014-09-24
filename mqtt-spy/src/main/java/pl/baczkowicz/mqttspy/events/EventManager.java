@@ -5,17 +5,31 @@ import java.util.Map;
 
 import javafx.application.Platform;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.MessageStore;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
+import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
 
 public class EventManager
 {
-	final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObserver 
-		= new HashMap<ConnectionStatusChangeObserver, MqttConnection>();
+	private final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObservers = new HashMap<>();
 	
-	private Map<ClearTabObserver, ObservableMessageStoreWithFiltering> clearTabObserver
-		= new HashMap<ClearTabObserver, ObservableMessageStoreWithFiltering>();
+	private final Map<ClearTabObserver, ObservableMessageStoreWithFiltering> clearTabObservers = new HashMap<>();
+
+	private final Map<NewMessageObserver, MessageStore> newMessageObservers = new HashMap<>();
+	
+	private final Map<MessageIndexChangeObserver, MessageStore> changeMessageIndexObservers = new HashMap<>();
+	
+	private final Map<MessageIndexToFirstObserver, MessageStore> displayFirstMessageObservers = new HashMap<>();
+	
+	private final Map<MessageIndexIncrementObserver, MessageStore> incrementMessageIndexObservers = new HashMap<>();
+	
+	private final Map<MessageFormatChangeObserver, MessageStore> formatChangeObservers = new HashMap<>();
 	
 	/**
 	 * 
@@ -26,17 +40,47 @@ public class EventManager
 	 */
 	public void registerConnectionStatusObserver(final ConnectionStatusChangeObserver observer, final MqttConnection filter)
 	{
-		connectionStatusChangeObserver.put(observer, filter);
+		connectionStatusChangeObservers.put(observer, filter);
 	}
 	
 	public void deregisterConnectionStatusObserver(final ConnectionStatusChangeObserver observer)
 	{
-		connectionStatusChangeObserver.remove(observer);
+		connectionStatusChangeObservers.remove(observer);
 	}
 	
 	public void registerClearTabObserver(final ClearTabObserver observer, final ObservableMessageStoreWithFiltering filter)
 	{
-		clearTabObserver.put(observer, filter);
+		clearTabObservers.put(observer, filter);
+	}
+	
+	public void registerNewMessageObserver(final NewMessageObserver observer, final MessageStore filter)
+	{
+		newMessageObservers.put(observer, filter);
+	}
+	
+	public void registerChangeMessageIndexObserver(final MessageIndexChangeObserver observer, final MessageStore filter)
+	{
+		changeMessageIndexObservers.put(observer, filter);
+	}
+	
+	public void registerChangeMessageIndexFirstObserver(final MessageIndexToFirstObserver observer, final MessageStore filter)
+	{
+		displayFirstMessageObservers.put(observer, filter);
+	}
+	
+	public void registerIncrementMessageIndexObserver(final MessageIndexIncrementObserver observer, final MessageStore filter)
+	{
+		incrementMessageIndexObservers.put(observer, filter);
+	}
+	
+	public void registerFormatChangeObserver(final MessageFormatChangeObserver observer, final MessageStore filter)
+	{
+		formatChangeObservers.put(observer, filter);
+	}
+	
+	public void deregisterFormatChangeObserver(MessageFormatChangeObserver observer)
+	{
+		formatChangeObservers.remove(observer);		
 	}
 	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
@@ -46,9 +90,9 @@ public class EventManager
 			@Override
 			public void run()
 			{
-				for (final ConnectionStatusChangeObserver observer : connectionStatusChangeObserver.keySet())
+				for (final ConnectionStatusChangeObserver observer : connectionStatusChangeObservers.keySet())
 				{
-					final MqttConnection filter = connectionStatusChangeObserver.get(observer);
+					final MqttConnection filter = connectionStatusChangeObservers.get(observer);
 					
 					if (filter == null || filter.equals(changedConnection))
 					{				
@@ -56,8 +100,107 @@ public class EventManager
 					}
 				}				
 			}
+		});		
+	}
+	
+	public void notifyFormatChanged(final MessageStore store)
+	{
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				for (final MessageFormatChangeObserver observer : formatChangeObservers.keySet())
+				{
+					final MessageStore filter = formatChangeObservers.get(observer);
+					
+					if (filter == null || filter.equals(store))
+					{				
+						observer.onFormatChange();
+					}
+				}				
+			}
+		});		
+	}
+	
+	public void notifyNewMessageAvailable(final MessageStore store)
+	{
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				for (final NewMessageObserver observer : newMessageObservers.keySet())
+				{
+					final MessageStore filter = newMessageObservers.get(observer);
+					
+					if (filter == null || filter.equals(store))
+					{				
+						observer.onNewMessageReceived();
+					}
+				}				
+			}
+		});		
+	}
+	
+	public void changeMessageIndexToFirst(final MessageStore store)
+	{
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final MessageIndexToFirstObserver observer : displayFirstMessageObservers.keySet())
+				{
+					final MessageStore filter = displayFirstMessageObservers.get(observer);
+
+					if (filter == null || filter.equals(store))
+					{
+						observer.onMessageIndexToFirstChange();
+					}
+				}
+			}
 		});
-		
+	}
+	
+	public void changeMessageIndex(final MessageStore store, final Object dispatcher, final int index)
+	{
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final MessageIndexChangeObserver observer : changeMessageIndexObservers.keySet())
+				{
+					final MessageStore filter = changeMessageIndexObservers.get(observer);
+
+					if ((filter == null || filter.equals(store)) && (dispatcher != observer))
+					{
+						observer.onMessageIndexChange(index);
+					}
+				}
+			}
+		});
+	}
+	
+	public void incrementMessageIndex(final MessageStore store)
+	{
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final MessageIndexIncrementObserver observer : incrementMessageIndexObservers.keySet())
+				{
+					final MessageStore filter = incrementMessageIndexObservers.get(observer);
+
+					if (filter == null || filter.equals(store))
+					{
+						observer.onMessageIndexIncrement();
+					}
+				}
+			}
+		});
 	}
 
 	public void notifyConfigurationFileWriteFailure()
@@ -75,11 +218,11 @@ public class EventManager
 		// TODO Auto-generated method stub
 	}
 
-	public void notifyClearHistory(ObservableMessageStoreWithFiltering store)
+	public void notifyClearHistory(final ObservableMessageStoreWithFiltering store)
 	{
-		for (final ClearTabObserver observer : clearTabObserver.keySet())
+		for (final ClearTabObserver observer : clearTabObservers.keySet())
 		{
-			final ObservableMessageStoreWithFiltering filter = clearTabObserver.get(observer);
+			final ObservableMessageStoreWithFiltering filter = clearTabObservers.get(observer);
 			
 			if (filter == null || filter.equals(store))
 			{

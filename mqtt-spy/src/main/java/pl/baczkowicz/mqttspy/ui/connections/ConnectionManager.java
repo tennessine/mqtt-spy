@@ -69,7 +69,7 @@ public class ConnectionManager
 		connectionController.setStatisticsManager(statisticsManager);
 		
 		final Tab connectionTab = createConnectionTab(connection, connectionPane, connectionController);
-		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, statisticsManager, uiEventQueue);			
+		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
 		
 		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
 				true, parent, connection, connection, null, connectionController);

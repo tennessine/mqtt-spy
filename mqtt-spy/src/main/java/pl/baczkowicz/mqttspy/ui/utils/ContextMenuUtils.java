@@ -6,23 +6,17 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TableView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
-import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
-import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ContextMenuUtils
 {
@@ -154,214 +148,8 @@ public class ContextMenuUtils
 
 		return contextMenu;
 	}
-
-	public static ContextMenu createTopicTableContextMenu(
-			final TableView<SubscriptionTopicSummaryProperties> filterTable, final ObservableMessageStoreWithFiltering store, 
-			final EventDispatcher navigationEventDispatcher,
-			final ConnectionController connectionController)
-	{
-		final ContextMenu contextMenu = new ContextMenu();
-		
-		// Copy topic
-		final MenuItem copyTopicItem = new MenuItem("[Topic] Copy to clipboard");
-		copyTopicItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					final ClipboardContent content = new ClipboardContent();
-					content.putString(item.topicProperty().getValue());
-					Clipboard.getSystemClipboard().setContent(content);
-				}
-			}
-		});
-		contextMenu.getItems().add(copyTopicItem);
-		
-		// Subscribe to topic
-		final MenuItem subscribeToTopicItem = new MenuItem("[Topic] Subscribe (and create tab)");
-		subscribeToTopicItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
-					subscriptionDetails.setTopic(item.topicProperty().getValue());
-					subscriptionDetails.setQos(0);
-					
-					connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
-				}
-			}
-		});
-		contextMenu.getItems().add(subscribeToTopicItem);
-
-		// Separator
-		contextMenu.getItems().add(new SeparatorMenuItem());
-		
-		// Copy content
-		final MenuItem copyContentItem = new MenuItem("[Content] Copy to clipboard");
-		copyContentItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					final ClipboardContent content = new ClipboardContent();
-					content.putString(item.lastReceivedPayloadProperty().getValue());
-					Clipboard.getSystemClipboard().setContent(content);
-				}
-			}
-		});
-		contextMenu.getItems().add(copyContentItem);
-		
-		// Separator
-		contextMenu.getItems().add(new SeparatorMenuItem());
-		
-		// Apply filters
-		final MenuItem selectAllTopicsItem = new MenuItem("[Show] Select all topics");
-		selectAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					store.setAllShowValues(true);
-					navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());
-				}
-			}
-		});
-		contextMenu.getItems().add(selectAllTopicsItem);
-
-		// Toggle filters
-		final MenuItem toggleAllTopicsItem = new MenuItem("[Show] Toggle all topics");
-		toggleAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					store.toggleAllShowValues();
-					navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());	
-				}
-			}
-		});
-		contextMenu.getItems().add(toggleAllTopicsItem);
-		
-		// Only this topic
-		final MenuItem selectOnlyThisItem = new MenuItem("[Show] Select only this");
-		selectOnlyThisItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					store.setAllShowValues(false);
-					store.setShowValue(item.topicProperty().getValue(), true);
-					navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());	
-				}
-			}
-		});
-		contextMenu.getItems().add(selectOnlyThisItem);
-				
-		// Remove filters
-		final MenuItem removeAllTopicsItem = new MenuItem("[Show] Clear all selected topics");
-		removeAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					store.setAllShowValues(false);
-					navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());	
-				}
-			}
-		});
-		contextMenu.getItems().add(removeAllTopicsItem);
-
-		return contextMenu;
-	}
 	
-	public static ContextMenu createMessageListTableContextMenu(
-			final TableView<MqttContentProperties> messageTable, final EventDispatcher navigationEventDispatcher)
-	{
-		final ContextMenu contextMenu = new ContextMenu();
-		
-		// Copy topic
-		final MenuItem copyTopicItem = new MenuItem("[Topic] Copy to clipboard");
-		copyTopicItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final MqttContentProperties item = messageTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					final ClipboardContent content = new ClipboardContent();
-					content.putString(item.topicProperty().getValue());
-					Clipboard.getSystemClipboard().setContent(content);
-				}
-			}
-		});
-		contextMenu.getItems().add(copyTopicItem);
-
-		// Separator
-		contextMenu.getItems().add(new SeparatorMenuItem());
-		
-		// Copy content
-		final MenuItem copyContentItem = new MenuItem("[Content] Copy to clipboard");
-		copyContentItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final MqttContentProperties item = messageTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-					final ClipboardContent content = new ClipboardContent();
-					content.putString(item.lastReceivedPayloadProperty().getValue());
-					Clipboard.getSystemClipboard().setContent(content);
-				}
-			}
-		});
-		contextMenu.getItems().add(copyContentItem);
-		
-		// Separator
-		// contextMenu.getItems().add(new SeparatorMenuItem());
-		//
-		// // Show message filters
-		// final MenuItem showMessageItem = new MenuItem("Preview message");
-		// showMessageItem.setOnAction(new EventHandler<ActionEvent>()
-		// {
-		// public void handle(ActionEvent e)
-		// {
-		// final ObservableMqttContent item = messageTable.getSelectionModel()
-		// .getSelectedItem();
-		// if (item != null)
-		// {
-		// navigationEventDispatcher.dispatchEvent(new MessageIndexChangedEvent(
-		// messageTable.getSelectionModel().getSelectedIndex()));
-		// }
-		// }
-		// });
-		// contextMenu.getItems().add(showMessageItem);
-
-		return contextMenu;
-	}
+	
 
 	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttConnection connection, 
 			final ConnectionController connectionController, final ConnectionManager connectionManager)

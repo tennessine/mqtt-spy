@@ -26,15 +26,13 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
-import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 
-public class SearchPaneController implements Initializable, Observer
+public class SearchPaneController implements Initializable, Observer, MessageFormatChangeObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(SearchPaneController.class);
 	
@@ -68,6 +66,8 @@ public class SearchPaneController implements Initializable, Observer
 	@FXML
 	private CheckBox caseSensitiveCheckBox;
 	
+	private EventManager eventManager;
+	
 	private ObservableMessageStoreWithFiltering store; 
 	
 	private ObservableMessageStore foundMessageStore;
@@ -76,7 +76,7 @@ public class SearchPaneController implements Initializable, Observer
 
 	private final ObservableList<MqttContentProperties> foundMessages = FXCollections.observableArrayList();
 
-	private EventDispatcher searchPaneEventDispatcher;
+	// private EventDispatcher searchPaneEventDispatcher;
 
 	private Queue<MqttSpyUIEvent> uiEventQueue;
 	
@@ -153,7 +153,8 @@ public class SearchPaneController implements Initializable, Observer
 		updateTabTitle();	
 		messagePaneController.setSearchOptions(new SearchOptions(searchField.getText(), caseSensitiveCheckBox.isSelected()));
 		
-		searchPaneEventDispatcher.dispatchEvent(new ShowFirstEvent());
+		eventManager.changeMessageIndexToFirst(foundMessageStore);
+		// searchPaneEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
 	}
 	
 	private void updateTabTitle()
@@ -187,21 +188,33 @@ public class SearchPaneController implements Initializable, Observer
 		this.uiEventQueue = uiEventQueue;
 	}
 
+	@Override
+	public void onFormatChange()
+	{
+		//else if (update instanceof MessageFormatChangeEvent && !observable.equals(searchPaneEventDispatcher))
+		//{
+		foundMessageStore.setFormatter(store.getFormatter());
+		eventManager.notifyFormatChanged(foundMessageStore);
+		//searchPaneEventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
+		//}		
+	}
+
 	public void update(Observable observable, Object update)
 	{
 		if (update instanceof MqttContent)
 		{
 			if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(((MqttContent) update).getTopic())))
 			{
-				if (processMessage((MqttContent) update))														
+				final boolean matchingSearch = processMessage((MqttContent) update); 
+				if (matchingSearch)														
 				{
 					if (messageNavigationPaneController.showLatest())
 					{
-						searchPaneEventDispatcher.dispatchEvent(new ShowFirstEvent());
+						eventManager.changeMessageIndexToFirst(foundMessageStore);
 					}
 					else
 					{
-						searchPaneEventDispatcher.dispatchEvent(new NewMessageEvent());
+						eventManager.incrementMessageIndex(foundMessageStore);
 					}
 				}
 				
@@ -212,39 +225,52 @@ public class SearchPaneController implements Initializable, Observer
 				// Ignore
 			}
 		}
-		else if (update instanceof MessageFormatChangeEvent && !observable.equals(searchPaneEventDispatcher))
-		{
-			foundMessageStore.setFormatter(store.getFormatter());
-			searchPaneEventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
-		}
+		
 	}
 
 	public void init()
 	{
-		foundMessageStore = new ObservableMessageStore(Integer.MAX_VALUE, uiEventQueue);
+		eventManager.registerFormatChangeObserver(this, store);
+		
+		foundMessageStore = new ObservableMessageStore("search-" + store.getName(), Integer.MAX_VALUE, uiEventQueue);
 		foundMessageStore.setFormatter(store.getFormatter());
 		
-		searchPaneEventDispatcher = new EventDispatcher();
-		searchPaneEventDispatcher.addObserver(this);
+		// searchPaneEventDispatcher = new EventDispatcher();
+		// searchPaneEventDispatcher.addObserver(this);
 		
 		messageListTablePaneController.setItems(foundMessages);
 		messageListTablePaneController.setStore(foundMessageStore);
-		messageListTablePaneController.setNavigationEventDispatcher(searchPaneEventDispatcher);
+		messageListTablePaneController.setEventManager(eventManager);
 		messageListTablePaneController.init();
+		eventManager.registerChangeMessageIndexObserver(messageListTablePaneController, foundMessageStore);
 		
 		messagePaneController.setStore(foundMessageStore);
-		messagePaneController.setEventDispatcher(searchPaneEventDispatcher);
-		messagePaneController.init();
+		messagePaneController.init();		
+		// The search pane's message browser wants to know about changing indices and format
+		eventManager.registerChangeMessageIndexObserver(messagePaneController, foundMessageStore);
+		eventManager.registerFormatChangeObserver(messagePaneController, foundMessageStore);
 		
-		messageNavigationPaneController.setStore(foundMessageStore);
-		messageNavigationPaneController.setNavigationEventDispatcher(searchPaneEventDispatcher);
-		messageNavigationPaneController.init();
+		messageNavigationPaneController.setStore(foundMessageStore);		
+		messageNavigationPaneController.setEventManager(eventManager);
+		messageNavigationPaneController.init();		
+		// The search pane's message browser wants to know about show first, index change and update index events 
+		eventManager.registerChangeMessageIndexObserver(messageNavigationPaneController, foundMessageStore);
+		eventManager.registerChangeMessageIndexFirstObserver(messageNavigationPaneController, foundMessageStore);
+		eventManager.registerIncrementMessageIndexObserver(messageNavigationPaneController, foundMessageStore);
 	}
 
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+	
 	public void cleanup()
 	{
 		disableAutoSearch();
-		searchPaneEventDispatcher.deleteObserver(this);
+		
+		// TODO:
+		eventManager.deregisterFormatChangeObserver(this);
+		// searchPaneEventDispatcher.deleteObserver(this);
 	}
 		
 	public void setTab(Tab tab)

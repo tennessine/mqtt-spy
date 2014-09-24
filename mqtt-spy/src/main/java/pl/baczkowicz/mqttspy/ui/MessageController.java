@@ -1,8 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -22,14 +20,13 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
-import pl.baczkowicz.mqttspy.ui.events.MessageIndexChangedEvent;
+import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class MessageController implements Initializable, Observer
+public class MessageController implements Initializable, MessageIndexChangeObserver, MessageFormatChangeObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(MessageController.class);
 
@@ -54,7 +51,7 @@ public class MessageController implements Initializable, Observer
 	@FXML
 	private Label lengthLabel;
 
-	private EventDispatcher eventDispatcher;
+	// private EventDispatcher eventDispatcher;
 	
 	private ObservableMessageStore store;
 	
@@ -175,19 +172,34 @@ public class MessageController implements Initializable, Observer
 			}
 		});		
 	}
+	
 
 	@Override
-	public void update(Observable observable, Object update)
+	public void onMessageIndexChange(final int index)
 	{
-		if (update instanceof MessageIndexChangedEvent)
-		{
-			updateMessage(((MessageIndexChangedEvent) update).getIndex());			
-		}
-		else if (update instanceof MessageFormatChangeEvent)
-		{
-			showMessageData();
-		}
+		updateMessage(index);
 	}
+	
+
+	@Override
+	public void onFormatChange()
+	{
+		showMessageData();		
+	}
+
+	// @Override
+	// public void update(Observable observable, Object update)
+	// {
+	// // if (update instanceof MessageIndexChangedEvent)
+	// // {
+	// // updateMessage(((MessageIndexChangedEvent) update).getIndex());
+	// // }
+	// // else
+	// // if (update instanceof MessageFormatChangeEvent)
+	// // {
+	// // showMessageData();
+	// // }
+	// }
 	
 	private void updateMessage(final int messageIndex)
 	{
@@ -229,7 +241,7 @@ public class MessageController implements Initializable, Observer
 		tooltip = new Tooltip("");
 		tooltip.setWrapText(true);
 		
-		eventDispatcher.addObserver(this);
+		// eventDispatcher.addObserver(this);
 	}
 	
 	public void setStore(final ObservableMessageStore store)
@@ -237,8 +249,8 @@ public class MessageController implements Initializable, Observer
 		this.store = store;
 	}
 	
-	public void setEventDispatcher(final EventDispatcher eventDispatcher)
-	{
-		this.eventDispatcher = eventDispatcher;
-	}
+	// public void setEventDispatcher(final EventDispatcher eventDispatcher)
+	// {
+	// this.eventDispatcher = eventDispatcher;
+	// }
 }

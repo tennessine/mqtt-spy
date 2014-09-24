@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.ui.events;
+package pl.baczkowicz.mqttspy.events.ui;
 
 import java.util.Observable;
 

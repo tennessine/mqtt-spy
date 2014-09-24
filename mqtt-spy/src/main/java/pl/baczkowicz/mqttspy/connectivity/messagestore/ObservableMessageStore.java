@@ -20,10 +20,13 @@ public class ObservableMessageStore extends Observable implements MessageStore
 	/** Stores events for the UI to be updated. */
 	protected Queue<MqttSpyUIEvent> uiEventQueue;
 
-	public ObservableMessageStore(final int maxSize, final Queue<MqttSpyUIEvent> uiEventQueue)
+	private final String name;	
+	
+	public ObservableMessageStore(final String name, final int maxSize, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		this.store = new MqttMessageStore(maxSize);
 		this.uiEventQueue = uiEventQueue;
+		this.name = name;
 	}
 	
 	public MqttContent storeMessage(final MqttContent message)
@@ -66,5 +69,10 @@ public class ObservableMessageStore extends Observable implements MessageStore
 	public boolean filtersEnabled()
 	{
 		return false;
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 }

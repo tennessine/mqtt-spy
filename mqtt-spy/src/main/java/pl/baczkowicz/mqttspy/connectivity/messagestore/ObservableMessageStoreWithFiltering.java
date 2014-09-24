@@ -31,13 +31,10 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	private final MqttMessageStore filteredStore;
 	
 	private final TopicSummary topicSummary;
-
-	private String name;	
 	
 	public ObservableMessageStoreWithFiltering(final String name, final int maxSize, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
-		super(maxSize, uiEventQueue);
-		this.name = name;
+		super(name, maxSize, uiEventQueue);
 		this.topicSummary = new TopicSummary(name);
 		this.topicSummary.setFormatter(messageFormat);
 		this.filteredStore = new MqttMessageStore(maxSize);
@@ -117,13 +114,13 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		{
 			if (!shownTopics.contains(topic))
 			{
-				logger.debug("Adding {} to active filters for {}; recreate = {}", topic, name, recreateStore);
+				logger.debug("Adding {} to active filters for {}; recreate = {}", topic, getName(), recreateStore);
 				shownTopics.add(topic);
 				
 				// TODO: optimise
 				if (recreateStore)
 				{
-					logger.warn("Recreating store for {} because of {}", name, topic);
+					logger.warn("Recreating store for {} because of {}", getName(), topic);
 					initialiseFilteredStore();
 				}
 				
@@ -145,7 +142,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		{
 			if (shownTopics.contains(topic))
 			{
-				logger.debug("Removing {} from active filters for {}", topic, name);
+				logger.debug("Removing {} from active filters for {}", topic, getName());
 				shownTopics.remove(topic);
 		
 				initialiseFilteredStore();
@@ -225,11 +222,6 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	{
 		updateFilter(topic, show);
 		topicSummary.setShowValue(topic, show);
-	}
-	
-	public String getName()
-	{
-		return name;
 	}
 	
 	public TopicSummary getTopicSummary()

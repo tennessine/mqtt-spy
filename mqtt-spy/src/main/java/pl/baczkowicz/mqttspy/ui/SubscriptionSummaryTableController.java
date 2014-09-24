@@ -4,25 +4,31 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.util.Callback;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
-import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionSummaryTableController implements Initializable
@@ -31,7 +37,7 @@ public class SubscriptionSummaryTableController implements Initializable
 
 	private ObservableMessageStoreWithFiltering store; 
 	
-	private EventDispatcher navigationEventDispatcher;
+	// private EventDispatcher navigationEventDispatcher;
 
 	@FXML
 	private TableView<SubscriptionTopicSummaryProperties> filterTable;
@@ -52,7 +58,8 @@ public class SubscriptionSummaryTableController implements Initializable
 	private TableColumn<SubscriptionTopicSummaryProperties, String> lastReceivedColumn;
 
 	private ConnectionController connectionController;
-
+	private EventManager eventManager;
+	
 	public void initialize(URL location, ResourceBundle resources)
 	{				
 		// Table
@@ -85,7 +92,8 @@ public class SubscriptionSummaryTableController implements Initializable
 											@Override
 											public void run()
 											{
-												navigationEventDispatcher.dispatchEvent(new ShowFirstEvent());	
+												eventManager.changeMessageIndexToFirst(store);
+												// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());	
 											}											
 										});
 									}																			
@@ -170,9 +178,14 @@ public class SubscriptionSummaryTableController implements Initializable
 				});				
 	}
 	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+	
 	public void init()
 	{
-		filterTable.setContextMenu(ContextMenuUtils.createTopicTableContextMenu(filterTable, store, navigationEventDispatcher, connectionController));
+		filterTable.setContextMenu(createTopicTableContextMenu());
 		filterTable.setItems(store.getObservableMessagesPerTopic());	
 	}
 
@@ -181,13 +194,156 @@ public class SubscriptionSummaryTableController implements Initializable
 		this.store = store;
 	}
 	
-	public void setNavigationEventDispatcher(final EventDispatcher navigationEventDispatcher)
-	{
-		this.navigationEventDispatcher = navigationEventDispatcher;
-	}
+	// public void setNavigationEventDispatcher(final EventDispatcher
+	// navigationEventDispatcher)
+	// {
+	// this.navigationEventDispatcher = navigationEventDispatcher;
+	// }
 	
 	public void setConnectionController(final ConnectionController connectionController)
 	{
 		this.connectionController = connectionController;
+	}
+	
+	public ContextMenu createTopicTableContextMenu()
+	{
+		final ContextMenu contextMenu = new ContextMenu();
+		
+		// Copy topic
+		final MenuItem copyTopicItem = new MenuItem("[Topic] Copy to clipboard");
+		copyTopicItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final ClipboardContent content = new ClipboardContent();
+					content.putString(item.topicProperty().getValue());
+					Clipboard.getSystemClipboard().setContent(content);
+				}
+			}
+		});
+		contextMenu.getItems().add(copyTopicItem);
+		
+		// Subscribe to topic
+		final MenuItem subscribeToTopicItem = new MenuItem("[Topic] Subscribe (and create tab)");
+		subscribeToTopicItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+					subscriptionDetails.setTopic(item.topicProperty().getValue());
+					subscriptionDetails.setQos(0);
+					
+					connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
+				}
+			}
+		});
+		contextMenu.getItems().add(subscribeToTopicItem);
+
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+		
+		// Copy content
+		final MenuItem copyContentItem = new MenuItem("[Content] Copy to clipboard");
+		copyContentItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final ClipboardContent content = new ClipboardContent();
+					content.putString(item.lastReceivedPayloadProperty().getValue());
+					Clipboard.getSystemClipboard().setContent(content);
+				}
+			}
+		});
+		contextMenu.getItems().add(copyContentItem);
+		
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+		
+		// Apply filters
+		final MenuItem selectAllTopicsItem = new MenuItem("[Show] Select all topics");
+		selectAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.setAllShowValues(true);
+					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
+					eventManager.changeMessageIndexToFirst(store);
+				}
+			}
+		});
+		contextMenu.getItems().add(selectAllTopicsItem);
+
+		// Toggle filters
+		final MenuItem toggleAllTopicsItem = new MenuItem("[Show] Toggle all topics");
+		toggleAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.toggleAllShowValues();
+					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
+					eventManager.changeMessageIndexToFirst(store);
+				}
+			}
+		});
+		contextMenu.getItems().add(toggleAllTopicsItem);
+		
+		// Only this topic
+		final MenuItem selectOnlyThisItem = new MenuItem("[Show] Select only this");
+		selectOnlyThisItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.setAllShowValues(false);
+					store.setShowValue(item.topicProperty().getValue(), true);
+					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
+					eventManager.changeMessageIndexToFirst(store);
+				}
+			}
+		});
+		contextMenu.getItems().add(selectOnlyThisItem);
+				
+		// Remove filters
+		final MenuItem removeAllTopicsItem = new MenuItem("[Show] Clear all selected topics");
+		removeAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.setAllShowValues(false);
+					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
+					eventManager.changeMessageIndexToFirst(store);
+				}
+			}
+		});
+		contextMenu.getItems().add(removeAllTopicsItem);
+
+		return contextMenu;
 	}
 }

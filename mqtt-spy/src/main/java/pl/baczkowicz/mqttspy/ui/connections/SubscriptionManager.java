@@ -6,9 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -16,6 +13,10 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
@@ -23,7 +24,6 @@ import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
@@ -38,16 +38,16 @@ public class SubscriptionManager
 		
 	private final EventManager eventManager;
 	
-	private final StatisticsManager statisticsManager;
+	// private final StatisticsManager statisticsManager;
 	
 	private final Map<String, SubscriptionController> subscriptionControllers = new HashMap<>();
 	
 	private final Queue<MqttSpyUIEvent> uiEventQueue;
 	
-	public SubscriptionManager(final EventManager eventManager, final StatisticsManager statisticsManager, final Queue<MqttSpyUIEvent> uiEventQueue)
+	public SubscriptionManager(final EventManager eventManager, /*final StatisticsManager statisticsManager, */ final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		this.eventManager = eventManager;
-		this.statisticsManager = statisticsManager;
+		// this.statisticsManager = statisticsManager;
 		this.uiEventQueue = uiEventQueue;
 	}
 	
@@ -118,7 +118,7 @@ public class SubscriptionManager
 		subscriptionController.setStore(observableMessageStore);
 		subscriptionController.setEventManager(eventManager);
 		subscriptionController.setTab(tab);
-		subscriptionController.setStatisticsManager(statisticsManager);
+		// subscriptionController.setStatisticsManager(statisticsManager);
 		subscriptionController.setConnectionProperties(connection.getProperties());
 				
 		tab.setClosable(false);

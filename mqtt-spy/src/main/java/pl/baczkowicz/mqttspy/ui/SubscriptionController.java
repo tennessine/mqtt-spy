@@ -39,12 +39,9 @@ import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
+import pl.baczkowicz.mqttspy.events.ui.EventDispatcher;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.MessageFormatChangeEvent;
-import pl.baczkowicz.mqttspy.ui.events.NewMessageEvent;
-import pl.baczkowicz.mqttspy.ui.events.ShowFirstEvent;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
@@ -130,7 +127,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	private EventManager eventManager;
 
-	private StatisticsManager statisticsManager;
+	// private StatisticsManager statisticsManager;
 
 	private Label summaryTitledPaneTitleLabel;
 
@@ -152,32 +149,21 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 	
 	public void update(Observable observable, Object update)
 	{
-		// Expecting to receive only notifications from subscriptions and the
-		// connection (for all subscriptions)
-		// if (update == null)
-		// {
-		// messagePaneController.clear();
-		// messageNavigationPaneController.clear();
-		// store.setAllShowValues(false);
-		// }
-		// else 
 		if (update instanceof MqttContent)
 		{
 			if (store.getFilters().contains(((MqttContent) update).getTopic()))
 			{
 				if (messageNavigationPaneController.showLatest())
 				{
-					eventDispatcher.dispatchEvent(new ShowFirstEvent());
+					eventManager.notifyNewMessageAvailable(store);
+					eventManager.changeMessageIndexToFirst(store);
 				}
 				else
 				{
-					eventDispatcher.dispatchEvent(new NewMessageEvent());
+					eventManager.notifyNewMessageAvailable(store);
+					eventManager.incrementMessageIndex(store);
 				}
 			}
-			// else
-			// {
-			// logger.info("No match for " + ((MqttContent) update).getTopic());
-			// }
 		}
 		else if (update instanceof MqttSubscription)
 		{
@@ -192,7 +178,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
 	
 		formattingMenuButton.setText(store.getFormatter().getName());
-		eventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
+		eventManager.notifyFormatChanged(store);
+		// eventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
 	}
 	
 	@FXML
@@ -298,14 +285,17 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			searchWindowController.setSubscription(subscription);
 			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : SubscriptionManager.ALL_SUBSCRIPTIONS_TAB_TITLE);
 			searchWindowController.setEventDispatcher(eventDispatcher);
-			eventDispatcher.addObserver(searchWindowController);
+			searchWindowController.setEventManager(eventManager);
+			
+			// Note: searchWindowController is purely interested in knowing if a new message is available
+			eventManager.registerNewMessageObserver(searchWindowController, store);
+			
 		
 			// Set scene width, height and style
 			final Scene scene = new Scene(searchWindow, SearchWindowController.WIDTH, SearchWindowController.HEIGHT);
 			scene.getStylesheets().addAll(tab.getTabPane().getScene().getStylesheets());
 			
 			searchStage = new Stage();
-			// searchStage.setTitle(subscription != null ? subscription.getTopic() : tab.getText());
 			searchStage.initModality(Modality.NONE);
 			searchStage.initOwner(getParentWindow());
 			searchStage.setScene(scene);
@@ -344,17 +334,23 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		summaryTitledPane.setGraphic(summaryTitledPaneTitleLabel);
 		
 		summaryTablePaneController.setStore(store);
-		summaryTablePaneController.setNavigationEventDispatcher(eventDispatcher);
 		summaryTablePaneController.setConnectionController(connectionController);
+		summaryTablePaneController.setEventManager(eventManager);
 		summaryTablePaneController.init();
 		
 		messagePaneController.setStore(store);
-		messagePaneController.setEventDispatcher(eventDispatcher);
 		messagePaneController.init();
+		// The search pane's message browser wants to know about changing indices and format
+		eventManager.registerChangeMessageIndexObserver(messagePaneController, store);
+		eventManager.registerFormatChangeObserver(messagePaneController, store);
 		
 		messageNavigationPaneController.setStore(store);
-		messageNavigationPaneController.setNavigationEventDispatcher(eventDispatcher);
-		messageNavigationPaneController.init();
+		messageNavigationPaneController.setEventManager(eventManager);
+		messageNavigationPaneController.init();		
+		// The subscription pane's message browser wants to know about show first, index change and update index events 
+		eventManager.registerChangeMessageIndexObserver(messageNavigationPaneController, store);
+		eventManager.registerChangeMessageIndexFirstObserver(messageNavigationPaneController, store);
+		eventManager.registerIncrementMessageIndexObserver(messageNavigationPaneController, store);
 		
 		if (connectionProperties != null && connectionProperties.getFormatter() != null)
 		{
@@ -404,10 +400,10 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		return tab;
 	}
 
-	public void setStatisticsManager(StatisticsManager statisticsManager)
-	{
-		this.statisticsManager = statisticsManager;
-	}
+	// public void setStatisticsManager(StatisticsManager statisticsManager)
+	// {
+	// this.statisticsManager = statisticsManager;
+	// }
 	
 	public void setConnectionController(final ConnectionController connectionController)
 	{

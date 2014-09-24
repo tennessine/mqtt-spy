@@ -1,41 +1,41 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.util.Callback;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.MessageStore;
-import pl.baczkowicz.mqttspy.ui.events.EventDispatcher;
-import pl.baczkowicz.mqttspy.ui.events.MessageIndexChangedEvent;
+import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
-import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-@SuppressWarnings({"rawtypes"})
-public class MessageListTableController implements Initializable, Observer
+public class MessageListTableController implements Initializable, MessageIndexChangeObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(MessageListTableController.class);
 	
 	private ObservableList<MqttContentProperties> items; 
 	
-	private EventDispatcher navigationEventDispatcher;
-
 	@FXML
 	private TableView<MqttContentProperties> messageTable;
 
@@ -48,7 +48,9 @@ public class MessageListTableController implements Initializable, Observer
 	@FXML
 	private TableColumn<MqttContentProperties, String> messageReceivedAtColumn;
 
-	private MessageStore store;
+	private ObservableMessageStore store;
+
+	private EventManager eventManager;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{				
@@ -63,7 +65,16 @@ public class MessageListTableController implements Initializable, Observer
 		messageReceivedAtColumn
 				.setCellValueFactory(new PropertyValueFactory<MqttContentProperties, String>(
 						"lastReceivedTimestamp"));
-
+		
+		messageTable.setOnMouseClicked(new EventHandler<Event>()
+				{
+					@Override
+					public void handle(Event event)
+					{
+						selectItem();
+					}
+				});
+		
 		messageTable
 				.setRowFactory(new Callback<TableView<MqttContentProperties>, TableRow<MqttContentProperties>>()
 				{
@@ -93,73 +104,133 @@ public class MessageListTableController implements Initializable, Observer
 						return row;
 					}
 				});
-		messageTable.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>()
-		{
-			@Override
-			public void changed(ObservableValue observable, Number oldValue, Number newValue)
-			{
-				final MqttContentProperties item = messageTable.getSelectionModel().getSelectedItem();
-				if (item != null)
-				{
-					final Object[] array = store.getMessages().toArray();
-					for (int i = 0; i < store.getMessages().size(); i++)
-					{
-						if (((MqttContent) array[i]).getId() == item.getId())
-						{
-							navigationEventDispatcher.dispatchEvent(new MessageIndexChangedEvent(array.length - i));
-						}
-					}
-
-				}
-			}
-		});
 	}
 	
-	public void update(Observable observable, Object update)
+	private void selectItem()
 	{
-		if (update instanceof MessageIndexChangedEvent)
+		final MqttContentProperties item = messageTable.getSelectionModel().getSelectedItem();
+		if (item != null)
 		{
-			if (store.getMessages().size() > 0)
+			final Object[] array = store.getMessages().toArray();
+			for (int i = 0; i < store.getMessages().size(); i++)
 			{
-				final int messageIndex = ((MessageIndexChangedEvent) update).getIndex();
-				final long id = ((MqttContent) store.getMessages().toArray()[store.getMessages().size()
-						- messageIndex]).getId();
-	
-				for (final MqttContentProperties item : items)
+				if (((MqttContent) array[i]).getId() == item.getId())
 				{
-					if (item.getId() == id)
+					// logger.info("{} Changing selection to " + (array.length - i), store.getName());
+					eventManager.changeMessageIndex(store, this, array.length - i);
+				}
+			}
+
+		}
+	}
+
+	@Override
+	public void onMessageIndexChange(int messageIndex)
+	{
+		if (store.getMessages().size() > 0)
+		{
+			final long id = ((MqttContent) store.getMessages().toArray()[store.getMessages().size()
+					- messageIndex]).getId();
+
+			for (final MqttContentProperties item : items)
+			{
+				if (item.getId() == id)
+				{
+					if (!item.equals(messageTable.getSelectionModel().getSelectedItem()))
 					{
-						if (!item.equals(messageTable.getSelectionModel().getSelectedItem()))
-						{
-							messageTable.getSelectionModel().select(item);
-							break;
-						}
+						messageTable.getSelectionModel().select(item);
+						break;
 					}
 				}
 			}
 		}
+		
 	}
 	
 	public void init()
 	{
-		navigationEventDispatcher.addObserver(this);
-		
-		messageTable.setContextMenu(ContextMenuUtils.createMessageListTableContextMenu(messageTable, navigationEventDispatcher));
+		messageTable.setContextMenu(createMessageListTableContextMenu(messageTable));
 		messageTable.setItems(items);	
 	}
 
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+	
 	public void setItems(final ObservableList<MqttContentProperties> items)
 	{
 		this.items = items;
 	}
 	
-	public void setStore(final MessageStore store)
+	public void setStore(final ObservableMessageStore store)
 	{
 		this.store = store;
 	}
 	
-	public void setNavigationEventDispatcher(final EventDispatcher navigationEventDispatcher)
+	public static ContextMenu createMessageListTableContextMenu(final TableView<MqttContentProperties> messageTable)
 	{
-		this.navigationEventDispatcher = navigationEventDispatcher;
+		final ContextMenu contextMenu = new ContextMenu();
+		
+		// Copy topic
+		final MenuItem copyTopicItem = new MenuItem("[Topic] Copy to clipboard");
+		copyTopicItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final MqttContentProperties item = messageTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final ClipboardContent content = new ClipboardContent();
+					content.putString(item.topicProperty().getValue());
+					Clipboard.getSystemClipboard().setContent(content);
+				}
+			}
+		});
+		contextMenu.getItems().add(copyTopicItem);
+
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+		
+		// Copy content
+		final MenuItem copyContentItem = new MenuItem("[Content] Copy to clipboard");
+		copyContentItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final MqttContentProperties item = messageTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					final ClipboardContent content = new ClipboardContent();
+					content.putString(item.lastReceivedPayloadProperty().getValue());
+					Clipboard.getSystemClipboard().setContent(content);
+				}
+			}
+		});
+		contextMenu.getItems().add(copyContentItem);
+		
+		// Separator
+		// contextMenu.getItems().add(new SeparatorMenuItem());
+		//
+		// // Show message filters
+		// final MenuItem showMessageItem = new MenuItem("Preview message");
+		// showMessageItem.setOnAction(new EventHandler<ActionEvent>()
+		// {
+		// public void handle(ActionEvent e)
+		// {
+		// final ObservableMqttContent item = messageTable.getSelectionModel()
+		// .getSelectedItem();
+		// if (item != null)
+		// {
+		// navigationEventDispatcher.dispatchEvent(new MessageIndexChangedEvent(
+		// messageTable.getSelectionModel().getSelectedIndex()));
+		// }
+		// }
+		// });
+		// contextMenu.getItems().add(showMessageItem);
+
+		return contextMenu;
 	}
 }

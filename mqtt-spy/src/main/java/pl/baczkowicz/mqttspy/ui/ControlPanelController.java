@@ -124,21 +124,12 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		controlPanelItem4Controller.setConfigurationMananger(configurationManager);
 		
 		// Item 1
-		//button1.setContentDisplay(ContentDisplay.TOP);
 		showConfigurationFileStatus(controlPanelItem1Controller, button1);		
 		
 		// Item 2
-		//button2.setContentDisplay(ContentDisplay.TOP);		
-		//((AnchorPane) button2.getGraphic()).minHeightProperty().bind(button2.heightProperty().subtract(10));
 		showConnections(controlPanelItem2Controller, button2);					
 		
 		// Item 3
-		// button3.setContentDisplay(ContentDisplay.TOP);
-		// button3.setAlignment(Pos.TOP_CENTER);
-		// button3.setGraphicTextGap(0);
-		// ((AnchorPane) button3.getGraphic()).minHeightProperty().bind(button3.heightProperty().multiply(0.8));			
-		//((AnchorPane) button3.getGraphic()).minHeightProperty().bind(button3.heightProperty().subtract(10));
-		// TODO: run this in a separate thread so the app is not blocked?
 		checkForUpdates(controlPanelItem3Controller, button3);	
 		
 		// Item 4			
@@ -159,9 +150,10 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		controlPanelItem4Controller.setTitle("Coming in the next version...");
 		controlPanelItem4Controller.setDetails("A new secret feature... ;-)");
 		controlPanelItem4Controller.setStatus(ItemStatus.INFO);
+		controlPanelItem4Controller.refresh();
 		
-		statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
-		statsUpdater.show();
+		//statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
+		//statsUpdater.show();
 	}
 	
 	@Override
