@@ -46,7 +46,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	private final static Logger logger = LoggerFactory.getLogger(ControlPanelController.class);
 
 	private static final double MAX_CONNECTIONS_HEIGHT = 250;
-
+	
 	// private static final double MAX_CONFIGURATION_FILE_HEIGHT = 130;
 
 	/**
@@ -97,19 +97,6 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	// === Initialisation ============
 	// ===============================
 	
-	public ControlPanelController()
-	{		
-		try
-		{
-			this.versionManager = new VersionManager();
-		}
-		catch (XMLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		nextActionTitle.put(MqttConnectionStatus.NOT_CONNECTED, "Connect to");
@@ -121,6 +108,15 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		
 	public void init()
 	{			
+		try
+		{
+			this.versionManager = new VersionManager(configurationManager);
+		}
+		catch (XMLException e)
+		{
+			e.printStackTrace();
+		}
+		
 		eventManager.registerConnectionStatusObserver(this, null);
 		controlPanelItem1Controller.setConfigurationMananger(configurationManager);
 		controlPanelItem2Controller.setConfigurationMananger(configurationManager);
@@ -160,7 +156,11 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	
 	private void showStats(final ControlPanelItemController controller, final Button button)
 	{
-		statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, application);
+		controlPanelItem4Controller.setTitle("Coming in the next version...");
+		controlPanelItem4Controller.setDetails("A new secret feature... ;-)");
+		controlPanelItem4Controller.setStatus(ItemStatus.INFO);
+		
+		statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
 		statsUpdater.show();
 	}
 	
@@ -382,8 +382,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		{			
 			@Override
 			public void handle(ActionEvent event)
-			{
-				application.getHostServices().showDocument("https://drive.google.com/folderview?id=0B3K44MOFJ2-PTktfSGFPRVhzcEk&usp=sharing");			
+			{				
+				application.getHostServices().showDocument(configurationManager.getProperty(ConfigurationManager.UPDATE_URL));			
 			}
 		});
 		

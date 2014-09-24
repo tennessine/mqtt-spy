@@ -192,6 +192,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			getClient().subscribe(subscription.getTopic(), subscription.getQos());			
 			logger.info("Subscribed to " + subscription.getTopic());
 			
+			StatisticsManager.newSubscription();
 			subscription.setActive(true);
 			subscription.setSubscribing(false);
 			

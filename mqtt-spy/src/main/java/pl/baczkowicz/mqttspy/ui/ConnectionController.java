@@ -222,47 +222,51 @@ public class ConnectionController implements Initializable, Observer
 					sub.getSubscriptionController().updateContextMenu();
 				}
 				
-				switch ((MqttConnectionStatus) update)
+				// If the context menu is available and has items in it
+				if (connectionTab.getContextMenu() != null && connectionTab.getContextMenu().getItems().size() > 0)
 				{
-					case NOT_CONNECTED:
-						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
-						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-						showTabTile(false);
-						break;
-					case CONNECTED:					
-						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
-						connectionTab.getContextMenu().getItems().get(2).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(5).setDisable(false);
-						newSubscriptionPaneController.setConnected(true);
-						newPublicationPaneController.setConnected(true);
-						showTabTile(false);
-						break;
-					case CONNECTING:
-						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
-						connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
-						connectionTab.getContextMenu().getItems().get(3).setDisable(true);
-						connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-						showTabTile(true);						
-						break;
-					case DISCONNECTED:
-						connectionTab.getContextMenu().getItems().get(0).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
-						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-						showTabTile(false);
-						break;
-					case DISCONNECTING:					
-						connectionTab.getContextMenu().getItems().get(0).setDisable(true);
-						connectionTab.getContextMenu().getItems().get(2).setDisable(true);
-						connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-						connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-						showTabTile(false);
-						break;
-					default:
-						break;
+					switch ((MqttConnectionStatus) update)
+					{
+						case NOT_CONNECTED:
+							connectionTab.getContextMenu().getItems().get(0).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
+							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+							showTabTile(false);
+							break;
+						case CONNECTED:					
+							connectionTab.getContextMenu().getItems().get(0).setDisable(true);
+							connectionTab.getContextMenu().getItems().get(2).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(5).setDisable(false);
+							newSubscriptionPaneController.setConnected(true);
+							newPublicationPaneController.setConnected(true);
+							showTabTile(false);
+							break;
+						case CONNECTING:
+							connectionTab.getContextMenu().getItems().get(2).setDisable(true);
+							connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
+							connectionTab.getContextMenu().getItems().get(3).setDisable(true);
+							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+							showTabTile(true);						
+							break;
+						case DISCONNECTED:
+							connectionTab.getContextMenu().getItems().get(0).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
+							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+							showTabTile(false);
+							break;
+						case DISCONNECTING:					
+							connectionTab.getContextMenu().getItems().get(0).setDisable(true);
+							connectionTab.getContextMenu().getItems().get(2).setDisable(true);
+							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+							showTabTile(false);
+							break;
+						default:
+							break;
+					}
 				}
 
 				// connectionTab.getStyleClass().clear();

@@ -154,7 +154,6 @@ public class SubscriptionManager
 		{
 			tab.getGraphic().getStyleClass().add("subscribed");
 			tab.getTooltip().setText("Status: " + "subscribed");
-			StatisticsManager.newSubscription();
 		}
 		else
 		{

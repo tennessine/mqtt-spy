@@ -98,11 +98,20 @@ public class StatisticsManager implements Runnable
 	{
 		try
 		{
-			statsFile.mkdirs();
+			// Create the mqtt-spy home directory if it doesn't exit
+			new File(ConfigurationManager.getDefaultHomeDirectory()).mkdirs();
+			
 			if(!statsFile.exists()) 
 			{
 				statsFile.createNewFile();
-			} 
+			}
+			// This is in case the previous version of mqtt-spy create a directory with the same name as the stats file
+			else if (statsFile.isDirectory())
+			{
+				statsFile.delete();
+				statsFile.createNewFile();
+			}
+			
 			parser.saveToFile(statsFile, 
 					new JAXBElement(new QName("http://baczkowicz.pl/mqtt-spy-stats", "MqttSpyStats"), MqttSpyStats.class, stats));
 			return true;
@@ -211,30 +220,30 @@ public class StatisticsManager implements Runnable
 		return runtimeMessagesPublished.get(connectionId).avgPeriods.get(period).average(period);
 	}
 	
-	public static int getMessagesPublished()
+	public static long getMessagesPublished()
 	{
-		int total = 0;
+		long total = 0;
 		
 		for (final ConnectionStats stats : runtimeMessagesPublished.values())
 		{
 			if (stats.runtimeStats.size() > 1)
 			{
-				total = (int) stats.runtimeStats.get(1).overallCount;
+				total = total + (int) stats.runtimeStats.get(1).overallCount;
 			}
 		}
 		
 		return total;
 	}
 	
-	public static int getMessagesReceived()
+	public static long getMessagesReceived()
 	{
-		int total = 0;
+		long total = 0;
 		
 		for (final ConnectionStats stats : runtimeMessagesReceived.values())
 		{
 			if (stats.runtimeStats.size() > 1)
 			{
-				total = (int) stats.runtimeStats.get(1).overallCount;
+				total = total + (int) stats.runtimeStats.get(1).overallCount;
 			}
 		}
 		

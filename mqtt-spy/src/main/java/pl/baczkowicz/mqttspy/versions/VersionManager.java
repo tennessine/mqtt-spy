@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
@@ -24,13 +25,14 @@ public class VersionManager extends XMLParser
 	
 	private static final String SCHEMA = "/mqtt-spy-versions.xsd";
 	
-	private static final String VERSION_INFO_URL = "http://baczkowicz.pl/mqtt-spy/version_0_0_9.xml";
-
 	private MqttSpyVersions versions;
 
-	public VersionManager() throws XMLException
+	private ConfigurationManager configurationManager;
+
+	public VersionManager(final ConfigurationManager configurationManager) throws XMLException
 	{
 		super(SCHEMA, PACKAGE);
+		this.configurationManager = configurationManager;
 					
 		this.versions = new MqttSpyVersions();
 	}
@@ -39,13 +41,13 @@ public class VersionManager extends XMLParser
 	{
 		try
 		{
-			final URL url = new URL(VERSION_INFO_URL);
+			final URL url = new URL(configurationManager.getProperty(ConfigurationManager.VERSION_INFO_URL));
 
 			versions = (MqttSpyVersions) loadFromInputStream(url.openStream());			
 		}
 		catch (IOException e)
 		{
-			throw new XMLException("Cannot read version info from " + VERSION_INFO_URL, e);
+			throw new XMLException("Cannot read version info from " + configurationManager.getProperty(ConfigurationManager.VERSION_INFO_URL), e);
 		}
 				
 		return versions;

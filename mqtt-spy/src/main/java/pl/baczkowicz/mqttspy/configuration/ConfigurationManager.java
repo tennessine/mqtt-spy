@@ -44,6 +44,10 @@ public class ConfigurationManager
 	
 	public static final String BUILD_PROPERTY = "application.build";
 	
+	public static final String UPDATE_URL = "application.download.url";
+	
+	public static final String VERSION_INFO_URL = "application.update.url";
+	
 	public static final String PACKAGE = "pl.baczkowicz.mqttspy.configuration.generated";
 	
 	public static final String SCHEMA = "/mqtt-spy-configuration.xsd";

@@ -11,45 +11,85 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ControlPanelItemController;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 
 public class ControlPanelStatsUpdater implements Runnable
 {
+	private final static long milliseconds = new Date().getTime() - StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime().getTime();
+	private final static long days = milliseconds / (1000 * 60 * 60 * 24);
+	private final static String inDays = days > 1 ? (" in " + days + " days") : "";
+	private final static int STATS_MESSAGES = 6;
+	private final static int GO_NEXT_AFTER_INTERVALS = 10;
+	private final static int REFRESH_INTERVAL =  1000;
+	
 	private boolean statsPlaying;
 	
 	private List<String> unicefDetails = new ArrayList<String>(Arrays.asList(
-			"Finding mqtt-spy useful? Donate to UNICEF this month at", 
-			"Like your mqtt-spy? Why not to donate to UNICEF this month at", 
-			"If you use mqtt-spy on a regular basis, please donate to UNICEF every month at"));
+			"Finding mqtt-spy useful? Donate to UNICEF each month at the", 
+			"Like your mqtt-spy? Why not to donate to UNICEF this month at the", 
+			"Using mqtt-spy on a regular basis? Please donate to UNICEF at the"));
 
 	private int statTitleIndex;
 
 	private final ControlPanelItemController controlPanelItemController;
 
 	private Application application;
+
+	private int secondCounter;
 	
-	public ControlPanelStatsUpdater(final ControlPanelItemController controlPanelItemController, final Application application)
+	private final Button bigButton;
+	
+	public ControlPanelStatsUpdater(final ControlPanelItemController controlPanelItemController, final Button bigButton, final Application application)
 	{
-		this.controlPanelItemController = controlPanelItemController;				
+		this.controlPanelItemController = controlPanelItemController;
+		this.bigButton = bigButton;
 		this.application = application;
+	}
+	
+	private static String formatNumber(final long number)
+	{
+		long divided = number;
+		final StringBuffer sb = new StringBuffer();
+		
+		while (divided > 1000)
+		{
+			long rest = divided % 1000;
+			sb.insert(0, " " + String.format("%03d", rest));
+			
+			divided = divided / 1000;
+		}
+		
+		long rest = divided % 1000;
+		sb.insert(0, rest);
+		
+		return sb.toString();
 	}
 	
 	public void show()
 	{
-		// UNICEF details
-		final Random r = new Random();
+		// Default values
+		controlPanelItemController.setTitle("Connect to an MQTT broker to start seeing processing statistics...");		
 		controlPanelItemController.setDetails("");
-		// TODO: add "(click here)"
-
 		controlPanelItemController.setStatus(ItemStatus.STATS);
+		
+		bigButton.setOnAction(new EventHandler<ActionEvent>()
+		{
+			@Override
+			public void handle(ActionEvent event)
+			{
+				moveToNextStatTitle();
+			}
+		});
 
 		final List<Node> items  = new ArrayList<Node>();
 
+		// UNICEF details
+		final Random r = new Random();
 		items.add(new Label(unicefDetails.get(r.nextInt(unicefDetails.size()))));
 		// items.add(new Label(" at"));
 
@@ -68,7 +108,7 @@ public class ControlPanelStatsUpdater implements Runnable
 		// donate.getChildren().add(new Label(" or "));
 
 		final Hyperlink unicef = new Hyperlink();
-		unicef.setText("unicef.org.uk");
+		unicef.setText("unicef.org.uk mqtt-spy page");
 		unicef.setOnAction(new EventHandler<ActionEvent>()
 		{
 			@Override
@@ -99,15 +139,7 @@ public class ControlPanelStatsUpdater implements Runnable
 					ControlPanelItemController.setButtonProperties(controlPanelItemController.getButton1(), "/images/pause.png", true);
 					statsPlaying = true;
 				}
-			}
-		});
-		
-		ControlPanelItemController.setButtonProperties(controlPanelItemController.getButton2(), "/images/next.png", true, new EventHandler<ActionEvent>()
-		{			
-			@Override
-			public void handle(ActionEvent event)
-			{
-				moveToNextStatTitle();
+				event.consume();
 			}
 		});
 		
@@ -117,126 +149,105 @@ public class ControlPanelStatsUpdater implements Runnable
 	}
 	
 	private void moveToNextStatTitle()
-	{								
+	{	
+		secondCounter = 0;
+		
 		statTitleIndex++;
-		if (statTitleIndex == 6)
+		
+		if (statTitleIndex == STATS_MESSAGES)
 		{
 			statTitleIndex = 0;
 		}
-		refreshStatsTitle();
+		
+		// Try to update the stats - if all unavailable, ignore
+		int retries = 0;		
+		while (!refreshStatsTitle(false) && retries < STATS_MESSAGES)
+		{				
+			statTitleIndex++;
+			
+			if (statTitleIndex == STATS_MESSAGES)
+			{
+				statTitleIndex = 0;
+			}
+			
+			retries++;
+		}
 	}
 	
-	private void refreshStatsTitle()
+	private boolean refreshStatsTitle(final boolean updateOnly)
 	{
-		final long milliseconds = new Date().getTime() - StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime().getTime();
-		final long days = milliseconds / (1000 * 60 * 60 * 24);
-		final String inDays = days > 1 ? (" in " + days + " days") : "";
+		if ((statTitleIndex == 0) && (StatisticsManager.stats.getConnections() > 0))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Your mqtt-spy made %s connection" + (StatisticsManager.stats.getConnections() > 1 ? "s" : "") + " to MQTT brokers%s.",
+					formatNumber(StatisticsManager.stats.getConnections()), inDays));
+			return true;
+		}
+
+		else if ((statTitleIndex == 1) && (StatisticsManager.stats.getMessagesPublished() > 1))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Your mqtt-spy published %s messages to MQTT brokers%s.",
+					formatNumber(StatisticsManager.stats.getMessagesPublished()), inDays));
+			return true;
+		}
+
+		else if ((statTitleIndex == 2) && (StatisticsManager.stats.getSubscriptions() > 1))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Your mqtt-spy made %s subscriptions to MQTT brokers%s.",
+					formatNumber(StatisticsManager.stats.getSubscriptions()), inDays));
+			return true;
+		}
+
+		else if ((statTitleIndex == 3) && (StatisticsManager.stats.getMessagesReceived() > 1))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Your mqtt-spy received %s messages%s.",
+					formatNumber(StatisticsManager.stats.getMessagesReceived()), inDays));
+			return true;
+		}
+
+		else if ((statTitleIndex == 4) && (updateOnly || StatisticsManager.getMessagesPublished() > 1))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Right now your mqtt-spy is publishing %s msgs/s.",
+					StatisticsManager.getMessagesPublished()));
+			return true;
+		}
+
+		else if ((statTitleIndex == 5) && (updateOnly || StatisticsManager.getMessagesReceived() > 1))
+		{
+			controlPanelItemController.setTitle(String.format(
+					"Right now your mqtt-spy is munching through %d msgs/s.",
+					StatisticsManager.getMessagesReceived()));
+			return true;
+		}				
 		
-		if (statTitleIndex == 0)
-		{
-			if (StatisticsManager.stats.getConnections() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(						
-						"Your mqtt-spy made %d connections to MQTT brokers%s.", 
-						StatisticsManager.stats.getConnections(),
-						inDays));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}		
-		else if (statTitleIndex == 1)
-		{
-			if (StatisticsManager.stats.getMessagesPublished() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(
-						"Your mqtt-spy published %d messages to MQTT brokers%s.", 
-						StatisticsManager.stats.getMessagesPublished(),
-						inDays));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}		
-		else if (statTitleIndex == 2)
-		{
-			if (StatisticsManager.stats.getSubscriptions() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(
-						"Your mqtt-spy made %d subscriptions to MQTT brokers%s.", 
-						StatisticsManager.stats.getSubscriptions(),
-						inDays));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}
-		else if (statTitleIndex == 3)
-		{
-			if (StatisticsManager.stats.getMessagesReceived() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(
-						"Your mqtt-spy received %d messages%s.", 
-						StatisticsManager.stats.getMessagesReceived(),
-						inDays));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}
-		else if (statTitleIndex == 4)
-		{
-			if (StatisticsManager.getMessagesPublished() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(
-						"Right now your mqtt-spy is publishing %d msgs/s.", 
-						StatisticsManager.getMessagesPublished()));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}
-		else if (statTitleIndex == 5)
-		{
-			if (StatisticsManager.getMessagesReceived() > 1)
-			{
-				controlPanelItemController.setTitle(String.format(
-						"Right now your mqtt-spy is munching through %d msgs/s.", 
-						StatisticsManager.getMessagesReceived()));
-			}
-			else
-			{
-				moveToNextStatTitle();
-			}
-		}		
+		return false;
 	}
 
 	@Override
 	public void run()
 	{
-		int count = 0;
+		secondCounter = 0;
 		while (true)
 		{
-			count++;
+			secondCounter++;
 			Platform.runLater(new Runnable()
 			{				
 				@Override
 				public void run()
 				{
-					refreshStatsTitle();	
+					refreshStatsTitle(true);	
 				}
 			});
 						
 			if (statsPlaying)
 			{
-				if (count == 10)
+				if (secondCounter == GO_NEXT_AFTER_INTERVALS)
 				{
-					count = 0;
+					secondCounter = 0;
 					Platform.runLater(new Runnable()
 					{						
 						@Override
@@ -249,12 +260,12 @@ public class ControlPanelStatsUpdater implements Runnable
 			}
 			else
 			{
-				count = 0;
+				secondCounter = 0;
 			}			
 			
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(REFRESH_INTERVAL);
 			}
 			catch (InterruptedException e)
 			{
