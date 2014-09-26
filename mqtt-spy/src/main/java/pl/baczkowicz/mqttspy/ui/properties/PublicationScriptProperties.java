@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -12,20 +13,22 @@ public class PublicationScriptProperties
 {
 	private SimpleStringProperty name;
 	
-	private ScriptRunningState state;
+	private SimpleObjectProperty<ScriptRunningState> status;
 	
-	private SimpleStringProperty lastCompleted;
+	private SimpleStringProperty lastStarted;
 	
 	private SimpleIntegerProperty count;
 
 	private File file;
 
-	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastCompleted, final int messageCount)
+	private Thread thread;
+
+	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastStarted, final int messageCount)
 	{
 		this.name = new SimpleStringProperty(name);
-		this.state = state;
+		this.status = new SimpleObjectProperty<ScriptRunningState>(state);
 		this.file = file;
-		this.lastCompleted = new SimpleStringProperty(lastCompleted == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastCompleted));
+		this.lastStarted = new SimpleStringProperty(lastStarted == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
 		this.count = new SimpleIntegerProperty(messageCount);
 	}
 	
@@ -34,14 +37,14 @@ public class PublicationScriptProperties
 		return this.name;
 	}
 	
-	public ScriptRunningState getState()
+	public SimpleObjectProperty<ScriptRunningState> statusProperty()
 	{
-		return this.state;
+		return this.status;
 	}
 	
-	public SimpleStringProperty lastCompletedProperty()
+	public SimpleStringProperty lastStartedProperty()
 	{
-		return this.lastCompleted;
+		return this.lastStarted;
 	}
 	
 	public SimpleIntegerProperty countProperty()
@@ -54,18 +57,28 @@ public class PublicationScriptProperties
 		this.count.set(messageCount);
 	}
 	
-	public void setLastCompleted(final Date lastCompleted)
+	public void setLastStarted(final Date lastStarted)
 	{
-		this.lastCompleted.set(Utils.DATE_WITH_SECONDS_SDF.format(lastCompleted));
+		this.lastStarted.set(Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
 	}
 	
-	public void setState(final ScriptRunningState state)
+	public void setStatus(final ScriptRunningState state)
 	{
-		this.state = state;
+		this.status.setValue(state);
 	}
 	
 	public File getFile()
 	{
 		return this.file;
+	}
+
+	public void setThread(Thread currentThread)
+	{
+		this.thread = currentThread;		
+	}
+	
+	public Thread getThread()
+	{
+		return this.thread;
 	}
 }

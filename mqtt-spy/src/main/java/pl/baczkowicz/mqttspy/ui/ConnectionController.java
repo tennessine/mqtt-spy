@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
@@ -94,6 +95,8 @@ public class ConnectionController implements Initializable, Observer
 
 	private ConnectionManager connectionManager;
 
+	private EventManager eventManager;
+
 	public void initialize(URL location, ResourceBundle resources)
 	{		
 		publishMessageTitledPane.expandedProperty().addListener(new ChangeListener<Boolean>()
@@ -136,6 +139,7 @@ public class ConnectionController implements Initializable, Observer
 		connection.setStatisticsManager(statisticsManager);
 		
 		publicationScriptsPaneController.setConnection(connection);
+		publicationScriptsPaneController.setEventManager(eventManager);
 		publicationScriptsPaneController.init();
 		
 		tooltip = new Tooltip();
@@ -312,5 +316,10 @@ public class ConnectionController implements Initializable, Observer
 	public NewSubscriptionController getNewSubscriptionPaneController()
 	{
 		return newSubscriptionPaneController;
+	}
+
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 }

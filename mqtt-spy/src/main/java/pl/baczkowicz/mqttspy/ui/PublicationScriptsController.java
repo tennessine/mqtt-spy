@@ -1,5 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -15,21 +16,19 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.util.Callback;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
-import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
-public class PublicationScriptsController implements Initializable
+public class PublicationScriptsController implements Initializable, ScriptStateChangeObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(PublicationScriptsController.class);
 	
@@ -46,7 +45,7 @@ public class PublicationScriptsController implements Initializable
     private TableColumn<PublicationScriptProperties, ScriptRunningState> runningStatusColumn;
     
     @FXML
-    private TableColumn<PublicationScriptProperties, String> lastCompletedColumn;
+    private TableColumn<PublicationScriptProperties, String> lastStartedColumn;
     
     @FXML
     private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
@@ -57,13 +56,14 @@ public class PublicationScriptsController implements Initializable
 
 	private ScriptManager scriptManager;
 
+	private EventManager eventManager;
+
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		// Table
 		nameColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>("name"));
 
-		messageCountColumn
-				.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, Integer>("count"));
+		messageCountColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, Integer>("count"));
 		messageCountColumn
 				.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, Integer>, TableCell<PublicationScriptProperties, Integer>>()
 				{
@@ -91,10 +91,39 @@ public class PublicationScriptsController implements Initializable
 						return cell;
 					}
 				});
+		
+		runningStatusColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, ScriptRunningState>("status"));
+		runningStatusColumn
+			.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, ScriptRunningState>, TableCell<PublicationScriptProperties, ScriptRunningState>>()
+		{
+			public TableCell<PublicationScriptProperties, ScriptRunningState> call(
+					TableColumn<PublicationScriptProperties, ScriptRunningState> param)
+			{
+				final TableCell<PublicationScriptProperties, ScriptRunningState> cell = new TableCell<PublicationScriptProperties, ScriptRunningState>()
+				{
+					@Override
+					public void updateItem(ScriptRunningState item, boolean empty)
+					{
+						super.updateItem(item, empty);
+						if (!isEmpty())
+						{
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
-		lastCompletedColumn
+		lastStartedColumn
 				.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>(
-						"lastCompleted"));
+						"lastStarted"));
 
 		// scriptTable
 		// .setRowFactory(new Callback<TableView<PublicationScriptProperties>,
@@ -159,7 +188,8 @@ public class PublicationScriptsController implements Initializable
 	
 	public void init()
 	{
-		scriptManager = new ScriptManager(connection);
+		scriptManager = new ScriptManager(eventManager, connection);
+		eventManager.registerScriptStateChangeObserver(this, null);
 		refreshList();
 		scriptTable.setItems(scriptManager.getObservableScriptList());		
 		scriptTable.setContextMenu(createScriptTableContextMenu());
@@ -173,6 +203,21 @@ public class PublicationScriptsController implements Initializable
 	public void setConnection(MqttConnection connection)
 	{
 		this.connection = connection;
+	}
+	
+	public void startScript(final File file)
+	{
+		scriptManager.evaluateScriptFile(file);
+	}
+	
+	public void stopScript(final File file)
+	{
+		scriptManager.stopScriptFile(file);
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 	
 	public ContextMenu createScriptTableContextMenu()
@@ -189,34 +234,11 @@ public class PublicationScriptsController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					scriptManager.evaluateScriptFile(item.getFile());
-					// final ClipboardContent content = new ClipboardContent();
-					// content.putString(item.topicProperty().getValue());
-					// Clipboard.getSystemClipboard().setContent(content);
+					startScript(item.getFile());
 				}
 			}
 		});
 		contextMenu.getItems().add(startScriptItem);
-		
-		// Pause script
-		final MenuItem pauseScriptItem = new MenuItem("[Script] Pause");
-		pauseScriptItem.setOnAction(new EventHandler<ActionEvent>()
-		{
-			public void handle(ActionEvent e)
-			{
-				final PublicationScriptProperties item = scriptTable.getSelectionModel()
-						.getSelectedItem();
-				if (item != null)
-				{
-//					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
-//					subscriptionDetails.setTopic(item.topicProperty().getValue());
-//					subscriptionDetails.setQos(0);
-//					
-//					connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
-				}
-			}
-		});
-		contextMenu.getItems().add(pauseScriptItem);
 		
 		// Stop script
 		final MenuItem stopScriptItem = new MenuItem("[Script] Stop");
@@ -228,11 +250,7 @@ public class PublicationScriptsController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-//							final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
-//							subscriptionDetails.setTopic(item.topicProperty().getValue());
-//							subscriptionDetails.setQos(0);
-//							
-//							connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
+					stopScript(item.getFile());
 				}
 			}
 		});
@@ -253,5 +271,11 @@ public class PublicationScriptsController implements Initializable
 		contextMenu.getItems().add(refreshListItem);
 
 		return contextMenu;
+	}
+
+	@Override
+	public void onScriptStateChange(String scriptName, ScriptRunningState state)
+	{
+		// TODO: update the context menu
 	}
 }

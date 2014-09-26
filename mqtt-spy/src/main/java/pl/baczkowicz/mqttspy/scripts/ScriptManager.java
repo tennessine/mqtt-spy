@@ -1,12 +1,13 @@
 package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
@@ -15,9 +16,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
 
 public class ScriptManager
@@ -29,15 +29,23 @@ public class ScriptManager
 	private ScriptEngine scriptEngine;
 	
 	private Map<String, Object> scriptVariables;
+
+	private EventManager eventManager;
 	
-	public ScriptManager(final MqttConnection connection)
+	public ScriptManager(final EventManager eventManager, final MqttConnection connection)
 	{
-		scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
+		this.eventManager = eventManager;
+		this.scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 		
-		scriptVariables = new HashMap<String, Object>();
-		scriptVariables.put("mqttspy", new ScriptedPublisher(connection, observableScriptList));
+		this.scriptVariables = new HashMap<String, Object>();
+		this.scriptVariables.put("mqttspy", new ScriptedPublisher(connection, observableScriptList));
 				
 		putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
+	}
+	
+	public static String getScriptName(final File file)
+	{
+		return file.getName().replace(".js",  "");
 	}
 			
 	public void populateScripts(final String directory)
@@ -52,8 +60,8 @@ public class ScriptManager
 				PublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
 				if (script == null)					
 				{
-					script = new PublicationScriptProperties(scriptFile.getName().replace(".js",  ""), scriptFile, 
-							ScriptRunningState.STOPPED, null, 0);
+					script = new PublicationScriptProperties(getScriptName(scriptFile), scriptFile, 
+							ScriptRunningState.NOT_STARTED, null, 0);
 					observableScriptList.add(script);
 				}				
 			}			
@@ -108,40 +116,30 @@ public class ScriptManager
 	
 	public void evaluateScriptFile(final File scriptFile)
 	{
-		new Thread(new Runnable()
-		{				
-			@Override
-			public void run()
-			{
-				try
-				{						
-					scriptEngine.eval(new FileReader(scriptFile));
-					
-					// TODO: update last completed
-				}
-				catch (ScriptException e)
-				{
-					handleException(e);
-				}
-				catch (FileNotFoundException e)
-				{			
-					e.printStackTrace();
-				}
-			}						
-		}).start();
+		new Thread(new ScriptRunner(eventManager, scriptEngine, scriptFile, observableScriptList)).start();
 	}
 	
-	
-	private static void handleException(ScriptException exception)
+	public void stopScriptFile(final File scriptFile)
+	{
+		final Thread scriptThread = getPublicationScriptProperties(observableScriptList,
+				getScriptName(scriptFile)).getThread();
+
+		if (scriptThread != null)
+		{
+			scriptThread.interrupt();
+		}
+	}
+
+	public static void handleException(ScriptException exception)
 	{
 		if (isReferenceError(exception))
 		{
-			throw new IllegalArgumentException("I couldn't resolve a variable on expression with vars ", exception);
+			throw new IllegalArgumentException("Couldn't resolve a variable on expression with vars ", exception);
 		}
 		throw new RuntimeException(exception);
 	}
 
-	private static boolean isReferenceError(ScriptException exception)
+	public static boolean isReferenceError(ScriptException exception)
 	{
 		String message = exception.getMessage();
 		return message.startsWith(REFERENCE_ERROR);
@@ -154,12 +152,26 @@ public class ScriptManager
 			if (script.nameProperty().getValue().equals(scriptName))
 			{
 				script.setCount(script.countProperty().getValue() + 1);
+				break;
 			}
 		}
+	}
+	
+	public static PublicationScriptProperties getPublicationScriptProperties(final ObservableList<PublicationScriptProperties> observableScriptList, final String scriptName)
+	{
+		for (final PublicationScriptProperties script : observableScriptList)
+		{
+			if (script.nameProperty().getValue().equals(scriptName))
+			{
+				return script;				
+			}
+		}
+		
+		return null;
 	}
 
 	public ObservableList<PublicationScriptProperties> getObservableScriptList()
 	{
 		return observableScriptList;
-	}
+	}		
 }

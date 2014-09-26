@@ -66,6 +66,7 @@ public class ConnectionManager
 		final ConnectionController connectionController = (ConnectionController) loader.getController();
 		connectionController.setConnection(connection);
 		connectionController.setConnectionManager(this);
+		connectionController.setEventManager(eventManager);
 		connectionController.setStatisticsManager(statisticsManager);
 		
 		final Tab connectionTab = createConnectionTab(connection, connectionPane, connectionController);

@@ -14,6 +14,8 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
 import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
+import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
+import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 
 public class EventManager
 {
@@ -30,6 +32,8 @@ public class EventManager
 	private final Map<MessageIndexIncrementObserver, MessageStore> incrementMessageIndexObservers = new HashMap<>();
 	
 	private final Map<MessageFormatChangeObserver, MessageStore> formatChangeObservers = new HashMap<>();
+	
+	private final Map<ScriptStateChangeObserver, String> scriptStateChangeObservers = new HashMap<>();
 	
 	/**
 	 * 
@@ -81,6 +85,11 @@ public class EventManager
 	public void deregisterFormatChangeObserver(MessageFormatChangeObserver observer)
 	{
 		formatChangeObservers.remove(observer);		
+	}
+	
+	public void registerScriptStateChangeObserver(final ScriptStateChangeObserver observer, final String filter)
+	{
+		scriptStateChangeObservers.put(observer, filter);
 	}
 	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
@@ -229,5 +238,26 @@ public class EventManager
 				observer.onClearTab(store);
 			}
 		}
+	}
+
+	public void notifyScriptStateChange(final String scriptName, final ScriptRunningState state)
+	{
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final ScriptStateChangeObserver observer : scriptStateChangeObservers.keySet())
+				{
+					final String filter = scriptStateChangeObservers.get(observer);
+
+					if (filter == null || filter.equals(scriptName))
+					{
+						observer.onScriptStateChange(scriptName, state);
+					}
+				}
+			}
+		});
+		
 	}
 }
