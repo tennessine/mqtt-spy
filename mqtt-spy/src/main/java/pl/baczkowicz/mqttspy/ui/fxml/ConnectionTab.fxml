@@ -18,6 +18,12 @@
                </content>
             </TitledPane> 
             
+            <TitledPane fx:id="scriptedPublicationsTitledPane" alignment="TOP_LEFT" animated="false" text="Scripted publications" SplitPane.resizableWithParent="false">
+               <content>
+                    <fx:include fx:id="publicationScriptsPane" source="PublicationScriptsPane.fxml" />		
+               </content>
+            </TitledPane>
+            
             <TitledPane fx:id="newSubscriptionTitledPane" alignment="TOP_LEFT" animated="false" text="Define new subscription" SplitPane.resizableWithParent="false">
               <content>
                 	<fx:include fx:id="newSubscriptionPane" source="NewSubscriptionPane.fxml" />	

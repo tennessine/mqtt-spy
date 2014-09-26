@@ -148,6 +148,18 @@ public class MainController
 		editConnectionsStage.showAndWait();		
 		controlPanelPaneController.refreshConnectionsStatus();
 	}
+	
+	@FXML
+	private void showManualPublicationPane()
+	{
+		// TODO
+	}
+	
+	@FXML
+	private void showScriptedPublicationPane()
+	{
+		// TODO
+	}
 
 	@FXML
 	public void exit()

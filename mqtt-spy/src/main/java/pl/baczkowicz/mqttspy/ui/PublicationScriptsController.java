@@ -3,252 +3,255 @@ package pl.baczkowicz.mqttspy.ui;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.MenuButton;
+import javafx.geometry.Pos;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.util.Callback;
 
-import org.controlsfx.dialog.Dialogs;
-import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
-import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
+import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.ui.format.ConversionException;
-import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.scripts.ScriptManager;
+import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
+import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
+import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class PublicationScriptsController implements Initializable
 {
 	final static Logger logger = LoggerFactory.getLogger(PublicationScriptsController.class);
-
+	
+	@FXML
+	private TableView<PublicationScriptProperties> scriptTable;
+	
     @FXML
-    private TableColumn nameColumn;
+    private TableColumn<PublicationScriptProperties, String> nameColumn;
+    
+	// @FXML
+	// private TableColumn<PublicationScriptProperties, String> actionColumn;
     
     @FXML
-    private TableColumn actionColumn;
+    private TableColumn<PublicationScriptProperties, ScriptRunningState> runningStatusColumn;
     
     @FXML
-    private TableColumn runningStatusColumn;
+    private TableColumn<PublicationScriptProperties, String> lastCompletedColumn;
     
     @FXML
-    private TableColumn lastCompletedColumn;
-    
-    @FXML
-    private TableColumn messageCountColumn;
+    private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
 		
-	private ObservableList<String> publicationTopics = FXCollections.observableArrayList();
+	//private ObservableList<String> publicationTopics = FXCollections.observableArrayList();
 
 	private MqttConnection connection;
 
-	private boolean plainSelected = true;
-
-	private boolean previouslyPlainSelected = true;
+	private ScriptManager scriptManager;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		publicationTopicText.setItems(publicationTopics);
-		formatGroup.getToggles().get(0).setUserData(ConversionMethod.PLAIN);
-		formatGroup.getToggles().get(1).setUserData(ConversionMethod.HEX_DECODE);
-		formatGroup.selectToggle(formatGroup.getToggles().get(0));
-		
-		formatGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue)
-			{
-				// If plain has been selected
-				if (newValue != null)
-				{
-					if (formatGroup.getSelectedToggle().getUserData().equals(ConversionMethod.PLAIN))
-					{
-						showAsPlain();
-					}
-					else
-					{
-						showAsHex();
-					}
-				}
-			}
-		});
-	}
+		// Table
+		nameColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>("name"));
 
-	public void recordPublicationTopic(final String publicationTopic)
-	{
-		Utils.recordTopic(publicationTopic, publicationTopics);
-	}
-	
-	public void setConnected(final boolean connected)
-	{
-		this.publishButton.setDisable(!connected);
-		this.publicationTopicText.setDisable(!connected);
-	}
-	
-	@FXML
-	public void showAsPlain()
-	{
-		plainSelected = true;
-		if (previouslyPlainSelected != plainSelected)
-		{
-			try
-			{
-				final String convertedText = FormattingUtils.hexToString(publicationData.getText());
-				logger.info("Converted {} to {}", publicationData.getText(), convertedText);
-				
-				publicationData.clear();				
-				publicationData.appendText(convertedText);
-				
-				formatMenu.setText("Input format: Plain");
-				previouslyPlainSelected = plainSelected;
-			}
-			catch (ConversionException e)
-			{
-				showAndLogHexError();
-				
-				formatGroup.selectToggle(formatGroup.getToggles().get(1));
-				formatMenu.setText("Input format: Hex");
-				plainSelected = false;
-			}
-		}
-	}
-	
-	@FXML
-	public void showAsHex()
-	{
-		plainSelected = false;
-		if (previouslyPlainSelected != plainSelected)
-		{
-			final String convertedText = FormattingUtils.stringToHex(publicationData.getText());
-			logger.info("Converted {} to {}", publicationData.getText(), convertedText);
-			
-			publicationData.clear();
-			publicationData.appendText(convertedText);
-			
-			formatMenu.setText("Input format: Hex");
-			previouslyPlainSelected = plainSelected;
-		}
-	}
-	
-	public void displayMessage(final ConfiguredMessage message)
-	{
-		if (message == null)
-		{
-			publicationTopicText.setValue("");
-			publicationTopicText.setPromptText("(cannot be empty)");
-			publicationQosChoice.getSelectionModel().select(0);
-			publicationData.clear();
-			retainedBox.setSelected(false);
-		}
-		else
-		{
-			publicationTopicText.setValue(message.getTopic());
-			publicationQosChoice.getSelectionModel().select(message.getQoS());
-			publicationData.clear();
-			publicationData.appendText(message.getPayload());
-			retainedBox.setSelected(message.isRetained());
-		}
-	}
-	
-	public ConfiguredMessage readMessage(final boolean verify)
-	{
-		if (verify && (publicationTopicText.getValue() == null || publicationTopicText.getValue().isEmpty()))
-		{
-			logger.error("Cannot publish to an empty topic");
-			
-			Dialogs.create()
-			      .owner(null)
-			      .title("Invalid topic")
-			      .masthead(null)
-			      .message("Cannot publish to an empty topic.")
-			      .showError();
-			return null;
-		}
+		messageCountColumn
+				.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, Integer>("count"));
+		messageCountColumn
+				.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, Integer>, TableCell<PublicationScriptProperties, Integer>>()
+				{
+					public TableCell<PublicationScriptProperties, Integer> call(
+							TableColumn<PublicationScriptProperties, Integer> param)
+					{
+						final TableCell<PublicationScriptProperties, Integer> cell = new TableCell<PublicationScriptProperties, Integer>()
+						{
+							@Override
+							public void updateItem(Integer item, boolean empty)
+							{
+								super.updateItem(item, empty);
+								if (!isEmpty())
+								{
+									setText(item.toString());
+								}
+								else
+								{
+									setText(null);
+								}
+							}
+						};
+						cell.setAlignment(Pos.TOP_CENTER);
+						
+						return cell;
+					}
+				});
+
+		lastCompletedColumn
+				.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>(
+						"lastCompleted"));
+
+		// scriptTable
+		// .setRowFactory(new Callback<TableView<PublicationScriptProperties>,
+		// TableRow<PublicationScriptProperties>>()
+		// {
+		// public TableRow<PublicationScriptProperties> call(
+		// TableView<PublicationScriptProperties> tableView)
+		// {
+		// final TableRow<PublicationScriptProperties> row = new
+		// TableRow<PublicationScriptProperties>()
+		// {
+		// @Override
+		// protected void updateItem(PublicationScriptProperties item, boolean
+		// empty)
+		// {
+		// super.updateItem(item, empty);
+		// if (!isEmpty() && item.getSubscription() != null)
+		// {
+		// this.setStyle(Utils.createBgRGBString(item.getSubscription()
+		// .getColor(), getIndex() % 2 == 0 ? 0.8 : 0.6)
+		// + " -fx-background-radius: 6; ");
+		// }
+		// else
+		// {
+		// this.setStyle(null);
+		// }
+		// }
+		// };
+		//
+		// return row;
+		// }
+		// });		
 		
-		final ConfiguredMessage message = new ConfiguredMessage();
-		try
-		{
-			String data = publicationData.getText();
-		
-			if (!previouslyPlainSelected)
-			{
-				data = FormattingUtils.hexToString(data);
-			}
-					
-			message.setTopic(publicationTopicText.getValue());
-			message.setQoS(publicationQosChoice.getSelectionModel().getSelectedIndex());
-			message.setPayload(data);
-			message.setRetained(retainedBox.isSelected());
-			
-			return message;
-		}
-		catch (ConversionException e)
-		{
-			showAndLogHexError();
-			return null;
-		}		
+		// publicationTopicText.setItems(publicationTopics);
+		// formatGroup.getToggles().get(0).setUserData(ConversionMethod.PLAIN);
+		// formatGroup.getToggles().get(1).setUserData(ConversionMethod.HEX_DECODE);
+		// formatGroup.selectToggle(formatGroup.getToggles().get(0));
+		//
+		// formatGroup.selectedToggleProperty().addListener(new
+		// ChangeListener<Toggle>()
+		// {
+		// @Override
+		// public void changed(ObservableValue<? extends Toggle> observable,
+		// Toggle oldValue, Toggle newValue)
+		// {
+		// // If plain has been selected
+		// if (newValue != null)
+		// {
+		// if
+		// (formatGroup.getSelectedToggle().getUserData().equals(ConversionMethod.PLAIN))
+		// {
+		// showAsPlain();
+		// }
+		// else
+		// {
+		// showAsHex();
+		// }
+		// }
+		// }
+		// });
 	}
 	
-	@FXML
-	public void publish()
-	{						
-		final ConfiguredMessage message = readMessage(true);
-				
-		connection.publish(message.getTopic(), message.getPayload(), message.getQoS(), message.isRetained());
-		
-		recordPublicationTopic(message.getTopic());		
-	}
-	
-	private void showAndLogHexError()
+	public void init()
 	{
-		logger.error("Cannot convert " + publicationData.getText() + " to plain text");
-		
-		Dialogs.create()
-			      .owner(null)
-			      .title("Invalid hex format")
-			      .masthead(null)
-			      .message("Provided text is not a valid hex string.")
-			      .showError();
+		scriptManager = new ScriptManager(connection);
+		refreshList();
+		scriptTable.setItems(scriptManager.getObservableScriptList());		
+		scriptTable.setContextMenu(createScriptTableContextMenu());
+	}
+	
+	private void refreshList()
+	{
+		scriptManager.populateScripts(connection.getProperties().getConfiguredProperties().getPublicationScripts());
 	}
 
 	public void setConnection(MqttConnection connection)
 	{
 		this.connection = connection;
 	}
-
-	public void clearTopics()
+	
+	public ContextMenu createScriptTableContextMenu()
 	{
-		publicationTopics.clear();		
-	}	
+		final ContextMenu contextMenu = new ContextMenu();
+		
+		// Start script
+		final MenuItem startScriptItem = new MenuItem("[Script] Start");
+		startScriptItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final PublicationScriptProperties item = scriptTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					scriptManager.evaluateScriptFile(item.getFile());
+					// final ClipboardContent content = new ClipboardContent();
+					// content.putString(item.topicProperty().getValue());
+					// Clipboard.getSystemClipboard().setContent(content);
+				}
+			}
+		});
+		contextMenu.getItems().add(startScriptItem);
+		
+		// Pause script
+		final MenuItem pauseScriptItem = new MenuItem("[Script] Pause");
+		pauseScriptItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final PublicationScriptProperties item = scriptTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+//					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+//					subscriptionDetails.setTopic(item.topicProperty().getValue());
+//					subscriptionDetails.setQos(0);
+//					
+//					connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
+				}
+			}
+		});
+		contextMenu.getItems().add(pauseScriptItem);
+		
+		// Stop script
+		final MenuItem stopScriptItem = new MenuItem("[Script] Stop");
+		stopScriptItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final PublicationScriptProperties item = scriptTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+//							final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+//							subscriptionDetails.setTopic(item.topicProperty().getValue());
+//							subscriptionDetails.setQos(0);
+//							
+//							connectionController.getNewSubscriptionPaneController().subscribe(subscriptionDetails, true);
+				}
+			}
+		});
+		contextMenu.getItems().add(stopScriptItem);
 
-	public ComboBox<String> getPublicationTopicText()
-	{
-		return publicationTopicText;
-	}
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+		
+		// Refresh list
+		final MenuItem refreshListItem = new MenuItem("[Scripts] Refresh list");
+		refreshListItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				refreshList();
+			}
+		});
+		contextMenu.getItems().add(refreshListItem);
 
-	public ChoiceBox<String> getPublicationQosChoice()
-	{
-		return publicationQosChoice;
-	}
-
-	public StyleClassedTextArea getPublicationData()
-	{
-		return publicationData;
-	}
-
-	public CheckBox getRetainedBox()
-	{
-		return retainedBox;
+		return contextMenu;
 	}
 }

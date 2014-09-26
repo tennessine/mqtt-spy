@@ -18,12 +18,8 @@
 				<Menu mnemonicParsing="false" text="Configuration">
 					<items>
 						<MenuItem fx:id="openConfigFileMenu" mnemonicParsing="false" onAction="#openConfigurationFile" text="Open file" />
-                  <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem fx:id="restoreConfigFileMenu" mnemonicParsing="false" onAction="#restoreConfiguration" text="Restore defaults" />
-						<!-- 
-						<SeparatorMenuItem mnemonicParsing="false" />
-						<MenuItem mnemonicParsing="false" onAction="#restoreConfigurationFile" text="Create/restore sample configuration file" />
-						 -->
+                 		<SeparatorMenuItem mnemonicParsing="false" />
+                 	 	<MenuItem fx:id="restoreConfigFileMenu" mnemonicParsing="false" onAction="#restoreConfiguration" text="Restore defaults" />
 					</items>
 				</Menu>
 				
@@ -31,6 +27,20 @@
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#createNewConnection" text="New connection" />
 						<MenuItem mnemonicParsing="false" onAction="#editConnections" text="Manage connections" />
+					</items>
+				</Menu>
+				
+				<Menu mnemonicParsing="false" text="View">
+					<items>
+						<Menu mnemonicParsing="false" text="Publications">
+							<items>
+								<RadioMenuItem mnemonicParsing="false" onAction="#showManualPublicationPane" selected="true" text="Manual publications">
+		                           <toggleGroup>
+		                              <ToggleGroup fx:id="publicationMode" />
+		                           </toggleGroup></RadioMenuItem>
+								<RadioMenuItem mnemonicParsing="false" onAction="#showScriptedPublicationPane" text="Scripted publications" toggleGroup="$publicationMode" />
+							</items>
+						</Menu>
 					</items>
 				</Menu>
 				

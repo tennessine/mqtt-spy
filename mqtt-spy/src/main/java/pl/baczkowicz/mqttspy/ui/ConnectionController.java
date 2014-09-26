@@ -5,9 +5,6 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -39,20 +36,20 @@ public class ConnectionController implements Initializable, Observer
 
 	private static final int MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT = 26;
 	
-	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 110;
+	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 110;	
 	
 	private static final int MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT = 26;
 
 	final static Logger logger = LoggerFactory.getLogger(ConnectionController.class);
 
 	@FXML
-	AnchorPane connectionPane;
+	private AnchorPane connectionPane;
 	
 	@FXML
-	AnchorPane newPublicationPane;
+	private AnchorPane newPublicationPane;
 	
 	@FXML
-	AnchorPane newSubscriptionPane;
+	private AnchorPane newSubscriptionPane;
 	
 	/**
 	 * The name of this field needs to be set to the name of the pane +
@@ -66,19 +63,26 @@ public class ConnectionController implements Initializable, Observer
 	 * Controller (i.e. <fx:id>Controller).
 	 */
 	@FXML
+	private PublicationScriptsController publicationScriptsPaneController;
+	
+	/**
+	 * The name of this field needs to be set to the name of the pane +
+	 * Controller (i.e. <fx:id>Controller).
+	 */
+	@FXML
 	NewSubscriptionController newSubscriptionPaneController;
 
 	@FXML
-	TitledPane publishMessageTitledPane;
+	private TitledPane publishMessageTitledPane;
 	
 	@FXML
-	TitledPane newSubscriptionTitledPane;
+	private TitledPane newSubscriptionTitledPane;
 	
 	@FXML
 	TitledPane subscriptionsTitledPane;
 	
 	@FXML
-	TabPane subscriptionTabs;
+	private TabPane subscriptionTabs;
 
 	private MqttConnection connection;
 
@@ -89,8 +93,6 @@ public class ConnectionController implements Initializable, Observer
 	private StatisticsManager statisticsManager;
 
 	private ConnectionManager connectionManager;
-	
-	private ScriptEngine engine;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{		
@@ -127,13 +129,14 @@ public class ConnectionController implements Initializable, Observer
 	
 	public void init()
 	{
-		engine = new ScriptEngineManager().getEngineByName("nashorn");
-		
 		newPublicationPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
 		newSubscriptionPaneController.setConnectionManager(connectionManager);
 		connection.setStatisticsManager(statisticsManager);
+		
+		publicationScriptsPaneController.setConnection(connection);
+		publicationScriptsPaneController.init();
 		
 		tooltip = new Tooltip();
 		connectionTab.setTooltip(tooltip);
