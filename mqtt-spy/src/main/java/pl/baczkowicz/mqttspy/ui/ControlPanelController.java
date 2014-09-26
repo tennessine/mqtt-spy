@@ -152,8 +152,9 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		controlPanelItem4Controller.setStatus(ItemStatus.INFO);
 		controlPanelItem4Controller.refresh();
 		
-		//statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
-		//statsUpdater.show();
+		// 0.1.0
+		statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
+		statsUpdater.show();
 	}
 	
 	@Override

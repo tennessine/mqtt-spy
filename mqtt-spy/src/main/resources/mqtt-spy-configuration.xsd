@@ -9,7 +9,6 @@
 			<xs:element name="Formatting" 	type="config:Formatting"	minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
-
 	
 	<!-- ================== -->
 	<!-- === UI =========== -->
@@ -59,6 +58,7 @@
 			
 			<xs:element name="Formatter" 			type="xs:IDREF" 	minOccurs="0" maxOccurs="1" />
 			<xs:element name="MaxMessagesStored" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
+			<xs:element name="PublicationScripts" 	type="xs:string" 	minOccurs="0" maxOccurs="1" />
 			
 			<xs:element name="Publication" 			type="config:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />	
 			<xs:element name="Subscription" 		type="config:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />	

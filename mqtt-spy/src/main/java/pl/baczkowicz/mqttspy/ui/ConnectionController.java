@@ -5,6 +5,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -86,6 +89,8 @@ public class ConnectionController implements Initializable, Observer
 	private StatisticsManager statisticsManager;
 
 	private ConnectionManager connectionManager;
+	
+	private ScriptEngine engine;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{		
@@ -122,6 +127,8 @@ public class ConnectionController implements Initializable, Observer
 	
 	public void init()
 	{
+		engine = new ScriptEngineManager().getEngineByName("nashorn");
+		
 		newPublicationPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
