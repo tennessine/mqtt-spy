@@ -8,18 +8,17 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.control.ComboBox?>
 
-<AnchorPane prefHeight="179.0" prefWidth="612.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.PublicationScriptsController">
+<AnchorPane prefWidth="612.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.PublicationScriptsController">
    <children>
-      <TableView fx:id="scriptTable" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <TableView fx:id="scriptTable" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
            <columnResizePolicy>
               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
            </columnResizePolicy>
         <columns>
             <TableColumn fx:id="nameColumn" minWidth="100.0" prefWidth="100.0" maxWidth="1.7976931348623157E308" text="Script name" />
-            <!-- <TableColumn fx:id="actionColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Action" /> -->
-            <TableColumn fx:id="runningStatusColumn" maxWidth="100.0" minWidth="100.0" resizable="false" text="Status" />
             <TableColumn fx:id="lastStartedColumn" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Last started" />
-            <TableColumn fx:id="messageCountColumn" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" resizable="false" text="Messages" />
+            <TableColumn fx:id="runningStatusColumn" maxWidth="120.0" minWidth="120.0" resizable="false" text="Status" />
+            <TableColumn fx:id="messageCountColumn" maxWidth="120.0" minWidth="120.0" prefWidth="100.0" resizable="false" text="Messages" />
         </columns>
       </TableView>
    </children>

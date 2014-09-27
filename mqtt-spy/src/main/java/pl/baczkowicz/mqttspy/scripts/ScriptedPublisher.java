@@ -1,7 +1,10 @@
 package pl.baczkowicz.mqttspy.scripts;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,22 +18,51 @@ public class ScriptedPublisher
 	
 	private final MqttConnection connection;
 	
-	private ObservableList<PublicationScriptProperties> observableScriptList;
+	private PublicationScriptProperties script;
 	
-	public ScriptedPublisher(final MqttConnection connection, final ObservableList<PublicationScriptProperties> observableScriptList)
+	private int publishedMessages;
+	
+	public ScriptedPublisher(final MqttConnection connection, final PublicationScriptProperties script)
 	{
 		this.connection = connection;
-		this.observableScriptList = observableScriptList;
+		this.script = script;
 	}
 	
-	public void publish(final String scriptName, final String publicationTopic, final String data)
+	public String execute(final String command) throws IOException, InterruptedException
 	{
-		publish(scriptName, publicationTopic, data, 0, false);
+		Runtime rt = Runtime.getRuntime();
+		Process p = rt.exec(command);
+		p.waitFor();
+		BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String line = null;
+
+		try
+		{
+			final StringBuffer sb = new StringBuffer();
+			while ((line = input.readLine()) != null)
+			{
+				sb.append(line);
+			}
+			return sb.toString();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}			
+		
+		return null;
 	}
 	
-	public void publish(final String scriptName, final String publicationTopic, final String data, final int qos, final boolean retained)
+	public void publish(final String publicationTopic, final String data)
 	{
-		logger.info("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", scriptName, publicationTopic, data, qos, retained);
+		publish(publicationTopic, data, 0, false);
+	}
+	
+	public void publish(final String publicationTopic, final String data, final int qos, final boolean retained)
+	{
+		publishedMessages++;
+		
+		logger.debug("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", script.getName(), publicationTopic, data, qos, retained);
 		connection.publish(publicationTopic, data, qos, retained);
 		
 		Platform.runLater(new Runnable()
@@ -38,8 +70,8 @@ public class ScriptedPublisher
 			@Override
 			public void run()
 			{
-				ScriptManager.incrementMessageCount(observableScriptList, scriptName);				
+				script.setCount(publishedMessages);				
 			}
-		});		
+		});
 	}
 }

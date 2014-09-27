@@ -37,10 +37,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
     @FXML
     private TableColumn<PublicationScriptProperties, String> nameColumn;
-    
-	// @FXML
-	// private TableColumn<PublicationScriptProperties, String> actionColumn;
-    
+        
     @FXML
     private TableColumn<PublicationScriptProperties, ScriptRunningState> runningStatusColumn;
     
@@ -50,8 +47,6 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
     @FXML
     private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
 		
-	//private ObservableList<String> publicationTopics = FXCollections.observableArrayList();
-
 	private MqttConnection connection;
 
 	private ScriptManager scriptManager;
@@ -99,22 +94,40 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 			public TableCell<PublicationScriptProperties, ScriptRunningState> call(
 					TableColumn<PublicationScriptProperties, ScriptRunningState> param)
 			{
-				final TableCell<PublicationScriptProperties, ScriptRunningState> cell = new TableCell<PublicationScriptProperties, ScriptRunningState>()
+				final TableCell<PublicationScriptProperties, ScriptRunningState> cell = new TableCell<PublicationScriptProperties, ScriptRunningState>()				
 				{
 					@Override
 					public void updateItem(ScriptRunningState item, boolean empty)
 					{
 						super.updateItem(item, empty);
+						
 						if (!isEmpty())
 						{
 							setText(item.toString());
+									// if
+									// (item.equals(ScriptRunningState.RUNNING))
+									// {
+									// final ProgressIndicator progressIndicator
+									// = new ProgressIndicator();
+									// progressIndicator.setMaxSize(12, 12);
+									//
+									// setGraphic(progressIndicator);
+									//
+									// }
+									// else
+									// {
+									// setGraphic(null);
+									// }
 						}
 						else
 						{
 							setText(null);
+							setGraphic(null);
 						}
 					}
 				};
+				// cell.setMaxHeight(cell.getHeight());
+				// cell.setPadding(new Insets(0, 0, 0, 0));
 				cell.setAlignment(Pos.TOP_CENTER);
 				
 				return cell;
@@ -276,6 +289,6 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	@Override
 	public void onScriptStateChange(String scriptName, ScriptRunningState state)
 	{
-		// TODO: update the context menu
+		// TODO: update the context menu - but this requires context menu per row
 	}
 }

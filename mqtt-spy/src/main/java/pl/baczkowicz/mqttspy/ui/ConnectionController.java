@@ -33,13 +33,19 @@ import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class ConnectionController implements Initializable, Observer
 {
+	private static final int MIN_COLLAPSED_PANE_HEIGHT = 26;
+	
 	private static final int MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT = 71;
 
-	private static final int MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT = 26;
+	private static final int MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 	
 	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 110;	
 	
-	private static final int MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT = 26;
+	private static final int MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
+	
+	private static final int MIN_EXPANDED_SCRIPTED_PUBLICATION_PANE_HEIGHT = 145;	
+	
+	private static final int MIN_COLLAPSED_SCRIPTED_PUBLICATION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 
 	final static Logger logger = LoggerFactory.getLogger(ConnectionController.class);
 
@@ -80,6 +86,9 @@ public class ConnectionController implements Initializable, Observer
 	private TitledPane newSubscriptionTitledPane;
 	
 	@FXML
+	private TitledPane scriptedPublicationsTitledPane;
+	
+	@FXML
 	TitledPane subscriptionsTitledPane;
 	
 	@FXML
@@ -97,9 +106,9 @@ public class ConnectionController implements Initializable, Observer
 
 	private EventManager eventManager;
 
-	public void initialize(URL location, ResourceBundle resources)
-	{		
-		publishMessageTitledPane.expandedProperty().addListener(new ChangeListener<Boolean>()
+	private ChangeListener<Boolean> createChangeListener()
+	{
+		return new ChangeListener<Boolean>()
 		{
 			@Override
 			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2)
@@ -107,26 +116,17 @@ public class ConnectionController implements Initializable, Observer
 				updateMinHeights();
 
 			}
-		});
+		};
+	}
+	
+	public void initialize(URL location, ResourceBundle resources)
+	{		
+		publishMessageTitledPane.expandedProperty().addListener(createChangeListener());		
+		scriptedPublicationsTitledPane.expandedProperty().addListener(createChangeListener());		
+		newSubscriptionTitledPane.expandedProperty().addListener(createChangeListener());		
+		subscriptionsTitledPane.expandedProperty().addListener(createChangeListener());
 		
-		newSubscriptionTitledPane.expandedProperty().addListener(new ChangeListener<Boolean>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2)
-			{
-				updateMinHeights();
-			}
-		});
-		
-		subscriptionsTitledPane.expandedProperty().addListener(new ChangeListener<Boolean>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends Boolean> arg0, Boolean arg1, Boolean arg2)
-			{
-				updateMinHeights();
-			}
-		});
-		
+		scriptedPublicationsTitledPane.setExpanded(false);
 		updateMinHeights();		
 	}
 	
@@ -167,13 +167,24 @@ public class ConnectionController implements Initializable, Observer
 			publishMessageTitledPane.setMinHeight(MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT);
 		}
 		
+		if (scriptedPublicationsTitledPane.isExpanded())
+		{
+			scriptedPublicationsTitledPane.setMinHeight(MIN_EXPANDED_SCRIPTED_PUBLICATION_PANE_HEIGHT);
+		}
+		else
+		{
+			scriptedPublicationsTitledPane.setMinHeight(MIN_COLLAPSED_SCRIPTED_PUBLICATION_PANE_HEIGHT);
+		}
+		
 		if (newSubscriptionTitledPane.isExpanded())
 		{
 			newSubscriptionTitledPane.setMinHeight(MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT);
+			newSubscriptionTitledPane.setMaxHeight(MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT);
 		}
 		else
 		{
 			newSubscriptionTitledPane.setMinHeight(MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT);
+			newSubscriptionTitledPane.setMaxHeight(MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT);
 		}
 	}
 

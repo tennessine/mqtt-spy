@@ -23,15 +23,14 @@
                   <Font size="20.0" />
                </font>
             </Label>
-            <FlowPane fx:id="details" prefHeight="0.0" prefWidth="751.0">
+            <FlowPane fx:id="details">
                <children>
-                  <Label fx:id="detailsText" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Your version is 0.0.8.  Some very long text here. Some very long text here.Some very long text here." wrapText="true" />
+                  <Label fx:id="detailsText" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Your version is x.x.x.  Some very long text here. Some very long text here.Some very long text here." wrapText="true" />
                </children>
             </FlowPane>
          </children>
       </VBox>
       <ProgressIndicator fx:id="progressIndicator" layoutX="16.0" layoutY="15.0" />
       <Button fx:id="smallButton1" focusTraversable="false" layoutX="789.0" layoutY="0.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" visible="false" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="4.0" />
-      <!-- <Button fx:id="smallButton1" focusTraversable="false" layoutX="807.0" layoutY="0.0" maxHeight="20.0" maxWidth="20.0" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" visible="false" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="28.0" /> -->
    </children>
 </AnchorPane>

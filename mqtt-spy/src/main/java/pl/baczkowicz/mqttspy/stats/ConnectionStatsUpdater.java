@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.ui.stats;
+package pl.baczkowicz.mqttspy.stats;
 
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;

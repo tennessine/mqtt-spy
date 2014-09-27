@@ -14,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
@@ -32,8 +33,9 @@ import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.ui.controlpanel.ControlPanelStatsUpdater;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
-import pl.baczkowicz.mqttspy.ui.stats.ControlPanelStatsUpdater;
+import pl.baczkowicz.mqttspy.ui.controlpanel.UnicefTooltip;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
@@ -92,6 +94,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	private ControlPanelStatsUpdater statsUpdater;
 	
 	private Map<MqttConnectionStatus, String> nextActionTitle = new HashMap<MqttConnectionStatus, String>();
+
+	private UnicefTooltip unicefTooltip;
 	
 	// ===============================
 	// === Initialisation ============
@@ -145,6 +149,8 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	// === Logic =====================
 	// ===============================	
 	
+	
+	
 	private void showStats(final ControlPanelItemController controller, final Button button)
 	{
 		controlPanelItem4Controller.setTitle("Coming in the next version...");
@@ -155,6 +161,21 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		// 0.1.0
 		statsUpdater = new ControlPanelStatsUpdater(controlPanelItem4Controller, button, application);
 		statsUpdater.show();
+		unicefTooltip = new UnicefTooltip();				  
+		button.setTooltip(unicefTooltip);
+		button.setOnMouseMoved(new EventHandler<MouseEvent>()
+		{
+			@Override
+			public void handle(MouseEvent event)
+			{
+				unicefTooltip.setCurrentMousePosition(event);
+				
+				if (unicefTooltip.isShowing())
+				{
+					unicefTooltip.checkAndHide();
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -325,7 +346,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		if (connections > 0)
 		{
 			controller.setTitle("You have " + connections + " " + "connection" + (connections > 1 ? "s" : "") + " configured.");
-			controller.setDetails("Click here to edit your connections or on the relevant button to open, connect or reconnect or disconnect.");
+			controller.setDetails("Click here to edit your connections or on the relevant button to open, connect, reconnect or disconnect.");
 			controller.setStatus(ItemStatus.OK);
 			
 			FlowPane buttons = new FlowPane();

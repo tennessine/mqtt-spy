@@ -96,18 +96,6 @@ public class ControlPanelItemController extends AnchorPane implements Initializa
 		return smallButton2;
 	}
 	
-	// public void setButton1Properties(final String imageLocation, final
-	// EventHandler<ActionEvent> action)
-	// {
-	// setButtonProperites(smallButton1, imageLocation, true, action);
-	// }
-	//
-	// public void setButton2Image(final String imageLocation, final
-	// EventHandler<ActionEvent> action)
-	// {
-	// setButtonProperites(smallButton2, imageLocation, true, action);
-	// }
-	
 	public void refresh()
 	{
 		String imageLocation = "";

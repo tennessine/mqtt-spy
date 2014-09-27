@@ -29,10 +29,10 @@
 						<MenuItem mnemonicParsing="false" onAction="#editConnections" text="Manage connections" />
 					</items>
 				</Menu>
-				
+				<!-- 
 				<Menu mnemonicParsing="false" text="View">
 					<items>
-						<Menu mnemonicParsing="false" text="Publications">
+						<Menu mnemonicParsing="false" text="Manual publication pane">
 							<items>
 								<RadioMenuItem mnemonicParsing="false" onAction="#showManualPublicationPane" selected="true" text="Manual publications">
 		                           <toggleGroup>
@@ -43,7 +43,7 @@
 						</Menu>
 					</items>
 				</Menu>
-				
+				 -->
 				<!-- 
 				<Menu mnemonicParsing="false" text="Preferences">
 					<items>

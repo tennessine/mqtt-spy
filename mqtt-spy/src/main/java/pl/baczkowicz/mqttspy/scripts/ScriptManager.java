@@ -16,6 +16,8 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
+import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
@@ -26,21 +28,16 @@ public class ScriptManager
 		
 	private final ObservableList<PublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
 	
-	private ScriptEngine scriptEngine;
-	
-	private Map<String, Object> scriptVariables;
+	private Map<File, PublicationScriptProperties> scripts = new HashMap<>();
 
 	private EventManager eventManager;
+
+	private MqttConnection connection;
 	
 	public ScriptManager(final EventManager eventManager, final MqttConnection connection)
 	{
 		this.eventManager = eventManager;
-		this.scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
-		
-		this.scriptVariables = new HashMap<String, Object>();
-		this.scriptVariables.put("mqttspy", new ScriptedPublisher(connection, observableScriptList));
-				
-		putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
+		this.connection = connection;
 	}
 	
 	public static String getScriptName(final File file)
@@ -60,9 +57,23 @@ public class ScriptManager
 				PublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
 				if (script == null)					
 				{
-					script = new PublicationScriptProperties(getScriptName(scriptFile), scriptFile, 
-							ScriptRunningState.NOT_STARTED, null, 0);
+					final String scriptName = getScriptName(scriptFile);
+					final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
+					
+					script = new PublicationScriptProperties(scriptName, scriptFile, 
+							ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
+					
+					final Map<String, Object> scriptVariables = new HashMap<String, Object>();
+					scriptVariables.put("mqttspy", new ScriptedPublisher(connection, script));	
+					scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
+					// TODO: get it from the command line?
+					// scriptVariables.put("custom", Class.forName(className).newInstance());
+					// TODO: some reflection here? (name, and class)
+					
+					putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
+					
 					observableScriptList.add(script);
+					scripts.put(scriptFile, script);
 				}				
 			}			
 		}
@@ -111,12 +122,18 @@ public class ScriptManager
 			bindings.put(key, variables.get(key));
 		}
 
-		engine.setBindings(bindings, ScriptContext.GLOBAL_SCOPE);
+		engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
 	public void evaluateScriptFile(final File scriptFile)
 	{
-		new Thread(new ScriptRunner(eventManager, scriptEngine, scriptFile, observableScriptList)).start();
+		PublicationScriptProperties script = scripts.get(scriptFile);
+		
+		// Only start if not running already
+		if (!script.getStatus().equals(ScriptRunningState.RUNNING))
+		{
+			new Thread(new ScriptRunner(eventManager, script)).start();
+		}		
 	}
 	
 	public void stopScriptFile(final File scriptFile)
@@ -145,17 +162,19 @@ public class ScriptManager
 		return message.startsWith(REFERENCE_ERROR);
 	}
 	
-	public static void incrementMessageCount(final ObservableList<PublicationScriptProperties> observableScriptList, final String scriptName)
-	{
-		for (final PublicationScriptProperties script : observableScriptList)
-		{
-			if (script.nameProperty().getValue().equals(scriptName))
-			{
-				script.setCount(script.countProperty().getValue() + 1);
-				break;
-			}
-		}
-	}
+	// public static void incrementMessageCount(final
+	// ObservableList<PublicationScriptProperties> observableScriptList, final
+	// String scriptName)
+	// {
+	// for (final PublicationScriptProperties script : observableScriptList)
+	// {
+	// if (script.nameProperty().getValue().equals(scriptName))
+	// {
+	// script.setCount(script.countProperty().getValue() + 1);
+	// break;
+	// }
+	// }
+	// }
 	
 	public static PublicationScriptProperties getPublicationScriptProperties(final ObservableList<PublicationScriptProperties> observableScriptList, final String scriptName)
 	{

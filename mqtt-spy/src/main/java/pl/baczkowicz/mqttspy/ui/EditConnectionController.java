@@ -149,6 +149,11 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	@FXML
 	private Button removeSubscriptionButton;
 	
+	// Pubs
+	
+	@FXML
+	private TextField publicationScriptsText;
+	
 	// Tables
 	
 	@FXML
@@ -338,6 +343,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		});
 		
 		// Publications
+		publicationScriptsText.textProperty().addListener(basicOnChangeListener);
 		publicationTopicColumn.setCellValueFactory(new PropertyValueFactory<BaseTopicProperty, String>("topic"));
 		publicationTopicColumn.setCellFactory(TextFieldTableCell.<BaseTopicProperty>forTableColumn());
 		publicationTopicColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<BaseTopicProperty, String>>()
@@ -745,6 +751,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			connection.setUserAuthentication(userAuthentication);
 		}
 		
+		connection.setPublicationScripts(publicationScriptsText.getText());
 		for (final BaseTopicProperty publicationDetails : publicationsTable.getItems())
 		{
 			final PublicationDetails newPublicationDetails = new PublicationDetails();
@@ -935,6 +942,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		}
 		
 		// Publications
+		publicationScriptsText.setText(connection.getPublicationScripts());
 		removePublicationButton.setDisable(true);
 		publicationsTable.getItems().clear();
 		lastWillAndTestamentMessageController.clearTopics();
@@ -1050,5 +1058,4 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	{
 		this.connectionManager = connectionManager;
 	}
-
 }

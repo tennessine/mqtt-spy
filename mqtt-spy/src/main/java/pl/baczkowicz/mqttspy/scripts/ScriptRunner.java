@@ -1,67 +1,75 @@
 package pl.baczkowicz.mqttspy.scripts;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Date;
 
-import javafx.collections.ObservableList;
-
-import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
 
 public class ScriptRunner implements Runnable
 {
-	private File scriptFile;
+	private final static Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
 	
-	private final ScriptEngine scriptEngine;
-
-	private final ObservableList<PublicationScriptProperties> observableScriptList;
+	private final PublicationScriptProperties script;
 
 	private EventManager eventManager;
 
-	public ScriptRunner(final EventManager eventManager, final ScriptEngine scriptEngine, 
-			final File scriptFile, final ObservableList<PublicationScriptProperties> observableScriptList)
+	public ScriptRunner(final EventManager eventManager, final PublicationScriptProperties script)
 	{
-		this.scriptEngine = scriptEngine;
-		this.scriptFile = scriptFile;
-		this.observableScriptList = observableScriptList;
+		this.script = script;
 		this.eventManager = eventManager;
 	}
 	
 	@Override
 	public void run()
 	{
-		final String scriptName = ScriptManager.getScriptName(scriptFile);
-		final PublicationScriptProperties publicationScriptProperties = ScriptManager.getPublicationScriptProperties(observableScriptList, scriptName);
-		publicationScriptProperties.setStatus(ScriptRunningState.RUNNING);
-		eventManager.notifyScriptStateChange(scriptName, ScriptRunningState.RUNNING);
-		publicationScriptProperties.setLastStarted(new Date());
-		publicationScriptProperties.setThread(Thread.currentThread());
+		script.setStatus(ScriptRunningState.RUNNING);
+		eventManager.notifyScriptStateChange(script.getName(), ScriptRunningState.RUNNING);
+		script.setLastStarted(new Date());
+		script.setThread(Thread.currentThread());
 
 		try
 		{
-			scriptEngine.eval(new FileReader(scriptFile));
-			changeState(scriptName, ScriptRunningState.STOPPED, publicationScriptProperties);
+			final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));
+			
+			if (returnValue instanceof Boolean)
+			{
+				if ((boolean) returnValue)
+				{
+					changeState(script.getName(), ScriptRunningState.FINISHED, script);
+				}
+				else
+				{
+					changeState(script.getName(), ScriptRunningState.STOPPED, script);
+				}
+			}
+			else
+			{
+				changeState(script.getName(), ScriptRunningState.FINISHED, script);
+			}
 		}
 		catch (ScriptException e)
 		{
-			changeState(scriptName, ScriptRunningState.FAILED, publicationScriptProperties);
+			changeState(script.getName(), ScriptRunningState.FAILED, script);
 			ScriptManager.handleException(e);
 		}
 		catch (FileNotFoundException e)
 		{
-			changeState(scriptName, ScriptRunningState.FAILED, publicationScriptProperties);
+			changeState(script.getName(), ScriptRunningState.FAILED, script);
 			e.printStackTrace();
 		}		
 	}
 	
-	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties publicationScriptProperties)
+	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties script)
 	{
-		publicationScriptProperties.setStatus(newState);
+		logger.trace("Changing script state to " + newState);
+		script.setStatus(newState);
 		eventManager.notifyScriptStateChange(scriptName, newState);
 	}
 }

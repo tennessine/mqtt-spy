@@ -3,6 +3,8 @@ package pl.baczkowicz.mqttspy.ui.properties;
 import java.io.File;
 import java.util.Date;
 
+import javax.script.ScriptEngine;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,14 +24,17 @@ public class PublicationScriptProperties
 	private File file;
 
 	private Thread thread;
+	
+	private final ScriptEngine scriptEngine;
 
-	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastStarted, final int messageCount)
+	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastStarted, final int messageCount, final ScriptEngine scriptEngine)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.status = new SimpleObjectProperty<ScriptRunningState>(state);
 		this.file = file;
 		this.lastStarted = new SimpleStringProperty(lastStarted == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
 		this.count = new SimpleIntegerProperty(messageCount);
+		this.scriptEngine = scriptEngine;
 	}
 	
 	public SimpleStringProperty nameProperty()
@@ -80,5 +85,20 @@ public class PublicationScriptProperties
 	public Thread getThread()
 	{
 		return this.thread;
+	}
+
+	public ScriptEngine getScriptEngine()
+	{
+		return scriptEngine;
+	}
+
+	public String getName()
+	{
+		return nameProperty().getValue();
+	}
+
+	public ScriptRunningState getStatus()
+	{
+		return status.getValue();
 	}
 }

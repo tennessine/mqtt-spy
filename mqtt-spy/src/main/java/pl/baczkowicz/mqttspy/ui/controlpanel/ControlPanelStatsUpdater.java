@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.ui.stats;
+package pl.baczkowicz.mqttspy.ui.controlpanel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,17 +16,24 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ControlPanelItemController;
-import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
+import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class ControlPanelStatsUpdater implements Runnable
 {
 	private final static long milliseconds = new Date().getTime() - StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime().getTime();
-	private final static long days = milliseconds / (1000 * 60 * 60 * 24);
-	private final static String inDays = days > 1 ? (" in " + days + " days") : "";
-	private final static int STATS_MESSAGES = 6;
-	private final static int GO_NEXT_AFTER_INTERVALS = 10;
-	private final static int REFRESH_INTERVAL =  1000;
 	
+	private final static long days = milliseconds / (1000 * 60 * 60 * 24);
+	
+	private final static String inDays = days > 1 ? (" in " + days + " days") : "";
+	
+	private final static String since = " since " + Utils.DATE_SDF.format(StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime());
+	
+	private final static int STATS_MESSAGES = 6;
+	
+	private final static int GO_NEXT_AFTER_INTERVALS = 10;
+	
+	private final static int REFRESH_INTERVAL =  1000;
+		
 	private boolean statsPlaying;
 	
 	private List<String> unicefDetails = new ArrayList<String>(Arrays.asList(
@@ -91,21 +98,6 @@ public class ControlPanelStatsUpdater implements Runnable
 		// UNICEF details
 		final Random r = new Random();
 		items.add(new Label(unicefDetails.get(r.nextInt(unicefDetails.size()))));
-		// items.add(new Label(" at"));
-
-//		final Hyperlink jg = new Hyperlink();
-//		jg.setText("justgiving.com");
-//		jg.setOnAction(new EventHandler<ActionEvent>()
-//		{
-//			@Override
-//			public void handle(ActionEvent event)
-//			{
-//				application.getHostServices().showDocument("https://www.justgiving.com/mqtt-spy/");
-//			}
-//		});
-//		donate.getChildren().add(jg);
-		//
-		// donate.getChildren().add(new Label(" or "));
 
 		final Hyperlink unicef = new Hyperlink();
 		unicef.setText("unicef.org.uk mqtt-spy page");
@@ -120,7 +112,6 @@ public class ControlPanelStatsUpdater implements Runnable
 		items.add(unicef);
 		
 		items.add(new Label("!"));
-		// controlPanelItemController.getCustomItems().getChildren().add(donate);
 		controlPanelItemController.getDetails().getChildren().addAll(items);
 		
 		statsPlaying = true;
@@ -187,7 +178,7 @@ public class ControlPanelStatsUpdater implements Runnable
 		else if ((statTitleIndex == 1) && (StatisticsManager.stats.getMessagesPublished() > 1))
 		{
 			controlPanelItemController.setTitle(String.format(
-					"Your mqtt-spy published %s messages to MQTT brokers%s.",
+					"Your mqtt-spy published %s messages to MQTT brokers.",
 					formatNumber(StatisticsManager.stats.getMessagesPublished()), inDays));
 			return true;
 		}
@@ -204,7 +195,7 @@ public class ControlPanelStatsUpdater implements Runnable
 		{
 			controlPanelItemController.setTitle(String.format(
 					"Your mqtt-spy received %s messages%s.",
-					formatNumber(StatisticsManager.stats.getMessagesReceived()), inDays));
+					formatNumber(StatisticsManager.stats.getMessagesReceived()), since));
 			return true;
 		}
 
