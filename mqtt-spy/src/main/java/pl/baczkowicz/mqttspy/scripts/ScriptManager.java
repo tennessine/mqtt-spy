@@ -13,7 +13,6 @@ import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 
 import org.slf4j.LoggerFactory;
@@ -24,7 +23,7 @@ import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
 
 public class ScriptManager
 {
-	private static final String REFERENCE_ERROR = "ReferenceError";
+	// private static final String REFERENCE_ERROR = "ReferenceError";
 		
 	private final ObservableList<PublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
 	
@@ -62,13 +61,11 @@ public class ScriptManager
 					
 					script = new PublicationScriptProperties(scriptName, scriptFile, 
 							ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
+					script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script));
 					
 					final Map<String, Object> scriptVariables = new HashMap<String, Object>();
-					scriptVariables.put("mqttspy", new ScriptedPublisher(connection, script));	
+					scriptVariables.put("mqttspy", script.getPublicationScriptIO());	
 					scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
-					// TODO: get it from the command line?
-					// scriptVariables.put("custom", Class.forName(className).newInstance());
-					// TODO: some reflection here? (name, and class)
 					
 					putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
 					
@@ -147,20 +144,22 @@ public class ScriptManager
 		}
 	}
 
-	public static void handleException(ScriptException exception)
-	{
-		if (isReferenceError(exception))
-		{
-			throw new IllegalArgumentException("Couldn't resolve a variable on expression with vars ", exception);
-		}
-		throw new RuntimeException(exception);
-	}
-
-	public static boolean isReferenceError(ScriptException exception)
-	{
-		String message = exception.getMessage();
-		return message.startsWith(REFERENCE_ERROR);
-	}
+	// public static void handleException(ScriptException exception)
+	// {
+	// if (isReferenceError(exception))
+	// {
+	// throw new
+	// IllegalArgumentException("Couldn't resolve a variable on expression with vars ",
+	// exception);
+	// }
+	// throw new RuntimeException(exception);
+	// }
+	//
+	// public static boolean isReferenceError(ScriptException exception)
+	// {
+	// String message = exception.getMessage();
+	// return message.startsWith(REFERENCE_ERROR);
+	// }
 	
 	// public static void incrementMessageCount(final
 	// ObservableList<PublicationScriptProperties> observableScriptList, final

@@ -3,11 +3,14 @@ package pl.baczkowicz.mqttspy.ui.properties;
 import java.io.File;
 import java.util.Date;
 
-import javax.script.ScriptEngine;
-
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+
+import javax.script.ScriptEngine;
+
+import pl.baczkowicz.mqttspy.scripts.PublicationScriptIO;
+import pl.baczkowicz.mqttspy.scripts.ScriptHealthDetector;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -17,7 +20,7 @@ public class PublicationScriptProperties
 	
 	private SimpleObjectProperty<ScriptRunningState> status;
 	
-	private SimpleStringProperty lastStarted;
+	private SimpleStringProperty lastPublished;
 	
 	private SimpleIntegerProperty count;
 
@@ -27,12 +30,16 @@ public class PublicationScriptProperties
 	
 	private final ScriptEngine scriptEngine;
 
-	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastStarted, final int messageCount, final ScriptEngine scriptEngine)
+	private PublicationScriptIO publicationScriptIO;
+	
+	private long scriptTimeout = ScriptHealthDetector.DEFAULT_THREAD_TIMEOUT;
+
+	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, final int messageCount, final ScriptEngine scriptEngine)
 	{
 		this.name = new SimpleStringProperty(name);
 		this.status = new SimpleObjectProperty<ScriptRunningState>(state);
 		this.file = file;
-		this.lastStarted = new SimpleStringProperty(lastStarted == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
+		this.lastPublished = new SimpleStringProperty(lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished));
 		this.count = new SimpleIntegerProperty(messageCount);
 		this.scriptEngine = scriptEngine;
 	}
@@ -47,9 +54,9 @@ public class PublicationScriptProperties
 		return this.status;
 	}
 	
-	public SimpleStringProperty lastStartedProperty()
+	public SimpleStringProperty lastPublishedProperty()
 	{
-		return this.lastStarted;
+		return this.lastPublished;
 	}
 	
 	public SimpleIntegerProperty countProperty()
@@ -62,9 +69,9 @@ public class PublicationScriptProperties
 		this.count.set(messageCount);
 	}
 	
-	public void setLastStarted(final Date lastStarted)
+	public void setLastPublished(final Date lastStarted)
 	{
-		this.lastStarted.set(Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
+		this.lastPublished.set(Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
 	}
 	
 	public void setStatus(final ScriptRunningState state)
@@ -100,5 +107,25 @@ public class PublicationScriptProperties
 	public ScriptRunningState getStatus()
 	{
 		return status.getValue();
+	}
+
+	public void setPublicationScriptIO(PublicationScriptIO publicationScriptIO)
+	{
+		this.publicationScriptIO = publicationScriptIO;
+	}
+	
+	public PublicationScriptIO getPublicationScriptIO()
+	{
+		return publicationScriptIO;
+	}
+
+	public void setScriptTimeout(long customTimeout)
+	{
+		this.scriptTimeout = customTimeout;		
+	}
+	
+	public long getScriptTimeout()
+	{
+		return scriptTimeout;
 	}
 }

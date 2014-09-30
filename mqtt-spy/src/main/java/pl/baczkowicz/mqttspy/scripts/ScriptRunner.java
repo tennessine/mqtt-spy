@@ -1,10 +1,7 @@
 package pl.baczkowicz.mqttspy.scripts;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.Date;
-
-import javax.script.ScriptException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +26,12 @@ public class ScriptRunner implements Runnable
 	@Override
 	public void run()
 	{
-		script.setStatus(ScriptRunningState.RUNNING);
-		eventManager.notifyScriptStateChange(script.getName(), ScriptRunningState.RUNNING);
-		script.setLastStarted(new Date());
+		script.getPublicationScriptIO().touch();
 		script.setThread(Thread.currentThread());
 
+		changeState(script.getName(), ScriptRunningState.RUNNING, script);
+		new Thread(new ScriptHealthDetector(eventManager, script)).start();		
+		
 		try
 		{
 			final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));
@@ -54,22 +52,24 @@ public class ScriptRunner implements Runnable
 				changeState(script.getName(), ScriptRunningState.FINISHED, script);
 			}
 		}
-		catch (ScriptException e)
+		catch (Exception e)
 		{
 			changeState(script.getName(), ScriptRunningState.FAILED, script);
-			ScriptManager.handleException(e);
-		}
-		catch (FileNotFoundException e)
-		{
-			changeState(script.getName(), ScriptRunningState.FAILED, script);
-			e.printStackTrace();
+			logger.error("Script execution exception", e);
+			// ScriptManager.handleException(e);
 		}		
 	}
 	
-	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties script)
+	public static void changeState(final EventManager eventManager, final String scriptName, 
+			final ScriptRunningState newState, final PublicationScriptProperties script)
 	{
 		logger.trace("Changing script state to " + newState);
 		script.setStatus(newState);
 		eventManager.notifyScriptStateChange(scriptName, newState);
+	}
+	
+	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties script)
+	{
+		changeState(eventManager, scriptName, newState, script);
 	}
 }

@@ -103,20 +103,36 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		super.messageReceived(message);
 	}
 	
-	public void publish(final String publicationTopic, final String data, final int qos, final boolean retained)
+	public boolean canPublish()
 	{
-		try
+		return client != null;
+	}
+	
+	public boolean publish(final String publicationTopic, final String data, final int qos, final boolean retained)
+	{
+		if (canPublish())
 		{
-			logger.info("Publishing message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-			getClient().publish(publicationTopic, data.getBytes(), qos, retained);
-			
-			logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-			statisticsManager.messagePublished(getId(), publicationTopic);
+			try
+			{
+				logger.info("Publishing message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
+				client.publish(publicationTopic, data.getBytes(), qos, retained);
+				
+				logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
+				statisticsManager.messagePublished(getId(), publicationTopic);
+				
+				return true;
+			}
+			catch (MqttException e)
+			{
+				logger.error("Cannot publish message on " + publicationTopic, e);
+			}
 		}
-		catch (MqttException e)
+		else
 		{
-			logger.error("Cannot publish message on " + publicationTopic, e);
+			logger.warn("No connection established yet...");
 		}
+		
+		return false;
 	}
 
 	public void connectionLost(Throwable cause)
@@ -175,7 +191,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			return false;
 		}
 
-		if (!getClient().isConnected())
+		if (!client.isConnected())
 		{
 			logger.info("Client not connected");
 			return false;
@@ -189,7 +205,7 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 			subscription.setSubscribing(true);
 			
 			logger.debug("Subscribing to " + subscription.getTopic());			
-			getClient().subscribe(subscription.getTopic(), subscription.getQos());			
+			client.subscribe(subscription.getTopic(), subscription.getQos());			
 			logger.info("Subscribed to " + subscription.getTopic());
 			
 			StatisticsManager.newSubscription();
@@ -231,9 +247,9 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		logger.debug("Unsubscribing from " + subscription.getTopic());
 		try
 		{
-			if (getClient().isConnected())
+			if (client.isConnected())
 			{
-				getClient().unsubscribe(subscription.getTopic());
+				client.unsubscribe(subscription.getTopic());
 			}
 			logger.info("Unsubscribed from " + subscription.getTopic());
 			return true;

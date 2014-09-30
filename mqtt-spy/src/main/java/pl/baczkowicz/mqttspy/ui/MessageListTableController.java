@@ -9,9 +9,11 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -62,9 +64,33 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 				.setCellValueFactory(new PropertyValueFactory<MqttContentProperties, String>(
 						"lastReceivedPayload"));
 
-		messageReceivedAtColumn
-				.setCellValueFactory(new PropertyValueFactory<MqttContentProperties, String>(
-						"lastReceivedTimestamp"));
+		messageReceivedAtColumn.setCellValueFactory(new PropertyValueFactory<MqttContentProperties, String>("lastReceivedTimestamp"));
+		messageReceivedAtColumn.setCellFactory(new Callback<TableColumn<MqttContentProperties, String>, TableCell<MqttContentProperties, String>>()
+		{
+			public TableCell<MqttContentProperties, String> call(
+					TableColumn<MqttContentProperties, String> param)
+			{
+				final TableCell<MqttContentProperties, String> cell = new TableCell<MqttContentProperties, String>()
+				{
+					@Override
+					public void updateItem(String item, boolean empty)
+					{
+						super.updateItem(item, empty);
+						if (!isEmpty())
+						{
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 		
 		messageTable.setOnMouseClicked(new EventHandler<Event>()
 				{

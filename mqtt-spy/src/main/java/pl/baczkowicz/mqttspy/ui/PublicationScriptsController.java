@@ -42,7 +42,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
     private TableColumn<PublicationScriptProperties, ScriptRunningState> runningStatusColumn;
     
     @FXML
-    private TableColumn<PublicationScriptProperties, String> lastStartedColumn;
+    private TableColumn<PublicationScriptProperties, String> lastPublishedColumn;
     
     @FXML
     private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
@@ -60,32 +60,32 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 
 		messageCountColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, Integer>("count"));
 		messageCountColumn
-				.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, Integer>, TableCell<PublicationScriptProperties, Integer>>()
+		.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, Integer>, TableCell<PublicationScriptProperties, Integer>>()
+		{
+			public TableCell<PublicationScriptProperties, Integer> call(
+					TableColumn<PublicationScriptProperties, Integer> param)
+			{
+				final TableCell<PublicationScriptProperties, Integer> cell = new TableCell<PublicationScriptProperties, Integer>()
 				{
-					public TableCell<PublicationScriptProperties, Integer> call(
-							TableColumn<PublicationScriptProperties, Integer> param)
+					@Override
+					public void updateItem(Integer item, boolean empty)
 					{
-						final TableCell<PublicationScriptProperties, Integer> cell = new TableCell<PublicationScriptProperties, Integer>()
+						super.updateItem(item, empty);
+						if (!isEmpty())
 						{
-							@Override
-							public void updateItem(Integer item, boolean empty)
-							{
-								super.updateItem(item, empty);
-								if (!isEmpty())
-								{
-									setText(item.toString());
-								}
-								else
-								{
-									setText(null);
-								}
-							}
-						};
-						cell.setAlignment(Pos.TOP_CENTER);
-						
-						return cell;
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
 					}
-				});
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 		
 		runningStatusColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, ScriptRunningState>("status"));
 		runningStatusColumn
@@ -134,9 +134,33 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 			}
 		});
 
-		lastStartedColumn
-				.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>(
-						"lastStarted"));
+		lastPublishedColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>("lastPublished"));
+		lastPublishedColumn.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, String>, TableCell<PublicationScriptProperties, String>>()
+		{
+			public TableCell<PublicationScriptProperties, String> call(
+					TableColumn<PublicationScriptProperties, String> param)
+			{
+				final TableCell<PublicationScriptProperties, String> cell = new TableCell<PublicationScriptProperties, String>()
+				{
+					@Override
+					public void updateItem(String item, boolean empty)
+					{
+						super.updateItem(item, empty);
+						if (!isEmpty())
+						{
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
 		// scriptTable
 		// .setRowFactory(new Callback<TableView<PublicationScriptProperties>,

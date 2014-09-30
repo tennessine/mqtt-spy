@@ -160,7 +160,7 @@ public class MainController
 	{
 		// TODO
 	}
-
+	
 	@FXML
 	public void exit()
 	{
@@ -401,6 +401,12 @@ public class MainController
 		application.getHostServices().showDocument("https://code.google.com/p/mqtt-spy/");
 	}
 	
+	@FXML
+	private void openFundraisingPage()
+	{
+		application.getHostServices().showDocument("http://fundraise.unicef.org.uk/MyPage/mqtt-spy");
+	}
+
 	@FXML
 	private void overviewWiki()
 	{

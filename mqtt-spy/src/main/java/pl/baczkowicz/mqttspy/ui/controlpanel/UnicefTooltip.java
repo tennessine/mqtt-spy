@@ -47,7 +47,7 @@ public class UnicefTooltip extends Tooltip
 		setGraphic(tooltipContent);
 		setAutoHide(false);
 		setHideOnEscape(true);
-		setOpacity(0.8);
+		setOpacity(0.95);
 	}
 	
 	@Override

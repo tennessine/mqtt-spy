@@ -37,8 +37,6 @@ public class SubscriptionSummaryTableController implements Initializable
 
 	private ObservableMessageStoreWithFiltering store; 
 	
-	// private EventDispatcher navigationEventDispatcher;
-
 	@FXML
 	private TableView<SubscriptionTopicSummaryProperties> filterTable;
 
@@ -67,44 +65,42 @@ public class SubscriptionSummaryTableController implements Initializable
 				"show"));
 		showColumn
 				.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, Boolean>, TableCell<SubscriptionTopicSummaryProperties, Boolean>>()
+		{
+			public TableCell<SubscriptionTopicSummaryProperties, Boolean> call(
+					TableColumn<SubscriptionTopicSummaryProperties, Boolean> param)
+			{
+				final CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean> cell = new CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean>()
 				{
-
-					public TableCell<SubscriptionTopicSummaryProperties, Boolean> call(
-							TableColumn<SubscriptionTopicSummaryProperties, Boolean> param)
+					@Override
+					public void updateItem(final Boolean checked, boolean empty)
 					{
-						final CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean> cell = new CheckBoxTableCell<SubscriptionTopicSummaryProperties, Boolean>()
+						super.updateItem(checked, empty);
+						if (!isEmpty() && checked != null && this.getTableRow() != null)
 						{
-							@Override
-							public void updateItem(final Boolean checked, boolean empty)
+							final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
+							
+							logger.trace("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
+														
+							if (store.updateFilter(item.topicProperty().getValue(), checked))
 							{
-								super.updateItem(checked, empty);
-								if (!isEmpty() && checked != null && this.getTableRow() != null)
+								// Wouldn't get updated properly if this is in the same thread 
+								Platform.runLater(new Runnable()
 								{
-									final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
-									
-									logger.trace("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
-																
-									if (store.updateFilter(item.topicProperty().getValue(), checked))
+									@Override
+									public void run()
 									{
-										// Wouldn't get updated properly if this is in the same thread 
-										Platform.runLater(new Runnable()
-										{
-											@Override
-											public void run()
-											{
-												eventManager.changeMessageIndexToFirst(store);
-												// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());	
-											}											
-										});
-									}																			
-								}									
-							}
-						};
-						cell.setAlignment(Pos.TOP_CENTER);
-						
-						return cell;
+										eventManager.changeMessageIndexToFirst(store);	
+									}											
+								});
+							}																			
+						}									
 					}
-				});
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
 		topicColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
 				"topic"));
@@ -113,69 +109,90 @@ public class SubscriptionSummaryTableController implements Initializable
 				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
 						"lastReceivedPayload"));
 
-		messageCountColumn
-				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, Integer>(
-						"count"));
-		messageCountColumn
-				.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, Integer>, TableCell<SubscriptionTopicSummaryProperties, Integer>>()
+		messageCountColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, Integer>("count"));
+		messageCountColumn.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, Integer>, TableCell<SubscriptionTopicSummaryProperties, Integer>>()
+		{
+			public TableCell<SubscriptionTopicSummaryProperties, Integer> call(
+					TableColumn<SubscriptionTopicSummaryProperties, Integer> param)
+			{
+				final TableCell<SubscriptionTopicSummaryProperties, Integer> cell = new TableCell<SubscriptionTopicSummaryProperties, Integer>()
 				{
-					public TableCell<SubscriptionTopicSummaryProperties, Integer> call(
-							TableColumn<SubscriptionTopicSummaryProperties, Integer> param)
+					@Override
+					public void updateItem(Integer item, boolean empty)
 					{
-						final TableCell<SubscriptionTopicSummaryProperties, Integer> cell = new TableCell<SubscriptionTopicSummaryProperties, Integer>()
+						super.updateItem(item, empty);
+						if (!isEmpty())
 						{
-							@Override
-							public void updateItem(Integer item, boolean empty)
-							{
-								super.updateItem(item, empty);
-								if (!isEmpty())
-								{
-									setText(item.toString());
-								}
-								else
-								{
-									setText(null);
-								}
-							}
-						};
-						cell.setAlignment(Pos.TOP_CENTER);
-						
-						return cell;
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
 					}
-				});
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
-		lastReceivedColumn
-				.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>(
-						"lastReceivedTimestamp"));
+		lastReceivedColumn.setCellValueFactory(new PropertyValueFactory<SubscriptionTopicSummaryProperties, String>("lastReceivedTimestamp"));
+		lastReceivedColumn.setCellFactory(new Callback<TableColumn<SubscriptionTopicSummaryProperties, String>, TableCell<SubscriptionTopicSummaryProperties, String>>()
+		{
+			public TableCell<SubscriptionTopicSummaryProperties, String> call(
+					TableColumn<SubscriptionTopicSummaryProperties, String> param)
+			{
+				final TableCell<SubscriptionTopicSummaryProperties, String> cell = new TableCell<SubscriptionTopicSummaryProperties, String>()
+				{
+					@Override
+					public void updateItem(String item, boolean empty)
+					{
+						super.updateItem(item, empty);
+						if (!isEmpty())
+						{
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+						}
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
 		filterTable
-				.setRowFactory(new Callback<TableView<SubscriptionTopicSummaryProperties>, TableRow<SubscriptionTopicSummaryProperties>>()
+		.setRowFactory(new Callback<TableView<SubscriptionTopicSummaryProperties>, TableRow<SubscriptionTopicSummaryProperties>>()
+		{
+			public TableRow<SubscriptionTopicSummaryProperties> call(
+					TableView<SubscriptionTopicSummaryProperties> tableView)
+			{
+				final TableRow<SubscriptionTopicSummaryProperties> row = new TableRow<SubscriptionTopicSummaryProperties>()
 				{
-					public TableRow<SubscriptionTopicSummaryProperties> call(
-							TableView<SubscriptionTopicSummaryProperties> tableView)
+					@Override
+					protected void updateItem(SubscriptionTopicSummaryProperties item, boolean empty)
 					{
-						final TableRow<SubscriptionTopicSummaryProperties> row = new TableRow<SubscriptionTopicSummaryProperties>()
+						super.updateItem(item, empty);
+						if (!isEmpty() && item.getSubscription() != null)
 						{
-							@Override
-							protected void updateItem(SubscriptionTopicSummaryProperties item, boolean empty)
-							{
-								super.updateItem(item, empty);
-								if (!isEmpty() && item.getSubscription() != null)
-								{
-									this.setStyle(Utils.createBgRGBString(item.getSubscription()
-											.getColor(), getIndex() % 2 == 0 ? 0.8 : 0.6)
-											+ " -fx-background-radius: 6; ");
-								}
-								else
-								{
-									this.setStyle(null);
-								}
-							}
-						};
-
-						return row;
+							this.setStyle(Utils.createBgRGBString(item.getSubscription()
+									.getColor(), getIndex() % 2 == 0 ? 0.8 : 0.6)
+									+ " -fx-background-radius: 6; ");
+						}
+						else
+						{
+							this.setStyle(null);
+						}
 					}
-				});				
+				};
+
+				return row;
+			}
+		});				
 	}
 	
 	public void setEventManager(final EventManager eventManager)

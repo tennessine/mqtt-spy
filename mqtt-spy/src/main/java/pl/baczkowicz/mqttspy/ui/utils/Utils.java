@@ -82,4 +82,9 @@ public class Utils
 		topics.add(newTopic);
 		return true;
 	}
+	
+	public static long getMonotonicTimeInMilliseconds()
+	{
+		return System.nanoTime() / 1000000;
+	}
 }

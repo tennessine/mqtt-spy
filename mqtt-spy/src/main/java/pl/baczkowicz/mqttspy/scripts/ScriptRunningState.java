@@ -2,7 +2,8 @@ package pl.baczkowicz.mqttspy.scripts;
 
 public enum ScriptRunningState
 {
-	NOT_STARTED("Not started"), FAILED("Failed"), RUNNING("Running"), STOPPED("Stopped"), FINISHED("Finished");
+	NOT_STARTED("Not started"), FAILED("Failed"), RUNNING("Running"), STOPPED("Stopped"), 
+	FINISHED("Finished"), FROZEN("Not responding");
 
 	private final String name;
 
