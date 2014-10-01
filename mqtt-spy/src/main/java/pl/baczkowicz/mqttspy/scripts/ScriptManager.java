@@ -17,6 +17,7 @@ import javax.script.SimpleBindings;
 
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
@@ -46,34 +47,41 @@ public class ScriptManager
 			
 	public void populateScripts(final String directory)
 	{
+		final List<File> files = new ArrayList<File>(); 
+		
 		// Adds new entries to the list of new files are present
 		if (directory != null && !directory.isEmpty())
 		{
-			final List<File> files = getFileNamesForDirectory(directory, ".js");
-			
-			for (final File scriptFile : files)
-			{
-				PublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
-				if (script == null)					
-				{
-					final String scriptName = getScriptName(scriptFile);
-					final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
-					
-					script = new PublicationScriptProperties(scriptName, scriptFile, 
-							ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
-					script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script));
-					
-					final Map<String, Object> scriptVariables = new HashMap<String, Object>();
-					scriptVariables.put("mqttspy", script.getPublicationScriptIO());	
-					scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
-					
-					putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
-					
-					observableScriptList.add(script);
-					scripts.put(scriptFile, script);
-				}				
-			}			
+			files.addAll(getFileNamesForDirectory(directory, ".js"));				
 		}
+		else
+		{
+			// If directory defined, use the mqtt-spy's home directory
+			files.addAll(getFileNamesForDirectory(ConfigurationManager.getDefaultHomeDirectory(), ".js"));
+		}	
+		
+		for (final File scriptFile : files)
+		{
+			PublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
+			if (script == null)					
+			{
+				final String scriptName = getScriptName(scriptFile);
+				final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
+				
+				script = new PublicationScriptProperties(scriptName, scriptFile, 
+						ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
+				script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script));
+				
+				final Map<String, Object> scriptVariables = new HashMap<String, Object>();
+				scriptVariables.put("mqttspy", script.getPublicationScriptIO());	
+				scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
+				
+				putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
+				
+				observableScriptList.add(script);
+				scripts.put(scriptFile, script);
+			}				
+		}			
 	}
 	
 	private static PublicationScriptProperties retrievePublicationScriptProperties(final List<PublicationScriptProperties> scriptList, final File scriptFile)

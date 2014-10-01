@@ -420,9 +420,9 @@ public class MainController
 	}
 	
 	@FXML
-	private void configurationWiki()
+	private void scriptingWiki()
 	{
-		application.getHostServices().showDocument("https://code.google.com/p/mqtt-spy/wiki/Configuration");
+		application.getHostServices().showDocument("https://code.google.com/p/mqtt-spy/wiki/Scripting");
 	}
 	
 	@FXML
