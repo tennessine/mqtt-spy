@@ -15,11 +15,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -44,9 +44,9 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	private boolean isOpening;
 
 	/** Maximum number of messages to store for this connection in each message store. */
-	private int maxMessageStoreSize;
+	private int preferredStoreSize;
 
-	private EventManager eventManager;
+	// private final EventManager eventManager;
 
 	private String disconnectionReason;
 
@@ -60,10 +60,15 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	public MqttConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
-		super(properties.getName(), properties.getMaxMessagesStored(), uiEventQueue);
-		this.setMaxMessageStoreSize(properties.getMaxMessagesStored());
+		// Max size is double the preferred size
+		super(properties.getName(), 
+				properties.getConfiguredProperties().getMinMessagesStoredPerTopic(), 
+				properties.getMaxMessagesStored(), 
+				properties.getMaxMessagesStored() * 2, 
+				uiEventQueue, eventManager);
+		this.setPreferredStoreSize(properties.getMaxMessagesStored());
 		this.properties = properties;
-		this.eventManager = eventManager;
+		// this.eventManager = eventManager;
 		setConnectionStatus(status);
 
 		// Manage subscriptions, based on moquette
@@ -294,10 +299,6 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 	{
 		this.connectionStatus = connectionStatus;
 		eventManager.notifyConnectionStatusChanged(this);
-
-		// Notify observers
-		this.setChanged();
-		this.notifyObservers(connectionStatus);
 	}
 
 	public RuntimeConnectionProperties getProperties()
@@ -320,14 +321,14 @@ public class MqttConnection extends ObservableMessageStoreWithFiltering
 		this.client = client;
 	}
 
-	public int getMaxMessageStoreSize()
+	public int getPreferredStoreSize()
 	{
-		return maxMessageStoreSize;
+		return preferredStoreSize;
 	}
 
-	public void setMaxMessageStoreSize(int maxMessageStoreSize)
+	public void setPreferredStoreSize(int preferredStoreSize)
 	{
-		this.maxMessageStoreSize = maxMessageStoreSize;
+		this.preferredStoreSize = preferredStoreSize;
 	}
 	
 	public int getId()

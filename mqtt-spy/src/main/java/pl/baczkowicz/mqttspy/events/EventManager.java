@@ -5,21 +5,32 @@ import java.util.Map;
 
 import javafx.application.Platform;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.MessageStore;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
+import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
 import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
+import pl.baczkowicz.mqttspy.storage.MessageStore;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 
 public class EventManager
 {
+	// final static Logger logger = LoggerFactory.getLogger(EventManager.class);
+	
+	private final Map<MqttContentObserver, ObservableMessageStore> mqttContentObservers = new HashMap<>();
+	
 	private final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObservers = new HashMap<>();
+	
+	private final Map<SubscriptionStatusChangeObserver, MqttSubscription> subscriptionStatusChangeObservers = new HashMap<>();
 	
 	private final Map<ClearTabObserver, ObservableMessageStoreWithFiltering> clearTabObservers = new HashMap<>();
 
@@ -45,6 +56,16 @@ public class EventManager
 	public void registerConnectionStatusObserver(final ConnectionStatusChangeObserver observer, final MqttConnection filter)
 	{
 		connectionStatusChangeObservers.put(observer, filter);
+	}
+	
+	public void registerMqttContentObserver(final MqttContentObserver observer, final ObservableMessageStore filter)
+	{
+		mqttContentObservers.put(observer, filter);
+	}
+	
+	public void registerSubscriptionStatusObserver(final SubscriptionStatusChangeObserver observer, final MqttSubscription filter)
+	{
+		subscriptionStatusChangeObservers.put(observer, filter);
 	}
 	
 	public void deregisterConnectionStatusObserver(final ConnectionStatusChangeObserver observer)
@@ -92,6 +113,19 @@ public class EventManager
 		scriptStateChangeObservers.put(observer, filter);
 	}
 	
+	public void notifyMqttContentReceived(final ObservableMessageStore store, final MqttContent message)
+	{
+		for (final MqttContentObserver observer : mqttContentObservers.keySet())
+		{
+			final ObservableMessageStore filter = mqttContentObservers.get(observer);
+			
+			if (filter == null || filter.equals(store))
+			{				
+				observer.onMqttContentReceived(message);
+			}			
+		}				
+	}
+	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
 	{
 		Platform.runLater(new Runnable()
@@ -112,6 +146,27 @@ public class EventManager
 		});		
 	}
 	
+	public void notifySubscriptionStatusChanged(final MqttSubscription changedSubscription)
+	{
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				for (final SubscriptionStatusChangeObserver observer : subscriptionStatusChangeObservers.keySet())
+				{
+					final MqttSubscription filter = subscriptionStatusChangeObservers.get(observer);
+					
+					if (filter == null || filter.equals(changedSubscription))
+					{				
+						observer.onSubscriptionStatusChanged(changedSubscription);
+					}
+				}				
+			}
+		});		
+		
+	}
+		
 	public void notifyFormatChanged(final MessageStore store)
 	{
 		Platform.runLater(new Runnable()

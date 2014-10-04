@@ -1,6 +1,7 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -19,9 +20,9 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -66,7 +67,7 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	public void populate(final MqttContent message)
 	{
 		// Don't populate with the same message object
-		if (!message.equals(this.message))
+		if (message != null && !message.equals(this.message))
 		{
 			this.message = message;
 	
@@ -210,19 +211,26 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 			// Optimised for showing the latest message
 			if (messageIndex == 1)
 			{
-				message = store.getMessages().getLast();
-				populate(message);
+				synchronized (store)
+				{
+					message = store.getMessages().get(0);
+					populate(message);
+				}
 			}
 			else
 			{
-				final Object[] messages = store.getMessages().toArray();
-				
-				// Make sure we don't try to re-display a message that is not in the store anymore
-				if (messageIndex <= messages.length)
+				synchronized (store)
 				{
-					message = (MqttContent) messages[messages.length - messageIndex];
-					populate(message);
-				}
+					final List<MqttContent> messages = store.getMessages();
+					
+					// Make sure we don't try to re-display a message that is not in the store anymore
+					if (messageIndex <= messages.size())
+					{
+						// message = (MqttContent) messages[messages.length - messageIndex];
+						message = messages.get(messageIndex - 1);
+						populate(message);
+					}
+				}				
 			}			
 		}
 		else

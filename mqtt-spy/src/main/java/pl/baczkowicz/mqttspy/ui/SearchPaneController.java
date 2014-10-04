@@ -1,8 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.Queue;
 import java.util.ResourceBundle;
 
@@ -24,15 +22,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 
-public class SearchPaneController implements Initializable, Observer, MessageFormatChangeObserver
+public class SearchPaneController implements Initializable, MessageFormatChangeObserver, MqttContentObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(SearchPaneController.class);
 	
@@ -145,9 +144,9 @@ public class SearchPaneController implements Initializable, Observer, MessageFor
 	{
 		clearMessages();		
 		
-		for (final MqttContent message : store.getMessages())
+		for (int i = store.getMessages().size() -1; i >= 0; i--)
 		{
-			processMessage(message);
+			processMessage(store.getMessages().get(i));
 		}
 		
 		updateTabTitle();	
@@ -177,10 +176,11 @@ public class SearchPaneController implements Initializable, Observer, MessageFor
 		tab.setGraphic(title);		
 	}
 
-	public void setStore(ObservableMessageStoreWithFiltering store)
+	public void setStore(final ObservableMessageStoreWithFiltering store)
 	{
 		this.store = store;
-		store.addObserver(this);
+		eventManager.registerMqttContentObserver(this, store);
+		// store.addObserver(this);
 	}
 	
 	public void setUIQueue(final Queue<MqttSpyUIEvent> uiEventQueue)
@@ -199,40 +199,33 @@ public class SearchPaneController implements Initializable, Observer, MessageFor
 		//}		
 	}
 
-	public void update(Observable observable, Object update)
+	public void onMqttContentReceived(final MqttContent message)
 	{
-		if (update instanceof MqttContent)
+		if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(message.getTopic())))
 		{
-			if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(((MqttContent) update).getTopic())))
+			final boolean matchingSearch = processMessage(message); 
+			if (matchingSearch)														
 			{
-				final boolean matchingSearch = processMessage((MqttContent) update); 
-				if (matchingSearch)														
+				if (messageNavigationPaneController.showLatest())
 				{
-					if (messageNavigationPaneController.showLatest())
-					{
-						eventManager.changeMessageIndexToFirst(foundMessageStore);
-					}
-					else
-					{
-						eventManager.incrementMessageIndex(foundMessageStore);
-					}
+					eventManager.changeMessageIndexToFirst(foundMessageStore);
 				}
-				
-				updateTabTitle();
+				else
+				{
+					eventManager.incrementMessageIndex(foundMessageStore);
+				}
 			}
-			else
-			{
-				// Ignore
-			}
+			
+			updateTabTitle();
 		}
-		
 	}
 
 	public void init()
 	{
 		eventManager.registerFormatChangeObserver(this, store);
 		
-		foundMessageStore = new ObservableMessageStore("search-" + store.getName(), Integer.MAX_VALUE, uiEventQueue);
+		foundMessageStore = new ObservableMessageStore("search-" + store.getName(), 
+				store.getMessageStore().getPreferredSize(), store.getMessageStore().getMaxSize(), uiEventQueue, eventManager);
 		foundMessageStore.setFormatter(store.getFormatter());
 		
 		// searchPaneEventDispatcher = new EventDispatcher();

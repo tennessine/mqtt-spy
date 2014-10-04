@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -203,7 +203,7 @@ public class SubscriptionSummaryTableController implements Initializable
 	public void init()
 	{
 		filterTable.setContextMenu(createTopicTableContextMenu());
-		filterTable.setItems(store.getObservableMessagesPerTopic());	
+		filterTable.setItems(store.getMessageStore().getTopicSummary().getObservableMessagesPerTopic());	
 	}
 
 	public void setStore(final ObservableMessageStoreWithFiltering store)

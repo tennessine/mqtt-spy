@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 
 public class ObservableMessageStoreWithFilteringTest
 {
@@ -21,7 +22,7 @@ public class ObservableMessageStoreWithFilteringTest
 	@Before
 	public void setUp() throws Exception
 	{
-		store = new ObservableMessageStoreWithFiltering("test", 5, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		store = new ObservableMessageStoreWithFiltering("test", 5, 5, 5, new LinkedBlockingQueue<MqttSpyUIEvent>(), null);
 	}
 
 	@Test

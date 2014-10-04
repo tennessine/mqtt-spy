@@ -57,6 +57,7 @@
 			<xs:element name="KeepAliveInterval" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
 			
 			<xs:element name="Formatter" 			type="xs:IDREF" 	minOccurs="0" maxOccurs="1" />
+			<xs:element name="MinMessagesStoredPerTopic" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
 			<xs:element name="MaxMessagesStored" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
 			<xs:element name="PublicationScripts" 	type="xs:string" 	minOccurs="0" maxOccurs="1" />
 			

@@ -1,7 +1,7 @@
 package pl.baczkowicz.mqttspy.events.ui;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 
 public class BrowseReceivedMessageEvent implements MqttSpyUIEvent
 {

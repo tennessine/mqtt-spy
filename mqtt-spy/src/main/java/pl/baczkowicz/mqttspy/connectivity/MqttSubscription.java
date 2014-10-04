@@ -3,8 +3,9 @@ package pl.baczkowicz.mqttspy.connectivity;
 import java.util.Queue;
 
 import javafx.scene.paint.Color;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 
 public class MqttSubscription extends ObservableMessageStoreWithFiltering
@@ -21,18 +22,24 @@ public class MqttSubscription extends ObservableMessageStoreWithFiltering
 
 	private SubscriptionController subscriptionController;
 
+	// private final EventManager eventManager;
+	
 	private MqttConnection connection;
 
 	private boolean subscribing;
 
-	public MqttSubscription(final String topic, final Integer qos, final Color color, final int maxMessageStoreSize, final Queue<MqttSpyUIEvent> uiEventQueue)
+	public MqttSubscription(final String topic, final Integer qos, final Color color, 
+			final int minMessagesPerTopic, final int preferredStoreSize, final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
 	{
-		super(topic, maxMessageStoreSize, uiEventQueue);
+		// Max size is double the preferred size
+		super(topic, minMessagesPerTopic, preferredStoreSize, preferredStoreSize * 2, uiEventQueue, eventManager);
 		
 		this.topic = topic;
 		this.qos = qos;
 		this.color = color;
-		this.active = false;			
+		this.active = false;
+		
+		// this.eventManager = eventManager;
 	}
 
 	public String getTopic()
@@ -78,9 +85,7 @@ public class MqttSubscription extends ObservableMessageStoreWithFiltering
 
 	public void subscriptionStatusChanged()
 	{
-		// Notifies the observers
-		this.setChanged();
-		this.notifyObservers(this);
+		eventManager.notifySubscriptionStatusChanged(this);
 	}
 
 	public void setSubscriptionController(final SubscriptionController subscriptionController)

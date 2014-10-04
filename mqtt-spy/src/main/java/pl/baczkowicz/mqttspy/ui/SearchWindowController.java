@@ -20,10 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
-import pl.baczkowicz.mqttspy.events.ui.EventDispatcher;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SearchWindowController extends AnchorPane implements Initializable, NewMessageObserver
@@ -54,7 +53,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 
 	private Stage stage;
 
-	private EventDispatcher subscriptionPaneEventDispatcher;
+	// private EventDispatcher subscriptionPaneEventDispatcher;
 
 	private EventManager eventManager;
 	
@@ -91,16 +90,16 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 				searchPaneControllers.remove(tab);		
 				
 				// That's for getting new messages in
-				subscriptionPaneEventDispatcher.deleteObserver(searchPaneController);
+				//subscriptionPaneEventDispatcher.deleteObserver(searchPaneController);
 			}
 		});
 		
-		searchPaneController.setStore(store);
 		searchPaneController.setTab(tab);
 		searchPaneController.setEventManager(eventManager);
+		searchPaneController.setStore(store);
 		
 		// That's for getting new messages in
-		subscriptionPaneEventDispatcher.addObserver(searchPaneController);
+		//subscriptionPaneEventDispatcher.addObserver(searchPaneController);
 		
 		searchPaneController.init();
 		
@@ -188,8 +187,9 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		this.subscriptionName = name;		
 	}
 	
-	public void setEventDispatcher(final EventDispatcher subscriptionPaneEventDispatcher)
-	{
-		this.subscriptionPaneEventDispatcher = subscriptionPaneEventDispatcher;
-	}
+	// public void setEventDispatcher(final EventDispatcher
+	// subscriptionPaneEventDispatcher)
+	// {
+	// this.subscriptionPaneEventDispatcher = subscriptionPaneEventDispatcher;
+	// }
 }

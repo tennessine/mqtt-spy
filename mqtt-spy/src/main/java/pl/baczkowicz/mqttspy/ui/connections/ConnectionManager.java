@@ -90,7 +90,8 @@ public class ConnectionManager
 				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
 				subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
 				
-				connection.addObserver(connectionController);											
+				eventManager.registerConnectionStatusObserver(connectionController, connection);
+				// connection.addObserver(connectionController);											
 				connection.setOpening(false);
 				connection.setOpened(true);
 				

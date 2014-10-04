@@ -21,9 +21,9 @@ import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
@@ -56,7 +56,9 @@ public class SubscriptionManager
 	{
 		logger.info("Creating subscription for " + subscriptionDetails.getTopic());
 		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
-				subscriptionDetails.getQos(), color, connection.getMaxMessageStoreSize(), uiEventQueue);
+				subscriptionDetails.getQos(), color,
+				connection.getProperties().getConfiguredProperties().getMinMessagesStoredPerTopic(),
+				connection.getPreferredStoreSize(), uiEventQueue, eventManager);
 		subscription.setConnection(connection);
 		
 		// Add a new tab
@@ -114,7 +116,12 @@ public class SubscriptionManager
 		final SubscriptionController subscriptionController = ((SubscriptionController) loader.getController());
 		
 		final Tab tab = new Tab();
-		observableMessageStore.addObserver(subscriptionController);
+		//observableMessageStore.addObserver(subscriptionController);
+		eventManager.registerMqttContentObserver(subscriptionController, observableMessageStore);
+		if (subscription != null)
+		{
+			eventManager.registerSubscriptionStatusObserver(subscriptionController, subscription);
+		}
 		subscriptionController.setStore(observableMessageStore);
 		subscriptionController.setEventManager(eventManager);
 		subscriptionController.setTab(tab);

@@ -1,8 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -26,12 +24,13 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
-public class ConnectionController implements Initializable, Observer
+public class ConnectionController implements Initializable, ConnectionStatusChangeObserver
 {
 	private static final int MIN_COLLAPSED_PANE_HEIGHT = 26;
 	
@@ -232,78 +231,74 @@ public class ConnectionController implements Initializable, Observer
 			connectionTab.setText(connection.getName());
 		}
 	}
-
-	public void update(Observable observable, Object update)
+	
+	public void onConnectionStatusChanged(final MqttConnection changedConnection)
 	{
-		if (observable instanceof MqttConnection)
+		final MqttConnectionStatus connectionStatus = changedConnection.getConnectionStatus();
+		
+		newSubscriptionPaneController.setConnected(false);
+		newPublicationPaneController.setConnected(false);
+		
+		for (final MqttSubscription sub : connection.getSubscriptions().values())
 		{
-			if (update instanceof MqttConnectionStatus)
+			sub.getSubscriptionController().updateContextMenu();
+		}
+		
+		// If the context menu is available and has items in it
+		if (connectionTab.getContextMenu() != null && connectionTab.getContextMenu().getItems().size() > 0)
+		{
+			switch (connectionStatus)
 			{
-				newSubscriptionPaneController.setConnected(false);
-				newPublicationPaneController.setConnected(false);
-				
-				for (final MqttSubscription sub : connection.getSubscriptions().values())
-				{
-					sub.getSubscriptionController().updateContextMenu();
-				}
-				
-				// If the context menu is available and has items in it
-				if (connectionTab.getContextMenu() != null && connectionTab.getContextMenu().getItems().size() > 0)
-				{
-					switch ((MqttConnectionStatus) update)
-					{
-						case NOT_CONNECTED:
-							connectionTab.getContextMenu().getItems().get(0).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
-							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-							showTabTile(false);
-							break;
-						case CONNECTED:					
-							connectionTab.getContextMenu().getItems().get(0).setDisable(true);
-							connectionTab.getContextMenu().getItems().get(2).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(5).setDisable(false);
-							newSubscriptionPaneController.setConnected(true);
-							newPublicationPaneController.setConnected(true);
-							showTabTile(false);
-							break;
-						case CONNECTING:
-							connectionTab.getContextMenu().getItems().get(2).setDisable(true);
-							connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
-							connectionTab.getContextMenu().getItems().get(3).setDisable(true);
-							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-							showTabTile(true);						
-							break;
-						case DISCONNECTED:
-							connectionTab.getContextMenu().getItems().get(0).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
-							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-							showTabTile(false);
-							break;
-						case DISCONNECTING:					
-							connectionTab.getContextMenu().getItems().get(0).setDisable(true);
-							connectionTab.getContextMenu().getItems().get(2).setDisable(true);
-							connectionTab.getContextMenu().getItems().get(3).setDisable(false);
-							connectionTab.getContextMenu().getItems().get(5).setDisable(true);
-							showTabTile(false);
-							break;
-						default:
-							break;
-					}
-				}
-
-				// connectionTab.getStyleClass().clear();
-				if (connectionTab.getStyleClass().size() > 1)
-				{
-					connectionTab.getStyleClass().remove(1);
-				}
-				connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus((MqttConnectionStatus) update));
-				
-				DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
+				case NOT_CONNECTED:
+					connectionTab.getContextMenu().getItems().get(0).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
+					connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+					showTabTile(false);
+					break;
+				case CONNECTED:					
+					connectionTab.getContextMenu().getItems().get(0).setDisable(true);
+					connectionTab.getContextMenu().getItems().get(2).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(5).setDisable(false);
+					newSubscriptionPaneController.setConnected(true);
+					newPublicationPaneController.setConnected(true);
+					showTabTile(false);
+					break;
+				case CONNECTING:
+					connectionTab.getContextMenu().getItems().get(2).setDisable(true);
+					connectionTab.getContextMenu().getItems().get(0).setDisable(true);					
+					connectionTab.getContextMenu().getItems().get(3).setDisable(true);
+					connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+					showTabTile(true);						
+					break;
+				case DISCONNECTED:
+					connectionTab.getContextMenu().getItems().get(0).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(2).setDisable(true);										
+					connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+					showTabTile(false);
+					break;
+				case DISCONNECTING:					
+					connectionTab.getContextMenu().getItems().get(0).setDisable(true);
+					connectionTab.getContextMenu().getItems().get(2).setDisable(true);
+					connectionTab.getContextMenu().getItems().get(3).setDisable(false);
+					connectionTab.getContextMenu().getItems().get(5).setDisable(true);
+					showTabTile(false);
+					break;
+				default:
+					break;
 			}
 		}
+
+		// connectionTab.getStyleClass().clear();
+		if (connectionTab.getStyleClass().size() > 1)
+		{
+			connectionTab.getStyleClass().remove(1);
+		}
+		connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(connectionStatus));
+		
+		DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
 	}
 	
 	public void updateConnectionStats()

@@ -1,6 +1,7 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
@@ -26,9 +27,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -93,13 +94,13 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 		});
 		
 		messageTable.setOnMouseClicked(new EventHandler<Event>()
-				{
-					@Override
-					public void handle(Event event)
-					{
-						selectItem();
-					}
-				});
+		{
+			@Override
+			public void handle(Event event)
+			{
+				selectItem();
+			}
+		});
 		
 		messageTable
 				.setRowFactory(new Callback<TableView<MqttContentProperties>, TableRow<MqttContentProperties>>()
@@ -137,16 +138,16 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 		final MqttContentProperties item = messageTable.getSelectionModel().getSelectedItem();
 		if (item != null)
 		{
-			final Object[] array = store.getMessages().toArray();
+			final List<MqttContent> list = store.getMessages();
 			for (int i = 0; i < store.getMessages().size(); i++)
 			{
-				if (((MqttContent) array[i]).getId() == item.getId())
+				if (list.get(i).getId() == item.getId())
 				{
 					// logger.info("{} Changing selection to " + (array.length - i), store.getName());
-					eventManager.changeMessageIndex(store, this, array.length - i);
+					// eventManager.changeMessageIndex(store, this, list.size() - i);
+					eventManager.changeMessageIndex(store, this, i + 1);
 				}
 			}
-
 		}
 	}
 
@@ -155,8 +156,8 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 	{
 		if (store.getMessages().size() > 0)
 		{
-			final long id = ((MqttContent) store.getMessages().toArray()[store.getMessages().size()
-					- messageIndex]).getId();
+			// final long id = (store.getMessages().get(store.getMessages().size() - messageIndex)).getId();
+			final long id = (store.getMessages().get(messageIndex - 1)).getId();
 
 			for (final MqttContentProperties item : items)
 			{
@@ -170,7 +171,6 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 				}
 			}
 		}
-		
 	}
 	
 	public void init()

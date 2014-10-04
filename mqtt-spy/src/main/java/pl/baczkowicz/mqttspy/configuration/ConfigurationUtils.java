@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.Main;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.MqttMessageStore;
+import pl.baczkowicz.mqttspy.storage.MessageList;
 
 public class ConfigurationUtils
 {
@@ -39,7 +39,12 @@ public class ConfigurationUtils
 		
 		if (connection.getMaxMessagesStored() == null)
 		{
-			connection.setMaxMessagesStored(MqttMessageStore.DEFAULT_MAX_SIZE);
+			connection.setMaxMessagesStored(MessageList.DEFAULT_MAX_SIZE);
+		}
+		
+		if (connection.getMinMessagesStoredPerTopic() == null)
+		{
+			connection.setMinMessagesStoredPerTopic(MessageList.DEFAULT_MIN_MESSAGES_PER_TOPIC);
 		}
 		
 		if (connection.isAutoOpen() == null)

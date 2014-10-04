@@ -24,10 +24,10 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
 import pl.baczkowicz.mqttspy.ui.utils.TextUtils;
 
 public class MessageNavigationController implements Initializable, MessageIndexToFirstObserver, MessageIndexIncrementObserver

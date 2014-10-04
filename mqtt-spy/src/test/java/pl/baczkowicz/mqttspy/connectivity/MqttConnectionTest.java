@@ -74,7 +74,7 @@ public class MqttConnectionTest extends TestCase
 		connection.setClient(mockClient);
 
 		// This should add a subscription
-		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 10, 100, new LinkedBlockingQueue<MqttSpyUIEvent>(), mockEventManager);
 
 		context.checking(new Expectations()
 		{
@@ -90,7 +90,7 @@ public class MqttConnectionTest extends TestCase
 			}
 		});
 
-		subscription.addObserver(mockObserver);
+		//subscription.addObserver(mockObserver);
 		assertTrue(connection.subscribe(subscription));
 
 		// This should handle the message
@@ -134,8 +134,8 @@ public class MqttConnectionTest extends TestCase
 		connection.setClient(mockClient);
 
 		// This should add a subscription
-		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 100, new LinkedBlockingQueue<MqttSpyUIEvent>());
-		subscription.addObserver(mockObserver);
+		final MqttSubscription subscription = new MqttSubscription(subscription_TOPIC, 0, Color.WHITE, 10, 100, new LinkedBlockingQueue<MqttSpyUIEvent>(), mockEventManager);
+		//subscription.addObserver(mockObserver);
 		
 		context.checking(new Expectations()
 		{

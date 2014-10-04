@@ -1,22 +1,20 @@
-package pl.baczkowicz.mqttspy.connectivity.messagestore;
+package pl.baczkowicz.mqttspy.storage;
 
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
-import javafx.collections.ObservableList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.events.ui.RemoveMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.UpdateReceivedMessageSummaryEvent;
-import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 {
@@ -28,16 +26,17 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	/** All topics this store knows about. */
 	private final Set<String> allTopics = new HashSet<String>();
 	
-	private final MqttMessageStore filteredStore;
-	
-	private final TopicSummary topicSummary;
-	
-	public ObservableMessageStoreWithFiltering(final String name, final int maxSize, final Queue<MqttSpyUIEvent> uiEventQueue)
+	private final MessageListWithObservableTopicSummary filteredStore;
+			
+	public ObservableMessageStoreWithFiltering(final String name, final int minMessagesPerTopic, final int preferredSize, final int maxSize, 
+			final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
 	{
-		super(name, maxSize, uiEventQueue);
-		this.topicSummary = new TopicSummary(name);
-		this.topicSummary.setFormatter(messageFormat);
-		this.filteredStore = new MqttMessageStore(maxSize);
+		super(name, preferredSize, maxSize, uiEventQueue, eventManager);		
+		
+		this.filteredStore = new MessageListWithObservableTopicSummary(preferredSize, maxSize, "filtered-" + name, messageFormat);
+		
+		new Thread(new MessageStoreGarbageCollector(store, uiEventQueue, minMessagesPerTopic, true, false)).start();
+		new Thread(new MessageStoreGarbageCollector(filteredStore, uiEventQueue, minMessagesPerTopic, false, true)).start();
 	}
 	
 	public void messageReceived(final MqttContent message)
@@ -73,21 +72,19 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		// 6. The following updates are queued so that the JavaFX thread is not swamped with hundreds or thousands of requests to do Platform.runLater()
 		// Message browsing update
 		uiEventQueue.add(new BrowseReceivedMessageEvent(this, message));		
+		
 		// Summary table update - required are: removed message, new message, and whether to show the topic
-		uiEventQueue.add(new UpdateReceivedMessageSummaryEvent(this, removed, message, allTopicsShown && !topicAlreadyExists));
+		if (removed != null)
+		{
+			uiEventQueue.add(new RemoveMessageEvent(store, removed));
+		}
+		uiEventQueue.add(new UpdateReceivedMessageSummaryEvent(this, message, allTopicsShown && !topicAlreadyExists));
 	}	
 	
 	@Override
-	public Deque<MqttContent> getMessages()
+	public List<MqttContent> getMessages()
 	{		
 		return filteredStore.getMessages();
-	}
-	
-	@Override
-	public void setFormatter(final FormatterDetails messageFormat)
-	{
-		super.setFormatter(messageFormat);
-		topicSummary.setFormatter(messageFormat);
 	}
 
 	private void initialiseFilteredStore()
@@ -102,11 +99,6 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			}
 		}
 	}
-	
-	// public boolean applyFilter(final String topic)
-	// {
-	// return applyFilter(topic, true);
-	// }
 	
 	private boolean applyFilter(final String topic, final boolean recreateStore)
 	{
@@ -168,17 +160,12 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	{
 		return shownTopics.size() != allTopics.size();
 	}
-	
-	public ObservableList<SubscriptionTopicSummaryProperties> getObservableMessagesPerTopic()
-	{
-		return topicSummary.getObservableMessagesPerTopic();
-	}
+
 	
 	@Override
 	public void clear()
 	{
 		super.clear();
-		topicSummary.clear();
 		allTopics.clear();
 		removeAllFilters();
 	}
@@ -205,7 +192,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			updateFilter(topic, show);
 		}
 		
-		topicSummary.setAllShowValues(show);
+		store.getTopicSummary().setAllShowValues(show);
 	}
 
 	public void toggleAllShowValues()
@@ -215,17 +202,12 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			updateFilter(topic, !shownTopics.contains(topic));
 		}
 		
-		topicSummary.toggleAllShowValues();
+		store.getTopicSummary().toggleAllShowValues();
 	}
 
 	public void setShowValue(final String topic, final boolean show)
 	{
 		updateFilter(topic, show);
-		topicSummary.setShowValue(topic, show);
-	}
-	
-	public TopicSummary getTopicSummary()
-	{
-		return topicSummary;
+		store.getTopicSummary().setShowValue(topic, show);
 	}
 }

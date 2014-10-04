@@ -1,8 +1,6 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -36,18 +34,19 @@ import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.connectivity.messagestore.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
-import pl.baczkowicz.mqttspy.events.ui.EventDispatcher;
+import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
+import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SubscriptionController implements Observer, Initializable, ClearTabObserver
+public class SubscriptionController implements Initializable, ClearTabObserver, SubscriptionStatusChangeObserver, MqttContentObserver//, Observer
 {
 	public MqttSubscription getSubscription()
 	{
@@ -123,7 +122,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	private SearchWindowController searchWindowController;
 
-	private final EventDispatcher eventDispatcher;
+	//private final EventDispatcher eventDispatcher;
 
 	private EventManager eventManager;
 
@@ -135,8 +134,8 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 
 	public SubscriptionController()
 	{
-		eventDispatcher = new EventDispatcher();
-		eventDispatcher.addObserver(this);
+		// eventDispatcher = new EventDispatcher();
+		// eventDispatcher.addObserver(this);
 	}
 	
 	@Override
@@ -147,28 +146,26 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 		store.setAllShowValues(false);		
 	}
 	
-	public void update(Observable observable, Object update)
+	public void onSubscriptionStatusChanged(final MqttSubscription changedSubscription)
 	{
-		if (update instanceof MqttContent)
+		subscription = changedSubscription;
+		updateContextMenu();
+	}
+	
+	public void onMqttContentReceived(final MqttContent message)
+	{
+		if (store.getFilters().contains(message.getTopic()))
 		{
-			if (store.getFilters().contains(((MqttContent) update).getTopic()))
+			if (messageNavigationPaneController.showLatest())
 			{
-				if (messageNavigationPaneController.showLatest())
-				{
-					eventManager.notifyNewMessageAvailable(store);
-					eventManager.changeMessageIndexToFirst(store);
-				}
-				else
-				{
-					eventManager.notifyNewMessageAvailable(store);
-					eventManager.incrementMessageIndex(store);
-				}
+				eventManager.notifyNewMessageAvailable(store);
+				eventManager.changeMessageIndexToFirst(store);
 			}
-		}
-		else if (update instanceof MqttSubscription)
-		{
-			subscription = (MqttSubscription) update;
-			updateContextMenu();
+			else
+			{
+				eventManager.notifyNewMessageAvailable(store);
+				eventManager.incrementMessageIndex(store);
+			}
 		}
 	}
 	
@@ -284,7 +281,7 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);
 			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : SubscriptionManager.ALL_SUBSCRIPTIONS_TAB_TITLE);
-			searchWindowController.setEventDispatcher(eventDispatcher);
+			// searchWindowController.setEventDispatcher(eventDispatcher);
 			searchWindowController.setEventManager(eventManager);
 			
 			// Note: searchWindowController is purely interested in knowing if a new message is available
@@ -412,12 +409,15 @@ public class SubscriptionController implements Observer, Initializable, ClearTab
 	
 	public void updateContextMenu()
 	{
-		SubscriptionManager.updateSubscriptionTabContextMenu(tab, subscription);
+		if (subscription != null)
+		{
+			SubscriptionManager.updateSubscriptionTabContextMenu(tab, subscription);
+		}
 	}
 
 	public void updateSubscriptionStats()
 	{
-		final int topicCount = store.getObservableMessagesPerTopic().size();
+		final int topicCount = store.getMessageStore().getTopicSummary().getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)
 		{

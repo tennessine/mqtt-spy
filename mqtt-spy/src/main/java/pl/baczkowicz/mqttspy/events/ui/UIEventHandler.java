@@ -65,19 +65,23 @@ public class UIEventHandler implements Runnable
 			{
 				final UpdateReceivedMessageSummaryEvent updateEvent = (UpdateReceivedMessageSummaryEvent) event;
 				
-				// Remove old message from stats
-				if (updateEvent.getRemoved() != null)
-				{
-					updateEvent.getStore().getTopicSummary().removeOldest(updateEvent.getRemoved());
-				}
-				
 				// Calculate the overall message count per topic
-				updateEvent.getStore().getTopicSummary().addAndRemove(updateEvent.getAdded());
+				updateEvent.getStore().getMessageStore().getTopicSummary().add(updateEvent.getAdded());
 				
 				// Update the 'show' property if required
 				if (updateEvent.isShowTopic())
 				{			
-					updateEvent.getStore().getTopicSummary().setShowValue(updateEvent.getAdded().getTopic(), true);											
+					updateEvent.getStore().getMessageStore().getTopicSummary().setShowValue(updateEvent.getAdded().getTopic(), true);											
+				}
+			}
+			else if (event instanceof RemoveMessageEvent)
+			{
+				final RemoveMessageEvent removeEvent = (RemoveMessageEvent) event;
+				
+				// Remove old message from stats
+				if (removeEvent.getRemoved() != null)
+				{
+					removeEvent.getStore().getTopicSummary().remove(removeEvent.getRemoved());
 				}
 			}
 		}		

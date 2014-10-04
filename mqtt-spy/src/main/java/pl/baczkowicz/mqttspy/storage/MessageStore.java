@@ -1,12 +1,12 @@
-package pl.baczkowicz.mqttspy.connectivity.messagestore;
+package pl.baczkowicz.mqttspy.storage;
 
-import java.util.Queue;
+import java.util.List;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 
 public interface MessageStore
 {
-	Queue<MqttContent> getMessages();
+	List<MqttContent> getMessages();
 
 	boolean filtersEnabled();
 }
