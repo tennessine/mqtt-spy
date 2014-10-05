@@ -32,7 +32,7 @@ public class TopicSummary extends TopicMessageCount
 		}
 	}
 	
-	public void remove(final MqttContent message)
+	public void removeMessage(final MqttContent message)
 	{
 		synchronized (topicToSummaryMapping)
 		{
@@ -50,7 +50,7 @@ public class TopicSummary extends TopicMessageCount
 		}
 	}
 	
-	public SubscriptionTopicSummaryProperties add(final MqttContent message)
+	public SubscriptionTopicSummaryProperties addMessage(final MqttContent message)
 	{
 		SubscriptionTopicSummaryProperties newElement = null;
 		

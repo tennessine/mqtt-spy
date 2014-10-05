@@ -151,10 +151,12 @@
                         <CheckBox fx:id="autoConnect" layoutX="279.0" layoutY="58.0" mnemonicParsing="false" selected="true" />
                         <Label layoutX="23.0" layoutY="60.0" text="Auto-connect when opened" />
                         <CheckBox fx:id="autoOpen" layoutX="279.0" layoutY="18.0" mnemonicParsing="false" selected="true" />
-                        <Label layoutX="23.0" layoutY="100.0" text="Max messages stored" />
-                        <Label layoutX="23.0" layoutY="140.0" text="Message content formatter" />
-                        <TextField fx:id="maxMessagesStored" layoutX="279.0" layoutY="95.0" prefHeight="25.0" prefWidth="78.0" />
-                        <ComboBox fx:id="formatter" layoutX="279.0" layoutY="135.0" prefHeight="25.0" prefWidth="296.0" AnchorPane.rightAnchor="11.0" />                        
+                        <Label layoutX="23.0" layoutY="140.0" text="Max messages stored" />
+                        <Label layoutX="23.0" layoutY="180.0" text="Message content formatter" />
+                        <TextField fx:id="maxMessagesStored" layoutX="279.0" layoutY="135.0" prefHeight="25.0" prefWidth="78.0" />
+                        <ComboBox fx:id="formatter" layoutX="279.0" layoutY="175.0" prefHeight="25.0" prefWidth="296.0" AnchorPane.rightAnchor="11.0" />
+                        <Label layoutX="23.0" layoutY="100.0" text="Min messages per topic" />
+                        <TextField fx:id="minMessagesPerTopicStored" layoutX="279.0" layoutY="95.0" prefHeight="25.0" prefWidth="78.0" />                        
                   	</children>
                   </AnchorPane>
                </content>

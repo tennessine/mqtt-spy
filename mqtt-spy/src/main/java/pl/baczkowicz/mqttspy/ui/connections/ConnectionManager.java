@@ -49,7 +49,7 @@ public class ConnectionManager
 		this.eventManager = eventManager;
 		this.statisticsManager = statisticsManager;
 		
-		new Thread(new UIEventHandler(uiEventQueue)).start();
+		new Thread(new UIEventHandler(uiEventQueue, eventManager)).start();
 	}
 	
 	public void loadConnectionTab(final MainController mainController,

@@ -2,7 +2,7 @@ package pl.baczkowicz.mqttspy.events.observers;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 
-public interface MqttContentObserver
+public interface MessageAddedObserver
 {
-	void onMqttContentReceived(final MqttContent message);
+	void onMessageAdded(final MqttContent message);
 }

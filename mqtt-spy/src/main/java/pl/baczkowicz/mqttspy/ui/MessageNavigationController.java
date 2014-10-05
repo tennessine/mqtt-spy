@@ -24,13 +24,16 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
+import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.utils.TextUtils;
 
-public class MessageNavigationController implements Initializable, MessageIndexToFirstObserver, MessageIndexIncrementObserver
+public class MessageNavigationController implements Initializable, MessageIndexToFirstObserver, MessageIndexIncrementObserver, MessageAddedObserver, MessageRemovedObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(MessageNavigationController.class);
 
@@ -75,153 +78,13 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 
 	private int selectedMessage;
 
-	private ObservableMessageStore store; 
+	private BasicMessageStore store; 
 	
 	private TextField messageIndexValueField;
 	
 	private Label totalMessagesValueLabel;
 	
 	private EventManager eventManager;
-
-	// ===================
-	// === FXML methods ==
-	// ===================
-	@FXML
-	private void showFirst()
-	{
-		showFirstMessage();
-	}
-
-	@FXML
-	private void showLast()
-	{
-		showLastMessage();
-	}	
-
-	@FXML
-	private void showMoreRecent()
-	{
-		changeSelectedMessageIndex(-1);
-	}	
-	
-	@FXML
-	private void showLessRecent()
-	{
-		changeSelectedMessageIndex(1);
-	}
-
-	// ====================
-	// === Other methods ==
-	// ====================
-		
-	@Override
-	public void onMessageIndexChange(final int newSelectedMessage)
-	{
-		// logger.info("{} Index change = " + newSelectedMessage, store.getName()); 
-		if (selectedMessage != newSelectedMessage)
-		{
-			selectedMessage = newSelectedMessage;
-			updateIndex();
-		}		
-	}
-	
-	@Override
-	public void onMessageIndexToFirstChange()
-	{
-		// logger.info("{} Index change to first", store.getName());
-		showFirstMessage();				
-	}
-	
-	@Override
-	public void onMessageIndexIncrement()
-	{
-		// logger.info("{} Index increment", store.getName());
-		
-		selectedMessage++;
-		
-		// Because this is an event saying a new message is available, but we don't want to display it,
-		// so by not refreshing the content of the old one we allow uninterrupted interaction with UI fields (e.g. selection, etc.)
-		updateIndex(false);			
-	}
-	
-	private void showFirstMessage()
-	{
-		if (store.getMessages().size() > 0)
-		{
-			selectedMessage = 1;
-			updateIndex();
-		}
-		else
-		{
-			selectedMessage = 0;
-			updateIndex();
-		}
-	}
-
-	private void showLastMessage()
-	{
-		if (store.getMessages().size() > 0)
-		{
-			selectedMessage = store.getMessages().size();
-			updateIndex();
-		}
-	}
-	
-	private void changeSelectedMessageIndex(final int count)
-	{
-		if (store.getMessages().size() > 0)
-		{
-			if (selectedMessage + count <= 1)
-			{
-				showFirstMessage();
-			}
-			else if (selectedMessage + count >= store.getMessages().size())
-			{
-				showLastMessage();
-			}
-			else
-			{
-				selectedMessage = selectedMessage + count;
-				updateIndex();
-			}
-		}		
-	}
-
-	private void updateIndex()
-	{
-		updateIndex(true);
-	}
-	
-	private void updateIndex(final boolean refreshMessageDetails)
-	{
-		final String selectedIndexValue = selectedMessage > 0 ? String.valueOf(selectedMessage) : "-";
-		final String totalMessagesValue = "/ " + store.getMessages().size(); 		
-		
-		if (messageIndexBox.getChildren().size() == 1)
-		{
-			messageLabel.setText("Message ");	
-			messageIndexBox.getChildren().add(messageIndexValueField);
-			messageIndexBox.getChildren().add(totalMessagesValueLabel);		
-			messageIndexBox.getChildren().add(filterStatusLabel);
-		}
-		
-		messageIndexValueField.setText(selectedIndexValue);		
-		totalMessagesValueLabel.setText(totalMessagesValue);
-
-		if (!store.filtersEnabled())
-		{			
-			filterStatusLabel.setText("");
-		}
-		else
-		{
-			filterStatusLabel.setText("(filter is on)");		
-		}
-		
-		if (refreshMessageDetails)
-		{
-			eventManager.changeMessageIndex(store, this, selectedMessage);
-		}
-	}
 
 	public void initialize(URL location, ResourceBundle resources)
 	{				
@@ -319,6 +182,186 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 	        }
 	    });		
 	}
+
+	public void init()
+	{
+		moreRecentButton.setTooltip(new Tooltip("Show more recent message"));
+		lessRecentButton.setTooltip(new Tooltip("Show less recent message"));
+		showFirstButton.setTooltip(new Tooltip("Show the latest message"));
+		showLastButton.setTooltip(new Tooltip("Show the oldest message"));	
+	}
+	
+	// ===================
+	// === FXML methods ==
+	// ===================
+	
+	@FXML
+	private void showFirst()
+	{
+		showFirstMessage();
+	}
+
+	@FXML
+	private void showLast()
+	{
+		showLastMessage();
+	}	
+
+	@FXML
+	private void showMoreRecent()
+	{
+		changeSelectedMessageIndex(-1);
+	}	
+	
+	@FXML
+	private void showLessRecent()
+	{
+		changeSelectedMessageIndex(1);
+	}
+
+	// ====================
+	// === Other methods ==
+	// ====================
+		
+	public void onMessageAdded(final MqttContent message)
+	{
+		// This is registered for filtered messages only
+		//if (store.getFilters().contains(message.getTopic()))
+		//{
+			if (showLatest())
+			{
+				// eventManager.notifyNewMessageAvailable(store);
+				// eventManager.navigateToFirst(store);
+				onNavigateToFirst();
+			}
+			else
+			{
+				// eventManager.notifyNewMessageAvailable(store);
+				// eventManager.incrementMessageIndex(store);
+				onMessageIndexIncrement();
+			}
+		//}
+	}
+		
+	@Override
+	public void onMessageIndexChange(final int newSelectedMessage)
+	{
+		// logger.info("{} Index change = " + newSelectedMessage, store.getName()); 
+		if (selectedMessage != newSelectedMessage)
+		{
+			selectedMessage = newSelectedMessage;
+			updateIndex();
+		}		
+	}
+	
+	@Override
+	public void onNavigateToFirst()
+	{
+		// logger.info("{} Index change to first", store.getName());
+		showFirstMessage();				
+	}
+	
+	@Override
+	public void onMessageIndexIncrement()
+	{
+		// logger.info("{} Index increment", store.getName());
+		
+		selectedMessage++;
+		
+		// Because this is an event saying a new message is available, but we don't want to display it,
+		// so by not refreshing the content of the old one we allow uninterrupted interaction with UI fields (e.g. selection, etc.)
+		updateIndex(false);			
+	}
+	
+	public void onMessageRemoved(final MqttContent message, final int messageIndex)
+	{
+		if (messageIndex < selectedMessage)
+		{
+			selectedMessage--;					
+		}		
+			
+		updateIndex(false);		
+	}
+	
+	private void showFirstMessage()
+	{
+		if (store.getMessages().size() > 0)
+		{
+			selectedMessage = 1;
+			updateIndex();
+		}
+		else
+		{
+			selectedMessage = 0;
+			updateIndex();
+		}
+	}
+
+	private void showLastMessage()
+	{
+		if (store.getMessages().size() > 0)
+		{
+			selectedMessage = store.getMessages().size();
+			updateIndex();
+		}
+	}
+	
+	private void changeSelectedMessageIndex(final int count)
+	{
+		if (store.getMessages().size() > 0)
+		{
+			if (selectedMessage + count <= 1)
+			{
+				showFirstMessage();
+			}
+			else if (selectedMessage + count >= store.getMessages().size())
+			{
+				showLastMessage();
+			}
+			else
+			{
+				selectedMessage = selectedMessage + count;
+				updateIndex();
+			}
+		}		
+	}
+
+	private void updateIndex()
+	{
+		updateIndex(true);
+	}
+	
+	private void updateIndex(final boolean refreshMessageDetails)
+	{
+		final String selectedIndexValue = selectedMessage > 0 ? String.valueOf(selectedMessage) : "-";
+		final String totalMessagesValue = "/ " + store.getMessages().size(); 		
+		
+		if (messageIndexBox.getChildren().size() == 1)
+		{
+			messageLabel.setText("Message ");	
+			messageIndexBox.getChildren().add(messageIndexValueField);
+			messageIndexBox.getChildren().add(totalMessagesValueLabel);		
+			messageIndexBox.getChildren().add(filterStatusLabel);
+		}
+		
+		messageIndexValueField.setText(selectedIndexValue);		
+		totalMessagesValueLabel.setText(totalMessagesValue);
+
+		if (!store.filtersEnabled())
+		{			
+			filterStatusLabel.setText("");
+		}
+		else
+		{
+			filterStatusLabel.setText("(filter is on)");		
+		}
+		
+		if (refreshMessageDetails)
+		{
+			eventManager.changeMessageIndex(store, this, selectedMessage);
+		}
+	}
+
 	
 	private void updateMessageIndexFromScroll(final int scroll)
 	{
@@ -332,19 +375,6 @@ public class MessageNavigationController implements Initializable, MessageIndexT
     	}
 	}	
 
-	public void init()
-	{
-		moreRecentButton.setTooltip(new Tooltip("Show more recent message"));
-		lessRecentButton.setTooltip(new Tooltip("Show less recent message"));
-		showFirstButton.setTooltip(new Tooltip("Show the latest message"));
-		showLastButton.setTooltip(new Tooltip("Show the oldest message"));	
-	}
-
-	public void setStore(final ObservableMessageStore store)
-	{
-		this.store = store;
-	}
-
 	public void clear()
 	{
 		messageLabel.setText("No messages");
@@ -355,6 +385,15 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 	public boolean showLatest()
 	{
 		return showLatestBox.isSelected();
+	}
+	
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
+	
+	public void setStore(final BasicMessageStore store)
+	{
+		this.store = store;
 	}
 	
 	public int getSelectedMessageIndex()

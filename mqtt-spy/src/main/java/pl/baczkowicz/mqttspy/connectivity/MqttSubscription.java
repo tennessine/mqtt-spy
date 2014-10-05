@@ -5,10 +5,10 @@ import java.util.Queue;
 import javafx.scene.paint.Color;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 
-public class MqttSubscription extends ObservableMessageStoreWithFiltering
+public class MqttSubscription extends ManagedMessageStoreWithFiltering
 {
 	private int id;
 	

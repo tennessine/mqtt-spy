@@ -32,21 +32,19 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
-import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
 import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SubscriptionController implements Initializable, ClearTabObserver, SubscriptionStatusChangeObserver, MqttContentObserver//, Observer
+public class SubscriptionController implements Initializable, ClearTabObserver, SubscriptionStatusChangeObserver
 {
 	public MqttSubscription getSubscription()
 	{
@@ -110,7 +108,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	@FXML
 	private ToggleButton searchButton;
 
-	private ObservableMessageStoreWithFiltering store; 
+	private ManagedMessageStoreWithFiltering store; 
 
 	private Tab tab;
 
@@ -121,8 +119,6 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	private Stage searchStage;
 
 	private SearchWindowController searchWindowController;
-
-	//private final EventDispatcher eventDispatcher;
 
 	private EventManager eventManager;
 
@@ -139,7 +135,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	}
 	
 	@Override
-	public void onClearTab(final ObservableMessageStoreWithFiltering subscription)
+	public void onClearTab(final ManagedMessageStoreWithFiltering subscription)
 	{	
 		messagePaneController.clear();
 		messageNavigationPaneController.clear();
@@ -151,24 +147,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		subscription = changedSubscription;
 		updateContextMenu();
 	}
-	
-	public void onMqttContentReceived(final MqttContent message)
-	{
-		if (store.getFilters().contains(message.getTopic()))
-		{
-			if (messageNavigationPaneController.showLatest())
-			{
-				eventManager.notifyNewMessageAvailable(store);
-				eventManager.changeMessageIndexToFirst(store);
-			}
-			else
-			{
-				eventManager.notifyNewMessageAvailable(store);
-				eventManager.incrementMessageIndex(store);
-			}
-		}
-	}
-	
+
 	@FXML
 	public void formatWholeMessage()
 	{
@@ -285,7 +264,8 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 			searchWindowController.setEventManager(eventManager);
 			
 			// Note: searchWindowController is purely interested in knowing if a new message is available
-			eventManager.registerNewMessageObserver(searchWindowController, store);
+			//eventManager.registerNewMessageObserver(searchWindowController, store);
+			eventManager.registerMessageAddedObserver(searchWindowController, store.getMessageList());
 			
 		
 			// Set scene width, height and style
@@ -344,10 +324,14 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		messageNavigationPaneController.setStore(store);
 		messageNavigationPaneController.setEventManager(eventManager);
 		messageNavigationPaneController.init();		
+		
 		// The subscription pane's message browser wants to know about show first, index change and update index events 
 		eventManager.registerChangeMessageIndexObserver(messageNavigationPaneController, store);
 		eventManager.registerChangeMessageIndexFirstObserver(messageNavigationPaneController, store);
 		eventManager.registerIncrementMessageIndexObserver(messageNavigationPaneController, store);
+		
+		eventManager.registerMessageAddedObserver(messageNavigationPaneController, store.getMessageList());
+		eventManager.registerMessageRemovedObserver(messageNavigationPaneController, store.getMessageList());
 		
 		if (connectionProperties != null && connectionProperties.getFormatter() != null)
 		{
@@ -366,7 +350,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		// logger.info("init(); finished on SubscriptionController");
 	}
 
-	public void setStore(final ObservableMessageStoreWithFiltering store)
+	public void setStore(final ManagedMessageStoreWithFiltering store)
 	{
 		this.store = store;
 	}
@@ -417,7 +401,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 
 	public void updateSubscriptionStats()
 	{
-		final int topicCount = store.getMessageStore().getTopicSummary().getObservableMessagesPerTopic().size();
+		final int topicCount = store.getMessageList().getTopicSummary().getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)
 		{

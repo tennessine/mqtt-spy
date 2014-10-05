@@ -5,36 +5,39 @@ import java.util.Map;
 
 import javafx.application.Platform;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
-import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
-import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
+import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
+import pl.baczkowicz.mqttspy.events.ui.BrowseRemovedMessageEvent;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.MessageListWithObservableTopicSummary;
 import pl.baczkowicz.mqttspy.storage.MessageStore;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
 
 public class EventManager
 {
 	// final static Logger logger = LoggerFactory.getLogger(EventManager.class);
 	
-	private final Map<MqttContentObserver, ObservableMessageStore> mqttContentObservers = new HashMap<>();
+	private final Map<MessageAddedObserver, MessageListWithObservableTopicSummary> messageAddedObservers = new HashMap<>();
+	
+	private final Map<MessageRemovedObserver, MessageListWithObservableTopicSummary> messageRemovedObservers = new HashMap<>();
 	
 	private final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObservers = new HashMap<>();
 	
 	private final Map<SubscriptionStatusChangeObserver, MqttSubscription> subscriptionStatusChangeObservers = new HashMap<>();
 	
-	private final Map<ClearTabObserver, ObservableMessageStoreWithFiltering> clearTabObservers = new HashMap<>();
+	private final Map<ClearTabObserver, ManagedMessageStoreWithFiltering> clearTabObservers = new HashMap<>();
 
-	private final Map<NewMessageObserver, MessageStore> newMessageObservers = new HashMap<>();
+	// private final Map<NewMessageObserver, MessageStore> newMessageObservers = new HashMap<>();
 	
 	private final Map<MessageIndexChangeObserver, MessageStore> changeMessageIndexObservers = new HashMap<>();
 	
@@ -58,9 +61,14 @@ public class EventManager
 		connectionStatusChangeObservers.put(observer, filter);
 	}
 	
-	public void registerMqttContentObserver(final MqttContentObserver observer, final ObservableMessageStore filter)
+	public void registerMessageAddedObserver(final MessageAddedObserver observer, final MessageListWithObservableTopicSummary filter)
 	{
-		mqttContentObservers.put(observer, filter);
+		messageAddedObservers.put(observer, filter);
+	}
+	
+	public void registerMessageRemovedObserver(final MessageRemovedObserver observer, final MessageListWithObservableTopicSummary filter)
+	{
+		messageRemovedObservers.put(observer, filter);
 	}
 	
 	public void registerSubscriptionStatusObserver(final SubscriptionStatusChangeObserver observer, final MqttSubscription filter)
@@ -73,15 +81,17 @@ public class EventManager
 		connectionStatusChangeObservers.remove(observer);
 	}
 	
-	public void registerClearTabObserver(final ClearTabObserver observer, final ObservableMessageStoreWithFiltering filter)
+	public void registerClearTabObserver(final ClearTabObserver observer, final ManagedMessageStoreWithFiltering filter)
 	{
 		clearTabObservers.put(observer, filter);
 	}
 	
-	public void registerNewMessageObserver(final NewMessageObserver observer, final MessageStore filter)
-	{
-		newMessageObservers.put(observer, filter);
-	}
+	// @Deprecated
+	// public void registerNewMessageObserver(final NewMessageObserver observer,
+	// final MessageStore filter)
+	// {
+	// newMessageObservers.put(observer, filter);
+	// }
 	
 	public void registerChangeMessageIndexObserver(final MessageIndexChangeObserver observer, final MessageStore filter)
 	{
@@ -113,17 +123,30 @@ public class EventManager
 		scriptStateChangeObservers.put(observer, filter);
 	}
 	
-	public void notifyMqttContentReceived(final ObservableMessageStore store, final MqttContent message)
+	public void notifyMessageAdded(final BrowseReceivedMessageEvent browseEvent)
 	{
-		for (final MqttContentObserver observer : mqttContentObservers.keySet())
+		for (final MessageAddedObserver observer : messageAddedObservers.keySet())
 		{
-			final ObservableMessageStore filter = mqttContentObservers.get(observer);
+			final MessageListWithObservableTopicSummary filter = messageAddedObservers.get(observer);
 			
-			if (filter == null || filter.equals(store))
+			if (filter == null || filter.equals(browseEvent.getList()))
 			{				
-				observer.onMqttContentReceived(message);
+				observer.onMessageAdded(browseEvent.getMessage());
 			}			
 		}				
+	}
+	
+	public void notifyMessageRemoved(final BrowseRemovedMessageEvent browseEvent)
+	{
+		for (final MessageRemovedObserver observer : messageRemovedObservers.keySet())
+		{
+			final MessageListWithObservableTopicSummary filter = messageRemovedObservers.get(observer);
+			
+			if (filter == null || filter.equals(browseEvent.getList()))
+			{				
+				observer.onMessageRemoved(browseEvent.getMessage(), browseEvent.getMessageIndex());
+			}			
+		}		
 	}
 	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
@@ -187,44 +210,45 @@ public class EventManager
 		});		
 	}
 	
-	public void notifyNewMessageAvailable(final MessageStore store)
-	{
-		Platform.runLater(new Runnable()
-		{			
-			@Override
-			public void run()
-			{
-				for (final NewMessageObserver observer : newMessageObservers.keySet())
-				{
-					final MessageStore filter = newMessageObservers.get(observer);
-					
-					if (filter == null || filter.equals(store))
-					{				
-						observer.onNewMessageReceived();
-					}
-				}				
-			}
-		});		
-	}
+	// @Deprecated
+	// public void notifyNewMessageAvailable(final MessageStore store)
+	// {
+	// // Platform.runLater(new Runnable()
+	// // {
+	// // @Override
+	// // public void run()
+	// // {
+	// for (final NewMessageObserver observer : newMessageObservers.keySet())
+	// {
+	// final MessageStore filter = newMessageObservers.get(observer);
+	//
+	// if (filter == null || filter.equals(store))
+	// {
+	// observer.onNewMessageReceived();
+	// }
+	// }
+	// // }
+	// // });
+	// }
 	
-	public void changeMessageIndexToFirst(final MessageStore store)
+	public void navigateToFirst(final MessageStore store)
 	{
-		Platform.runLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
+//		Platform.runLater(new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
 				for (final MessageIndexToFirstObserver observer : displayFirstMessageObservers.keySet())
 				{
 					final MessageStore filter = displayFirstMessageObservers.get(observer);
 
 					if (filter == null || filter.equals(store))
 					{
-						observer.onMessageIndexToFirstChange();
+						observer.onNavigateToFirst();
 					}
 				}
-			}
-		});
+//			}
+//		});
 	}
 	
 	public void changeMessageIndex(final MessageStore store, final Object dispatcher, final int index)
@@ -249,11 +273,11 @@ public class EventManager
 	
 	public void incrementMessageIndex(final MessageStore store)
 	{
-		Platform.runLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
+//		Platform.runLater(new Runnable()
+//		{
+//			@Override
+//			public void run()
+//			{
 				for (final MessageIndexIncrementObserver observer : incrementMessageIndexObservers.keySet())
 				{
 					final MessageStore filter = incrementMessageIndexObservers.get(observer);
@@ -263,8 +287,8 @@ public class EventManager
 						observer.onMessageIndexIncrement();
 					}
 				}
-			}
-		});
+//			}
+//		});
 	}
 
 	public void notifyConfigurationFileWriteFailure()
@@ -282,11 +306,11 @@ public class EventManager
 		// TODO Auto-generated method stub
 	}
 
-	public void notifyClearHistory(final ObservableMessageStoreWithFiltering store)
+	public void notifyClearHistory(final ManagedMessageStoreWithFiltering store)
 	{
 		for (final ClearTabObserver observer : clearTabObservers.keySet())
 		{
-			final ObservableMessageStoreWithFiltering filter = clearTabObservers.get(observer);
+			final ManagedMessageStoreWithFiltering filter = clearTabObservers.get(observer);
 			
 			if (filter == null || filter.equals(store))
 			{

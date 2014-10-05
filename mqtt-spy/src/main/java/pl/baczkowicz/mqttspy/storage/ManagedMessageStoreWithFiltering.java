@@ -13,12 +13,12 @@ import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.events.ui.RemoveMessageEvent;
-import pl.baczkowicz.mqttspy.events.ui.UpdateReceivedMessageSummaryEvent;
+import pl.baczkowicz.mqttspy.events.ui.TopicSummaryNewMessageEvent;
+import pl.baczkowicz.mqttspy.events.ui.TopicSummaryRemovedMessageEvent;
 
-public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
+public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 {
-	final static Logger logger = LoggerFactory.getLogger(ObservableMessageStoreWithFiltering.class);
+	final static Logger logger = LoggerFactory.getLogger(ManagedMessageStoreWithFiltering.class);
 	
 	/** This is the same as 'show' flag on topic summary. */
 	private final Set<String> shownTopics = new HashSet<String>();
@@ -26,19 +26,26 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 	/** All topics this store knows about. */
 	private final Set<String> allTopics = new HashSet<String>();
 	
-	private final MessageListWithObservableTopicSummary filteredStore;
+	private final MessageListWithObservableTopicSummary filteredMessages;
 			
-	public ObservableMessageStoreWithFiltering(final String name, final int minMessagesPerTopic, final int preferredSize, final int maxSize, 
+	public ManagedMessageStoreWithFiltering(final String name, final int minMessagesPerTopic, final int preferredSize, final int maxSize, 
 			final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
 	{
 		super(name, preferredSize, maxSize, uiEventQueue, eventManager);		
 		
-		this.filteredStore = new MessageListWithObservableTopicSummary(preferredSize, maxSize, "filtered-" + name, messageFormat);
+		this.filteredMessages = new MessageListWithObservableTopicSummary(preferredSize, maxSize, "filtered-" + name, messageFormat);
 		
-		new Thread(new MessageStoreGarbageCollector(store, uiEventQueue, minMessagesPerTopic, true, false)).start();
-		new Thread(new MessageStoreGarbageCollector(filteredStore, uiEventQueue, minMessagesPerTopic, false, true)).start();
+		new Thread(new MessageStoreGarbageCollector(this, messages, uiEventQueue, minMessagesPerTopic, true, false)).start();
+		new Thread(new MessageStoreGarbageCollector(this, filteredMessages, uiEventQueue, minMessagesPerTopic, false, true)).start();
 	}
 	
+	/**
+	 * Stores the received message and triggers UI updates. The following
+	 * updates are queued as UI events so that the JavaFX thread is not swamped
+	 * with hundreds or thousands of requests to do Platform.runLater().
+	 * 
+	 * @param message Received message
+	 */
 	public void messageReceived(final MqttContent message)
 	{	
 		// Record the current state of topics
@@ -56,7 +63,10 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		// 3. Add it to the filtered store if all messages are shown or the topic is already on the list
 		if (allTopicsShown || shownTopics.contains(message.getTopic()))
 		{
-			filteredStore.add(message);
+			filteredMessages.add(message);
+			
+			// Message browsing update
+			uiEventQueue.add(new BrowseReceivedMessageEvent(filteredMessages, message));
 		}
 
 		// 4. If the topic doesn't exist yet, add it (e.g. all shown but this is the first message for this topic)
@@ -67,35 +77,42 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		}
 
 		// 5. Formats the message with the currently selected formatter
-		message.format(getFormatter());
+		message.format(getFormatter());			
 		
-		// 6. The following updates are queued so that the JavaFX thread is not swamped with hundreds or thousands of requests to do Platform.runLater()
-		// Message browsing update
-		uiEventQueue.add(new BrowseReceivedMessageEvent(this, message));		
-		
-		// Summary table update - required are: removed message, new message, and whether to show the topic
+		// 6. Summary table update - required are: removed message, new message, and whether to show the topic
 		if (removed != null)
 		{
-			uiEventQueue.add(new RemoveMessageEvent(store, removed));
+			uiEventQueue.add(new TopicSummaryRemovedMessageEvent(messages, removed));
 		}
-		uiEventQueue.add(new UpdateReceivedMessageSummaryEvent(this, message, allTopicsShown && !topicAlreadyExists));
+		uiEventQueue.add(new TopicSummaryNewMessageEvent(messages, message, allTopicsShown && !topicAlreadyExists));
 	}	
 	
 	@Override
 	public List<MqttContent> getMessages()
 	{		
-		return filteredStore.getMessages();
+		return filteredMessages.getMessages();
+	}
+	
+	@Override
+	public MessageListWithObservableTopicSummary getMessageList()
+	{
+		return filteredMessages;
+	}
+	
+	public MessageListWithObservableTopicSummary getNonFilteredMessageList()
+	{
+		return messages;
 	}
 
 	private void initialiseFilteredStore()
 	{
-		filteredStore.clear();
+		filteredMessages.clear();
 		
 		for (MqttContent message : super.getMessages())
 		{
 			if (shownTopics.contains(message.getTopic()))
 			{
-				filteredStore.add(message);
+				filteredMessages.add(message);
 			}
 		}
 	}
@@ -151,7 +168,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 		synchronized (shownTopics)
 		{
 			shownTopics.clear();
-			filteredStore.clear();
+			filteredMessages.clear();
 		}
 	}
 	
@@ -192,7 +209,7 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			updateFilter(topic, show);
 		}
 		
-		store.getTopicSummary().setAllShowValues(show);
+		messages.getTopicSummary().setAllShowValues(show);
 	}
 
 	public void toggleAllShowValues()
@@ -202,12 +219,12 @@ public class ObservableMessageStoreWithFiltering extends ObservableMessageStore
 			updateFilter(topic, !shownTopics.contains(topic));
 		}
 		
-		store.getTopicSummary().toggleAllShowValues();
+		messages.getTopicSummary().toggleAllShowValues();
 	}
 
 	public void setShowValue(final String topic, final boolean show)
 	{
 		updateFilter(topic, show);
-		store.getTopicSummary().setShowValue(topic, show);
+		messages.getTopicSummary().setShowValue(topic, show);
 	}
 }

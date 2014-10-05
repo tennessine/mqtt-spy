@@ -6,8 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.events.ui.BrowseRemovedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.events.ui.RemoveMessageEvent;
+import pl.baczkowicz.mqttspy.events.ui.TopicSummaryRemovedMessageEvent;
 
 public class MessageStoreGarbageCollector implements Runnable
 {
@@ -16,28 +17,29 @@ public class MessageStoreGarbageCollector implements Runnable
 	/** Stores events for the UI to be updated. */
 	protected final Queue<MqttSpyUIEvent> uiEventQueue;
 	
-	private final MessageListWithObservableTopicSummary store;
+	private MessageListWithObservableTopicSummary messages;
 	
 	private int minMessagesPerTopic;
 
-	private boolean createRemoveEvents;
+	private boolean createTopicSummaryEvents;
 
-	private boolean createIndexUpdateEvents;
+	private boolean createBrowseEvents;
 	
-	public MessageStoreGarbageCollector(final MessageListWithObservableTopicSummary store, final Queue<MqttSpyUIEvent> uiEventQueue, 
-			final int minMessages, final boolean createRemoveEvents, final boolean createIndexUpdateEvents)
+	public MessageStoreGarbageCollector(final ManagedMessageStoreWithFiltering store, final MessageListWithObservableTopicSummary messages, 
+			final Queue<MqttSpyUIEvent> uiEventQueue, 
+			final int minMessages, final boolean createTopicSummaryEvents, final boolean createBrowseEvents)
 	{
-		this.store = store;
+		this.messages = messages;
 		this.uiEventQueue = uiEventQueue;
 		this.minMessagesPerTopic = minMessages;
-		this.createRemoveEvents = createRemoveEvents;
-		this.createIndexUpdateEvents = createIndexUpdateEvents;
+		this.createTopicSummaryEvents = createTopicSummaryEvents;
+		this.createBrowseEvents = createBrowseEvents;
 	}
 	
 	@Override
 	public void run()
 	{
-		Thread.currentThread().setName("Garbage Message Collector for " + store.getName());
+		Thread.currentThread().setName("Garbage Message Collector for " + messages.getName());
 		logger.info("Starting thread " + Thread.currentThread().getName());
 				
 		while (true)		
@@ -51,46 +53,46 @@ public class MessageStoreGarbageCollector implements Runnable
 				break;
 			}
 			
-			synchronized (store.getMessages())
+			synchronized (messages.getMessages())
 			{
 				//logger.info("Checkign if can delete messages... {} {}", i.hasNext(), store.shouldRemove());
-				boolean shouldRemove =  store.exceedingPreferredSize();
+				boolean shouldRemove =  messages.exceedingPreferredSize();
 					
 				if (!shouldRemove)
 				{
 					continue;
 				}
 				
-				logger.info("[{}] Checking if can delete messages...", store.getName());
-				for (int i = store.getMessages().size() - 1; i >=0; i--)				
+				logger.info("[{}] Checking if can delete messages...", messages.getName());
+				for (int i = messages.getMessages().size() - 1; i >=0; i--)				
 				{
-					final MqttContent element = store.getMessages().get(i);
+					final MqttContent element = messages.getMessages().get(i);
 										
-					final int count = store.getTopicSummary().getCountForTopic(element.getTopic());
+					final int count = messages.getTopicSummary().getCountForTopic(element.getTopic());
 					if (count > minMessagesPerTopic)
 					{
 						logger.info("[{} {} {}/{}/{}] Deleting message on " + element.getTopic() + ", content " + element.getFormattedPayload(), 
-								store.getName(), shouldRemove, count, store.getMessages().size(), store.getPreferredSize());
+								messages.getName(), shouldRemove, count, messages.getMessages().size(), messages.getPreferredSize());
 						
 						// Remove from the store
-						store.remove(i);
-						shouldRemove = store.exceedingPreferredSize();
+						messages.remove(i);
+						shouldRemove = messages.exceedingPreferredSize();
 						
 						logger.info("[{} {} {}/{}/{}] Deleted message on " + element.getTopic() + ", content " + element.getFormattedPayload(), 
-								store.getName(), shouldRemove, count, store.getMessages().size(), store.getPreferredSize());
+								messages.getName(), shouldRemove, count, messages.getMessages().size(), messages.getPreferredSize());
 												
 						// Update topic summary and UI
 
 						// Remove events are for the normal store
-						if (createRemoveEvents)
+						if (createTopicSummaryEvents)
 						{
-							uiEventQueue.add(new RemoveMessageEvent(store, element));
+							uiEventQueue.add(new TopicSummaryRemovedMessageEvent(messages, element));
 						}
 						
 						// Index update are for the filtered store
-						if (createIndexUpdateEvents)
+						if (createBrowseEvents)
 						{
-							// TODO
+							uiEventQueue.add(new BrowseRemovedMessageEvent(messages, element, i + 1));
 						}
 						
 						if (!shouldRemove)
@@ -100,7 +102,7 @@ public class MessageStoreGarbageCollector implements Runnable
 					}				
 					else
 					{
-						logger.info("[{}] Message count for topic {} = {}", store.getName(), element.getTopic(), count);
+						logger.info("[{}] Message count for topic {} = {}", messages.getName(), element.getTopic(), count);
 					}
 				}
 			}

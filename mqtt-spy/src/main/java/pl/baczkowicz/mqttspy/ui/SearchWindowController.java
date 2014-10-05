@@ -19,13 +19,14 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
-import pl.baczkowicz.mqttspy.events.observers.NewMessageObserver;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SearchWindowController extends AnchorPane implements Initializable, NewMessageObserver
+public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver
 {
 	/** Initial and minimal scene/stage width. */	
 	public final static int WIDTH = 780;
@@ -45,7 +46,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	
 	private Map<Tab, SearchPaneController> searchPaneControllers = new HashMap<Tab, SearchPaneController>();
 
-	private ObservableMessageStoreWithFiltering store;
+	private ManagedMessageStoreWithFiltering store;
 
 	private MqttSubscription subscription;
 
@@ -154,7 +155,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 //	}
 	
 	@Override
-	public void onNewMessageReceived()
+	public void onMessageAdded(final MqttContent message)
 	{
 		updateTitle();		
 	}
@@ -172,7 +173,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	// // }
 	// }
 
-	public void setStore(ObservableMessageStoreWithFiltering store)
+	public void setStore(ManagedMessageStoreWithFiltering store)
 	{
 		this.store = store;	
 	}

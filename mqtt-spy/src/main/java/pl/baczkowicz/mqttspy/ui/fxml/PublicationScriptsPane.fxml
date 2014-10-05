@@ -17,8 +17,8 @@
         <columns>
             <TableColumn fx:id="nameColumn" minWidth="100.0" prefWidth="100.0" maxWidth="1.7976931348623157E308" text="Script name" />
             <TableColumn fx:id="runningStatusColumn" maxWidth="120.0" minWidth="120.0" resizable="false" text="Status" />
-            <TableColumn fx:id="lastPublishedColumn" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Last published" />
             <TableColumn fx:id="messageCountColumn" maxWidth="120.0" minWidth="120.0" prefWidth="100.0" resizable="false" text="Messages" />
+            <TableColumn fx:id="lastPublishedColumn" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Last published" />
         </columns>
       </TableView>
    </children>

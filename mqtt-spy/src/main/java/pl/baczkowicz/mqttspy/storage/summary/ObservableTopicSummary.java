@@ -29,11 +29,11 @@ public class ObservableTopicSummary extends TopicSummary
 		}
 	}
 	
-	public SubscriptionTopicSummaryProperties add(final MqttContent message)
+	public SubscriptionTopicSummaryProperties addMessage(final MqttContent message)
 	{
 		synchronized (topicToSummaryMapping)
 		{
-			SubscriptionTopicSummaryProperties newAdded = super.add(message);
+			SubscriptionTopicSummaryProperties newAdded = super.addMessage(message);
 			
 			if (newAdded != null)
 			{				

@@ -104,6 +104,9 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private TextField maxMessagesStored;
 	
 	@FXML
+	private TextField minMessagesPerTopicStored;
+	
+	@FXML
 	private ComboBox<FormatterDetails> formatter;
 	
 	// Security
@@ -295,6 +298,9 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		maxMessagesStored.textProperty().addListener(basicOnChangeListener);
 		maxMessagesStored.addEventFilter(KeyEvent.KEY_TYPED, KeyboardUtils.nonNumericKeyConsumer);
+		
+		minMessagesPerTopicStored.textProperty().addListener(basicOnChangeListener);
+		minMessagesPerTopicStored.addEventFilter(KeyEvent.KEY_TYPED, KeyboardUtils.nonNumericKeyConsumer);
 		
 		formatter.getSelectionModel().selectedIndexProperty().addListener(basicOnChangeListener);
 		formatter.setCellFactory(new Callback<ListView<FormatterDetails>, ListCell<FormatterDetails>>()
@@ -737,6 +743,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		connection.setAutoOpen(autoOpen.isSelected());
 		connection.setFormatter(formatter.getSelectionModel().getSelectedItem());
 		connection.setMaxMessagesStored(Integer.valueOf(maxMessagesStored.getText()));
+		connection.setMinMessagesStoredPerTopic(Integer.valueOf(minMessagesPerTopicStored.getText()));
 		
 		if (userAuthentication.isSelected())
 		{
@@ -924,6 +931,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		autoConnect.setSelected(connection.isAutoConnect() == null ? false : connection.isAutoConnect());
 		autoOpen.setSelected(connection.isAutoOpen() == null ? false : connection.isAutoOpen());
 		maxMessagesStored.setText(connection.getMaxMessagesStored().toString());
+		minMessagesPerTopicStored.setText(connection.getMinMessagesStoredPerTopic().toString());
 				
 		if (formatter.getItems().size() > 0 && connection.getFormatter() != null)
 		{

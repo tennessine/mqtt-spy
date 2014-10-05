@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.events.EventManager;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -35,7 +35,7 @@ public class SubscriptionSummaryTableController implements Initializable
 {
 	final static Logger logger = LoggerFactory.getLogger(SubscriptionSummaryTableController.class);
 
-	private ObservableMessageStoreWithFiltering store; 
+	private ManagedMessageStoreWithFiltering store; 
 	
 	@FXML
 	private TableView<SubscriptionTopicSummaryProperties> filterTable;
@@ -89,7 +89,7 @@ public class SubscriptionSummaryTableController implements Initializable
 									@Override
 									public void run()
 									{
-										eventManager.changeMessageIndexToFirst(store);	
+										eventManager.navigateToFirst(store);	
 									}											
 								});
 							}																			
@@ -203,10 +203,10 @@ public class SubscriptionSummaryTableController implements Initializable
 	public void init()
 	{
 		filterTable.setContextMenu(createTopicTableContextMenu());
-		filterTable.setItems(store.getMessageStore().getTopicSummary().getObservableMessagesPerTopic());	
+		filterTable.setItems(store.getNonFilteredMessageList().getTopicSummary().getObservableMessagesPerTopic());	
 	}
 
-	public void setStore(final ObservableMessageStoreWithFiltering store)
+	public void setStore(final ManagedMessageStoreWithFiltering store)
 	{
 		this.store = store;
 	}
@@ -300,7 +300,7 @@ public class SubscriptionSummaryTableController implements Initializable
 				{
 					store.setAllShowValues(true);
 					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
-					eventManager.changeMessageIndexToFirst(store);
+					eventManager.navigateToFirst(store);
 				}
 			}
 		});
@@ -318,7 +318,7 @@ public class SubscriptionSummaryTableController implements Initializable
 				{
 					store.toggleAllShowValues();
 					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
-					eventManager.changeMessageIndexToFirst(store);
+					eventManager.navigateToFirst(store);
 				}
 			}
 		});
@@ -337,7 +337,7 @@ public class SubscriptionSummaryTableController implements Initializable
 					store.setAllShowValues(false);
 					store.setShowValue(item.topicProperty().getValue(), true);
 					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
-					eventManager.changeMessageIndexToFirst(store);
+					eventManager.navigateToFirst(store);
 				}
 			}
 		});
@@ -355,7 +355,7 @@ public class SubscriptionSummaryTableController implements Initializable
 				{
 					store.setAllShowValues(false);
 					// navigationEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
-					eventManager.changeMessageIndexToFirst(store);
+					eventManager.navigateToFirst(store);
 				}
 			}
 		});

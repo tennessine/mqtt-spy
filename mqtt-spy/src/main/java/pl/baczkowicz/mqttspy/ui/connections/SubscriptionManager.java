@@ -23,7 +23,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
@@ -106,7 +106,7 @@ public class SubscriptionManager
 	}
 
 	public SubscriptionController createSubscriptionTab(final boolean allTab, final Object parent,
-			final ObservableMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
+			final ManagedMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
 			final MqttSubscription subscription, final ConnectionController connectionController)
 	{
 		// Load a new tab and connection pane
@@ -116,8 +116,8 @@ public class SubscriptionManager
 		final SubscriptionController subscriptionController = ((SubscriptionController) loader.getController());
 		
 		final Tab tab = new Tab();
-		//observableMessageStore.addObserver(subscriptionController);
-		eventManager.registerMqttContentObserver(subscriptionController, observableMessageStore);
+		// eventManager.registerMessageAddedObserver(subscriptionController, observableMessageStore.getMessageList());
+		// eventManager.registerMessageRemovedObserver(subscriptionController, observableMessageStore.getMessageList());
 		if (subscription != null)
 		{
 			eventManager.registerSubscriptionStatusObserver(subscriptionController, subscription);

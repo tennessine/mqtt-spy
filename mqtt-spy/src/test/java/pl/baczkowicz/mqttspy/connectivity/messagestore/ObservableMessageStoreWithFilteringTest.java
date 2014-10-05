@@ -12,17 +12,17 @@ import org.junit.Test;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 
 public class ObservableMessageStoreWithFilteringTest
 {
 	/** Class under test. */
-	private ObservableMessageStoreWithFiltering store;
+	private ManagedMessageStoreWithFiltering store;
 	
 	@Before
 	public void setUp() throws Exception
 	{
-		store = new ObservableMessageStoreWithFiltering("test", 5, 5, 5, new LinkedBlockingQueue<MqttSpyUIEvent>(), null);
+		store = new ManagedMessageStoreWithFiltering("test", 5, 5, 5, new LinkedBlockingQueue<MqttSpyUIEvent>(), null);
 	}
 
 	@Test

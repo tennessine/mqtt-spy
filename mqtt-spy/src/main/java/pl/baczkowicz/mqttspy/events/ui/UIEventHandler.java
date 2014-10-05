@@ -7,15 +7,20 @@ import javafx.application.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.events.EventManager;
+
 public class UIEventHandler implements Runnable
 {
 	private final static Logger logger = LoggerFactory.getLogger(UIEventHandler.class);
 	
 	private final Queue<MqttSpyUIEvent> uiEventQueue;
+	
+	private final EventManager eventManager;
 
-	public UIEventHandler(final Queue<MqttSpyUIEvent> uiEventQueue)
+	public UIEventHandler(final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
 	{
 		this.uiEventQueue = uiEventQueue;
+		this.eventManager = eventManager;
 	}
 
 	@Override
@@ -56,32 +61,33 @@ public class UIEventHandler implements Runnable
 			
 			if (event instanceof BrowseReceivedMessageEvent)
 			{
-				final BrowseReceivedMessageEvent browseEvent = (BrowseReceivedMessageEvent) event;
-				
-				// Notify any observers there is a new message
-				browseEvent.getStore().notify(browseEvent.getMessage());
+				eventManager.notifyMessageAdded((BrowseReceivedMessageEvent) event);				
 			}
-			else if (event instanceof UpdateReceivedMessageSummaryEvent)
+			else if (event instanceof BrowseRemovedMessageEvent)
 			{
-				final UpdateReceivedMessageSummaryEvent updateEvent = (UpdateReceivedMessageSummaryEvent) event;
+				eventManager.notifyMessageRemoved((BrowseRemovedMessageEvent) event);
+			}			
+			else if (event instanceof TopicSummaryNewMessageEvent)
+			{
+				final TopicSummaryNewMessageEvent updateEvent = (TopicSummaryNewMessageEvent) event;
 				
 				// Calculate the overall message count per topic
-				updateEvent.getStore().getMessageStore().getTopicSummary().add(updateEvent.getAdded());
+				updateEvent.getList().getTopicSummary().addMessage(updateEvent.getAdded());
 				
 				// Update the 'show' property if required
 				if (updateEvent.isShowTopic())
 				{			
-					updateEvent.getStore().getMessageStore().getTopicSummary().setShowValue(updateEvent.getAdded().getTopic(), true);											
+					updateEvent.getList().getTopicSummary().setShowValue(updateEvent.getAdded().getTopic(), true);											
 				}
 			}
-			else if (event instanceof RemoveMessageEvent)
+			else if (event instanceof TopicSummaryRemovedMessageEvent)
 			{
-				final RemoveMessageEvent removeEvent = (RemoveMessageEvent) event;
+				final TopicSummaryRemovedMessageEvent removeEvent = (TopicSummaryRemovedMessageEvent) event;
 				
 				// Remove old message from stats
 				if (removeEvent.getRemoved() != null)
 				{
-					removeEvent.getStore().getTopicSummary().remove(removeEvent.getRemoved());
+					removeEvent.getList().getTopicSummary().removeMessage(removeEvent.getRemoved());
 				}
 			}
 		}		

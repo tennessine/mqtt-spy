@@ -1,8 +1,8 @@
 package pl.baczkowicz.mqttspy.events.observers;
 
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 
 public interface ClearTabObserver
 {
-	void onClearTab(final ObservableMessageStoreWithFiltering subscription);
+	void onClearTab(final ManagedMessageStoreWithFiltering subscription);
 }

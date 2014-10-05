@@ -22,7 +22,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -52,9 +52,7 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	@FXML
 	private Label lengthLabel;
 
-	// private EventDispatcher eventDispatcher;
-	
-	private ObservableMessageStore store;
+	private BasicMessageStore store;
 	
 	private MqttContent message;
 
@@ -63,6 +61,76 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	private Tooltip tooltip;
 
 	private SearchOptions searchOptions;
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources)
+	{		
+		dataField.selectedTextProperty().addListener(new ChangeListener<String>()
+		{
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue,
+					String newValue)
+			{
+				updateTooltipText();				
+			}
+		});		
+	}
+	
+	public void init()
+	{
+		tooltip = new Tooltip("");
+		tooltip.setWrapText(true);
+	}
+	
+	@Override
+	public void onMessageIndexChange(final int index)
+	{
+		updateMessage(index);
+	}
+	
+
+	@Override
+	public void onFormatChange()
+	{
+		showMessageData();		
+	}
+	
+	private void updateMessage(final int messageIndex)
+	{
+		if (messageIndex > 0)
+		{
+			MqttContent message = null; 
+		
+			// Optimised for showing the latest message
+			if (messageIndex == 1)
+			{
+				synchronized (store)
+				{
+					message = store.getMessages().get(0);
+					populate(message);
+				}
+			}
+			else
+			{
+				synchronized (store)
+				{
+					final List<MqttContent> messages = store.getMessages();
+					
+					// Make sure we don't try to re-display a message that is not in the store anymore
+					if (messageIndex <= messages.size())
+					{
+						// message = (MqttContent) messages[messages.length - messageIndex];
+						message = messages.get(messageIndex - 1);
+						populate(message);
+					}
+				}				
+			}			
+		}
+		else
+		{
+			clear();
+		}
+	}
 
 	public void populate(final MqttContent message)
 	{
@@ -159,106 +227,18 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 			}
 		}
 	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources)
-	{		
-		dataField.selectedTextProperty().addListener(new ChangeListener<String>()
-		{
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue,
-					String newValue)
-			{
-				updateTooltipText();				
-			}
-		});		
-	}
 	
-
-	@Override
-	public void onMessageIndexChange(final int index)
-	{
-		updateMessage(index);
-	}
-	
-
-	@Override
-	public void onFormatChange()
-	{
-		showMessageData();		
-	}
-
-	// @Override
-	// public void update(Observable observable, Object update)
-	// {
-	// // if (update instanceof MessageIndexChangedEvent)
-	// // {
-	// // updateMessage(((MessageIndexChangedEvent) update).getIndex());
-	// // }
-	// // else
-	// // if (update instanceof MessageFormatChangeEvent)
-	// // {
-	// // showMessageData();
-	// // }
-	// }
-	
-	private void updateMessage(final int messageIndex)
-	{
-		if (messageIndex > 0)
-		{
-			MqttContent message = null; 
-		
-			// Optimised for showing the latest message
-			if (messageIndex == 1)
-			{
-				synchronized (store)
-				{
-					message = store.getMessages().get(0);
-					populate(message);
-				}
-			}
-			else
-			{
-				synchronized (store)
-				{
-					final List<MqttContent> messages = store.getMessages();
-					
-					// Make sure we don't try to re-display a message that is not in the store anymore
-					if (messageIndex <= messages.size())
-					{
-						// message = (MqttContent) messages[messages.length - messageIndex];
-						message = messages.get(messageIndex - 1);
-						populate(message);
-					}
-				}				
-			}			
-		}
-		else
-		{
-			clear();
-		}
-	}
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
 	
 	public void setSearchOptions(final SearchOptions searchOptions)
 	{
 		this.searchOptions = searchOptions;
 	}
 	
-	public void init()
-	{
-		tooltip = new Tooltip("");
-		tooltip.setWrapText(true);
-		
-		// eventDispatcher.addObserver(this);
-	}
-	
-	public void setStore(final ObservableMessageStore store)
+	public void setStore(final BasicMessageStore store)
 	{
 		this.store = store;
 	}
-	
-	// public void setEventDispatcher(final EventDispatcher eventDispatcher)
-	// {
-	// this.eventDispatcher = eventDispatcher;
-	// }
 }

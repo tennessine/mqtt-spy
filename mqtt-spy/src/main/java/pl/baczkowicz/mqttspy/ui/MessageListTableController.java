@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
+import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
@@ -51,7 +51,7 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 	@FXML
 	private TableColumn<MqttContentProperties, String> messageReceivedAtColumn;
 
-	private ObservableMessageStore store;
+	private BasicMessageStore store;
 
 	private EventManager eventManager;
 
@@ -189,7 +189,7 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 		this.items = items;
 	}
 	
-	public void setStore(final ObservableMessageStore store)
+	public void setStore(final BasicMessageStore store)
 	{
 		this.store = store;
 	}

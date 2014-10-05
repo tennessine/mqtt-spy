@@ -24,14 +24,14 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageFormatChangeObserver;
-import pl.baczkowicz.mqttspy.events.observers.MqttContentObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStore;
-import pl.baczkowicz.mqttspy.storage.ObservableMessageStoreWithFiltering;
+import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 
-public class SearchPaneController implements Initializable, MessageFormatChangeObserver, MqttContentObserver
+public class SearchPaneController implements Initializable, MessageFormatChangeObserver, MessageAddedObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(SearchPaneController.class);
 	
@@ -67,9 +67,9 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	
 	private EventManager eventManager;
 	
-	private ObservableMessageStoreWithFiltering store; 
+	private ManagedMessageStoreWithFiltering store; 
 	
-	private ObservableMessageStore foundMessageStore;
+	private BasicMessageStore foundMessageStore;
 
 	private Tab tab;
 
@@ -152,7 +152,7 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		updateTabTitle();	
 		messagePaneController.setSearchOptions(new SearchOptions(searchField.getText(), caseSensitiveCheckBox.isSelected()));
 		
-		eventManager.changeMessageIndexToFirst(foundMessageStore);
+		eventManager.navigateToFirst(foundMessageStore);
 		// searchPaneEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
 	}
 	
@@ -176,11 +176,10 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		tab.setGraphic(title);		
 	}
 
-	public void setStore(final ObservableMessageStoreWithFiltering store)
+	public void setStore(final ManagedMessageStoreWithFiltering store)
 	{
 		this.store = store;
-		eventManager.registerMqttContentObserver(this, store);
-		// store.addObserver(this);
+		eventManager.registerMessageAddedObserver(this, store.getMessageList());
 	}
 	
 	public void setUIQueue(final Queue<MqttSpyUIEvent> uiEventQueue)
@@ -191,24 +190,21 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	@Override
 	public void onFormatChange()
 	{
-		//else if (update instanceof MessageFormatChangeEvent && !observable.equals(searchPaneEventDispatcher))
-		//{
 		foundMessageStore.setFormatter(store.getFormatter());
 		eventManager.notifyFormatChanged(foundMessageStore);
-		//searchPaneEventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
-		//}		
 	}
 
-	public void onMqttContentReceived(final MqttContent message)
+	public void onMessageAdded(final MqttContent message)
 	{
-		if (autoRefreshCheckBox.isSelected() && (store.getFilters().contains(message.getTopic())))
+		// && (store.getFilters().contains(message.getTopic()))
+		if (autoRefreshCheckBox.isSelected())
 		{
 			final boolean matchingSearch = processMessage(message); 
 			if (matchingSearch)														
 			{
 				if (messageNavigationPaneController.showLatest())
 				{
-					eventManager.changeMessageIndexToFirst(foundMessageStore);
+					eventManager.navigateToFirst(foundMessageStore);
 				}
 				else
 				{
@@ -224,8 +220,8 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	{
 		eventManager.registerFormatChangeObserver(this, store);
 		
-		foundMessageStore = new ObservableMessageStore("search-" + store.getName(), 
-				store.getMessageStore().getPreferredSize(), store.getMessageStore().getMaxSize(), uiEventQueue, eventManager);
+		foundMessageStore = new BasicMessageStore("search-" + store.getName(), 
+				store.getMessageList().getPreferredSize(), store.getMessageList().getMaxSize(), uiEventQueue, eventManager);
 		foundMessageStore.setFormatter(store.getFormatter());
 		
 		// searchPaneEventDispatcher = new EventDispatcher();
