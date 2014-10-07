@@ -36,6 +36,61 @@ public class MessageStoreGarbageCollector implements Runnable
 		this.createBrowseEvents = createBrowseEvents;
 	}
 	
+	private void checkAndRemove(boolean shouldRemove)
+	{
+		// logger.trace("[{}] Checking if can delete messages...", messages.getName());
+		for (int i = messages.getMessages().size() - 1; i >=0; i--)				
+		{
+			final MqttContent element = messages.getMessages().get(i);
+								
+			final int count = messages.getTopicSummary().getCountForTopic(element.getTopic());
+			if (count > minMessagesPerTopic)
+			{
+				// logger.info("[{} {} {}/{}/{}] Deleting message on " +
+				// element.getTopic() + ", content " +
+				// element.getFormattedPayload(),
+				// messages.getName(), shouldRemove, count,
+				// messages.getMessages().size(),
+				// messages.getPreferredSize());
+				
+				// Remove from the store
+				messages.remove(i);
+				shouldRemove = messages.exceedingPreferredSize();
+				
+				// logger.info("[{} {} {}/{}/{}] Deleted message on " +
+				// element.getTopic() + ", content " +
+				// element.getFormattedPayload(),
+				// messages.getName(), shouldRemove, count,
+				// messages.getMessages().size(),
+				// messages.getPreferredSize());
+										
+				// Update topic summary and UI
+
+				// Remove events are for the normal store
+				if (createTopicSummaryEvents)
+				{
+					uiEventQueue.add(new TopicSummaryRemovedMessageEvent(messages, element));
+				}
+				
+				// Index update are for the filtered store
+				if (createBrowseEvents)
+				{
+					uiEventQueue.add(new BrowseRemovedMessageEvent(messages, element, i + 1));
+				}
+				
+				if (!shouldRemove)
+				{
+					break;
+				}
+			}				
+			// else
+			// {
+			// logger.info("[{}] Message count for topic {} = {}",
+			// messages.getName(), element.getTopic(), count);
+			// }
+		}
+	}
+	
 	@Override
 	public void run()
 	{
@@ -55,56 +110,14 @@ public class MessageStoreGarbageCollector implements Runnable
 			
 			synchronized (messages.getMessages())
 			{
-				//logger.info("Checkign if can delete messages... {} {}", i.hasNext(), store.shouldRemove());
 				boolean shouldRemove =  messages.exceedingPreferredSize();
-					
+				
 				if (!shouldRemove)
 				{
 					continue;
 				}
 				
-				logger.info("[{}] Checking if can delete messages...", messages.getName());
-				for (int i = messages.getMessages().size() - 1; i >=0; i--)				
-				{
-					final MqttContent element = messages.getMessages().get(i);
-										
-					final int count = messages.getTopicSummary().getCountForTopic(element.getTopic());
-					if (count > minMessagesPerTopic)
-					{
-						logger.info("[{} {} {}/{}/{}] Deleting message on " + element.getTopic() + ", content " + element.getFormattedPayload(), 
-								messages.getName(), shouldRemove, count, messages.getMessages().size(), messages.getPreferredSize());
-						
-						// Remove from the store
-						messages.remove(i);
-						shouldRemove = messages.exceedingPreferredSize();
-						
-						logger.info("[{} {} {}/{}/{}] Deleted message on " + element.getTopic() + ", content " + element.getFormattedPayload(), 
-								messages.getName(), shouldRemove, count, messages.getMessages().size(), messages.getPreferredSize());
-												
-						// Update topic summary and UI
-
-						// Remove events are for the normal store
-						if (createTopicSummaryEvents)
-						{
-							uiEventQueue.add(new TopicSummaryRemovedMessageEvent(messages, element));
-						}
-						
-						// Index update are for the filtered store
-						if (createBrowseEvents)
-						{
-							uiEventQueue.add(new BrowseRemovedMessageEvent(messages, element, i + 1));
-						}
-						
-						if (!shouldRemove)
-						{
-							break;
-						}
-					}				
-					else
-					{
-						logger.info("[{}] Message count for topic {} = {}", messages.getName(), element.getTopic(), count);
-					}
-				}
+				checkAndRemove(shouldRemove);
 			}
 		}
 	}

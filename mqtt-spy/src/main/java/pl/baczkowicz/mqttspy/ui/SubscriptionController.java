@@ -260,14 +260,11 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);
 			searchWindowController.setSubscriptionName(subscription != null ? subscription.getTopic() : SubscriptionManager.ALL_SUBSCRIPTIONS_TAB_TITLE);
-			// searchWindowController.setEventDispatcher(eventDispatcher);
 			searchWindowController.setEventManager(eventManager);
 			
-			// Note: searchWindowController is purely interested in knowing if a new message is available
-			//eventManager.registerNewMessageObserver(searchWindowController, store);
 			eventManager.registerMessageAddedObserver(searchWindowController, store.getMessageList());
-			
-		
+			eventManager.registerMessageRemovedObserver(searchWindowController, store.getMessageList());
+					
 			// Set scene width, height and style
 			final Scene scene = new Scene(searchWindow, SearchWindowController.WIDTH, SearchWindowController.HEIGHT);
 			scene.getStylesheets().addAll(tab.getTabPane().getScene().getStylesheets());
@@ -401,7 +398,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 
 	public void updateSubscriptionStats()
 	{
-		final int topicCount = store.getMessageList().getTopicSummary().getObservableMessagesPerTopic().size();
+		final int topicCount = store.getNonFilteredMessageList().getTopicSummary().getObservableMessagesPerTopic().size();
 		
 		if (subscription == null)
 		{

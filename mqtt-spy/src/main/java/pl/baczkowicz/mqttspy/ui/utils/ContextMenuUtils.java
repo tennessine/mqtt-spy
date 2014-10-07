@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.ui.utils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
@@ -191,6 +192,50 @@ public class ContextMenuUtils
 			}
 		});
 		contextMenu.getItems().add(stats);
+		
+		// Separator
+		contextMenu.getItems().add(new SeparatorMenuItem());
+		
+		// View
+		final Menu view = new Menu("[View] Show/hide panes");
+		final MenuItem manualPublications = new MenuItem("Toggle 'Publish message' pane");
+		final MenuItem scriptedPublications = new MenuItem("Toggle 'Scripted publications' pane");
+		final MenuItem newSubscription = new MenuItem("Toggle 'Define new subscription' pane");
+		final MenuItem messageSummary = new MenuItem("Toggle 'Subscriptions and received messages' pane");
+		
+		view.getItems().add(manualPublications);
+		view.getItems().add(scriptedPublications);
+		view.getItems().add(newSubscription);
+		view.getItems().add(messageSummary);
+		manualPublications.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{				
+				connectionController.togglePane(connectionController.getPublishMessageTitledPane());
+			}
+		});
+		scriptedPublications.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{				
+				connectionController.togglePane(connectionController.getScriptedPublicationsTitledPane());
+			}
+		});
+		newSubscription.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{				
+				connectionController.togglePane(connectionController.getNewSubscriptionTitledPane());
+			}
+		});
+		messageSummary.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{				
+				connectionController.togglePane(connectionController.getSubscriptionsTitledPane());
+			}
+		});
+		contextMenu.getItems().add(view);
 
 		return contextMenu;
 	}

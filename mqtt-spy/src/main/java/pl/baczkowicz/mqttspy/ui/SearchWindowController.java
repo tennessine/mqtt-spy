@@ -23,10 +23,11 @@ import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver
+public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver, MessageRemovedObserver
 {
 	/** Initial and minimal scene/stage width. */	
 	public final static int WIDTH = 780;
@@ -53,8 +54,6 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	private String subscriptionName;
 
 	private Stage stage;
-
-	// private EventDispatcher subscriptionPaneEventDispatcher;
 
 	private EventManager eventManager;
 	
@@ -108,11 +107,6 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 
 		return tab;
 	}
-	
-	public void setEventManager(final EventManager eventManager)
-	{
-		this.eventManager = eventManager;
-	}
 
 	public void handleClose()
 	{
@@ -147,12 +141,6 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 			stage.setTitle(subscriptionName + " - " + store.getMessages().size() + " " + messagesText + " available for searching (filter is on)");		
 		}		
 	}
-
-//	@Override
-//	public void onDisplayFirstMessageRequested()
-//	{
-//		updateTitle();		
-//	}
 	
 	@Override
 	public void onMessageAdded(final MqttContent message)
@@ -160,18 +148,15 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		updateTitle();		
 	}
 	
-	// @Override
-	// public void update(Observable observable, Object update)
-	// {
-	// if (update instanceof ShowFirstMessageEvent)
-	// {
-	// updateTitle();
-	// }
-	// // else if (update instanceof NewMessageEvent)
-	// // {
-	// // updateTitle();
-	// // }
-	// }
+	@Override
+	public void onMessageRemoved(final MqttContent message, final int messageIndex)
+	{
+		updateTitle();
+	}
+	
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
 
 	public void setStore(ManagedMessageStoreWithFiltering store)
 	{
@@ -188,9 +173,8 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		this.subscriptionName = name;		
 	}
 	
-	// public void setEventDispatcher(final EventDispatcher
-	// subscriptionPaneEventDispatcher)
-	// {
-	// this.subscriptionPaneEventDispatcher = subscriptionPaneEventDispatcher;
-	// }
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
 }

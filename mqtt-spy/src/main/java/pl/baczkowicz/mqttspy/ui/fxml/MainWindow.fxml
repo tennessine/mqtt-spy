@@ -29,9 +29,19 @@
 						<MenuItem mnemonicParsing="false" onAction="#editConnections" text="Manage connections" />
 					</items>
 				</Menu>
-				<!-- 
+				
 				<Menu mnemonicParsing="false" text="View">
 					<items>
+						<Menu mnemonicParsing="false" text="Perspectives">
+							<items>
+								<RadioMenuItem fx:id="defaultPerspective" mnemonicParsing="false" onAction="#showDefaultPerspective" selected="true" text="Default (publications and subscriptions)">
+		                           <toggleGroup>
+		                              <ToggleGroup fx:id="perspective" />
+		                           </toggleGroup></RadioMenuItem>
+								<RadioMenuItem mnemonicParsing="false" onAction="#showSpyPerspective" text="Spy (subscriptions only)" toggleGroup="$perspective" />
+							</items>
+						</Menu>
+						<!-- 
 						<Menu mnemonicParsing="false" text="Manual publication pane">
 							<items>
 								<RadioMenuItem mnemonicParsing="false" onAction="#showManualPublicationPane" selected="true" text="Manual publications">
@@ -41,9 +51,10 @@
 								<RadioMenuItem mnemonicParsing="false" onAction="#showScriptedPublicationPane" text="Scripted publications" toggleGroup="$publicationMode" />
 							</items>
 						</Menu>
+						 -->
 					</items>
 				</Menu>
-				 -->
+				
 				<!-- 
 				<Menu mnemonicParsing="false" text="Preferences">
 					<items>

@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.storage;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -20,23 +19,20 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 {
 	final static Logger logger = LoggerFactory.getLogger(ManagedMessageStoreWithFiltering.class);
 	
-	/** This is the same as 'show' flag on topic summary. */
-	private final Set<String> shownTopics = new HashSet<String>();
-	
 	/** All topics this store knows about. */
 	private final Set<String> allTopics = new HashSet<String>();
 	
-	private final MessageListWithObservableTopicSummary filteredMessages;
-			
+	private FilteredMessageStore filteredStore;
+	
 	public ManagedMessageStoreWithFiltering(final String name, final int minMessagesPerTopic, final int preferredSize, final int maxSize, 
 			final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
 	{
-		super(name, preferredSize, maxSize, uiEventQueue, eventManager);		
+		super(name, preferredSize, maxSize, uiEventQueue, eventManager);
 		
-		this.filteredMessages = new MessageListWithObservableTopicSummary(preferredSize, maxSize, "filtered-" + name, messageFormat);
+		filteredStore = new FilteredMessageStore(messages, preferredSize, maxSize, name, messageFormat);		
 		
 		new Thread(new MessageStoreGarbageCollector(this, messages, uiEventQueue, minMessagesPerTopic, true, false)).start();
-		new Thread(new MessageStoreGarbageCollector(this, filteredMessages, uiEventQueue, minMessagesPerTopic, false, true)).start();
+		new Thread(new MessageStoreGarbageCollector(this, filteredStore.getFilteredMessages(), uiEventQueue, minMessagesPerTopic, false, true)).start();
 	}
 	
 	/**
@@ -61,19 +57,19 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 		final MqttContent removed = storeMessage(message);
 		
 		// 3. Add it to the filtered store if all messages are shown or the topic is already on the list
-		if (allTopicsShown || shownTopics.contains(message.getTopic()))
+		if (allTopicsShown || filteredStore.getShownTopics().contains(message.getTopic()))
 		{
-			filteredMessages.add(message);
+			filteredStore.getFilteredMessages().add(message);
 			
 			// Message browsing update
-			uiEventQueue.add(new BrowseReceivedMessageEvent(filteredMessages, message));
+			uiEventQueue.add(new BrowseReceivedMessageEvent(filteredStore.getFilteredMessages(), message));
 		}
 
 		// 4. If the topic doesn't exist yet, add it (e.g. all shown but this is the first message for this topic)
 		if (allTopicsShown && !topicAlreadyExists)
 		{
 			// This doesn't need to trigger 'show first' or sth because the following two UI events should refresh the screen
-			applyFilter(message.getTopic(), false);	 
+			filteredStore.applyFilter(message.getTopic(), false);	 
 		}
 
 		// 5. Formats the message with the currently selected formatter
@@ -90,141 +86,75 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 	@Override
 	public List<MqttContent> getMessages()
 	{		
-		return filteredMessages.getMessages();
+		return filteredStore.getFilteredMessages().getMessages();
 	}
 	
 	@Override
 	public MessageListWithObservableTopicSummary getMessageList()
 	{
-		return filteredMessages;
+		return filteredStore.getFilteredMessages();
 	}
 	
 	public MessageListWithObservableTopicSummary getNonFilteredMessageList()
 	{
 		return messages;
 	}
-
-	private void initialiseFilteredStore()
-	{
-		filteredMessages.clear();
-		
-		for (MqttContent message : super.getMessages())
-		{
-			if (shownTopics.contains(message.getTopic()))
-			{
-				filteredMessages.add(message);
-			}
-		}
-	}
 	
-	private boolean applyFilter(final String topic, final boolean recreateStore)
+	public FilteredMessageStore getFilteredMessageStore()
 	{
-		synchronized (shownTopics)
-		{
-			if (!shownTopics.contains(topic))
-			{
-				logger.debug("Adding {} to active filters for {}; recreate = {}", topic, getName(), recreateStore);
-				shownTopics.add(topic);
-				
-				// TODO: optimise
-				if (recreateStore)
-				{
-					logger.warn("Recreating store for {} because of {}", getName(), topic);
-					initialiseFilteredStore();
-				}
-				
-				return true;
-			}
-			
-			return false;
-		}
-	}
-	
-	public Set<String> getFilters()
-	{
-		return Collections.unmodifiableSet(shownTopics);
-	}
-	
-	private boolean removeFilter(final String topic)
-	{
-		synchronized (shownTopics)
-		{
-			if (shownTopics.contains(topic))
-			{
-				logger.debug("Removing {} from active filters for {}", topic, getName());
-				shownTopics.remove(topic);
-		
-				initialiseFilteredStore();
-				
-				return true;
-			}
-			
-			return false;
-		}
-	}
-	
-	private void removeAllFilters()
-	{
-		synchronized (shownTopics)
-		{
-			shownTopics.clear();
-			filteredMessages.clear();
-		}
-	}
+		return filteredStore;
+	}	
 	
 	@Override
 	public boolean filtersEnabled()
 	{
-		return shownTopics.size() != allTopics.size();
+		return filteredStore.getShownTopics().size() != allTopics.size();
 	}
 
-	
 	@Override
 	public void clear()
 	{
 		super.clear();
 		allTopics.clear();
-		removeAllFilters();
-	}
-	
-	public boolean updateFilter(final String topic, final boolean show)
-	{
-		boolean updated = false;
-		if (show)
-		{
-			updated = applyFilter(topic, true);
-		}
-		else
-		{
-			updated = removeFilter(topic);
-		}
-		
-		return updated;
+		filteredStore.removeAllFilters();
 	}
 
 	public void setAllShowValues(boolean show)
 	{
-		for (final String topic : allTopics)
+		if (show)
 		{
-			updateFilter(topic, show);
+			filteredStore.addAllFilters();
+		}
+		else
+		{
+			filteredStore.removeAllFilters();
 		}
 		
+		// filteredStore.updateFilter(allTopics, show);
 		messages.getTopicSummary().setAllShowValues(show);
 	}
 
 	public void toggleAllShowValues()
 	{
+		final Set<String> topicsToShow = new HashSet<>();
 		for (final String topic : allTopics)
 		{
-			updateFilter(topic, !shownTopics.contains(topic));
+			//filteredStore.updateFilter(topic, !filteredStore.getShownTopics().contains(topic));			
+			if (!filteredStore.getShownTopics().contains(topic))				
+			{
+				topicsToShow.add(topic);
+			}
 		}
+		filteredStore.removeAllFilters();
+		filteredStore.applyFilter(topicsToShow, true);
+		// filteredStore.updateFilter(topicsToShow, true);
 		
 		messages.getTopicSummary().toggleAllShowValues();
 	}
 
 	public void setShowValue(final String topic, final boolean show)
 	{
-		updateFilter(topic, show);
+		filteredStore.updateFilter(topic, show);
 		messages.getTopicSummary().setShowValue(topic, show);
 	}
 }

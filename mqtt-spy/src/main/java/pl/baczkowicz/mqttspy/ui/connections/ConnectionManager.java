@@ -83,6 +83,7 @@ public class ConnectionManager
 			@Override
 			public void run()
 			{	
+				mainController.showPerspective(connectionController);
 				connectionController.init();
 				subscriptionController.init();
 								

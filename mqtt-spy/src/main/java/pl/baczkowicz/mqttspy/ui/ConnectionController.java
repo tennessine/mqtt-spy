@@ -1,6 +1,8 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -10,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
@@ -52,6 +55,9 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	private AnchorPane connectionPane;
 	
 	@FXML
+	private SplitPane splitPane;
+	
+	@FXML
 	private AnchorPane newPublicationPane;
 	
 	@FXML
@@ -83,12 +89,12 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	
 	@FXML
 	private TitledPane newSubscriptionTitledPane;
-	
+
 	@FXML
 	private TitledPane scriptedPublicationsTitledPane;
 	
 	@FXML
-	TitledPane subscriptionsTitledPane;
+	private TitledPane subscriptionsTitledPane;
 	
 	@FXML
 	private TabPane subscriptionTabs;
@@ -104,6 +110,8 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	private ConnectionManager connectionManager;
 
 	private EventManager eventManager;
+
+	private Map<TitledPane, Boolean> panes = new LinkedHashMap<>();
 
 	private ChangeListener<Boolean> createChangeListener()
 	{
@@ -131,6 +139,11 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	
 	public void init()
 	{
+		panes.put(publishMessageTitledPane, true);
+		panes.put(scriptedPublicationsTitledPane, true);
+		panes.put(newSubscriptionTitledPane, true);
+		panes.put(subscriptionsTitledPane, true);
+		
 		newPublicationPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnection(connection);
 		newSubscriptionPaneController.setConnectionController(this);
@@ -327,5 +340,71 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	public void setEventManager(final EventManager eventManager)
 	{
 		this.eventManager = eventManager;
+	}
+
+
+	public TitledPane getPublishMessageTitledPane()
+	{
+		return publishMessageTitledPane;
+	}
+
+	public TitledPane getNewSubscriptionTitledPane()
+	{
+		return newSubscriptionTitledPane;
+	}
+
+	public TitledPane getScriptedPublicationsTitledPane()
+	{
+		return scriptedPublicationsTitledPane;
+	}
+
+	public TitledPane getSubscriptionsTitledPane()
+	{
+		return subscriptionsTitledPane;
+	}
+	
+	public void togglePane(final TitledPane pane)
+	{
+		panes.put(pane, !panes.get(pane));		
+		updateVisiblePanes();
+	}
+	
+	public void showPanes(boolean showManualPublications, boolean showScriptedPublications, boolean showNewSubscription, boolean showReceivedMessagesSummary)
+	{
+		panes.put(publishMessageTitledPane, showManualPublications);
+		panes.put(scriptedPublicationsTitledPane, showScriptedPublications);
+		panes.put(newSubscriptionTitledPane, showNewSubscription);
+		panes.put(subscriptionsTitledPane, showReceivedMessagesSummary);
+		
+		updateVisiblePanes();
+	}
+	
+	private void updateVisiblePanes()
+	{
+		int nextPosition = 0;
+		for (final TitledPane pane : panes.keySet())
+		{			
+			if (panes.get(pane))
+			{
+				// Show
+				if (!splitPane.getItems().contains(pane))
+				{
+					splitPane.getItems().add(nextPosition, pane);
+				}
+			}
+			else
+			{
+				// Don't show
+				if (splitPane.getItems().contains(pane))
+				{
+					splitPane.getItems().remove(pane);
+				}				
+			}
+			
+			if (splitPane.getItems().contains(pane))
+			{
+				nextPosition++;
+			}
+		}
 	}
 }

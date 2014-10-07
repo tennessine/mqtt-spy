@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
@@ -60,6 +61,11 @@ public class MainController
 
 	@FXML
 	private MenuItem openConfigFileMenu;
+	
+	@FXML
+	private RadioMenuItem defaultPerspective;
+	// @FXML
+	// private ToggleGroup perspective;
 
 	private EditConnectionsController editConnectionsController;
 	
@@ -384,6 +390,38 @@ public class MainController
 		// loadConfigurationFileAndShowErrorWhenApplicable(ConfigurationManager.getDefaultConfigurationFile());
 		// }
 		// }
+	}
+	
+	@FXML
+	private void showDefaultPerspective()
+	{
+		showPerspective();
+	}
+	
+	@FXML
+	private void showSpyPerspective()
+	{
+		showPerspective();
+	}
+	
+	private void showPerspective()
+	{
+		for (final ConnectionController connectionController : connectionManager.getConnectionControllers().values())
+		{
+			showPerspective(connectionController);
+		}
+	}
+	
+	public void showPerspective(final ConnectionController connectionController)
+	{
+		if (defaultPerspective.isSelected())
+		{
+			connectionController.showPanes(true, true, true, true);
+		}
+		else
+		{
+			connectionController.showPanes(false, false, true, true);
+		}
 	}
 	
 	@FXML

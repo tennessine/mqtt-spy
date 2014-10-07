@@ -31,10 +31,6 @@ public class Main extends Application
 	private final static String CONFIGURATION_PARAMETER_NAME = "configuration";
 	
 	private final static String NO_CONFIGURATION_PARAMETER_NAME = "no-configuration";
-	
-	// public final static int VERSION_ID = 800;
-	
-	// public final static String VERSION_NAME = "0.0.8-SNAPSHOT";
 
 	@Override
 	public void start(final Stage primaryStage)

@@ -75,9 +75,9 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 
 	private final ObservableList<MqttContentProperties> foundMessages = FXCollections.observableArrayList();
 
-	// private EventDispatcher searchPaneEventDispatcher;
-
 	private Queue<MqttSpyUIEvent> uiEventQueue;
+
+	private int seachedCount;
 	
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -118,6 +118,7 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	
 	private boolean processMessage(final MqttContent message)
 	{
+		seachedCount++;
 		if (matches(message.getFormattedPayload(store.getFormatter()), searchField.getText()))
 		{
 			foundMessage(message);
@@ -130,11 +131,17 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	private void foundMessage(final MqttContent message)
 	{
 		foundMessages.add(0, new MqttContentProperties(message, store.getFormatter()));
-		foundMessageStore.storeMessage(message);		
+		
+		// If an old message has been deleted from the store, remove it from the list as well 
+		if (foundMessageStore.storeMessage(message) != null)
+		{
+			foundMessages.remove(foundMessages.size() - 1);
+		}
 	}
 	
 	private void clearMessages()
 	{
+		seachedCount = 0;
 		foundMessages.clear();
 		foundMessageStore.clear();
 	}
@@ -144,7 +151,7 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 	{
 		clearMessages();		
 		
-		for (int i = store.getMessages().size() -1; i >= 0; i--)
+		for (int i = store.getMessages().size() - 1; i >= 0; i--)
 		{
 			processMessage(store.getMessages().get(i));
 		}
@@ -153,7 +160,6 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		messagePaneController.setSearchOptions(new SearchOptions(searchField.getText(), caseSensitiveCheckBox.isSelected()));
 		
 		eventManager.navigateToFirst(foundMessageStore);
-		// searchPaneEventDispatcher.dispatchEvent(new ShowFirstMessageEvent());
 	}
 	
 	private void updateTabTitle()
@@ -170,21 +176,10 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		}
 		
 		title.getChildren().add(new Label("Search for: \"" + searchField.getText() + "\""
-				+ " [" + foundMessages.size() + " found / " + store.getMessages().size() + " searched]"));
+				+ " [" + foundMessages.size() + " found / " + seachedCount + " searched]"));
 		
 		tab.setText(null);
 		tab.setGraphic(title);		
-	}
-
-	public void setStore(final ManagedMessageStoreWithFiltering store)
-	{
-		this.store = store;
-		eventManager.registerMessageAddedObserver(this, store.getMessageList());
-	}
-	
-	public void setUIQueue(final Queue<MqttSpyUIEvent> uiEventQueue)
-	{
-		this.uiEventQueue = uiEventQueue;
 	}
 
 	@Override
@@ -196,7 +191,6 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 
 	public void onMessageAdded(final MqttContent message)
 	{
-		// && (store.getFilters().contains(message.getTopic()))
 		if (autoRefreshCheckBox.isSelected())
 		{
 			final boolean matchingSearch = processMessage(message); 
@@ -224,9 +218,6 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 				store.getMessageList().getPreferredSize(), store.getMessageList().getMaxSize(), uiEventQueue, eventManager);
 		foundMessageStore.setFormatter(store.getFormatter());
 		
-		// searchPaneEventDispatcher = new EventDispatcher();
-		// searchPaneEventDispatcher.addObserver(this);
-		
 		messageListTablePaneController.setItems(foundMessages);
 		messageListTablePaneController.setStore(foundMessageStore);
 		messageListTablePaneController.setEventManager(eventManager);
@@ -247,11 +238,6 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		eventManager.registerChangeMessageIndexFirstObserver(messageNavigationPaneController, foundMessageStore);
 		eventManager.registerIncrementMessageIndexObserver(messageNavigationPaneController, foundMessageStore);
 	}
-
-	public void setEventManager(final EventManager eventManager)
-	{
-		this.eventManager = eventManager;
-	}
 	
 	public void cleanup()
 	{
@@ -261,20 +247,40 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		eventManager.deregisterFormatChangeObserver(this);
 		// searchPaneEventDispatcher.deleteObserver(this);
 	}
-		
-	public void setTab(Tab tab)
-	{
-		this.tab = tab;
-	}
-
-	public boolean isAutoRefresh()
-	{
-		return autoRefreshCheckBox.isSelected();
-	}
 
 	public void disableAutoSearch()
 	{
 		autoRefreshCheckBox.setSelected(false);			
 		updateTabTitle();
+	}
+	
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
+
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+	
+	public void setTab(Tab tab)
+	{
+		this.tab = tab;
+	}
+	
+	public boolean isAutoRefresh()
+	{
+		return autoRefreshCheckBox.isSelected();
+	}
+
+	public void setStore(final ManagedMessageStoreWithFiltering store)
+	{
+		this.store = store;
+		eventManager.registerMessageAddedObserver(this, store.getMessageList());
+	}
+	
+	public void setUIQueue(final Queue<MqttSpyUIEvent> uiEventQueue)
+	{
+		this.uiEventQueue = uiEventQueue;
 	}
 }
