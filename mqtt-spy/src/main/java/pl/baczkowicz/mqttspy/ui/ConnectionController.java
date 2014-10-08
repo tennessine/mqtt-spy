@@ -41,7 +41,7 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 
 	private static final int MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 	
-	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 110;	
+	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 98;	
 	
 	private static final int MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 	

@@ -448,6 +448,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 						public void run()
 						{
 							controller.setStatus(ItemStatus.ERROR);
+							controller.setShowProgress(false);
 							controller.setTitle("Error occurred while getting version info. Please perform manual update.");
 							logger.error("Cannot retrieve version info", e);
 							

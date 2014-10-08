@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import javafx.collections.transformation.FilteredList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.TopicSummaryNewMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.TopicSummaryRemovedMessageEvent;
+import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 {
@@ -119,8 +122,10 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 		filteredStore.removeAllFilters();
 	}
 
-	public void setAllShowValues(boolean show)
+	public void setAllShowValues(final boolean show, final FilteredList<SubscriptionTopicSummaryProperties> filteredData)
 	{
+		// TODO: process filtered data
+		
 		if (show)
 		{
 			filteredStore.addAllFilters();
@@ -134,8 +139,9 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 		messages.getTopicSummary().setAllShowValues(show);
 	}
 
-	public void toggleAllShowValues()
+	public void toggleAllShowValues(final FilteredList<SubscriptionTopicSummaryProperties> filteredData)
 	{
+		// TODO: process filtered data
 		final Set<String> topicsToShow = new HashSet<>();
 		for (final String topic : allTopics)
 		{

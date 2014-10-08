@@ -20,9 +20,9 @@
          <items>
          	<fx:include fx:id="messagePane" prefHeight="1000.0" source="MessagePane.fxml" />
             
-            <TitledPane fx:id="summaryTitledPane" alignment="TOP_LEFT" animated="false" maxHeight="1000.0" minHeight="26.0" prefHeight="151.0" text="Received messages summary" SplitPane.resizableWithParent="false">
+            <TitledPane fx:id="summaryTitledPane" alignment="TOP_LEFT" animated="false" maxHeight="1000.0" minHeight="26.0" prefHeight="1000.0" text="Received messages summary" SplitPane.resizableWithParent="false">
               <content>
-              		<fx:include fx:id="summaryTablePane" minHeight="101.0" prefHeight="118.0" source="SubscriptionSummaryTablePane.fxml" />
+              		<fx:include fx:id="summaryTablePane" minHeight="100.0" prefHeight="100" source="SubscriptionSummaryTablePane.fxml" />
               </content>
                <padding>
                   <Insets top="5.0" />
