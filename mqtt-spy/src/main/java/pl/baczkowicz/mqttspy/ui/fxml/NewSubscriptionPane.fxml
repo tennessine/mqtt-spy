@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -9,6 +10,7 @@
 <?import javafx.scene.control.ComboBox?>
 
 <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.NewSubscriptionController">
+	<padding><Insets top="6" right="6" bottom="3" left="6" /></padding>
 	<children>
 	
 		<Button fx:id="subscribeButton" disable="true" layoutX="549.0" layoutY="13.0" mnemonicParsing="false" onAction="#subscribe" prefHeight="25.0" prefWidth="97.0" text="Subscribe" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

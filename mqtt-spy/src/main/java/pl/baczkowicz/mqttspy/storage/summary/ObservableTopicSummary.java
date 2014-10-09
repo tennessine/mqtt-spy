@@ -1,5 +1,7 @@
 package pl.baczkowicz.mqttspy.storage.summary;
 
+import java.util.Collection;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -44,13 +46,16 @@ public class ObservableTopicSummary extends TopicSummary
 		}				
 	}
 
-	public void toggleAllShowValues()
+	public void toggleShowValues(final Collection<String> topics)
 	{
 		synchronized (topicToSummaryMapping)
 		{
 			for (final SubscriptionTopicSummaryProperties item : observableTopicSummaryList)
 			{
-				item.showProperty().set(!item.showProperty().get());
+				if (topics.contains(item.topicProperty().getValue()))
+				{
+					item.showProperty().set(!item.showProperty().get());
+				}
 			}
 		}
 	}
@@ -65,6 +70,20 @@ public class ObservableTopicSummary extends TopicSummary
 				{
 					item.showProperty().set(value);
 					break;
+				}
+			}
+		}
+	}
+	
+	public void setShowValues(final Collection<String> topics, final boolean value)
+	{
+		synchronized (topicToSummaryMapping)
+		{
+			for (final SubscriptionTopicSummaryProperties item : observableTopicSummaryList)
+			{
+				if (topics.contains(item.topicProperty().getValue()))
+				{
+					item.showProperty().set(value);
 				}
 			}
 		}

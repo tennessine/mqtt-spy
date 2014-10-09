@@ -1,10 +1,13 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -14,6 +17,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
@@ -63,6 +67,12 @@ public class SubscriptionSummaryTableController implements Initializable
 	
 	private ConnectionController connectionController;
 	private EventManager eventManager;
+
+	private Menu filteredTopicsMenu;
+
+	private ObservableList<SubscriptionTopicSummaryProperties> nonFilteredData;
+	
+	private Set<String> shownTopics = new HashSet<>();
 
 	// private ObservableList<SubscriptionTopicSummaryProperties> nonFilteredData;
 	
@@ -212,12 +222,20 @@ public class SubscriptionSummaryTableController implements Initializable
 	{		
 		filterTable.setContextMenu(createTopicTableContextMenu());		
 		
-		final ObservableList<SubscriptionTopicSummaryProperties> nonFilteredData = 
-				store.getNonFilteredMessageList().getTopicSummary().getObservableMessagesPerTopic();
+		nonFilteredData = store.getNonFilteredMessageList().getTopicSummary().getObservableMessagesPerTopic();
 		
 		filteredData = new FilteredList<>(nonFilteredData);
 				
 		filterTable.setItems(new SortedList<>(filteredData));
+		
+		filteredData.addListener(new ListChangeListener<SubscriptionTopicSummaryProperties>()
+		{
+			@Override
+			public void onChanged(Change<? extends SubscriptionTopicSummaryProperties> c)
+			{
+				filteredTopicsMenu.setDisable(filteredData.size() == nonFilteredData.size());
+			}
+		});
 	}
 	
 	public int getFilteredDataSize()
@@ -227,27 +245,40 @@ public class SubscriptionSummaryTableController implements Initializable
 	
 	public void updateTopicFilter(final String topicFilter)
 	{
-		filteredData.setPredicate(new Predicate<SubscriptionTopicSummaryProperties>()
+		synchronized (filteredData)
 		{
-			@Override
-			public boolean test(final SubscriptionTopicSummaryProperties item)
+			filteredData.setPredicate(new Predicate<SubscriptionTopicSummaryProperties>()
 			{
-				// If filter text is empty, display all persons.
-	            if (topicFilter == null || topicFilter.isEmpty()) 
-	            {
-	                return true;
-	            }
-
-	            if (item.topicProperty().getValue().toLowerCase().indexOf(topicFilter.toLowerCase()) != -1) 
-	            {
-	            	// Filter matches first name
-	                return true; 
-	            }
-	            
-	            // Does not match
-	            return false; 
-			}
-		});
+				@Override
+				public boolean test(final SubscriptionTopicSummaryProperties item)
+				{
+					// If filter text is empty, display all persons.
+		            if (topicFilter == null || topicFilter.isEmpty()) 
+		            {
+		                return true;
+		            }
+		            
+		            final String topic = item.topicProperty().getValue();
+	
+		            if (topic.toLowerCase().indexOf(topicFilter.toLowerCase()) != -1) 
+		            {
+		            	// Filter matches first name
+		            	synchronized (shownTopics)
+		            	{
+		            		shownTopics.add(topic);
+		            	}
+		                return true; 
+		            }
+		            
+		            // Does not match
+		            synchronized (shownTopics)
+		            {
+		            	shownTopics.remove(topic);
+		            }
+		            return false; 
+				}
+			});						
+		}
 	}
 
 	public void setStore(final ManagedMessageStoreWithFiltering store)
@@ -332,7 +363,10 @@ public class SubscriptionSummaryTableController implements Initializable
 		// Separator
 		contextMenu.getItems().add(new SeparatorMenuItem());
 		
-		// Apply filters
+		// All filters
+		final Menu allTopicsMenu = new Menu("[Browse] All topics");
+		
+		// Apply all filters
 		final MenuItem selectAllTopicsItem = new MenuItem("[Browse] Select all topics");
 		selectAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -342,14 +376,15 @@ public class SubscriptionSummaryTableController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					store.setAllShowValues(true, filteredData);
+					store.setAllShowValues(true);
 					eventManager.navigateToFirst(store);
 				}
 			}
 		});
-		contextMenu.getItems().add(selectAllTopicsItem);
-
-		// Toggle filters
+		
+		allTopicsMenu.getItems().add(selectAllTopicsItem);		
+		
+		// Toggle all filters
 		final MenuItem toggleAllTopicsItem = new MenuItem("[Browse] Toggle all topics");
 		toggleAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -359,14 +394,14 @@ public class SubscriptionSummaryTableController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					store.toggleAllShowValues(filteredData);
+					store.toggleAllShowValues();
 					eventManager.navigateToFirst(store);
 				}
 			}
 		});
-		contextMenu.getItems().add(toggleAllTopicsItem);
+		allTopicsMenu.getItems().add(toggleAllTopicsItem);
 		
-		// Remove filters
+		// Remove all filters
 		final MenuItem removeAllTopicsItem = new MenuItem("[Browse] Clear all selected topics");
 		removeAllTopicsItem.setOnAction(new EventHandler<ActionEvent>()
 		{
@@ -376,15 +411,68 @@ public class SubscriptionSummaryTableController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					store.setAllShowValues(false, filteredData);
+					store.setAllShowValues(false);
 					eventManager.navigateToFirst(store);
 				}
 			}
 		});
-		contextMenu.getItems().add(removeAllTopicsItem);
-
-		// Separator
-		contextMenu.getItems().add(new SeparatorMenuItem());		
+		allTopicsMenu.getItems().add(removeAllTopicsItem);
+		contextMenu.getItems().add(allTopicsMenu);	
+		
+		// Filtered topics
+		filteredTopicsMenu = new Menu("[Browse] Filtered topics");
+		
+		// Apply filtered filters
+		final MenuItem selectFilteredTopicsItem = new MenuItem("[Browse] Select filtered topics");
+		selectFilteredTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.setShowValues(true, shownTopics);
+					eventManager.navigateToFirst(store);
+				}
+			}
+		});		
+		filteredTopicsMenu.getItems().add(selectFilteredTopicsItem);		
+		
+		// Toggle filtered filters
+		final MenuItem toggleFilteredTopicsItem = new MenuItem("[Browse] Toggle filtered topics");
+		toggleFilteredTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.toggleShowValues(shownTopics);
+					eventManager.navigateToFirst(store);
+				}
+			}
+		});
+		filteredTopicsMenu.getItems().add(toggleFilteredTopicsItem);
+		
+		// Remove filtered filters
+		final MenuItem removeFilteredTopicsItem = new MenuItem("[Browse] Clear selected topics");
+		removeFilteredTopicsItem.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{
+				final SubscriptionTopicSummaryProperties item = filterTable.getSelectionModel()
+						.getSelectedItem();
+				if (item != null)
+				{
+					store.setShowValues(false, shownTopics);
+					eventManager.navigateToFirst(store);
+				}
+			}
+		});
+		filteredTopicsMenu.getItems().add(removeFilteredTopicsItem);
+		contextMenu.getItems().add(filteredTopicsMenu);	
 		
 		// Only this topic
 		final MenuItem selectOnlyThisItem = new MenuItem("[Browse] Select only this");
@@ -396,7 +484,7 @@ public class SubscriptionSummaryTableController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					store.setAllShowValues(false, null);
+					store.setAllShowValues(false);
 					store.setShowValue(item.topicProperty().getValue(), true);
 					eventManager.navigateToFirst(store);
 				}

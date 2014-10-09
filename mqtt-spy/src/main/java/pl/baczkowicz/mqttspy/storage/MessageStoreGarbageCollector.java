@@ -95,7 +95,7 @@ public class MessageStoreGarbageCollector implements Runnable
 	public void run()
 	{
 		Thread.currentThread().setName("Garbage Message Collector for " + messages.getName());
-		logger.info("Starting thread " + Thread.currentThread().getName());
+		logger.debug("Starting thread " + Thread.currentThread().getName());
 				
 		while (true)		
 		{			

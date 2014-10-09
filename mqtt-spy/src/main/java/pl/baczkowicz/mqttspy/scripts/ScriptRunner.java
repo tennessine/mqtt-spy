@@ -2,6 +2,8 @@ package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.FileReader;
 
+import javafx.application.Platform;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +36,15 @@ public class ScriptRunner implements Runnable
 		try
 		{
 			final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));
+			logger.debug("Script {} returned with value {}", script.getName(), returnValue);
 			
-			if (returnValue instanceof Boolean)
+			// If nothing returned, assume all good
+			if (returnValue == null)
+			{
+				changeState(script.getName(), ScriptRunningState.FINISHED, script);
+			}
+			// If boolean returned, check if OK
+			else if (returnValue instanceof Boolean)
 			{
 				if ((boolean) returnValue)
 				{
@@ -46,6 +55,7 @@ public class ScriptRunner implements Runnable
 					changeState(script.getName(), ScriptRunningState.STOPPED, script);
 				}
 			}
+			// Anything else, assume all good
 			else
 			{
 				changeState(script.getName(), ScriptRunningState.FINISHED, script);
@@ -55,16 +65,23 @@ public class ScriptRunner implements Runnable
 		{
 			changeState(script.getName(), ScriptRunningState.FAILED, script);
 			logger.error("Script execution exception", e);
-			// ScriptManager.handleException(e);
 		}		
 	}
 	
 	public static void changeState(final EventManager eventManager, final String scriptName, 
 			final ScriptRunningState newState, final PublicationScriptProperties script)
-	{
-		logger.trace("Changing script state to " + newState);
+	{		
+		logger.debug("Changing script state to " + newState);
 		script.setStatus(newState);
-		eventManager.notifyScriptStateChange(scriptName, newState);
+		
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{						
+				eventManager.notifyScriptStateChange(scriptName, newState);			
+			}
+		});	
 	}
 	
 	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties script)

@@ -1,11 +1,10 @@
 package pl.baczkowicz.mqttspy.storage;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-
-import javafx.collections.transformation.FilteredList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,6 @@ import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.TopicSummaryNewMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.TopicSummaryRemovedMessageEvent;
-import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
 public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 {
@@ -122,10 +120,8 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 		filteredStore.removeAllFilters();
 	}
 
-	public void setAllShowValues(final boolean show, final FilteredList<SubscriptionTopicSummaryProperties> filteredData)
+	public void setAllShowValues(final boolean show)
 	{
-		// TODO: process filtered data
-		
 		if (show)
 		{
 			filteredStore.addAllFilters();
@@ -135,27 +131,55 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 			filteredStore.removeAllFilters();
 		}
 		
-		// filteredStore.updateFilter(allTopics, show);
 		messages.getTopicSummary().setAllShowValues(show);
 	}
-
-	public void toggleAllShowValues(final FilteredList<SubscriptionTopicSummaryProperties> filteredData)
-	{
-		// TODO: process filtered data
-		final Set<String> topicsToShow = new HashSet<>();
-		for (final String topic : allTopics)
+	
+	public void setShowValues(final boolean show, final Collection<String> topics)
+	{		
+		synchronized (topics)
 		{
-			//filteredStore.updateFilter(topic, !filteredStore.getShownTopics().contains(topic));			
-			if (!filteredStore.getShownTopics().contains(topic))				
+			if (show)
 			{
-				topicsToShow.add(topic);
+				filteredStore.applyFilters(topics, true);
 			}
+			else
+			{
+				filteredStore.removeFilters(topics);
+			}
+			
+			messages.getTopicSummary().setShowValues(topics, show);
 		}
-		filteredStore.removeAllFilters();
-		filteredStore.applyFilter(topicsToShow, true);
-		// filteredStore.updateFilter(topicsToShow, true);
+	}
+	
+	public void toggleAllShowValues()
+	{
+		toggleShowValues(allTopics);
+	}
+
+	public void toggleShowValues(final Collection<String> topics)
+	{
+		final Set<String> topicsToAdd = new HashSet<>();
+		final Set<String> topicsToRemove = new HashSet<>();
 		
-		messages.getTopicSummary().toggleAllShowValues();
+		synchronized (topics)
+		{
+			for (final String topic : topics)
+			{		
+				if (filteredStore.getShownTopics().contains(topic))				
+				{
+					topicsToRemove.add(topic);				
+				}
+				else
+				{
+					topicsToAdd.add(topic);
+				}
+			}
+			
+			filteredStore.removeFilters(topicsToRemove);
+			filteredStore.applyFilters(topicsToAdd, true);
+			
+			messages.getTopicSummary().toggleShowValues(topics);
+		}
 	}
 
 	public void setShowValue(final String topic, final boolean show)

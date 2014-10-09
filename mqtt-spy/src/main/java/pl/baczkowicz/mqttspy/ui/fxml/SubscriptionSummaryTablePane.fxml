@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.SubscriptionSummaryTableController">
-	<padding><Insets top="8" right="1" bottom="1" left="1" /></padding>
+	<padding><Insets top="10" right="5" bottom="5" left="5" /></padding>
 	<children>
 	
         <TableView fx:id="filterTable" editable="true" maxHeight="1000.0" minHeight="100.0" prefHeight="100.0" prefWidth="626.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

@@ -41,17 +41,6 @@
 								<RadioMenuItem mnemonicParsing="false" onAction="#showSpyPerspective" text="Spy (subscriptions only)" toggleGroup="$perspective" />
 							</items>
 						</Menu>
-						<!-- 
-						<Menu mnemonicParsing="false" text="Manual publication pane">
-							<items>
-								<RadioMenuItem mnemonicParsing="false" onAction="#showManualPublicationPane" selected="true" text="Manual publications">
-		                           <toggleGroup>
-		                              <ToggleGroup fx:id="publicationMode" />
-		                           </toggleGroup></RadioMenuItem>
-								<RadioMenuItem mnemonicParsing="false" onAction="#showScriptedPublicationPane" text="Scripted publications" toggleGroup="$publicationMode" />
-							</items>
-						</Menu>
-						 -->
 					</items>
 				</Menu>
 				

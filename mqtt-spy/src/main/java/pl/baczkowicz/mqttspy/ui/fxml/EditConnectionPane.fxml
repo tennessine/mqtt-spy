@@ -100,7 +100,7 @@
                      <children>
                         <Label layoutX="23.0" layoutY="20.0" text="Last Will and Testament" />
                         <CheckBox fx:id="lastWillAndTestament" layoutX="279.0" layoutY="18.0" mnemonicParsing="false" />
-                        <AnchorPane layoutX="8.0" layoutY="64.0" prefHeight="134.0" prefWidth="678.0">
+                        <AnchorPane layoutX="8.0" layoutY="64.0" prefHeight="134.0" prefWidth="682.0">
                      		<children>  
                         		<fx:include fx:id="lastWillAndTestamentMessage" source="NewPublicationPane.fxml" />
                         	</children>

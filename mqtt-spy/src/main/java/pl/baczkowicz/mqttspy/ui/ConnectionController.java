@@ -37,17 +37,17 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 {
 	private static final int MIN_COLLAPSED_PANE_HEIGHT = 26;
 	
-	private static final int MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT = 71;
+	private static final int SUBSCRIPTION_PANE_MIN_EXPANDED_HEIGHT = 65;
 
-	private static final int MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
+	private static final int SUBSCRIPTION_PANE_MIN_COLLAPSED_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 	
-	private static final int MIN_EXPANDED_PUBLICATION_PANE_HEIGHT = 98;	
+	private static final int PUBLICATION_PANE_MIN_EXPANDED_HEIGHT = 98;	
 	
-	private static final int MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
+	private static final int PUBLICATION_PANE_MIN_COLLAPSED_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 	
-	private static final int MIN_EXPANDED_SCRIPTED_PUBLICATION_PANE_HEIGHT = 145;	
+	private static final int SCRIPTED_PUBLICATION_PANE_MIN_EXPANDED_HEIGHT = 136;	
 	
-	private static final int MIN_COLLAPSED_SCRIPTED_PUBLICATION_PANE_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
+	private static final int SCRIPTED_PUBLICATION_PANE_MIN_COLLAPSED_HEIGHT = MIN_COLLAPSED_PANE_HEIGHT;
 
 	final static Logger logger = LoggerFactory.getLogger(ConnectionController.class);
 
@@ -172,31 +172,31 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	{
 		if (publishMessageTitledPane.isExpanded())
 		{
-			publishMessageTitledPane.setMinHeight(MIN_EXPANDED_PUBLICATION_PANE_HEIGHT);
+			publishMessageTitledPane.setMinHeight(PUBLICATION_PANE_MIN_EXPANDED_HEIGHT);
 		}
 		else
 		{
-			publishMessageTitledPane.setMinHeight(MIN_COLLAPSED_PUBLICATION_PANE_HEIGHT);
+			publishMessageTitledPane.setMinHeight(PUBLICATION_PANE_MIN_COLLAPSED_HEIGHT);
 		}
 		
 		if (scriptedPublicationsTitledPane.isExpanded())
 		{
-			scriptedPublicationsTitledPane.setMinHeight(MIN_EXPANDED_SCRIPTED_PUBLICATION_PANE_HEIGHT);
+			scriptedPublicationsTitledPane.setMinHeight(SCRIPTED_PUBLICATION_PANE_MIN_EXPANDED_HEIGHT);
 		}
 		else
 		{
-			scriptedPublicationsTitledPane.setMinHeight(MIN_COLLAPSED_SCRIPTED_PUBLICATION_PANE_HEIGHT);
+			scriptedPublicationsTitledPane.setMinHeight(SCRIPTED_PUBLICATION_PANE_MIN_COLLAPSED_HEIGHT);
 		}
 		
 		if (newSubscriptionTitledPane.isExpanded())
 		{
-			newSubscriptionTitledPane.setMinHeight(MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT);
-			newSubscriptionTitledPane.setMaxHeight(MIN_EXPANDED_SUBSCRIPTION_PANE_HEIGHT);
+			newSubscriptionTitledPane.setMinHeight(SUBSCRIPTION_PANE_MIN_EXPANDED_HEIGHT);
+			newSubscriptionTitledPane.setMaxHeight(SUBSCRIPTION_PANE_MIN_EXPANDED_HEIGHT);
 		}
 		else
 		{
-			newSubscriptionTitledPane.setMinHeight(MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT);
-			newSubscriptionTitledPane.setMaxHeight(MIN_COLLAPSED_SUBSCRIPTION_PANE_HEIGHT);
+			newSubscriptionTitledPane.setMinHeight(SUBSCRIPTION_PANE_MIN_COLLAPSED_HEIGHT);
+			newSubscriptionTitledPane.setMaxHeight(SUBSCRIPTION_PANE_MIN_COLLAPSED_HEIGHT);
 		}
 	}
 

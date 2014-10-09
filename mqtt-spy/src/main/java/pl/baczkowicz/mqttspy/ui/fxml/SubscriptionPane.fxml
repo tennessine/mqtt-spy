@@ -16,7 +16,7 @@
     		</children>
       </AnchorPane>
       
-      <SplitPane fx:id="splitPane" dividerPositions="0.42" layoutX="11.0" layoutY="45.0" orientation="VERTICAL" prefHeight="229.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-2.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="40.0">
+      <SplitPane fx:id="splitPane" dividerPositions="0.42" layoutX="11.0" layoutY="45.0" orientation="VERTICAL" prefHeight="229.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="40.0">
          <items>
          	<fx:include fx:id="messagePane" prefHeight="1000.0" source="MessagePane.fxml" />
             

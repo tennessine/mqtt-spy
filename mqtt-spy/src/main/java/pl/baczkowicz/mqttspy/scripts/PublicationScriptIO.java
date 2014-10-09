@@ -109,16 +109,20 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 		{
 			publishedMessages++;
 			
+			if (!script.getStatus().equals(ScriptRunningState.RUNNING))
+			{
+				ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.RUNNING, script);
+			}
+			
 			logger.debug("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", script.getName(), publicationTopic, data, qos, retained);
 			connection.publish(publicationTopic, data, qos, retained);
-			
+						
 			Platform.runLater(new Runnable()
 			{			
 				@Override
 				public void run()
 				{
 					script.setLastPublished(new Date());
-					ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.RUNNING, script);
 					script.setCount(publishedMessages);				
 				}
 			});

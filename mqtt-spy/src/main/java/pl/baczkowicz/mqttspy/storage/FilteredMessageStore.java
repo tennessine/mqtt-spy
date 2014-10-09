@@ -99,7 +99,7 @@ public class FilteredMessageStore
 		}
 	}
 	
-	public boolean applyFilter(final Collection<String> topics, final boolean recreateStore)
+	public boolean applyFilters(final Collection<String> topics, final boolean recreateStore)
 	{
 		synchronized (shownTopics)
 		{
@@ -128,10 +128,10 @@ public class FilteredMessageStore
 	
 	public boolean applyFilter(final String topic, final boolean recreateStore)
 	{
-		return applyFilter(Arrays.asList(topic), recreateStore);
+		return applyFilters(Arrays.asList(topic), recreateStore);
 	}
 	
-	private boolean removeFilter(final Collection<String> topics)
+	public boolean removeFilters(final Collection<String> topics)
 	{
 		synchronized (shownTopics)
 		{
@@ -158,7 +158,7 @@ public class FilteredMessageStore
 
 	private boolean removeFilter(final String topic)
 	{
-		return removeFilter(Arrays.asList(topic));
+		return removeFilters(Arrays.asList(topic));
 	}
 	
 	public MessageListWithObservableTopicSummary getFilteredMessages()

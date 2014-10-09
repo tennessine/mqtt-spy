@@ -160,7 +160,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		messageNavigationPaneController.clear();
 		
 		// TODO: not sure what this is for...
-		store.setAllShowValues(false, null);		
+		store.setAllShowValues(false);		
 	}
 	
 	public void onSubscriptionStatusChanged(final MqttSubscription changedSubscription)

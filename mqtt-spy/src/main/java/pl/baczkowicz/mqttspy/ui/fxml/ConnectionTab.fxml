@@ -37,18 +37,9 @@
             <TitledPane fx:id="subscriptionsTitledPane" alignment="TOP_LEFT" animated="false" text="Subscriptions and received messages">
               <content>
                  <AnchorPane minHeight="250.0" prefHeight="1000.0">
+                     <padding><Insets top="6" right="6" bottom="3" left="6" /></padding>
                      <children> 
-   						<TabPane fx:id="subscriptionTabs" layoutX="0.0" layoutY="42.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-   							<tabs>
-   								<!-- Leaving it in slows down loading process, particularly that we're clearing it...
-   								<Tab closable="false" text="All">
-   									<content>
-   										<fx:include source="SubscriptionPane.fxml" />
-   									</content>
-   								</Tab>
-   								-->
-   							</tabs>
-   						</TabPane>
+   						<TabPane fx:id="subscriptionTabs" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
               </content>

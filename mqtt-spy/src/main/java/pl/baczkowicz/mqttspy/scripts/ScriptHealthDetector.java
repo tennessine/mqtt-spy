@@ -30,7 +30,7 @@ public class ScriptHealthDetector implements Runnable
 		{
 			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < Utils.getMonotonicTimeInMilliseconds())
 			{
-				logger.info("Script {} detected as frozen, last touch = {}, current time = {}", script.getName(), 
+				logger.warn("Script {} detected as frozen, last touch = {}, current time = {}", script.getName(), 
 						script.getPublicationScriptIO().getLastTouch(), Utils.getMonotonicTimeInMilliseconds());
 				ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.FROZEN, script);
 			}

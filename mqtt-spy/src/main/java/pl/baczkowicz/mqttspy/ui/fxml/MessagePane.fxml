@@ -44,7 +44,7 @@
          </font>
       </TextField>
       <!-- StyleClassed -->
-      <StyleClassedTextArea fx:id="dataField" editable="false" layoutX="48.0" layoutY="37.0" minHeight="35.0" prefHeight="35.0" prefWidth="478.0" wrapText="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="48.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="37.0">
+      <StyleClassedTextArea fx:id="dataField" editable="false" minHeight="35.0" prefHeight="35.0" prefWidth="478.0" wrapText="true" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="47.0" AnchorPane.rightAnchor="6.0" AnchorPane.topAnchor="37.0">
          <font>
             <Font name="System" size="11.0" />
          </font>
