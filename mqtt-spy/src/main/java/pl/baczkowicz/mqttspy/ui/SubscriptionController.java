@@ -335,7 +335,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		paneTitle = new AnchorPane();
 		final HBox titleBox = new HBox();
 		titleBox.setPadding(new Insets(0, 0, 0, 0));		
-		topicFilterBox.getChildren().addAll(new Label(" [filter topics: "), searchBox, new Label("] "));
+		topicFilterBox.getChildren().addAll(new Label(" [search topics: "), searchBox, new Label("] "));
 		titleBox.getChildren().addAll(new Label(SUMMARY_PANE_TITLE), topicFilterBox);
 		titleBox.prefWidth(Double.MAX_VALUE);
 		

@@ -138,7 +138,8 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		}
 		else
 		{
-			stage.setTitle(subscriptionName + " - " + store.getMessages().size() + " " + messagesText + " available for searching (filter is on)");		
+			stage.setTitle(subscriptionName + " - " + store.getMessages().size() + " " + messagesText 
+					+ " available for searching (" + MessageNavigationController.getBrowsingTopicsInfo(store) + ")");		
 		}		
 	}
 	

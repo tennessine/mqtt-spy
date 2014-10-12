@@ -224,9 +224,17 @@ public class SubscriptionSummaryTableController implements Initializable
 		
 		nonFilteredData = store.getNonFilteredMessageList().getTopicSummary().getObservableMessagesPerTopic();
 		
+		// Create filtered data set
 		filteredData = new FilteredList<>(nonFilteredData);
-				
-		filterTable.setItems(new SortedList<>(filteredData));
+		
+		// Create sortable data set
+		final SortedList<SubscriptionTopicSummaryProperties> sortedData = new SortedList<>(filteredData);
+		
+		// Bind the sortable list with the table
+		sortedData.comparatorProperty().bind(filterTable.comparatorProperty());
+		
+		// Set the data on the table
+		filterTable.setItems(sortedData);
 		
 		filteredData.addListener(new ListChangeListener<SubscriptionTopicSummaryProperties>()
 		{

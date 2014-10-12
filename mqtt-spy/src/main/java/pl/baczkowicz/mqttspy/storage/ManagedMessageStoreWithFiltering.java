@@ -1,6 +1,7 @@
 package pl.baczkowicz.mqttspy.storage;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -110,6 +111,11 @@ public class ManagedMessageStoreWithFiltering extends BasicMessageStore
 	public boolean filtersEnabled()
 	{
 		return filteredStore.getShownTopics().size() != allTopics.size();
+	}
+	
+	public Collection<String> getAllTopics()
+	{
+		return Collections.unmodifiableCollection(allTopics);
 	}
 
 	@Override

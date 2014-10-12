@@ -31,6 +31,7 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.utils.TextUtils;
 
 public class MessageNavigationController implements Initializable, MessageIndexToFirstObserver, MessageIndexIncrementObserver, MessageAddedObserver, MessageRemovedObserver
@@ -351,9 +352,10 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 		{			
 			filterStatusLabel.setText("");
 		}
-		else
+		else if (store instanceof ManagedMessageStoreWithFiltering)
 		{
-			filterStatusLabel.setText("(filter is on)");		
+			// filterStatusLabel.setText("(filter is on)");		
+			filterStatusLabel.setText("(" + getBrowsingTopicsInfo((ManagedMessageStoreWithFiltering) store) + ")");
 		}
 		
 		if (refreshMessageDetails)
@@ -362,6 +364,13 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 		}
 	}
 
+	public static String getBrowsingTopicsInfo(final ManagedMessageStoreWithFiltering store)
+	{
+		final int selectedTopics = store.getFilteredMessageStore().getShownTopics().size();
+		final int totalTopics = store.getAllTopics().size();
+		
+		return "browsing " + selectedTopics + "/" + totalTopics + " " + (totalTopics == 1? "topic" : "topics");		
+	}
 	
 	private void updateMessageIndexFromScroll(final int scroll)
 	{
