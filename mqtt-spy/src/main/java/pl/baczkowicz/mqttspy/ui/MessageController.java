@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.AnchorPane;
 
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
@@ -51,6 +52,12 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 
 	@FXML
 	private Label lengthLabel;
+	
+	@FXML
+	private Label retainedFieldLabel;
+	
+	@FXML
+	private Label qosFieldLabel;
 
 	private BasicMessageStore store;
 	
@@ -61,6 +68,8 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	private Tooltip tooltip;
 
 	private SearchOptions searchOptions;
+
+	private boolean detailedView;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -80,6 +89,43 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	{
 		tooltip = new Tooltip("");
 		tooltip.setWrapText(true);
+	}
+	
+	private void updateVisibility()
+	{
+		if (detailedView)
+		{
+			// Doing this so the panel doesn't get bigger
+			AnchorPane.setRightAnchor(topicField, null);
+			topicField.setPrefWidth(100);
+			
+			// Apply sizing and visibility
+			AnchorPane.setRightAnchor(topicField, 342.0);
+			qosField.setVisible(true);
+			retainedField.setVisible(true);
+			qosFieldLabel.setVisible(true);
+			retainedFieldLabel.setVisible(true);
+		}
+		else
+		{
+			AnchorPane.setRightAnchor(topicField, 205.0);
+			qosField.setVisible(false);
+			retainedField.setVisible(false);
+			qosFieldLabel.setVisible(false);
+			retainedFieldLabel.setVisible(false);
+		}
+	}
+	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		detailedView = visible;
+		updateVisibility();
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		detailedView = !detailedView;
+		updateVisibility();
 	}
 	
 	@Override

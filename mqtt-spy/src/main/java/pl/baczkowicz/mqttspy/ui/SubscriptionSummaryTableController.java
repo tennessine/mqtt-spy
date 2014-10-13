@@ -108,6 +108,7 @@ public class SubscriptionSummaryTableController implements Initializable
 									public void run()
 									{
 										eventManager.navigateToFirst(store);	
+										eventManager.notifyMessageListChanged(store.getMessageList());
 									}											
 								});
 							}																			

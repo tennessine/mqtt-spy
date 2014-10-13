@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -10,12 +11,14 @@
 <?import javafx.scene.control.ComboBox?>
 
 <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.NewSubscriptionController">
-	<padding><Insets top="6" right="6" bottom="3" left="6" /></padding>
+	<padding><Insets bottom="3" left="6" right="6" top="6" /></padding>
 	<children>
-	
-		<Button fx:id="subscribeButton" disable="true" layoutX="549.0" layoutY="13.0" mnemonicParsing="false" onAction="#subscribe" prefHeight="25.0" prefWidth="97.0" text="Subscribe" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-		<ColorPicker fx:id="colorPicker" layoutX="359.0" prefHeight="25.0" prefWidth="108.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="0.0" />
-		<ChoiceBox fx:id="subscriptionQosChoice" layoutX="498.0" layoutY="13.0" prefHeight="25.0" prefWidth="14.0" value="0" AnchorPane.rightAnchor="108.0" AnchorPane.topAnchor="0.0">
+
+		<Label layoutX="14.0" layoutY="9.0" text="Topic" AnchorPane.topAnchor="5.0" />
+		<ComboBox fx:id="subscriptionTopicText" editable="true" layoutX="53.0" layoutY="13.0" prefHeight="25.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="327" AnchorPane.topAnchor="0.0" />		
+		
+		<Label fx:id="subscriptionQosLabel" layoutX="472.0" layoutY="5.0" text="QoS" AnchorPane.rightAnchor="291" AnchorPane.topAnchor="5.0" />								
+		<ChoiceBox fx:id="subscriptionQosChoice" layoutX="498.0" layoutY="13.0" prefHeight="25.0" prefWidth="14.0" value="0" AnchorPane.rightAnchor="244" AnchorPane.topAnchor="0.0">
 			<items>
 				<FXCollections fx:factory="observableArrayList">
 					<String fx:value="0" />
@@ -24,9 +27,19 @@
 				</FXCollections>
 			</items>
 		</ChoiceBox>
-		<ComboBox fx:id="subscriptionTopicText" editable="true" layoutX="53.0" layoutY="13.0" prefHeight="25.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="305.0" AnchorPane.topAnchor="0.0" />
-		<Label layoutX="472.0" layoutY="5.0" text="QoS" AnchorPane.rightAnchor="158.0" AnchorPane.topAnchor="5.0" />
-		<Label layoutX="14.0" layoutY="9.0" text="Topic" AnchorPane.topAnchor="5.0" />
+		
+		<ColorPicker fx:id="colorPicker" layoutX="359.0" prefHeight="25.0" prefWidth="110.0" AnchorPane.rightAnchor="125" AnchorPane.topAnchor="0.0" />
+				
+		<Button fx:id="subscribeButton" disable="true" layoutX="549.0" layoutY="13.0" mnemonicParsing="false" onAction="#subscribe" prefHeight="25.0" prefWidth="115" text="Subscribe" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		<padding><Insets bottom="1.0" left="2.0" right="2.0" top="1.0" /></padding>
+		<graphic>
+      		<ImageView fx:id="settingsIcon" fitHeight="24" fitWidth="24" pickOnBounds="true">
+		         <image>
+		            <Image url="/images/receive-icon.png" />
+		         </image>
+		      </ImageView>
+      	</graphic>
+		</Button>
 		
    </children>
 </AnchorPane>

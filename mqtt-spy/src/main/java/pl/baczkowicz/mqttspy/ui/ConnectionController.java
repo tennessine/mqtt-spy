@@ -113,6 +113,8 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 
 	private Map<TitledPane, Boolean> panes = new LinkedHashMap<>();
 
+	private boolean detailedView;
+
 	private ChangeListener<Boolean> createChangeListener()
 	{
 		return new ChangeListener<Boolean>()
@@ -367,6 +369,34 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	{
 		panes.put(pane, !panes.get(pane));		
 		updateVisiblePanes();
+	}
+	
+	public boolean getDetailedViewVisibility()
+	{
+		return detailedView;
+	}
+	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		detailedView = visible;
+		newSubscriptionPaneController.setDetailedViewVisibility(visible);
+		newPublicationPaneController.setDetailedViewVisibility(visible);
+		
+		for (final SubscriptionController subscriptionController : connectionManager.getSubscriptionManager(connection.getId()).getSubscriptionControllers())
+		{
+			subscriptionController.setDetailedViewVisibility(visible);
+		}
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		newSubscriptionPaneController.toggleDetailedViewVisibility();
+		newPublicationPaneController.toggleDetailedViewVisibility();
+		
+		for (final SubscriptionController subscriptionController : connectionManager.getSubscriptionManager(connection.getId()).getSubscriptionControllers())
+		{
+			subscriptionController.toggleDetailedViewVisibility();
+		}
 	}
 	
 	public void showPanes(boolean showManualPublications, boolean showScriptedPublications, boolean showNewSubscription, boolean showReceivedMessagesSummary)

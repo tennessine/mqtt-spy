@@ -153,6 +153,16 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		// eventDispatcher.addObserver(this);
 	}
 	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		messagePaneController.setDetailedViewVisibility(visible);
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		messagePaneController.toggleDetailedViewVisibility();
+	}
+	
 	@Override
 	public void onClearTab(final ManagedMessageStoreWithFiltering subscription)
 	{	
@@ -174,9 +184,8 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	{
 		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
 	
-		formattingMenuButton.setText(store.getFormatter().getName());
+		// formattingMenuButton.setText(store.getFormatter().getName());
 		eventManager.notifyFormatChanged(store);
-		// eventDispatcher.dispatchEvent(new MessageFormatChangeEvent());
 	}
 	
 	@FXML
@@ -186,11 +195,11 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		
 		if (messageFormat != null)
 		{
-			formattingMenuButton.setText("[Selection] " + messageFormat.getName());
+			// formattingMenuButton.setText("[Selection] " + messageFormat.getName());
 		}
 		else
 		{
-			formattingMenuButton.setText(((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData()).getName());
+			// formattingMenuButton.setText(((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData()).getName());
 		}
 		messagePaneController.formatSelection(messageFormat);
 	}
@@ -322,7 +331,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		searchBox = new TextField();
 		searchBox.setFont(new Font("System", 11));
 		searchBox.setPadding(new Insets(2, 5, 2, 5));
-		searchBox.setMaxWidth(100);
+		searchBox.setMaxWidth(90);
 		searchBox.textProperty().addListener(new ChangeListener<String>()
 		{
 			@Override
@@ -460,6 +469,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 			
 			eventManager.registerMessageAddedObserver(searchWindowController, store.getMessageList());
 			eventManager.registerMessageRemovedObserver(searchWindowController, store.getMessageList());
+			eventManager.registerMessageListChangedObserver(searchWindowController, store.getMessageList());
 					
 			// Set scene width, height and style
 			final Scene scene = new Scene(searchWindow, SearchWindowController.WIDTH, SearchWindowController.HEIGHT);

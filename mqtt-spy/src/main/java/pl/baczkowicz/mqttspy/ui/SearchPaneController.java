@@ -106,6 +106,11 @@ public class SearchPaneController implements Initializable, MessageFormatChangeO
 		updateTabTitle();		
 	}
 	
+	public void requestSearchFocus()
+	{
+		searchField.requestFocus();
+	}
+	
 	private boolean matches(final String value, final String substring)
 	{
 		if (caseSensitiveCheckBox.isSelected())

@@ -82,10 +82,9 @@ public class ConnectionManager
 		{			
 			@Override
 			public void run()
-			{	
-				mainController.showPerspective(connectionController);
+			{					
 				connectionController.init();
-				subscriptionController.init();
+				subscriptionController.init();				
 								
 				mainController.addConnectionTab(connectionTab);
 				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
@@ -116,6 +115,9 @@ public class ConnectionManager
 								
 				// Populate panes
 				mainController.populateConnectionPanes(connectionProperties.getConfiguredProperties(), connectionController);	
+				
+				// Apply perspective
+				mainController.showPerspective(connectionController);
 			}
 		});		
 	}

@@ -202,11 +202,15 @@ public class ContextMenuUtils
 		final MenuItem scriptedPublications = new MenuItem("Toggle 'Scripted publications' pane");
 		final MenuItem newSubscription = new MenuItem("Toggle 'Define new subscription' pane");
 		final MenuItem messageSummary = new MenuItem("Toggle 'Subscriptions and received messages' pane");
+		final MenuItem detailedView = new MenuItem("Toggle between simplified and detailed views (QoS, Retained)");
 		
 		view.getItems().add(manualPublications);
 		view.getItems().add(scriptedPublications);
 		view.getItems().add(newSubscription);
 		view.getItems().add(messageSummary);
+		view.getItems().add(new SeparatorMenuItem());
+		view.getItems().add(detailedView);
+		
 		manualPublications.setOnAction(new EventHandler<ActionEvent>()
 		{
 			public void handle(ActionEvent e)
@@ -233,6 +237,13 @@ public class ContextMenuUtils
 			public void handle(ActionEvent e)
 			{				
 				connectionController.togglePane(connectionController.getSubscriptionsTitledPane());
+			}
+		});
+		detailedView.setOnAction(new EventHandler<ActionEvent>()
+		{
+			public void handle(ActionEvent e)
+			{				
+				connectionController.toggleDetailedViewVisibility();
 			}
 		});
 		contextMenu.getItems().add(view);

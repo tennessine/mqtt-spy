@@ -64,6 +64,15 @@ public class MainController
 	
 	@FXML
 	private RadioMenuItem defaultPerspective;
+	
+	@FXML
+	private RadioMenuItem detailedPerspective;
+	
+	@FXML
+	private RadioMenuItem spyPerspective;
+	
+	@FXML
+	private RadioMenuItem superSpyPerspective;
 	// @FXML
 	// private ToggleGroup perspective;
 
@@ -393,17 +402,6 @@ public class MainController
 	}
 	
 	@FXML
-	private void showDefaultPerspective()
-	{
-		showPerspective();
-	}
-	
-	@FXML
-	private void showSpyPerspective()
-	{
-		showPerspective();
-	}
-	
 	private void showPerspective()
 	{
 		for (final ConnectionController connectionController : connectionManager.getConnectionControllers().values())
@@ -414,13 +412,25 @@ public class MainController
 	
 	public void showPerspective(final ConnectionController connectionController)
 	{
-		if (defaultPerspective.isSelected())
+		if (spyPerspective.isSelected())
+		{
+			connectionController.showPanes(false, false, true, true);		
+			connectionController.setDetailedViewVisibility(false);
+		}
+		else if (superSpyPerspective.isSelected())
+		{
+			connectionController.showPanes(false, false, true, true);
+			connectionController.setDetailedViewVisibility(true);
+		}		
+		else if (detailedPerspective.isSelected())
 		{
 			connectionController.showPanes(true, true, true, true);
+			connectionController.setDetailedViewVisibility(true);
 		}
 		else
 		{
-			connectionController.showPanes(false, false, true, true);
+			connectionController.showPanes(true, true, true, true);
+			connectionController.setDetailedViewVisibility(false);
 		}
 	}
 	

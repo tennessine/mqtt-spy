@@ -33,7 +33,7 @@
             <Font size="11.0" />
          </font>
       </TextField>
-      <Label layoutX="275.0" layoutY="15.0" text="QoS" AnchorPane.rightAnchor="235.0" AnchorPane.topAnchor="15.0">
+      <Label fx:id="qosFieldLabel" layoutX="275.0" layoutY="15.0" text="QoS" AnchorPane.rightAnchor="235.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="11.0" />
          </font>
@@ -64,7 +64,7 @@
             <Font size="11.0" />
          </font>
       </CheckBox>
-      <Label layoutX="251.0" layoutY="15.0" text="Retained" AnchorPane.rightAnchor="285.0" AnchorPane.topAnchor="15.0">
+      <Label fx:id="retainedFieldLabel" layoutX="251.0" layoutY="15.0" text="Retained" AnchorPane.rightAnchor="285.0" AnchorPane.topAnchor="15.0">
          <font>
             <Font size="11.0" />
          </font>

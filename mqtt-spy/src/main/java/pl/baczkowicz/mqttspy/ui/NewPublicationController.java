@@ -13,9 +13,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.AnchorPane;
 
 import org.controlsfx.dialog.Dialogs;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -52,6 +54,12 @@ public class NewPublicationController implements Initializable
 	private CheckBox retainedBox;
 	
 	@FXML
+	private Label retainedLabel;
+	
+	@FXML
+	private Label publicationQosLabel;
+	
+	@FXML
 	private MenuButton formatMenu;
 		
 	private ObservableList<String> publicationTopics = FXCollections.observableArrayList();
@@ -61,6 +69,8 @@ public class NewPublicationController implements Initializable
 	private boolean plainSelected = true;
 
 	private boolean previouslyPlainSelected = true;
+
+	private boolean detailedView;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -144,6 +154,38 @@ public class NewPublicationController implements Initializable
 			formatMenu.setText("Input format: Hex");
 			previouslyPlainSelected = plainSelected;
 		}
+	}
+	
+	private void updateVisibility()
+	{
+		if (detailedView)
+		{
+			AnchorPane.setRightAnchor(publicationTopicText, 327.0);
+			publicationQosChoice.setVisible(true);
+			publicationQosLabel.setVisible(true);
+			retainedBox.setVisible(true);
+			retainedLabel.setVisible(true);
+		}
+		else
+		{
+			AnchorPane.setRightAnchor(publicationTopicText, 126.0);
+			publicationQosChoice.setVisible(false);
+			publicationQosLabel.setVisible(false);
+			retainedBox.setVisible(false);
+			retainedLabel.setVisible(false);
+		}
+	}
+	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		detailedView = visible;
+		updateVisibility();
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		detailedView = !detailedView;
+		updateVisibility();
 	}
 	
 	public void displayMessage(final ConfiguredMessage message)

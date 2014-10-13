@@ -14,6 +14,7 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageListChangedObserver;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
@@ -30,6 +31,8 @@ public class EventManager
 	private final Map<MessageAddedObserver, MessageListWithObservableTopicSummary> messageAddedObservers = new HashMap<>();
 	
 	private final Map<MessageRemovedObserver, MessageListWithObservableTopicSummary> messageRemovedObservers = new HashMap<>();
+	
+	private final Map<MessageListChangedObserver, MessageListWithObservableTopicSummary> messageListChangeObservers = new HashMap<>();
 	
 	private final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObservers = new HashMap<>();
 	
@@ -69,6 +72,11 @@ public class EventManager
 	public void registerMessageRemovedObserver(final MessageRemovedObserver observer, final MessageListWithObservableTopicSummary filter)
 	{
 		messageRemovedObservers.put(observer, filter);
+	}
+	
+	public void registerMessageListChangedObserver(final MessageListChangedObserver observer, final MessageListWithObservableTopicSummary filter)
+	{
+		messageListChangeObservers.put(observer, filter);
 	}
 	
 	public void registerSubscriptionStatusObserver(final SubscriptionStatusChangeObserver observer, final MqttSubscription filter)
@@ -147,6 +155,19 @@ public class EventManager
 				observer.onMessageRemoved(browseEvent.getMessage(), browseEvent.getMessageIndex());
 			}			
 		}		
+	}
+	
+	public void notifyMessageListChanged(final MessageListWithObservableTopicSummary list)
+	{
+		for (final MessageListChangedObserver observer : messageListChangeObservers.keySet())
+		{
+			final MessageListWithObservableTopicSummary filter = messageListChangeObservers.get(observer);
+			
+			if (filter == null || filter.equals(list))
+			{				
+				observer.onMessageListChanged();
+			}			
+		}				
 	}
 	
 	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)

@@ -70,6 +70,7 @@ public class SubscriptionManager
 		subscriptionController.init();
 		
 		subscription.setSubscriptionController(subscriptionController);
+		subscriptionController.setDetailedViewVisibility(connectionController.getDetailedViewVisibility());
 		
 		final TabPane subscriptionTabs = connectionController.getSubscriptionTabs();
 		

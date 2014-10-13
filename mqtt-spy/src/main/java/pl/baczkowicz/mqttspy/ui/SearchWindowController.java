@@ -23,11 +23,12 @@ import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
+import pl.baczkowicz.mqttspy.events.observers.MessageListChangedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
-public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver, MessageRemovedObserver
+public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver, MessageRemovedObserver, MessageListChangedObserver
 {
 	/** Initial and minimal scene/stage width. */	
 	public final static int WIDTH = 780;
@@ -64,7 +65,10 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	
 	public void createNewSearch()
 	{
-		searchTabs.getTabs().add(createSearchTab(this));
+		final Tab tab = createSearchTab(this);
+		searchTabs.getTabs().add(tab);
+		
+		searchPaneControllers.get(tab).requestSearchFocus();
 	}
 	
 	public Tab createSearchTab(final Object parent)
@@ -101,7 +105,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		// That's for getting new messages in
 		//subscriptionPaneEventDispatcher.addObserver(searchPaneController);
 		
-		searchPaneController.init();
+		searchPaneController.init();		
 		
 		searchPaneControllers.put(tab, searchPaneController);		
 
@@ -151,6 +155,12 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	
 	@Override
 	public void onMessageRemoved(final MqttContent message, final int messageIndex)
+	{
+		updateTitle();
+	}
+	
+	@Override
+	public void onMessageListChanged()
 	{
 		updateTitle();
 	}

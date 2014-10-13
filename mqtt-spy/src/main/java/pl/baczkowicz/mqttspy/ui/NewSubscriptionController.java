@@ -14,7 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 
 import org.slf4j.Logger;
@@ -40,6 +42,9 @@ public class NewSubscriptionController implements Initializable
 	private ChoiceBox<String> subscriptionQosChoice;
 
 	@FXML
+	private Label subscriptionQosLabel;
+	
+	@FXML
 	private ColorPicker colorPicker;
 
 	private ObservableList<String> subscriptionTopics = FXCollections.observableArrayList();
@@ -53,6 +58,8 @@ public class NewSubscriptionController implements Initializable
 	private boolean connected;
 
 	private ConnectionManager connectionManager;
+
+	private boolean detailedView;
 
 	public NewSubscriptionController()
 	{
@@ -101,6 +108,34 @@ public class NewSubscriptionController implements Initializable
 	        	}
 	        }
 	    });
+	}
+	
+	private void updateVisibility()
+	{
+		if (detailedView)
+		{
+			AnchorPane.setRightAnchor(subscriptionTopicText, 327.0);
+			subscriptionQosChoice.setVisible(true);
+			subscriptionQosLabel.setVisible(true);
+		}
+		else
+		{
+			AnchorPane.setRightAnchor(subscriptionTopicText, 244.0);
+			subscriptionQosChoice.setVisible(false);
+			subscriptionQosLabel.setVisible(false);
+		}
+	}
+	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		detailedView = visible;
+		updateVisibility();
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		detailedView = !detailedView;
+		updateVisibility();
 	}
 	
 	public void setConnected(final boolean connected)

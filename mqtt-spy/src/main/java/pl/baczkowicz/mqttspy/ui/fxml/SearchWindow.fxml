@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -12,7 +13,16 @@
    <children>
       <AnchorPane prefHeight="71.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button fx:id="createNewSearchButton" layoutX="12.0" layoutY="10.0" mnemonicParsing="false" onAction="#createNewSearch" prefHeight="47.0" prefWidth="575.0" text="Create new search" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="10.0" />
+            <Button fx:id="createNewSearchButton" graphicTextGap="20" layoutX="12.0" layoutY="10.0" mnemonicParsing="false" onAction="#createNewSearch" prefHeight="47.0" prefWidth="575.0" text="Create new search" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="12.0" AnchorPane.rightAnchor="12.0" AnchorPane.topAnchor="10.0">
+            <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+	        <graphic>
+	      		<ImageView fx:id="searchIcon" fitHeight="32" fitWidth="32" pickOnBounds="true">
+			         <image>
+			            <Image url="/images/tab-new.png" />
+			         </image>
+			      </ImageView>
+	      	</graphic>
+            </Button>
          </children>
       </AnchorPane>
       <Separator prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0" />

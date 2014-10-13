@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
@@ -21,8 +23,41 @@
       </Label>
       
       <!-- Create -->
- 	  <Button fx:id="connectButton" focusTraversable="false" layoutX="421.0" layoutY="317.0" mnemonicParsing="false" onAction="#createConnection" prefHeight="25.0" prefWidth="302.0" text="Open connection" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-      <Button fx:id="saveButton" focusTraversable="false" layoutX="14.0" layoutY="317.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="100.0" text="Apply" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" />
+ 	  <Button fx:id="connectButton" graphicTextGap="15" focusTraversable="false" layoutX="421.0" layoutY="317.0" mnemonicParsing="false" onAction="#createConnection" prefHeight="25.0" prefWidth="302.0" text="Open connection" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="14.0">
+	   <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+		    <graphic>
+		  		<ImageView fx:id="searchIcon" fitHeight="22" fitWidth="22" pickOnBounds="true">
+		       <image>
+		          <Image url="/images/button-connect.png" />
+		       </image>
+		    </ImageView>
+		  	</graphic>
+      </Button>
+            
+      <Button fx:id="saveButton" focusTraversable="false" layoutX="14.0" layoutY="317.0" mnemonicParsing="false" onAction="#save" prefHeight="25.0" prefWidth="100.0" text="Apply" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+      	        <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+		        <graphic>
+		      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+				         <image>
+				            <Image url="/images/button-apply.png" />
+				         </image>
+				      </ImageView>
+		      	</graphic>
+       </Button>
+       
+      <Button fx:id="undoButton" focusTraversable="false" layoutX="120.0" layoutY="317.0" mnemonicParsing="false" onAction="#undo" prefHeight="25.0" prefWidth="100.0" text="Undo" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="120.0">
+            	        <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+		        <graphic>
+		      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+				         <image>
+				            <Image url="/images/button-undo.png" />
+				         </image>
+				      </ImageView>
+		      	</graphic>
+       </Button>
+       
+      <Button fx:id="cancelButton" cancelButton="true" focusTraversable="false" layoutX="192.0" layoutY="317.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="80.0" text="Close" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="322.0" />
+            
       <TabPane layoutY="301.0" prefHeight="241.0" prefWidth="594.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="60.0">
         <tabs>
           <Tab text="Connectivity">
@@ -100,7 +135,7 @@
                      <children>
                         <Label layoutX="23.0" layoutY="20.0" text="Last Will and Testament" />
                         <CheckBox fx:id="lastWillAndTestament" layoutX="279.0" layoutY="18.0" mnemonicParsing="false" />
-                        <AnchorPane layoutX="8.0" layoutY="64.0" prefHeight="134.0" prefWidth="682.0">
+                        <AnchorPane layoutX="8.0" layoutY="64.0" prefHeight="134.0" minWidth="700" prefWidth="700">
                      		<children>  
                         		<fx:include fx:id="lastWillAndTestamentMessage" source="NewPublicationPane.fxml" />
                         	</children>
@@ -118,8 +153,28 @@
                             <TableColumn fx:id="publicationTopicColumn" minWidth="300.0" prefWidth="531.0" text="Topic" />
                           </columns>
                         </TableView>
-                        <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
-                        <Button fx:id="addPublicationButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addPublication" prefHeight="25.0" prefWidth="100.0" text="Add" AnchorPane.bottomAnchor="14.0" />
+                        <Button fx:id="removePublicationButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removePublication" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0">
+                                    <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+					        <graphic>
+					      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+							         <image>
+							            <Image url="/images/button-delete.png" />
+							         </image>
+							      </ImageView>
+					      	</graphic>
+		      			</Button>
+		      			
+                        <Button fx:id="addPublicationButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addPublication" prefHeight="25.0" prefWidth="100.0" text="Add" AnchorPane.bottomAnchor="14.0">
+                                    <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+					        <graphic>
+					      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+							         <image>
+							            <Image url="/images/button-add.png" />
+							         </image>
+							      </ImageView>
+					      	</graphic>
+			            </Button>
+                        
                         <TextField fx:id="publicationScriptsText" layoutX="279.0" layoutY="15.0" prefHeight="25.0" prefWidth="259.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="14.0" />
                         <Label layoutX="23.0" layoutY="20.0" text="Directory with publication scripts" />
                      </children>
@@ -137,8 +192,27 @@
                               <TableColumn fx:id="createTabSubscriptionColumn" prefWidth="95.0" text="Create tab" />
                            </columns>
                         </TableView>
-                        <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0" />
-                        <Button fx:id="addSubscriptionButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addSubscription" prefHeight="25.0" prefWidth="100.0" text="Add" AnchorPane.bottomAnchor="14.0" />
+                        <Button fx:id="removeSubscriptionButton" disable="true" focusTraversable="false" layoutX="472.0" layoutY="169.0" mnemonicParsing="false" onAction="#removeSubscription" prefHeight="25.0" prefWidth="100.0" text="Remove" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="472.0" AnchorPane.rightAnchor="14.0">
+                            <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+					        <graphic>
+					      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+							         <image>
+							            <Image url="/images/button-delete.png" />
+							         </image>
+							      </ImageView>
+					      	</graphic>
+		      			</Button>
+		      			
+                        <Button fx:id="addSubscriptionButton" focusTraversable="false" layoutX="364.0" layoutY="169.0" mnemonicParsing="false" onAction="#addSubscription" prefHeight="25.0" prefWidth="100.0" text="Add" AnchorPane.bottomAnchor="14.0">
+			                                    <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
+					        <graphic>
+					      		<ImageView fx:id="searchIcon" fitHeight="16" fitWidth="16" pickOnBounds="true">
+							         <image>
+							            <Image url="/images/button-add.png" />
+							         </image>
+							      </ImageView>
+					      	</graphic>
+			            </Button>
                      </children>
                   </AnchorPane>
                </content>
@@ -163,9 +237,7 @@
             </Tab>
         </tabs>
       </TabPane>
-      <Separator layoutX="14.0" layoutY="278.0" prefHeight="0.0" prefWidth="618.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />
-      <Button fx:id="undoButton" focusTraversable="false" layoutX="120.0" layoutY="317.0" mnemonicParsing="false" onAction="#undo" prefHeight="25.0" prefWidth="100.0" text="Undo" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="120.0" />
-      <Button fx:id="cancelButton" cancelButton="true" focusTraversable="false" layoutX="192.0" layoutY="317.0" mnemonicParsing="false" onAction="#cancel" prefHeight="25.0" prefWidth="80.0" text="Close" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="322.0" />
+      <Separator layoutX="14.0" layoutY="278.0" prefHeight="0.0" prefWidth="618.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" />          
       
    </children>
 </AnchorPane>
