@@ -792,7 +792,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		final ConnectionDetails connection = readValues();
 		boolean changed = !connection.equals(editedConnectionDetails.getSavedValues());
 			
-		logger.info("Values read. Changed = " + changed);
+		logger.debug("Values read. Changed = " + changed);
 		editedConnectionDetails.setModified(changed);
 		editedConnectionDetails.setConnectionDetails(connection);
 		

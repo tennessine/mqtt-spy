@@ -73,8 +73,6 @@ public class MainController
 	
 	@FXML
 	private RadioMenuItem superSpyPerspective;
-	// @FXML
-	// private ToggleGroup perspective;
 
 	private EditConnectionsController editConnectionsController;
 	
@@ -162,18 +160,6 @@ public class MainController
 
 		editConnectionsStage.showAndWait();		
 		controlPanelPaneController.refreshConnectionsStatus();
-	}
-	
-	@FXML
-	private void showManualPublicationPane()
-	{
-		// TODO
-	}
-	
-	@FXML
-	private void showScriptedPublicationPane()
-	{
-		// TODO
 	}
 	
 	@FXML
@@ -302,39 +288,41 @@ public class MainController
 		controlPanelPaneController.refreshConfigurationFileStatus();		
 	}	
 	
-	private boolean completeUserAuthenticationCredentials(final ConnectionDetails connectionDetails, UserAuthentication userCredentials)
+	private boolean completeUserAuthenticationCredentials(final ConnectionDetails connectionDetails)
 	{
-		boolean cancelled = false;
 		if (connectionDetails.getUserAuthentication() != null)
 		{
 			// Copy so that we don't store it in the connection and don't save those values
-			userCredentials = new UserAuthentication();
+			final UserAuthentication userCredentials = new UserAuthentication();
 			connectionDetails.getUserAuthentication().copyTo(userCredentials);
+			
+			// Decode password stored in config
 			userCredentials.setPassword(MqttUtils.decodePassword(userCredentials.getPassword()));
 			
+			// Check if ask for username or password, and then override existing values if confirmed
 			if (userCredentials.isAskForPassword() || userCredentials.isAskForUsername())
 			{
 				if (!DialogUtils.showUsernameAndPasswordDialog(stage, connectionDetails.getName(), userCredentials))
 				{
-					cancelled = true;
+					return true;
 				}
-				connectionDetails.setUserAuthentication(userCredentials);
 			}
+			
+			// Settings user credentials so they can be validated and passed onto the MQTT client library			
+			connectionDetails.setUserAuthentication(userCredentials);
 		}
 		
-		return cancelled;
+		return false;
 	}
 	
 	public void openConnection(final ConfiguredConnectionDetails configuredConnectionDetails, final MqttManager mqttManager) throws ConfigurationException
 	{
-		// Note: this is not a complete ConfiguredConnectionDetails copy but ConnectionDetails copy
+		// Note: this is not a complete ConfiguredConnectionDetails copy but ConnectionDetails copy - any user credentials entered won't be stored in config
 		final ConfiguredConnectionDetails connectionDetails = new ConfiguredConnectionDetails();
 		configuredConnectionDetails.copyTo(connectionDetails);
-		connectionDetails.setId(configuredConnectionDetails.getId());
-				
-		UserAuthentication userCredentials = null;
+		connectionDetails.setId(configuredConnectionDetails.getId());			
 		
-		final boolean cancelled = completeUserAuthenticationCredentials(connectionDetails, userCredentials);		
+		final boolean cancelled = completeUserAuthenticationCredentials(connectionDetails);		
 		
 		if (!cancelled)
 		{
@@ -346,7 +334,7 @@ public class MainController
 			else
 			{
 				final MainController mainController = this;
-				final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(connectionDetails, userCredentials);
+				final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(connectionDetails);
 				new Thread(new Runnable()
 				{					
 					@Override

@@ -2,7 +2,6 @@ package pl.baczkowicz.mqttspy.ui.properties;
 
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionProperties;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 
@@ -10,12 +9,12 @@ public class RuntimeConnectionProperties extends MqttConnectionProperties
 {
 	private ConfiguredConnectionDetails configuredProperties;
 
-	public RuntimeConnectionProperties(final ConfiguredConnectionDetails configuredProperties, final UserCredentials userCredentials) throws ConfigurationException
+	public RuntimeConnectionProperties(final ConfiguredConnectionDetails configuredProperties) throws ConfigurationException
 	{
 		super(	configuredProperties.getName(), 
 				configuredProperties.getServerURI(), 
 				configuredProperties.getClientID(), 
-				userCredentials,
+				configuredProperties.getUserAuthentication(),
 				configuredProperties.getLastWillAndTestament(),
 				configuredProperties.isCleanSession(), 
 				configuredProperties.getConnectionTimeout(), 

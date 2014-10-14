@@ -76,8 +76,11 @@ public class MqttManager
 						Thread.sleep(CONNECT_DELAY);
 
 						// Asynch connect
-						logger.info("Connecting " + connection.getProperties().getClientId() + " to "
-								+ connection.getProperties().getServerURI());
+						logger.info("Connecting client ID [{}] to server [{}]; options = {}",
+								connection.getProperties().getClientId(), 
+								connection.getProperties().getServerURI(), 
+								connection.getProperties().getOptions().toString());
+						
 						connection.getClient().connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
 					}
 					catch (MqttException | IllegalArgumentException e)

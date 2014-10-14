@@ -26,7 +26,6 @@ import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
-import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 public class DialogUtils
@@ -105,8 +104,8 @@ public class DialogUtils
 	public static boolean showUsernameAndPasswordDialog(final Object owner,
 			String connectionName, final UserAuthentication userCredentials)
 	{
-		final UserInfo userInfo = new UserInfo(userCredentials.getUsername(),
-				MqttUtils.decodePassword(userCredentials.getPassword()));
+		// final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), MqttUtils.decodePassword(userCredentials.getPassword()));
+		final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), userCredentials.getPassword());
 		
 		final CustomDialogs dialog = new CustomDialogs();
 		dialog.owner(owner);

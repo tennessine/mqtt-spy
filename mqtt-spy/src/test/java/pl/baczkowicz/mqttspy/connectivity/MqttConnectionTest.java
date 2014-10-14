@@ -60,7 +60,7 @@ public class MqttConnectionTest extends TestCase
 		configuredConnectionDetails.setKeepAliveInterval(5);
 		configuredConnectionDetails.setMaxMessagesStored(500);
 		
-		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails, null);
+		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails);
 		context.checking(new Expectations()
 		{
 			{
@@ -119,7 +119,7 @@ public class MqttConnectionTest extends TestCase
 		configuredConnectionDetails.setKeepAliveInterval(5);
 		configuredConnectionDetails.setMaxMessagesStored(200);
 		
-		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails, null);
+		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails);
 		
 		context.checking(new Expectations()
 		{
