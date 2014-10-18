@@ -93,7 +93,7 @@ public class SubscriptionSummaryTableController implements Initializable
 					public void updateItem(final Boolean checked, boolean empty)
 					{
 						super.updateItem(checked, empty);
-						if (!isEmpty() && checked != null && this.getTableRow() != null)
+						if (!isEmpty() && checked != null && this.getTableRow() != null && this.getTableRow().getItem() != null && store != null)
 						{
 							final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
 							
