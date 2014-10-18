@@ -3,17 +3,18 @@ package org.controlsfx.dialog;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Window;
 
+import org.controlsfx.tools.Utils;
+
+@SuppressWarnings("deprecation")
 public class CustomDialog extends Dialog
 {
 	public CustomDialog(Object owner, String title)
 	{
 		super(owner, title);
-	}
-	
-	public CustomDialog(Object owner, String title, boolean lightweight, DialogStyle style)
-	{
-		super(owner, title, lightweight, style);
+		Window window = Utils.getWindow(owner);
+		this.getStylesheets().addAll(window.getScene().getStylesheets());
 	}
 	
 	public final void setContentWithNoMaxWidth(String contentText)

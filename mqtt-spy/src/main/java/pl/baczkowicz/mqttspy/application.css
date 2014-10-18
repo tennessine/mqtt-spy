@@ -3,6 +3,25 @@
 	-fx-font-weight: bold;
 }
 
+.color-picker .color-picker-label .text 
+{
+    -fx-font: 11px "System";
+}
+.command-link-message
+{
+	-fx-font: 15px "System";
+}
+
+.line-1
+{
+	-fx-font: 14px "System";
+}
+
+.line-2
+{
+	-fx-font: 13px "System";
+}
+
 .messageIndex
 {
 	-fx-font-weight: bold;

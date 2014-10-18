@@ -32,7 +32,7 @@ import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class EditConnectionsController extends AnchorPane implements Initializable, ConnectionStatusChangeObserver
 {
 	private final static String MODIFIED_ITEM = "* ";
@@ -228,7 +228,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 		
 		final String connectionName = connections.get(getSelectedIndex()).getName();
 		
-		if (DialogUtils.showDeleteQuestion(connectionName) == Dialog.Actions.YES)
+		if (DialogUtils.showDeleteQuestion(connectionName) == Dialog.ACTION_YES)
 		{	
 			editConnectionPaneController.setRecordModifications(false);
 			connections.remove(getSelectedIndex());			

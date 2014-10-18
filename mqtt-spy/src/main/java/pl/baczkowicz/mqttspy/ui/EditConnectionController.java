@@ -61,7 +61,7 @@ import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.KeyboardUtils;
 
-@SuppressWarnings({"unchecked", "rawtypes"})
+@SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class EditConnectionController extends AnchorPane implements Initializable
 {
 	final static Logger logger = LoggerFactory.getLogger(EditConnectionController.class);
@@ -659,11 +659,11 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			if (editedConnectionDetails.isModified())
 			{	
 				Action response = DialogUtils.showApplyChangesQuestion("connection " + editedConnectionDetails.getName()); 
-				if (response == Dialog.Actions.YES)
+				if (response == Dialog.ACTION_YES)
 				{
 					save();
 				}
-				else if (response == Dialog.Actions.NO)
+				else if (response == Dialog.ACTION_NO)
 				{
 					// Do nothing
 				}
@@ -908,9 +908,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 
 		// Security
 		userAuthentication.setSelected(connection.getUserAuthentication() != null);
-		predefinedUsername.setSelected(true);
-		predefinedPassword.setSelected(true);
-		
+
 		if (userAuthentication.isSelected())
 		{			
 			username.setText(connection.getUserAuthentication().getUsername());			
@@ -918,11 +916,20 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			
 			askForUsername.setSelected(connection.getUserAuthentication().isAskForUsername());
 			askForPassword.setSelected(connection.getUserAuthentication().isAskForPassword());
+			
+			predefinedUsername.setSelected(!connection.getUserAuthentication().isAskForUsername());
+			predefinedPassword.setSelected(!connection.getUserAuthentication().isAskForPassword());
 		}
 		else
 		{
 			username.setText("");
 			password.setText("");
+			
+			predefinedUsername.setSelected(false);
+			predefinedPassword.setSelected(false);
+			
+			askForUsername.setSelected(true);
+			askForPassword.setSelected(true);
 		}
 		
 		updateUserAuthentication();

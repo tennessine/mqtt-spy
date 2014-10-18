@@ -13,13 +13,13 @@ import javafx.scene.control.Tooltip;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
+import javafx.util.Pair;
 
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.CustomDialogs;
 import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.DialogAction;
 import org.controlsfx.dialog.Dialogs;
-import org.controlsfx.dialog.Dialogs.CommandLink;
-import org.controlsfx.dialog.Dialogs.UserInfo;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
@@ -28,6 +28,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
+@SuppressWarnings("deprecation")
 public class DialogUtils
 {
 	public static final String STATS_FORMAT = "load: " + getPeriodValues();
@@ -97,7 +98,7 @@ public class DialogUtils
 	public static Action showDeleteQuestion(final String message)
 	{
 		return Dialogs.create().owner(null).title("Deleting connection").masthead(null)
-		.actions(Dialog.Actions.YES, Dialog.Actions.CANCEL)
+		.actions(Dialog.ACTION_YES, Dialog.ACTION_CANCEL)
 		.message("Are you sure you want to delete connection '" + message + "'? This cannot be undone.").showConfirm();		
 	}
 
@@ -105,18 +106,18 @@ public class DialogUtils
 			String connectionName, final UserAuthentication userCredentials)
 	{
 		// final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), MqttUtils.decodePassword(userCredentials.getPassword()));
-		final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), userCredentials.getPassword());
+		final Pair<String, String> userInfo = new Pair<String, String>(userCredentials.getUsername(), userCredentials.getPassword());
 		
 		final CustomDialogs dialog = new CustomDialogs();
 		dialog.owner(owner);
 		dialog.masthead("Enter MQTT user name and password:");
 		dialog.title("User credentials for connection " + connectionName);
-		Optional<UserInfo> response = dialog.showLogin(userInfo, null);
+		Optional<Pair<String, String>> response = dialog.showLogin(userInfo, null);
 		
 		if (response.isPresent())
 		{
-			userCredentials.setUsername(response.get().getUserName());
-			userCredentials.setPassword(response.get().getPassword());
+			userCredentials.setUsername(response.get().getKey());
+			userCredentials.setPassword(response.get().getValue());
 			return true;
 		}
 		
@@ -127,7 +128,6 @@ public class DialogUtils
 	{
 		Dialogs.create().owner(null).title("Invalid configuration file").masthead(null)
 				.message(message).showError();
-		;
 	}
 
 	public static void showReadOnlyWarning(final String absolutePath)
@@ -197,31 +197,31 @@ public class DialogUtils
 
 	public static boolean showDefaultConfigurationFileMissingChoice(final String title, final Window window)
 	{	
-		final List<CommandLink> links = Arrays.asList(
-		        new CommandLink( 
-        				"Create mqtt-spy configuration file with sample content", 
-        				System.getProperty("line.separator") + "This creates a configuration file " +  
-                        "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
-                        " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
-                        ", which will include sample connections to localhost and iot.eclipse.org."),
-		                        
-                new CommandLink( 
-        				"Create empty mqtt-spy configuration file", 
-        				System.getProperty("line.separator") + "This creates a configuration file " +  
-                        "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
-                        " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\" with no sample connections."),
-		                        
-		        new CommandLink( 
-        				"Copy existing mqtt-spy configuration file", 
-        				System.getProperty("line.separator") + "This copies an existing configuration file (selected in the next step) " +  
-                        "to \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
-                        " and renames it to \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"."),
-		                        
-		        new CommandLink( 
-        				"Don't do anything", 
-        				System.getProperty("line.separator") + "You can still point mqtt-spy at your chosen configuration file " +  
-                        "by using the \"--configuration=my_custom_path\"" + 
-                        " command line parameter or open a configuration file from the main menu."));
+		final DialogAction createWithSample = new DialogAction("Create mqtt-spy configuration file with sample content");
+		createWithSample.setLongText(System.getProperty("line.separator") + "This creates a configuration file " +  
+                "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
+                " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\"" + 
+                ", which will include sample connections to localhost and iot.eclipse.org.");
+		
+		 final DialogAction createEmpty = new DialogAction("Create empty mqtt-spy configuration file");
+		 createEmpty.setLongText(
+ 				System.getProperty("line.separator") + "This creates a configuration file " +  
+                 "in \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
+                 " called \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\" with no sample connections.");
+		 
+		 final DialogAction copyExisting = new DialogAction("Copy existing mqtt-spy configuration file");
+		 copyExisting.setLongText(
+				 System.getProperty("line.separator") + "This copies an existing configuration file (selected in the next step) " +  
+                 "to \"" + ConfigurationManager.DEFAULT_HOME_DIRECTORY + "\"" + 
+                 " and renames it to \"" + ConfigurationManager.DEFAULT_FILE_NAME + "\".");
+		 
+		 final DialogAction dontDoAnything = new DialogAction("Don't do anything");
+		 dontDoAnything.setLongText(
+				 System.getProperty("line.separator") + "You can still point mqtt-spy at your chosen configuration file " +  
+                 "by using the \"--configuration=my_custom_path\"" + 
+                 " command line parameter or open a configuration file from the main menu.");
+		
+		final List<DialogAction> links = Arrays.asList(createWithSample, createEmpty, copyExisting, dontDoAnything);
 		
 		final CustomDialogs dialog = new CustomDialogs();
 		dialog
@@ -230,7 +230,7 @@ public class DialogUtils
 	      .masthead(null)
 	      .message("Please select one of the following options with regards to the mqtt-spy configuration file:");
 		
-		Action response = dialog.showCommandLinks(links.get(0), links, 600, 30);
+		Action response = dialog.showCommandLinks(links.get(0), links, 650, 30, 110);
 		boolean configurationFileCreated = false;
 		
 		if (response.textProperty().getValue().toLowerCase().contains("sample"))

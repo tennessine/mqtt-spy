@@ -331,7 +331,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		searchBox = new TextField();
 		searchBox.setFont(new Font("System", 11));
 		searchBox.setPadding(new Insets(2, 5, 2, 5));
-		searchBox.setMaxWidth(90);
+		searchBox.setMaxWidth(80);
 		searchBox.textProperty().addListener(new ChangeListener<String>()
 		{
 			@Override

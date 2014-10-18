@@ -31,7 +31,7 @@ public class MqttConnection extends ManagedMessageStoreWithFiltering
 
 	private final Map<String, MqttSubscription> subscriptions = new HashMap<String, MqttSubscription>();
 	
-	private int lastUsedSubscriptionId = 1;
+	private int lastUsedSubscriptionId = 0;
 
 	private SubscriptionsStore subscriptionsStore;
 

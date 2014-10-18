@@ -1,11 +1,12 @@
 package org.controlsfx.dialog;
 
 import static impl.org.controlsfx.i18n.Localization.asKey;
+import static impl.org.controlsfx.i18n.Localization.getString;
 import static impl.org.controlsfx.i18n.Localization.localize;
-import static org.controlsfx.dialog.Dialog.Actions.CANCEL;
-import static org.controlsfx.dialog.Dialog.Actions.NO;
-import static org.controlsfx.dialog.Dialog.Actions.OK;
-import static org.controlsfx.dialog.Dialog.Actions.YES;
+import static org.controlsfx.dialog.Dialog.ACTION_CANCEL;
+import static org.controlsfx.dialog.Dialog.ACTION_NO;
+import static org.controlsfx.dialog.Dialog.ACTION_OK;
+import static org.controlsfx.dialog.Dialog.ACTION_YES;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import javafx.util.Pair;
 
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.ButtonBar.ButtonType;
@@ -37,12 +40,10 @@ import org.controlsfx.control.action.Action;
 import org.controlsfx.control.textfield.CustomPasswordField;
 import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
-import org.controlsfx.dialog.Dialog.ActionTrait;
-import org.controlsfx.dialog.Dialogs.CommandLink;
-import org.controlsfx.dialog.Dialogs.UserInfo;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
+@SuppressWarnings("deprecation")
 public class CustomDialogs
 {
 	/**
@@ -57,8 +58,6 @@ public class CustomDialogs
 	private String title = USE_DEFAULT;
 	private String message;
 	private String masthead;
-	private boolean lightweight;
-	private DialogStyle style;
 	private Effect backgroundEffect;
 
 	/**
@@ -73,7 +72,7 @@ public class CustomDialogs
 	 */
 	public CustomDialogs owner(final Object owner)
 	{
-		this.owner = owner;
+		this.owner = owner;		
 		return this;
 	}
 
@@ -104,57 +103,41 @@ public class CustomDialogs
 	}
 
 	/** This a replacement for Dialogs.showLogin. */
-	public Optional<UserInfo> showLogin(final UserInfo initialUserInfo,
-			final Callback<UserInfo, Void> authenticator)
-	{
-		final CustomTextField txUserName = (CustomTextField) TextFields.createClearableTextField();
-		txUserName.setLeft(new ImageView(DialogResources.getImage("login.user.icon")));
-
-		final CustomPasswordField txPassword = (CustomPasswordField) TextFields
-				.createClearablePasswordField();
-		txPassword.setLeft(new ImageView(DialogResources.getImage("login.password.icon")));
-
-		final Label lbMessage = new Label("");
-		lbMessage.getStyleClass().addAll("message-banner");
+    public Optional<Pair<String,String>> showLogin( final Pair<String,String> initialUserInfo, final Callback<Pair<String,String>, Void> authenticator ) {
+    	
+    	final CustomTextField txUserName = (CustomTextField) TextFields.createClearableTextField();
+    	txUserName.setLeft(new ImageView( DialogResources.getImage("login.user.icon")) ); //$NON-NLS-1$
+    	
+    	final CustomPasswordField txPassword = (CustomPasswordField) TextFields.createClearablePasswordField();
+    	txPassword.setLeft(new ImageView( DialogResources.getImage("login.password.icon"))); //$NON-NLS-1$
+		
+		final Label lbMessage= new Label("");  //$NON-NLS-1$
+		lbMessage.getStyleClass().addAll("message-banner"); //$NON-NLS-1$
 		lbMessage.setVisible(false);
 		lbMessage.setManaged(false);
-
-		// // layout a custom GridPane containing the input fields and labels
-		final GridPane content = new GridPane();
-		content.setHgap(10);
-		content.setVgap(10);
-
-		content.add(new Label("User name"), 0, 0);
-		content.add(txUserName, 1, 0);
-		GridPane.setHgrow(txUserName, Priority.ALWAYS);
-		content.add(new Label("Password"), 0, 1);
-		content.add(txPassword, 1, 1);
-		GridPane.setHgrow(txPassword, Priority.ALWAYS);
-
-		final Action actionLogin = new DefaultDialogAction("Connect", ActionTrait.DEFAULT)
-		{
+		
+		final VBox content = new VBox(10);
+		content.getChildren().add(new Label("User name"));
+		content.getChildren().add(txUserName);
+		content.getChildren().add(txPassword);
+		
+		final Action actionLogin = new DialogAction("Connect", null, false, false, true) { //$NON-NLS-1$
 			{
 				ButtonBar.setType(this, ButtonType.OK_DONE);
+				setEventHandler(this::handleAction);
 			}
-
-			@Override
-			public void handle(ActionEvent ae)
-			{
+			
+			protected void handleAction(ActionEvent ae) {
 				Dialog dlg = (Dialog) ae.getSource();
-				try
-				{
-					if (authenticator != null)
-					{
-						authenticator
-								.call(new UserInfo(txUserName.getText(), txPassword.getText()));
+				try {
+					if ( authenticator != null ) {
+						authenticator.call(new Pair<>(txUserName.getText(), txPassword.getText()));
 					}
 					lbMessage.setVisible(false);
 					lbMessage.setManaged(false);
 					dlg.hide();
 					dlg.setResult(this);
-				}
-				catch (final Throwable ex)
-				{
+				} catch( Throwable ex ) {
 					lbMessage.setVisible(true);
 					lbMessage.setManaged(true);
 					lbMessage.setText(ex.getMessage());
@@ -164,57 +147,57 @@ public class CustomDialogs
 				}
 			}
 
-			public String toString()
-			{
-				return "LOGIN";
+			@Override public String toString() {
+				return "LOGIN"; //$NON-NLS-1$
 			};
 		};
-
+		
 		final Dialog dlg = buildDialog(Type.LOGIN);
-		dlg.setContent(content);
-
-		dlg.setResizable(false);
+        dlg.setContent(content);
+        
+        dlg.setResizable(false);
 		dlg.setIconifiable(false);
-		if (dlg.getGraphic() == null)
-		{
-			dlg.setGraphic(new ImageView(DialogResources.getImage("login.icon")));
+		if ( dlg.getGraphic() == null ) { 
+			dlg.setGraphic( new ImageView( DialogResources.getImage("login.icon"))); //$NON-NLS-1$
 		}
-		dlg.getActions().setAll(actionLogin, Dialog.Actions.CANCEL);
-		final String userNameCation = "non-empty user name";
-		String passwordCaption = "your secret password";
+		dlg.getActions().setAll(actionLogin, ACTION_CANCEL);
+		final String userNameCation = getString("login.dlg.user.caption"); //$NON-NLS-1$
+		final String passwordCaption = getString("login.dlg.pswd.caption"); //$NON-NLS-1$
 		txUserName.setPromptText(userNameCation);
-		txUserName.setText(initialUserInfo.getUserName());
+		txUserName.setText( initialUserInfo.getKey());
 		txPassword.setPromptText(passwordCaption);
-		txPassword.setText(new String(initialUserInfo.getPassword()));
+		txPassword.setText(new String(initialUserInfo.getValue()));
 
 		final ValidationSupport validationSupport = new ValidationSupport();
 		Platform.runLater(new Runnable()
 		{
-			public void run()
-			{
-				String requiredFormat = "'%s' is required";
-				validationSupport.registerValidator(txUserName, Validator
-						.createEmptyValidator(String.format(requiredFormat, userNameCation)));
-				actionLogin.disabledProperty().bind(validationSupport.invalidProperty());
-				txUserName.requestFocus();
-			}
-		});
+		@Override
+		public void run()
+		{
+			String requiredFormat = "'%s' is required"; //$NON-NLS-1$
+			validationSupport.registerValidator(txUserName, Validator.createEmptyValidator( String.format( requiredFormat, userNameCation )));
+			actionLogin.disabledProperty().bind(validationSupport.invalidProperty());
+			txUserName.requestFocus();			
+		}});
 
-		return Optional.ofNullable(dlg.show() == actionLogin ? new UserInfo(txUserName.getText(),
-				txPassword.getText()) : null);
-	}
+		dlg.sizeToScene();
+    	return Optional.ofNullable( 
+    			dlg.show() == actionLogin? 
+    					new Pair<>(txUserName.getText(), txPassword.getText()): 
+    					null);
+    }
 	
 	/**
      * Show a dialog filled with provided command links. Command links are used instead of button bar and represent 
      * a set of available 'radio' buttons
      * @param defaultCommandLink command is set to be default. Null means no default
-     * @param links list of command links presented in specified sequence
+     * @param links list of command links presented in specified sequence 
      * @return action used to close dialog (it is either one of command links or CANCEL) 
      */
-    public Action showCommandLinks(CommandLink defaultCommandLink, List<CommandLink> links, final int minWidth, final int longMessageMinHeight) 
+    public Action showCommandLinks(DialogAction defaultCommandLink, List<DialogAction> links, final int minWidth, final int longMessageMinHeight, double maxHeight) 
     {
         final CustomDialog dlg = buildDialog(Type.INFORMATION);
-        dlg.setContentWithNoMaxWidth(message);       
+        dlg.setContentWithNoMaxWidth(message);             
         
         Node messageNode = dlg.getContent();
         messageNode.getStyleClass().add("command-link-message");
@@ -261,12 +244,12 @@ public class CustomDialogs
 			content.add(messageNode, 0, row++);
 		}
         
-		for (final CommandLink commandLink : links)
+		for (final DialogAction commandLink : links)
 		{
 			if (commandLink == null)
 				continue;
 
-			final Button button = buildCommandLinkButton(commandLink, longMessageMinHeight);
+			final Button button = buildCommandLinkButton(commandLink, longMessageMinHeight, maxHeight);
 			button.setDefaultButton(commandLink == defaultCommandLink);
 			button.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -292,12 +275,12 @@ public class CustomDialogs
         return dlg.show();
     }
     
-    private Button buildCommandLinkButton(CommandLink commandLink, final int longMessageMinHeight) 
+    private Button buildCommandLinkButton(DialogAction commandLink, final int longMessageMinHeight, double maxHeight) 
     {
         // put the content inside a button
         final Button button = new Button();
         button.getStyleClass().addAll("command-link-button");
-        button.setMaxHeight(Double.MAX_VALUE);
+        button.setMaxHeight(maxHeight);
         button.setMaxWidth(Double.MAX_VALUE);
         button.setAlignment(Pos.CENTER_LEFT);
         
@@ -319,6 +302,7 @@ public class CustomDialogs
         Label messageLabel = new Label(commandLink.getLongText() );
         messageLabel.setMinHeight(longMessageMinHeight);
         messageLabel.setPrefHeight(longMessageMinHeight + 10);
+        //messageLabel.setMaxHeight(longMessageMaxHeight);
         messageLabel.getStyleClass().addAll("line-2");
         messageLabel.setWrapText(true);
         messageLabel.setAlignment(Pos.TOP_LEFT);
@@ -347,15 +331,20 @@ public class CustomDialogs
         
         return button;
     }
-
-	private CustomDialog buildDialog(final Type dlgType)
+    
+	private CustomDialog buildDialog(final Type dlgType)	
+	{
+		return buildDialog(dlgType, false);
+	}
+	
+    private CustomDialog buildDialog(final Type dlgType, final boolean resizable)
 	{
 		String actualTitle = title == null ? null : USE_DEFAULT.equals(title) ? dlgType
 				.getDefaultTitle() : title;
 		String actualMasthead = masthead == null ? null : (USE_DEFAULT.equals(masthead) ? dlgType
 				.getDefaultMasthead() : masthead);
-		CustomDialog dlg = new CustomDialog(owner, actualTitle, lightweight, style);
-		dlg.setResizable(false);
+		CustomDialog dlg = new CustomDialog(owner, actualTitle);
+		dlg.setResizable(resizable);
 		dlg.setIconifiable(false);
 		Image image = dlgType.getImage();
 		if (image != null)
@@ -368,56 +357,48 @@ public class CustomDialogs
 		return dlg;
 	}
 
-	private static enum Type
-	{
-		ERROR("error.image", asKey("error.dlg.title"), asKey("error.dlg.masthead"), OK), INFORMATION(
-				"info.image", asKey("info.dlg.title"), asKey("info.dlg.masthead"), OK), WARNING(
-				"warning.image", asKey("warning.dlg.title"), asKey("warning.dlg.masthead"), OK), CONFIRMATION(
-				"confirm.image", asKey("confirm.dlg.title"), asKey("confirm.dlg.masthead"), YES,
-				NO, CANCEL), INPUT("confirm.image", asKey("input.dlg.title"),
-				asKey("input.dlg.masthead"), OK, CANCEL), FONT(null, asKey("font.dlg.title"),
-				asKey("font.dlg.masthead"), OK, CANCEL), PROGRESS("info.image",
-				asKey("progress.dlg.title"), asKey("progress.dlg.masthead")), LOGIN("login.image",
-				asKey("login.dlg.title"), asKey("login.dlg.masthead"), OK, CANCEL);
+	 private static enum Type {
+	        ERROR("error.image",          asKey("error.dlg.title"),   asKey("error.dlg.header"), ACTION_OK), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        INFORMATION("info.image",     asKey("info.dlg.title"),    asKey("info.dlg.header"), ACTION_OK), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        WARNING("warning.image",      asKey("warning.dlg.title"), asKey("warning.dlg.header"), ACTION_OK), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        CONFIRMATION("confirm.image", asKey("confirm.dlg.title"), asKey("confirm.dlg.header"), ACTION_YES, ACTION_NO, ACTION_CANCEL), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        INPUT("confirm.image",        asKey("input.dlg.title"),   asKey("input.dlg.header"), ACTION_OK, ACTION_CANCEL), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        FONT( null,                   asKey("font.dlg.title"),    asKey("font.dlg.header"), ACTION_OK, ACTION_CANCEL), //$NON-NLS-1$ //$NON-NLS-2$
+	        PROGRESS("info.image",        asKey("progress.dlg.title"), asKey("progress.dlg.header")), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	        LOGIN("login.icon",           asKey("login.dlg.title"),    asKey("login.dlg.header"), ACTION_OK, ACTION_CANCEL); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-		private final String defaultTitle;
-		private final String defaultMasthead;
-		private final Collection<Action> actions;
-		private final String imageResource;
-		private Image image;
+	        private final String defaultTitle;
+	        private final String defaultMasthead;
+	        private final Collection<Action> actions;
+	        private final String imageResource;
+	        private Image image;
 
-		Type(String imageResource, String defaultTitle, String defaultMasthead, Action... actions)
-		{
-			this.actions = Arrays.asList(actions);
-			this.imageResource = imageResource;
-			this.defaultTitle = defaultTitle;
-			this.defaultMasthead = defaultMasthead;
-		}
+	        Type(String imageResource, String defaultTitle, String defaultMasthead, Action... actions) {
+	            this.actions = Arrays.asList(actions);
+	            this.imageResource = imageResource;
+	            this.defaultTitle = defaultTitle;
+	            this.defaultMasthead = defaultMasthead;
+	        }
 
-		public Image getImage()
-		{
-			if (image == null && imageResource != null)
-			{
-				image = DialogResources.getImage(imageResource);
-			}
-			return image;
-		}
+	        public Image getImage() {
+	            if (image == null && imageResource != null ) {
+	                image = DialogResources.getImage(imageResource);
+	            }
+	            return image;
+	        }
 
-		public String getDefaultMasthead()
-		{
-			return localize(defaultMasthead);
-		}
+	        public String getDefaultMasthead() {
+	            return localize(defaultMasthead);
+	        }
 
-		public String getDefaultTitle()
-		{
-			return localize(defaultTitle);
-		}
+	        public String getDefaultTitle() {
+	            return localize(defaultTitle);
+	        }
 
-		public Collection<Action> getActions()
-		{
-			return actions;
-		}
-	}
+	        public Collection<Action> getActions() {
+	            return actions;
+	        }
+	    }
 
     /**
      * Assigns dialog's instructions
