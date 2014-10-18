@@ -15,6 +15,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
@@ -24,6 +25,7 @@ import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
 
 public class ScriptManager
 {
+	private final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
 	// private static final String REFERENCE_ERROR = "ReferenceError";
 		
 	private final ObservableList<PublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
@@ -104,15 +106,22 @@ public class ScriptManager
 		final File folder = new File(directory);
 		File[] listOfFiles = folder.listFiles();
 
-		for (int i = 0; i < listOfFiles.length; i++)
+		if (listOfFiles != null)
 		{
-			if (listOfFiles[i].isFile())
+			for (int i = 0; i < listOfFiles.length; i++)
 			{
-				if (extension == null || extension.isEmpty() ||  listOfFiles[i].getName().endsWith(extension))
+				if (listOfFiles[i].isFile())
 				{
+					if (extension == null || extension.isEmpty() ||  listOfFiles[i].getName().endsWith(extension))
+					{
 						files.add(listOfFiles[i]);
+					}
 				}
 			}
+		}
+		else
+		{
+			logger.error("No files in {}", directory);
 		}
 		
 		return files;

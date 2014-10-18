@@ -1,7 +1,5 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.scene.paint.Color;
@@ -20,6 +18,8 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttConnectionTest extends TestCase
@@ -36,15 +36,17 @@ public class MqttConnectionTest extends TestCase
 			setImposteriser(ClassImposteriser.INSTANCE);
 		}
 	};
-	private Observer mockObserver;
+	
 	private EventManager mockEventManager;
+	private StatisticsManager statisticsManager;
 
 	@Before
-	public void setUp()
+	public void setUp() throws XMLException
 	{
-		mockClient = context.mock(MqttAsyncClient.class);
-		mockObserver = context.mock(Observer.class);
+		mockClient = context.mock(MqttAsyncClient.class);		
 		mockEventManager = context.mock(EventManager.class);
+		statisticsManager = new StatisticsManager();
+		statisticsManager.loadStats();
 	}
 
 	@Test
@@ -58,6 +60,7 @@ public class MqttConnectionTest extends TestCase
 		configuredConnectionDetails.setCleanSession(false);
 		configuredConnectionDetails.setConnectionTimeout(5);
 		configuredConnectionDetails.setKeepAliveInterval(5);
+		configuredConnectionDetails.setMinMessagesStoredPerTopic(10);
 		configuredConnectionDetails.setMaxMessagesStored(500);
 		
 		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails);
@@ -69,6 +72,7 @@ public class MqttConnectionTest extends TestCase
 		});
 		
 		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		connection.setStatisticsManager(statisticsManager);
 		context.assertIsSatisfied();
 		
 		connection.setClient(mockClient);
@@ -85,8 +89,10 @@ public class MqttConnectionTest extends TestCase
 				allowing(mockClient).isConnected();
 				will(returnValue(true));
 				
-				allowing(mockObserver).update(with(any(Observable.class)), with(subscription));
-				oneOf(mockObserver).update(with(any(Observable.class)), with(any(MqttContent.class)));
+				allowing(mockEventManager).notifySubscriptionStatusChanged(subscription);
+				
+				//allowing(mockObserver).update(with(any(Observable.class)), with(subscription));
+				//oneOf(mockObserver).update(with(any(Observable.class)), with(any(MqttContent.class)));
 			}
 		});
 
@@ -117,6 +123,7 @@ public class MqttConnectionTest extends TestCase
 		configuredConnectionDetails.setCleanSession(false);
 		configuredConnectionDetails.setConnectionTimeout(5);
 		configuredConnectionDetails.setKeepAliveInterval(5);
+		configuredConnectionDetails.setMinMessagesStoredPerTopic(10);
 		configuredConnectionDetails.setMaxMessagesStored(200);
 		
 		final RuntimeConnectionProperties connectionProperties = new RuntimeConnectionProperties(configuredConnectionDetails);
@@ -129,6 +136,7 @@ public class MqttConnectionTest extends TestCase
 		});
 		
 		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		connection.setStatisticsManager(statisticsManager);
 		context.assertIsSatisfied();
 		
 		connection.setClient(mockClient);
@@ -146,8 +154,10 @@ public class MqttConnectionTest extends TestCase
 				allowing(mockClient).isConnected();
 				will(returnValue(true));
 				
-				allowing(mockObserver).update(with(any(Observable.class)), with(subscription));
-				oneOf(mockObserver).update(with(any(Observable.class)), with(any(MqttContent.class)));
+				allowing(mockEventManager).notifySubscriptionStatusChanged(subscription);
+				
+				//allowing(mockObserver).update(with(any(Observable.class)), with(subscription));
+				//oneOf(mockObserver).update(with(any(Observable.class)), with(any(MqttContent.class)));
 			}
 		});
 	
