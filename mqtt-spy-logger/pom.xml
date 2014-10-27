@@ -1,0 +1,218 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>pl.baczkowicz.mqttspy</groupId>
+  <artifactId>mqtt-spy-logger</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  
+  <dependencies>
+  		
+  		<dependency>
+			<groupId>pl.baczkowicz.mqttspy</groupId>
+			<artifactId>mqtt-spy-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.7</version>
+		</dependency>
+		
+		<!--=== SCHEMAS/JAXB === -->
+		<dependency>
+			<groupId>org.jvnet.jaxb2.maven2</groupId>
+			<artifactId>maven-jaxb2-plugin</artifactId>
+			<version>0.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-commons-lang</artifactId>
+			<version>2.3</version>
+		</dependency>		
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jvnet.jaxb2_commons</groupId>
+			<artifactId>jaxb2-basics-runtime</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+
+		<!--=== TEST === -->
+	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib-nodep</artifactId>
+			<version>2.1_3</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-legacy</artifactId>
+			<version>2.5.1</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.objenesis</groupId>
+			<artifactId>objenesis</artifactId>
+			<version>1.0</version>
+			<scope>test</scope>
+		</dependency>   
+
+	</dependencies>
+	
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source />
+					<target />
+				</configuration>
+			</plugin>
+      
+      		<!-- Generate JAXB clases -->			
+	        <plugin>
+	            <groupId>org.jvnet.jaxb2_commons</groupId>
+	            <artifactId>jaxb2-basics</artifactId>
+	            <version>0.9.0</version>
+	        </plugin>        	
+			<plugin>
+			    <groupId>org.jvnet.jaxb2.maven2</groupId>
+			    <artifactId>maven-jaxb2-plugin</artifactId>
+			    <version>0.9.0</version>
+			    <executions>
+			    
+			        <execution>
+			            <id>configuration</id>
+			            <phase>generate-resources</phase>
+			            <goals>
+			                <goal>generate</goal>
+			            </goals>
+			            <configuration>
+			                <schemaDirectory>src/main/resources/</schemaDirectory>
+			                <schemaIncludes>
+			                    <include>mqtt-spy-logger-configuration.xsd</include>
+			                </schemaIncludes>			                 
+			                <generateDirectory>src/main/java/</generateDirectory>			                
+			                <generatePackage>pl.baczkowicz.mqttspy.logger.configuration.generated</generatePackage>
+			                <removeOldOutput>false</removeOldOutput>
+			                
+			                <catalogs>
+			                	<catalog>
+			                		<dependencyResource>
+			                			<groupId>pl.baczkowicz.mqttspy</groupId>
+			                			<artifactId>mqtt-spy-common</artifactId>
+			                			<resource>mqtt-spy-common.catalog</resource>
+			                		</dependencyResource>
+			                	</catalog>
+			                </catalogs>
+			                
+			                <episode>false</episode>
+			                
+			                <episodes>
+			                	<episode>
+			                		<groupId>pl.baczkowicz.mqttspy</groupId>
+			                		<artifactId>mqtt-spy-common</artifactId>
+			                	</episode>
+			                </episodes>
+			                
+			                <args>			                
+						        <arg>-XtoString</arg>
+						        <arg>-Xequals</arg>
+						        <arg>-XhashCode</arg>						        
+                    			<arg>-Xcopyable</arg>					    
+			                </args>						 
+			                <plugins>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics</artifactId>
+									<version>0.5.0</version>
+								</plugin>
+							</plugins>
+			            </configuration>			            			          
+			        </execution>
+			        
+			        <execution>
+			            <id>logger</id>
+			            <phase>generate-resources</phase>
+			            <goals>
+			                <goal>generate</goal>
+			            </goals>
+			            <configuration>
+			                <schemaDirectory>src/main/resources/</schemaDirectory>
+			                <schemaIncludes>
+			                    <include>mqtt-spy-logger.xsd</include>
+			                </schemaIncludes>			                 
+			                <generateDirectory>src/main/java/</generateDirectory>			                
+			                <generatePackage>pl.baczkowicz.mqttspy.logger.generated</generatePackage>
+			                <removeOldOutput>false</removeOldOutput>
+			                
+			                <catalogs>
+			                	<catalog>
+			                		<dependencyResource>
+			                			<groupId>pl.baczkowicz.mqttspy</groupId>
+			                			<artifactId>mqtt-spy-common</artifactId>
+			                			<resource>mqtt-spy-common.catalog</resource>
+			                		</dependencyResource>
+			                	</catalog>
+			                </catalogs>
+			                
+			                <episode>false</episode>
+			                
+			                <episodes>
+			                	<episode>
+			                		<groupId>pl.baczkowicz.mqttspy</groupId>
+			                		<artifactId>mqtt-spy-common</artifactId>
+			                	</episode>
+			                </episodes>
+			                
+			                <args>			                
+						        <arg>-XtoString</arg>
+						        <arg>-Xequals</arg>
+						        <arg>-XhashCode</arg>						        
+                    			<arg>-Xcopyable</arg>					    
+			                </args>						 
+			                <plugins>
+								<plugin>
+									<groupId>org.jvnet.jaxb2_commons</groupId>
+									<artifactId>jaxb2-basics</artifactId>
+									<version>0.5.0</version>
+								</plugin>
+							</plugins>
+			            </configuration>			            			          
+			        </execution>			       
+			        
+			    </executions>			    
+			</plugin> 
+			 
+		</plugins>
+		
+	</build>
+
+</project>

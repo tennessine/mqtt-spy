@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:mqttspylogger="http://baczkowicz.pl/mqtt-spy/logger"
+			xmlns:mqttspycommon="http://baczkowicz.pl/mqtt-spy/common"
+			targetNamespace="http://baczkowicz.pl/mqtt-spy/logger">
+
+	<xs:import namespace="http://baczkowicz.pl/mqtt-spy/common" />
+
+	<xs:complexType name="LoggedMqttMessage">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:MqttMessage">
+				<xs:sequence>
+					<xs:element name="ID" 			type="xs:int" />			
+					<xs:element name="Timestamp" 	type="xs:long" />
+					<xs:element name="Source" 		type="mqttspylogger:Source" />			
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+
+	<xs:simpleType name="Source">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUBSCRIPTION" />
+			<xs:enumeration value="PUBLICATION" />
+		</xs:restriction>
+	</xs:simpleType>
+ 	
+	<!-- ================ -->
+	<!-- === ELEMENTS === -->
+	<!-- ================ -->
+	<!-- 
+	<xs:element name="MqttMessage" type="mqttspylogger:LoggedMqttMessage" />
+ 	-->
+</xs:schema>
