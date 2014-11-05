@@ -17,7 +17,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
@@ -51,7 +51,7 @@ public class SubscriptionManager
 		this.uiEventQueue = uiEventQueue;
 	}
 	
-	public void createSubscription(final Color color, final boolean subscribe, final SubscriptionDetails subscriptionDetails, 
+	public void createSubscription(final Color color, final boolean subscribe, final TabbedSubscriptionDetails subscriptionDetails, 
 			final MqttConnection connection, final ConnectionController connectionController, Object parent)
 	{
 		logger.info("Creating subscription for " + subscriptionDetails.getTopic());
@@ -127,7 +127,15 @@ public class SubscriptionManager
 		subscriptionController.setEventManager(eventManager);
 		subscriptionController.setTab(tab);
 		// subscriptionController.setStatisticsManager(statisticsManager);
-		subscriptionController.setConnectionProperties(connection.getProperties());
+		
+		if (connection != null)
+		{
+			subscriptionController.setConnectionProperties(connection.getProperties());
+		}
+		else
+		{
+			logger.warn("Supplied connection is null");
+		}
 				
 		tab.setClosable(false);
 		tab.setContent(subscriptionPane);

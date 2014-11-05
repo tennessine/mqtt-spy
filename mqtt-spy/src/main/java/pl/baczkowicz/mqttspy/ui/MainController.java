@@ -1,6 +1,12 @@
 package pl.baczkowicz.mqttspy.ui;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,19 +30,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
+import pl.baczkowicz.mqttspy.common.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.common.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
-import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
-import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.logger.LogParser;
+import pl.baczkowicz.mqttspy.logger.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
@@ -116,6 +125,52 @@ public class MainController
 	public void editConnections()
 	{
 		showEditConnectionsWindow(false);
+	}
+	
+	@FXML
+	public void openMessageLog()
+	{
+		final FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Select message log file to open");
+		String extensions = "messages";
+		fileChooser.setSelectedExtensionFilter(new ExtensionFilter("Message log file", extensions));
+
+		final File selectedFile = fileChooser.showOpenDialog(getParentWindow());
+
+		if (selectedFile != null)
+		{
+			try
+			{
+				final LogParser parser = new LogParser();
+				
+				BufferedReader in = new BufferedReader(new FileReader(selectedFile));
+		        String str;
+		
+
+		        
+		        final List<LoggedMqttMessage> list = new ArrayList<>();
+		        while((str = in.readLine()) != null)
+		        {
+		        	try
+		        	{
+		        		list.add(parser.parse(str));
+		        	}
+		        	catch (XMLException e)
+		        	{
+		        		logger.error("Can't process message " + str, e);
+		        	}
+		        }
+		        
+		        in.close();
+		        logger.info("Processed {} messages from {}", list.size(), selectedFile.getAbsoluteFile());		        		       
+		        
+				connectionManager.loadReplayTab(this, this, selectedFile.getName(), list);
+			}
+			catch (IOException | XMLException e)
+			{
+				logger.error("Can't open the message log file at " + selectedFile.getAbsolutePath(), e);
+			}
+		}
 	}
 	
 	private void initialiseEditConnectionsWindow()
@@ -355,7 +410,7 @@ public class MainController
 			connectionController.newPublicationPaneController.recordPublicationTopic(publicationDetails.getTopic());
 		}
 		
-		for (final SubscriptionDetails subscriptionDetails : connectionDetails.getSubscription())
+		for (final TabbedSubscriptionDetails subscriptionDetails : connectionDetails.getSubscription())
 		{
 			// Check if we should create a tab for the subscription
 			if (subscriptionDetails.isCreateTab())

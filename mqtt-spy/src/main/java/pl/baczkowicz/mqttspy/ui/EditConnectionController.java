@@ -40,20 +40,20 @@ import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
+import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.PublicationDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
-import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
 import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
@@ -768,7 +768,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		for (final AdvancedTopicProperties subscriptionDetails : subscriptionsTable.getItems())
 		{
-			final SubscriptionDetails newSubscriptionDetails = new SubscriptionDetails();
+			final TabbedSubscriptionDetails newSubscriptionDetails = new TabbedSubscriptionDetails();
 			newSubscriptionDetails.setTopic(subscriptionDetails.topicProperty().getValue());
 			newSubscriptionDetails.setCreateTab(subscriptionDetails.showProperty().getValue());
 			newSubscriptionDetails.setQos(subscriptionDetails.qosProperty().getValue());
@@ -777,7 +777,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		if (lastWillAndTestament.isSelected())
 		{			
-			final ConfiguredMessage message = lastWillAndTestamentMessageController.readMessage(false);
+			final BaseMqttMessage message = lastWillAndTestamentMessageController.readMessage(false);
 			if (message != null)
 			{
 				connection.setLastWillAndTestament(message);
@@ -978,7 +978,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// Subscriptions
 		removeSubscriptionButton.setDisable(true);
 		subscriptionsTable.getItems().clear();
-		for (final SubscriptionDetails sub : connection.getSubscription())
+		for (final TabbedSubscriptionDetails sub : connection.getSubscription())
 		{
 			subscriptionsTable.getItems().add(new AdvancedTopicProperties(sub.getTopic(), sub.getQos(), sub.isCreateTab()));
 		}

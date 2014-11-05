@@ -19,10 +19,10 @@ import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.common.xml.XMLParser;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
-import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.stats.generated.MqttSpyStats;
-import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class StatisticsManager implements Runnable

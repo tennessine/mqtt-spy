@@ -43,6 +43,18 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>pl.baczkowicz.mqttspy</groupId>
+			<artifactId>mqtt-spy-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>pl.baczkowicz.mqttspy</groupId>
+			<artifactId>mqtt-spy-logger</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
@@ -321,6 +333,26 @@
 			                <generateDirectory>src/main/java/</generateDirectory>			                
 			                <generatePackage>pl.baczkowicz.mqttspy.configuration.generated</generatePackage>
 			                <removeOldOutput>false</removeOldOutput>
+			                
+			                <catalogs>
+			                	<catalog>
+			                		<dependencyResource>
+			                			<groupId>pl.baczkowicz.mqttspy</groupId>
+			                			<artifactId>mqtt-spy-common</artifactId>
+			                			<resource>mqtt-spy-common.catalog</resource>
+			                		</dependencyResource>
+			                	</catalog>
+			                </catalogs>
+			                
+			                <episode>false</episode>
+			                
+			                <episodes>
+			                	<episode>
+			                		<groupId>pl.baczkowicz.mqttspy</groupId>
+			                		<artifactId>mqtt-spy-common</artifactId>
+			                	</episode>
+			                </episodes>
+			                
 			                <args>			                
 						        <arg>-XtoString</arg>
 						        <arg>-Xequals</arg>

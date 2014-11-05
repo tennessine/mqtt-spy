@@ -1,10 +1,15 @@
 package pl.baczkowicz.mqttspy.ui.connections;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.apache.commons.codec.binary.Base64;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -13,11 +18,14 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
+import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.UIEventHandler;
+import pl.baczkowicz.mqttspy.logger.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
@@ -58,6 +66,7 @@ public class ConnectionManager
 		// Create connection
 		final MqttConnection connection = mqttManager.createConnection(connectionProperties, uiEventQueue);
 		connection.setOpening(true);
+		connection.setStatisticsManager(statisticsManager);
 
 		// Load a new tab and connection pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
@@ -69,7 +78,7 @@ public class ConnectionManager
 		connectionController.setEventManager(eventManager);
 		connectionController.setStatisticsManager(statisticsManager);
 		
-		final Tab connectionTab = createConnectionTab(connection, connectionPane, connectionController);
+		final Tab connectionTab = createConnectionTab(connection.getProperties().getName(), connectionPane, connectionController);
 		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
 		
 		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
@@ -122,6 +131,66 @@ public class ConnectionManager
 		});		
 	}
 	
+	public void loadReplayTab(final MainController mainController, final Object parent, final String name, final List<LoggedMqttMessage> list)
+	{		
+		// Load a new tab and connection pane
+		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
+		AnchorPane connectionPane = Utils.loadAnchorPane(loader);
+		
+		final ConnectionController connectionController = (ConnectionController) loader.getController();
+		
+		//connectionController.setConnection(connection);
+		connectionController.setConnectionManager(this);
+		connectionController.setEventManager(eventManager);
+		connectionController.setStatisticsManager(statisticsManager);
+		connectionController.setReplayMode(true);
+		
+		final Tab connectionTab = createConnectionTab(name, connectionPane, connectionController);
+		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
+		
+        final ManagedMessageStoreWithFiltering store = new ManagedMessageStoreWithFiltering(
+        		name, 0, list.size(), list.size(), uiEventQueue, eventManager);               
+        
+		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
+				true, parent, store, null, null, connectionController);
+		subscriptionController.setConnectionController(connectionController);
+		subscriptionController.setReplayMode(true);
+		
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{					
+				connectionController.init();
+				subscriptionController.init();				
+								
+				mainController.addConnectionTab(connectionTab);
+				// TODO
+				//connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
+				//subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
+								
+				// Add "All" subscription tab
+				connectionController.getSubscriptionTabs().getTabs().clear();
+				connectionController.getSubscriptionTabs().getTabs().add(subscriptionController.getTab());							
+				
+				// Apply perspective
+				//mainController.showPerspective(connectionController);
+				connectionController.showReplayMode();
+				
+				// Process the messages
+		        for (final LoggedMqttMessage loggedMessage : list)
+		        {
+		        	final MqttMessage mqttMessage = new MqttMessage();
+		        	mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getPayload()));
+		        	mqttMessage.setQos(loggedMessage.getQos());
+		        	mqttMessage.setRetained(loggedMessage.isRetained());
+		        	
+		        	store.messageReceived(new MqttContent(loggedMessage.getId(), loggedMessage.getTopic(), mqttMessage, new Date(loggedMessage.getTimestamp())));
+		        }
+			}
+		});		
+	}
+	
 	public void disconnectAndCloseTab(final int connectionId)
 	{		
 		disconnect(mqttManager, connectionId);
@@ -138,12 +207,11 @@ public class ConnectionManager
 		mqttManager.disconnectFromBroker(connectionId);
 	}
 
-	private Tab createConnectionTab(final MqttConnection connection, final Node content,
-			final ConnectionController connectionController)
+	private Tab createConnectionTab(final String name, final Node content, final ConnectionController connectionController)
 	{
 		final Tab tab = new Tab();
 		connectionController.setTab(tab);
-		tab.setText(connection.getProperties().getName());
+		tab.setText(name);
 		tab.setContent(content);		
 
 		return tab;

@@ -1,9 +1,9 @@
 package pl.baczkowicz.mqttspy.ui.properties;
 
+import pl.baczkowicz.mqttspy.common.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionProperties;
-import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 
 public class RuntimeConnectionProperties extends MqttConnectionProperties
 {

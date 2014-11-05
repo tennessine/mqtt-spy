@@ -147,10 +147,17 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 
 	private HBox topicFilterBox;
 
+	private boolean replayMode;
+
 	public SubscriptionController()
 	{
 		// eventDispatcher = new EventDispatcher();
 		// eventDispatcher.addObserver(this);
+	}
+	
+	public void setReplayMode(final boolean value)
+	{
+		replayMode = value;
 	}
 	
 	public void setDetailedViewVisibility(final boolean visible)
@@ -371,15 +378,22 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		summaryTitledPane.setText(null);
 		summaryTitledPane.setGraphic(paneTitle);
 		
-		statsLabel.setTextAlignment(TextAlignment.RIGHT);
-		statsLabel.setAlignment(Pos.CENTER_RIGHT);
-		statsLabel.setTooltip(summaryTitledPaneTooltip);
-		AnchorPane.setRightAnchor(statsLabel, 5.0);
-		
-		//summaryTitledPane.setText(null);
-		//summaryTitledPane.setGraphic(summaryTitledPaneTitleLabel);
-		
-		updateSubscriptionStats();
+		if (!replayMode)
+		{
+			statsLabel.setTextAlignment(TextAlignment.RIGHT);
+			statsLabel.setAlignment(Pos.CENTER_RIGHT);
+			statsLabel.setTooltip(summaryTitledPaneTooltip);
+			AnchorPane.setRightAnchor(statsLabel, 5.0);
+			
+			//summaryTitledPane.setText(null);
+			//summaryTitledPane.setGraphic(summaryTitledPaneTitleLabel);
+			
+			updateSubscriptionStats();
+		}
+		else
+		{
+			messageNavigationPaneController.hideShowLatest();
+		}
 		
 		// logger.info("init(); finished on SubscriptionController");
 	}

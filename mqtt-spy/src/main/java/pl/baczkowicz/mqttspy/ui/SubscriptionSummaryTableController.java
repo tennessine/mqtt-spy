@@ -33,7 +33,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
@@ -338,7 +338,7 @@ public class SubscriptionSummaryTableController implements Initializable
 						.getSelectedItem();
 				if (item != null)
 				{
-					final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+					final TabbedSubscriptionDetails subscriptionDetails = new TabbedSubscriptionDetails();
 					subscriptionDetails.setTopic(item.topicProperty().getValue());
 					subscriptionDetails.setQos(0);
 					

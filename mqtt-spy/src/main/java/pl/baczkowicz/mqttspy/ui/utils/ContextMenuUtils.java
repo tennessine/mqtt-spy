@@ -9,7 +9,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
@@ -184,7 +184,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+				final TabbedSubscriptionDetails subscriptionDetails = new TabbedSubscriptionDetails();
 				subscriptionDetails.setTopic("$SYS/#");
 				subscriptionDetails.setQos(0);
 				

@@ -52,7 +52,7 @@ public class MqttMessageHandler implements Runnable
 			catch (InterruptedException e)
 			{
 				// Not expected
-				e.printStackTrace();
+				logger.error("Thread interrupted", e);
 			}
 		}
 	}

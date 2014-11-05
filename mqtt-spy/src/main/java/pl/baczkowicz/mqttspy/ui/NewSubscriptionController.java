@@ -22,7 +22,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
@@ -156,7 +156,7 @@ public class NewSubscriptionController implements Initializable
 		if (subscriptionTopicText.getValue() != null)
 		{
 			final String subscriptionTopic = subscriptionTopicText.getValue().toString();
-			final SubscriptionDetails subscriptionDetails = new SubscriptionDetails();
+			final TabbedSubscriptionDetails subscriptionDetails = new TabbedSubscriptionDetails();
 			subscriptionDetails.setTopic(subscriptionTopic);
 			subscriptionDetails.setQos(subscriptionQosChoice.getSelectionModel().getSelectedIndex());
 						
@@ -169,7 +169,7 @@ public class NewSubscriptionController implements Initializable
 	}
 	
 
-	public void subscribe(final SubscriptionDetails subscriptionDetails, final boolean subscribe)
+	public void subscribe(final TabbedSubscriptionDetails subscriptionDetails, final boolean subscribe)
 	{
 		logger.info("Subscribing to " + subscriptionDetails.getTopic());
 		if (!connection.getSubscriptions().keySet().contains(subscriptionDetails.getTopic()))		

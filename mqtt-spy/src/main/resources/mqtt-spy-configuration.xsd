@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
 			xmlns:config="http://baczkowicz.pl/mqtt-spy-configuration"
+			xmlns:mqttspycommon="http://baczkowicz.pl/mqtt-spy/common"
 			targetNamespace="http://baczkowicz.pl/mqtt-spy-configuration">
+
+	<xs:import namespace="http://baczkowicz.pl/mqtt-spy/common" />
 
 	<xs:complexType name="MqttSpyConfiguration">
 		<xs:sequence>
@@ -9,6 +12,18 @@
 			<xs:element name="Formatting" 	type="config:Formatting"	minOccurs="0" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
+	
+	<!-- ==================== -->
+	<!-- === COMMON ========= -->
+	<!-- ==================== -->
+	<xs:complexType name="BaseMqttMessage">
+		<xs:sequence>
+			<xs:element name="Topic" 				type="xs:string" />
+			<xs:element name="Payload" 				type="xs:string" />
+			<xs:element name="QoS" 					type="mqttspycommon:qos"/>
+			<xs:element name="Retained" 			type="xs:boolean"/>				
+		</xs:sequence>
+	</xs:complexType>		
 	
 	<!-- ================== -->
 	<!-- === UI =========== -->
@@ -18,18 +33,6 @@
 			
 		</xs:sequence>
 	</xs:complexType>
-
-	<!-- ==================== -->
-	<!-- === COMMON ========= -->
-	<!-- ==================== -->
-	<xs:complexType name="ConfiguredMessage">
-		<xs:sequence>
-			<xs:element name="Topic" 				type="xs:string" />
-			<xs:element name="Payload" 				type="xs:string" />
-			<xs:element name="QoS" 					type="config:qos"/>
-			<xs:element name="Retained" 			type="xs:boolean"/>				
-		</xs:sequence>
-	</xs:complexType>		
 			
 	<!-- ==================== -->
 	<!-- === CONNECTIVITY === -->
@@ -48,7 +51,7 @@
 			<xs:element name="ClientID" 			type="xs:string" />
 			
 			<xs:element name="UserAuthentication" 	type="config:UserAuthentication" 	minOccurs="0" maxOccurs="1" />
-			<xs:element name="LastWillAndTestament" type="config:ConfiguredMessage"		minOccurs="0" maxOccurs="1" />
+			<xs:element name="LastWillAndTestament" type="config:BaseMqttMessage" minOccurs="0" maxOccurs="1" />
 			
 			<xs:element name="AutoOpen" 			type="xs:boolean" 	minOccurs="0" maxOccurs="1" default="true" />
 			<xs:element name="AutoConnect" 			type="xs:boolean" 	minOccurs="0" maxOccurs="1" default="false" />
@@ -61,21 +64,14 @@
 			<xs:element name="MaxMessagesStored" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
 			<xs:element name="PublicationScripts" 	type="xs:string" 	minOccurs="0" maxOccurs="1" />
 			
-			<xs:element name="Publication" 			type="config:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />	
-			<xs:element name="Subscription" 		type="config:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />	
-		</xs:sequence>
-	</xs:complexType>
-	
-	<xs:complexType name="UserCredentials">
-		<xs:sequence>
-			<xs:element name="Username" 			type="xs:string" />
-			<xs:element name="Password" 			type="xs:string" />
+			<xs:element name="Publication" 			type="mqttspycommon:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />	
+			<xs:element name="Subscription" 		type="config:TabbedSubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />	
 		</xs:sequence>
 	</xs:complexType>
 	
 	<xs:complexType name="UserAuthentication">
 		<xs:complexContent>
-			<xs:extension base="config:UserCredentials">
+			<xs:extension base="mqttspycommon:UserCredentials">
 				<xs:sequence>
 		        	<xs:element name="AskForUsername" 		type="xs:boolean"/>
 					<xs:element name="AskForPassword" 		type="xs:boolean"/>
@@ -84,22 +80,13 @@
         </xs:complexContent>
 	</xs:complexType>
 	
-	<xs:complexType name="SubscriptionDetails">
-		<xs:attribute 	name="topic" 				type="xs:string" use="required" />
-		<xs:attribute 	name="qos" 					type="config:qos" default="0" />
-		<xs:attribute 	name="createTab" 			type="xs:boolean" default="false" />
+	<xs:complexType name="TabbedSubscriptionDetails">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:SubscriptionDetails">
+				<xs:attribute 	name="createTab" 			type="xs:boolean" default="false" />
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-	
-	<xs:complexType name="PublicationDetails">
-		<xs:attribute name="topic" 					type="xs:string" use="required" />
-	</xs:complexType>
-		
-	<xs:simpleType name="qos">
-		<xs:restriction base="xs:int" >
-			<xs:minInclusive value="0" />
-			<xs:maxInclusive value="2" />
-		</xs:restriction>
-	</xs:simpleType>
 	
 	<!-- ================== -->
 	<!-- === FORMATTING === -->

@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.exceptions;
+package pl.baczkowicz.mqttspy.common.exceptions;
 
 
 /**

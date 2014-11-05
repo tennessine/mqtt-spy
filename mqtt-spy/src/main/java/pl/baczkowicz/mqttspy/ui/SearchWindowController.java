@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -68,7 +69,17 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		final Tab tab = createSearchTab(this);
 		searchTabs.getTabs().add(tab);
 		
-		searchPaneControllers.get(tab).requestSearchFocus();
+		Platform.runLater(new Runnable()
+		{			
+			@Override
+			public void run()
+			{
+				if (searchPaneControllers.get(tab) != null)
+				{
+					searchPaneControllers.get(tab).requestSearchFocus();
+				}
+			}
+		});		
 	}
 	
 	public Tab createSearchTab(final Object parent)

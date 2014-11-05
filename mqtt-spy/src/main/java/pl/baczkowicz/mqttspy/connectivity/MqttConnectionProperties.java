@@ -2,9 +2,9 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
-import pl.baczkowicz.mqttspy.configuration.generated.UserCredentials;
-import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.common.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
+import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
 
 public class MqttConnectionProperties
 {
@@ -18,7 +18,7 @@ public class MqttConnectionProperties
 
 	public MqttConnectionProperties(final String name, final String serverURI, final String clientId, 
 			final UserCredentials userCredentials,
-			final ConfiguredMessage lwt,
+			final BaseMqttMessage lwt,
 			final Boolean cleanSession, final Integer connectionTimeout,
 			final Integer keepAliveInterval) throws ConfigurationException
 	{

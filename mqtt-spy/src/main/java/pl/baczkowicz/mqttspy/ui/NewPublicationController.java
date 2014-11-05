@@ -24,7 +24,7 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConfiguredMessage;
+import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.ui.format.ConversionException;
@@ -189,7 +189,7 @@ public class NewPublicationController implements Initializable
 		updateVisibility();
 	}
 	
-	public void displayMessage(final ConfiguredMessage message)
+	public void displayMessage(final BaseMqttMessage message)
 	{
 		if (message == null)
 		{
@@ -209,7 +209,7 @@ public class NewPublicationController implements Initializable
 		}
 	}
 	
-	public ConfiguredMessage readMessage(final boolean verify)
+	public BaseMqttMessage readMessage(final boolean verify)
 	{
 		if (verify && (publicationTopicText.getValue() == null || publicationTopicText.getValue().isEmpty()))
 		{
@@ -224,7 +224,7 @@ public class NewPublicationController implements Initializable
 			return null;
 		}
 		
-		final ConfiguredMessage message = new ConfiguredMessage();
+		final BaseMqttMessage message = new BaseMqttMessage();
 		try
 		{
 			String data = publicationData.getText();
@@ -251,7 +251,7 @@ public class NewPublicationController implements Initializable
 	@FXML
 	public void publish()
 	{						
-		final ConfiguredMessage message = readMessage(true);
+		final BaseMqttMessage message = readMessage(true);
 				
 		connection.publish(message.getTopic(), message.getPayload(), message.getQoS(), message.isRetained());
 		

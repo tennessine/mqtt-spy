@@ -18,7 +18,7 @@ public class ConfigurationLoader
 	
 	public static final String SCHEMA = "/mqtt-spy-logger-configuration.xsd";
 	
-	public static final String COMMON_SCHEMA = "/mqtt-spy-common-configuration.xsd";
+	public static final String COMMON_SCHEMA = "/mqtt-spy-common.xsd";
 	
 	private final XMLParser parser;
 

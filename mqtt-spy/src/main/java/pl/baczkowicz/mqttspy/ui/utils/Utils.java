@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import pl.baczkowicz.mqttspy.exceptions.CriticalException;
+import pl.baczkowicz.mqttspy.common.exceptions.CriticalException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;

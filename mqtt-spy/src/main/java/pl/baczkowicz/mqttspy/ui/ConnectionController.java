@@ -115,6 +115,8 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 
 	private boolean detailedView;
 
+	private boolean replayMode;
+
 	private ChangeListener<Boolean> createChangeListener()
 	{
 		return new ChangeListener<Boolean>()
@@ -141,24 +143,27 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	
 	public void init()
 	{
-		panes.put(publishMessageTitledPane, true);
-		panes.put(scriptedPublicationsTitledPane, true);
-		panes.put(newSubscriptionTitledPane, true);
 		panes.put(subscriptionsTitledPane, true);
 		
-		newPublicationPaneController.setConnection(connection);
-		newSubscriptionPaneController.setConnection(connection);
-		newSubscriptionPaneController.setConnectionController(this);
-		newSubscriptionPaneController.setConnectionManager(connectionManager);
-		connection.setStatisticsManager(statisticsManager);
-		
-		publicationScriptsPaneController.setConnection(connection);
-		publicationScriptsPaneController.setEventManager(eventManager);
-		publicationScriptsPaneController.init();
-		
-		tooltip = new Tooltip();
-		connectionTab.setTooltip(tooltip);
-		
+		if (!replayMode)
+		{
+			panes.put(publishMessageTitledPane, true);
+			panes.put(scriptedPublicationsTitledPane, true);
+			panes.put(newSubscriptionTitledPane, true);
+			
+			newPublicationPaneController.setConnection(connection);
+			newSubscriptionPaneController.setConnection(connection);
+			newSubscriptionPaneController.setConnectionController(this);
+			newSubscriptionPaneController.setConnectionManager(connectionManager);
+			// connection.setStatisticsManager(statisticsManager);
+			
+			publicationScriptsPaneController.setConnection(connection);
+			publicationScriptsPaneController.setEventManager(eventManager);
+			publicationScriptsPaneController.init();
+			
+			tooltip = new Tooltip();
+			connectionTab.setTooltip(tooltip);
+		}
 		// connectionPane.setMaxWidth(500);
 		// subscriptionsTitledPane.setMaxWidth(500);
 		// subscriptionTabs.setMaxWidth(500);
@@ -306,7 +311,6 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 			}
 		}
 
-		// connectionTab.getStyleClass().clear();
 		if (connectionTab.getStyleClass().size() > 1)
 		{
 			connectionTab.getStyleClass().remove(1);
@@ -367,8 +371,12 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	
 	public void togglePane(final TitledPane pane)
 	{
-		panes.put(pane, !panes.get(pane));		
-		updateVisiblePanes();
+		// Ignore any layout requests when in replay mode
+		if (!replayMode)
+		{
+			panes.put(pane, !panes.get(pane));		
+			updateVisiblePanes();
+		}
 	}
 	
 	public boolean getDetailedViewVisibility()
@@ -401,10 +409,33 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	
 	public void showPanes(boolean showManualPublications, boolean showScriptedPublications, boolean showNewSubscription, boolean showReceivedMessagesSummary)
 	{
-		panes.put(publishMessageTitledPane, showManualPublications);
-		panes.put(scriptedPublicationsTitledPane, showScriptedPublications);
-		panes.put(newSubscriptionTitledPane, showNewSubscription);
-		panes.put(subscriptionsTitledPane, showReceivedMessagesSummary);
+		// Ignore any layout requests when in replay mode
+		if (!replayMode)
+		{
+			panes.put(publishMessageTitledPane, showManualPublications);
+			panes.put(scriptedPublicationsTitledPane, showScriptedPublications);
+			panes.put(newSubscriptionTitledPane, showNewSubscription);
+			panes.put(subscriptionsTitledPane, showReceivedMessagesSummary);
+						
+			updateVisiblePanes();
+		}
+	}
+	
+	public void setReplayMode(final boolean value)
+	{
+		replayMode = value;
+	}
+	
+	public void showReplayMode()
+	{	
+		connectionTab.getStyleClass().add("connection-replay");
+		
+		panes.put(publishMessageTitledPane, false);
+		panes.put(scriptedPublicationsTitledPane, false);
+		panes.put(newSubscriptionTitledPane, false);
+		panes.put(subscriptionsTitledPane, true);
+		
+		subscriptionsTitledPane.setText("Logged messages");
 		
 		updateVisiblePanes();
 	}

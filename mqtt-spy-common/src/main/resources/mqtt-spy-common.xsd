@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:mqttspycommon="http://baczkowicz.pl/mqtt-spy/common"
+			targetNamespace="http://baczkowicz.pl/mqtt-spy/common">
+
+	<!-- ==================== -->
+	<!-- === COMMON ========= -->
+	<!-- ==================== -->
+	<xs:complexType name="BaseMqttMessage">
+		<xs:attribute name="topic" 				type="xs:string" use="required" />
+		<xs:attribute name="payload" 			type="xs:string" use="required" />
+		<xs:attribute name="qos" 				type="mqttspycommon:qos" />
+		<xs:attribute name="retained" 			type="xs:boolean" />				
+	</xs:complexType>		
+			
+	<!-- ==================== -->
+	<!-- === CONNECTIVITY === -->
+	<!-- ==================== -->
+		
+	<xs:complexType name="BaseConnectionDetails">
+		<xs:sequence>
+			<xs:element name="ServerURI" 			type="xs:string" />
+			<xs:element name="ClientID" 			type="xs:string" />
+			
+			<xs:element name="UserCredentials" 		type="mqttspycommon:UserCredentials" 	minOccurs="0" maxOccurs="1" />
+			<xs:element name="LastWillAndTestament" type="mqttspycommon:BaseMqttMessage"	minOccurs="0" maxOccurs="1" />
+			
+			<xs:element name="CleanSession" 		type="xs:boolean" 	minOccurs="0" maxOccurs="1" />
+			<xs:element name="ConnectionTimeout" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />
+			<xs:element name="KeepAliveInterval" 	type="xs:int" 		minOccurs="0" maxOccurs="1" />														
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="BaseConnectionDetailsWithSubscriptions">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:BaseConnectionDetails">
+				<xs:sequence>
+		        	<xs:element name="Subscription"	type="mqttspycommon:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="BaseConnectionDetailsWithPublications">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:BaseConnectionDetails">
+				<xs:sequence>
+		        	<xs:element name="Publication" 	type="mqttspycommon:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="NamedBaseConnectionDetailsWithPubSub">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:BaseConnectionDetails">
+				<xs:sequence>
+					<xs:element name="Name" 		type="xs:string" />
+		        	<xs:element name="Publication" 	type="mqttspycommon:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />
+		        	<xs:element name="Subscription"	type="mqttspycommon:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="UserCredentials">
+		<xs:sequence>
+			<xs:element name="Username" 			type="xs:string" />
+			<xs:element name="Password" 			type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="SubscriptionDetails">
+		<xs:attribute 	name="topic" 				type="xs:string" use="required" />
+		<xs:attribute 	name="qos" 					type="mqttspycommon:qos" default="0" />
+	</xs:complexType>
+	
+	<xs:complexType name="PublicationDetails">
+		<xs:attribute name="topic" 					type="xs:string" use="required" />
+	</xs:complexType>
+		
+	<xs:simpleType name="qos">
+		<xs:restriction base="xs:int" >
+			<xs:minInclusive value="0" />
+			<xs:maxInclusive value="2" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+</xs:schema>

@@ -4,20 +4,13 @@ import java.util.Date;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import pl.baczkowicz.mqttspy.common.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
-public class MqttContent
+public class MqttContent extends ReceivedMqttMessage
 {
-	private String topic;
-	
-	private MqttMessage message;
-
-	private Date date;
-
 	private MqttSubscription subscription;
-	
-	private final long id;
 	
 	private FormatterDetails lastUsedFormatter;
 	
@@ -25,41 +18,14 @@ public class MqttContent
 	
 	public MqttContent(final long id, final String topic, final MqttMessage message)
 	{
-		this.id = id;
-		this.topic = topic;
-		this.message = message;
-		this.setDate(new Date());
+		super(id, topic, message);
 		this.formattedPayload = new String(message.getPayload());
 	}
-
-	public MqttMessage getMessage()
+	
+	public MqttContent(final long id, final String topic, final MqttMessage message, final Date date)
 	{
-		return message;
-	}
-
-	public void setMessage(MqttMessage message)
-	{
-		this.message = message;
-	}
-
-	public String getTopic()
-	{
-		return topic;
-	}
-
-	public void setTopic(String topic)
-	{
-		this.topic = topic;
-	}
-
-	public Date getDate()
-	{
-		return date;
-	}
-
-	public void setDate(Date date)
-	{
-		this.date = date;
+		super(id, topic, message, date);
+		this.formattedPayload = new String(message.getPayload());
 	}
 
 	public MqttSubscription getSubscription()
@@ -72,23 +38,17 @@ public class MqttContent
 		this.subscription = subscription;
 	}
 
-	public long getId()
-	{
-		return id;
-	}
-
 	public void format(final FormatterDetails formatter)
 	{
 		if (formatter == null)
 		{
-			formattedPayload = new String(message.getPayload());
+			formattedPayload = new String(getMessage().getPayload());
 		}		
 		else if (!formatter.equals(lastUsedFormatter))
 		{
 			lastUsedFormatter = formatter;
-			formattedPayload = FormattingUtils.convertText(formatter, new String(message.getPayload()));
+			formattedPayload = FormattingUtils.convertText(formatter, new String(getMessage().getPayload()));
 		}
-		
 	}
 	
 	public String getFormattedPayload(final FormatterDetails formatter)

@@ -396,6 +396,11 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 		return showLatestBox.isSelected();
 	}
 	
+	public void hideShowLatest()
+	{
+		showLatestBox.setVisible(false);
+	}
+	
 	// ===============================
 	// === Setters and getters =======
 	// ===============================

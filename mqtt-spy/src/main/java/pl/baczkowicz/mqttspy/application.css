@@ -120,6 +120,11 @@
 	-fx-base: grey;
 }	
 
+.connection-replay
+{
+	-fx-base: lightblue;
+}
+
 /* Subscriptions */
 
 .subscribed .text
