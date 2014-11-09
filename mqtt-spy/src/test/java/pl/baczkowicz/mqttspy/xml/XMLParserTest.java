@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
-import pl.baczkowicz.mqttspy.common.exceptions.XMLException;
-import pl.baczkowicz.mqttspy.common.xml.XMLParser;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
+import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 public class XMLParserTest
 {

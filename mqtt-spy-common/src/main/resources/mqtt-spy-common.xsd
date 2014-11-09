@@ -31,21 +31,12 @@
 		</xs:sequence>
 	</xs:complexType>
 	
-	<xs:complexType name="BaseConnectionDetailsWithSubscriptions">
+	<xs:complexType name="BaseConnectionDetailsWithSubscriptionsAndScripts">
 		<xs:complexContent>
 			<xs:extension base="mqttspycommon:BaseConnectionDetails">
 				<xs:sequence>
 		        	<xs:element name="Subscription"	type="mqttspycommon:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />
-				</xs:sequence>	
-	        </xs:extension>		
-        </xs:complexContent>
-	</xs:complexType>
-	
-	<xs:complexType name="BaseConnectionDetailsWithPublications">
-		<xs:complexContent>
-			<xs:extension base="mqttspycommon:BaseConnectionDetails">
-				<xs:sequence>
-		        	<xs:element name="Publication" 	type="mqttspycommon:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />
+		        	<xs:element name="Script"		type="xs:string" 							minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>	
 	        </xs:extension>		
         </xs:complexContent>
@@ -58,6 +49,7 @@
 					<xs:element name="Name" 		type="xs:string" />
 		        	<xs:element name="Publication" 	type="mqttspycommon:PublicationDetails" 	minOccurs="0" maxOccurs="unbounded" />
 		        	<xs:element name="Subscription"	type="mqttspycommon:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />
+		        	<xs:element name="Script"		type="xs:string" 							minOccurs="0" maxOccurs="unbounded" />
 				</xs:sequence>	
 	        </xs:extension>		
         </xs:complexContent>
@@ -73,6 +65,7 @@
 	<xs:complexType name="SubscriptionDetails">
 		<xs:attribute 	name="topic" 				type="xs:string" use="required" />
 		<xs:attribute 	name="qos" 					type="mqttspycommon:qos" default="0" />
+		<xs:attribute 	name="script"				type="xs:string" />
 	</xs:complexType>
 	
 	<xs:complexType name="PublicationDetails">

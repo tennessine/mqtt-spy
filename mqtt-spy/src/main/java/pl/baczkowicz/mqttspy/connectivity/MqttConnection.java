@@ -21,9 +21,9 @@ import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class MqttConnection extends ManagedMessageStoreWithFiltering
+public class MqttConnection extends ManagedMessageStoreWithFiltering implements MqttConnectionInterface
 {
 	final static Logger logger = LoggerFactory.getLogger(MqttConnection.class);
 

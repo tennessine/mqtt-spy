@@ -29,7 +29,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.ui.format.ConversionException;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.Utils;
 
 @SuppressWarnings("deprecation")
 public class NewPublicationController implements Initializable

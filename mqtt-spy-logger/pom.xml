@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>pl.baczkowicz.mqttspy</groupId>
-  <artifactId>mqtt-spy-logger</artifactId>
+  <artifactId>mqtt-spy-daemon</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
   <dependencies>
@@ -117,10 +117,10 @@
 			            <configuration>
 			                <schemaDirectory>src/main/resources/</schemaDirectory>
 			                <schemaIncludes>
-			                    <include>mqtt-spy-logger-configuration.xsd</include>
+			                    <include>mqtt-spy-daemon-configuration.xsd</include>
 			                </schemaIncludes>			                 
 			                <generateDirectory>src/main/java/</generateDirectory>			                
-			                <generatePackage>pl.baczkowicz.mqttspy.logger.configuration.generated</generatePackage>
+			                <generatePackage>pl.baczkowicz.mqttspy.daemon.configuration.generated</generatePackage>
 			                <removeOldOutput>false</removeOldOutput>
 			                
 			                <catalogs>

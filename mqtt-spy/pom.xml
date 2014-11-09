@@ -4,7 +4,7 @@
 
 	<groupId>pl.baczkowicz</groupId>
 	<artifactId>mqtt-spy</artifactId>
-	<version>0.1.0</version>
+	<version>0.1.1-beta</version>
 	<packaging>jar</packaging>
 
 	<name>mqtt-spy</name>
@@ -50,7 +50,7 @@
 		
 		<dependency>
 			<groupId>pl.baczkowicz.mqttspy</groupId>
-			<artifactId>mqtt-spy-logger</artifactId>
+			<artifactId>mqtt-spy-daemon</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		
@@ -87,13 +87,13 @@
 		<dependency>
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
-			<version>8.20.7</version>
+			<version>8.20.8</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>org.fxmisc.richtext</groupId>
 			<artifactId>richtextfx</artifactId>
-			<version>0.5</version>
+			<version>0.5.1</version>
 		</dependency>
 
 		<dependency>

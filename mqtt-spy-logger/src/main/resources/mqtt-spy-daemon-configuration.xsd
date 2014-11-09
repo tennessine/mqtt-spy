@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+			xmlns:mqttspydc="http://baczkowicz.pl/mqtt-spy/daemon/configuration"
+			xmlns:mqttspycommon="http://baczkowicz.pl/mqtt-spy/common"
+			targetNamespace="http://baczkowicz.pl/mqtt-spy/daemon/configuration">
+
+	<xs:import namespace="http://baczkowicz.pl/mqtt-spy/common" />
+
+	<xs:complexType name="MqttSpyDaemonConfiguration">
+		<xs:sequence>
+			<xs:element name="Connection" type="mqttspycommon:BaseConnectionDetailsWithSubscriptionsAndScripts" minOccurs="1" maxOccurs="1"/>			
+		</xs:sequence>
+	</xs:complexType>
+	
+	<!-- ================ -->
+	<!-- === ELEMENTS === -->
+	<!-- ================ -->
+
+	<xs:element name="MqttSpyDaemonConfiguration" type="mqttspydc:MqttSpyDaemonConfiguration" />
+
+</xs:schema>

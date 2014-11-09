@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-import pl.baczkowicz.mqttspy.common.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
 public class MqttContent extends ReceivedMqttMessage

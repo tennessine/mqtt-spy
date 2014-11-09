@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
-import pl.baczkowicz.mqttspy.scripts.ScriptManager;
+import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
+import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
-import pl.baczkowicz.mqttspy.ui.properties.PublicationScriptProperties;
 
 public class PublicationScriptsController implements Initializable, ScriptStateChangeObserver
 {
@@ -49,7 +49,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		
 	private MqttConnection connection;
 
-	private ScriptManager scriptManager;
+	private InteractiveScriptManager scriptManager;
 
 	private EventManager eventManager;
 
@@ -225,7 +225,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
 	public void init()
 	{
-		scriptManager = new ScriptManager(eventManager, connection);
+		scriptManager = new InteractiveScriptManager(eventManager, connection);
 		eventManager.registerScriptStateChangeObserver(this, null);
 		refreshList();
 		scriptTable.setItems(scriptManager.getObservableScriptList());		

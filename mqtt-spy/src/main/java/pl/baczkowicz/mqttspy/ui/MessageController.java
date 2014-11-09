@@ -26,7 +26,7 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class MessageController implements Initializable, MessageIndexChangeObserver, MessageFormatChangeObserver
 {
