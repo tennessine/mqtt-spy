@@ -5,7 +5,7 @@ import java.util.Queue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 
 /**
@@ -20,9 +20,9 @@ public class MqttMessageHandler implements Runnable
 	
 	private final Queue<MqttContent> queue;
 
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
-	public MqttMessageHandler(final MqttConnection connection, final Queue<MqttContent> queue)
+	public MqttMessageHandler(final MqttAsyncConnection connection, final Queue<MqttContent> queue)
 	{
 		this.queue = queue;
 		this.connection = connection;

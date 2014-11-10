@@ -14,9 +14,9 @@ public class ConfigurationLoader
 {
 	final static Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 	
-	public static final String PACKAGE = "pl.baczkowicz.mqttspy.logger.configuration.generated";
+	public static final String PACKAGE = "pl.baczkowicz.mqttspy.daemon.configuration.generated";
 	
-	public static final String SCHEMA = "/mqtt-spy-logger-configuration.xsd";
+	public static final String SCHEMA = "/mqtt-spy-daemon-configuration.xsd";
 	
 	public static final String COMMON_SCHEMA = "/mqtt-spy-common.xsd";
 	

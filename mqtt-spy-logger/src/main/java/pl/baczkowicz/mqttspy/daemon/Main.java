@@ -5,18 +5,17 @@ package pl.baczkowicz.mqttspy.daemon;
 
 import java.io.File;
 
-import org.apache.commons.codec.binary.Base64;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.BaseConnectionDetailsWithSubscriptionsAndScripts;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
+import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 
 /**
  * @author kamil
@@ -39,56 +38,46 @@ public class Main
 		
 		try
 		{
-			final ConfigurationLoader loader = new ConfigurationLoader();
+			final ConfigurationLoader loader = new ConfigurationLoader();			
 			
 			loader.loadConfiguration(new File(args[0]));
 			
-			final BaseConnectionDetailsWithSubscriptionsAndScripts connection = loader.getConfiguration().getConnection();
-			// Creating MQTT client instance
-			final MqttClient client = new MqttClient(
-					connection.getServerURI(), 
-					connection.getClientID(),
-					null);
+			final BaseConnectionDetailsWithSubscriptionsAndScripts connectionSettings = loader.getConfiguration().getConnection();
+
+			final SimpleMqttAsyncConnection connection = new SimpleMqttAsyncConnection(connectionSettings);
+			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
+			connection.createClient(new MqttCallbackHandler(connection, connectionSettings.getSubscription(), scriptManager));
+			connection.connect();
 			
-			// Set MQTT callback
-			client.setCallback(new MqttCallbackHandler());			
+			logger.info("Successfully connected to " + connectionSettings.getServerURI());
 			
-			final MqttConnectOptions options = new MqttConnectOptions();
-			options.setCleanSession(connection.isCleanSession());
-			options.setConnectionTimeout(connection.getConnectionTimeout());
-			options.setKeepAliveInterval(connection.getKeepAliveInterval());
 			
-			if (connection.getUserCredentials() != null)
-			{
-				options.setUserName(connection.getUserCredentials().getUsername());
-				options.setPassword(connection.getUserCredentials().getPassword().toCharArray());
-			}
-			
-			if (connection.getLastWillAndTestament() != null)
-			{
-				options.setWill(connection.getLastWillAndTestament().getTopic(), 
-						Base64.decodeBase64(connection.getLastWillAndTestament().getPayload()),
-						connection.getLastWillAndTestament().getQos(),
-						connection.getLastWillAndTestament().isRetained());
-			}
-			
-			client.connect(options);
-			logger.info("Successfully connected to " + connection.getServerURI());
-			
-			for (final SubscriptionDetails subscription : connection.getSubscription())
-			{
-				client.subscribe(subscription.getTopic(), subscription.getQos());
+			// Subscribe to all configured subscriptions
+			for (final SubscriptionDetails subscription : connectionSettings.getSubscription())
+			{	
+				if (subscription.getScript() != null)
+				{
+					scriptManager.addScript(subscription.getScript());
+				}
+					
+				connection.subscribe(subscription.getTopic(), subscription.getQos());
 				logger.info("Successfully subscribed to " + subscription.getTopic());
+			}
+			
+			// Run all configured scripts
+			scriptManager.addScripts(connectionSettings.getScript());
+			for (final String script : connectionSettings.getScript())
+			{
+				scriptManager.evaluateScriptFile(new File(script));
 			}
 		}
 		catch (XMLException e)
 		{
-			logger.error("Cannot instantiate the configuration loader", e);
+			logger.error("Cannot load the mqtt-spy-daemon's configuration", e);
 		}
-		catch (MqttException e)
+		catch (MqttSpyException e)
 		{
 			logger.error("Error occurred while connecting to broker", e);
 		}
 	}
-
 }

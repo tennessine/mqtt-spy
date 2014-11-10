@@ -30,17 +30,15 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
 
 
 /**
- * <p>Java class for NamedBaseConnectionDetailsWithPubSub complex type.
+ * <p>Java class for BaseConnectionDetailsWithSubscriptionsAndScripts complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="NamedBaseConnectionDetailsWithPubSub">
+ * &lt;complexType name="BaseConnectionDetailsWithSubscriptionsAndScripts">
  *   &lt;complexContent>
  *     &lt;extension base="{http://baczkowicz.pl/mqtt-spy/common}BaseConnectionDetails">
  *       &lt;sequence>
- *         &lt;element name="Name" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Publication" type="{http://baczkowicz.pl/mqtt-spy/common}PublicationDetails" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Subscription" type="{http://baczkowicz.pl/mqtt-spy/common}SubscriptionDetails" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="Script" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
@@ -52,78 +50,19 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "NamedBaseConnectionDetailsWithPubSub", propOrder = {
-    "name",
-    "publication",
+@XmlType(name = "BaseConnectionDetailsWithSubscriptionsAndScripts", propOrder = {
     "subscription",
     "script"
 })
-public class NamedBaseConnectionDetailsWithPubSub
+public class BaseConnectionDetailsWithSubscriptionsAndScripts
     extends BaseConnectionDetails
     implements CopyTo, Copyable, Equals, HashCode, ToString
 {
 
-    @XmlElement(name = "Name", required = true)
-    protected String name;
-    @XmlElement(name = "Publication")
-    protected List<PublicationDetails> publication;
     @XmlElement(name = "Subscription")
     protected List<SubscriptionDetails> subscription;
     @XmlElement(name = "Script")
     protected List<String> script;
-
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
-
-    /**
-     * Gets the value of the publication property.
-     * 
-     * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the publication property.
-     * 
-     * <p>
-     * For example, to add a new item, do as follows:
-     * <pre>
-     *    getPublication().add(newItem);
-     * </pre>
-     * 
-     * 
-     * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PublicationDetails }
-     * 
-     * 
-     */
-    public List<PublicationDetails> getPublication() {
-        if (publication == null) {
-            publication = new ArrayList<PublicationDetails>();
-        }
-        return this.publication;
-    }
 
     /**
      * Gets the value of the subscription property.
@@ -186,16 +125,6 @@ public class NamedBaseConnectionDetailsWithPubSub
     public void toString(ToStringBuilder toStringBuilder) {
         super.toString(toStringBuilder);
         {
-            String theName;
-            theName = this.getName();
-            toStringBuilder.append("name", theName);
-        }
-        {
-            List<PublicationDetails> thePublication;
-            thePublication = this.getPublication();
-            toStringBuilder.append("publication", thePublication);
-        }
-        {
             List<SubscriptionDetails> theSubscription;
             theSubscription = this.getSubscription();
             toStringBuilder.append("subscription", theSubscription);
@@ -214,7 +143,7 @@ public class NamedBaseConnectionDetailsWithPubSub
     }
 
     public void equals(Object object, EqualsBuilder equalsBuilder) {
-        if (!(object instanceof NamedBaseConnectionDetailsWithPubSub)) {
+        if (!(object instanceof BaseConnectionDetailsWithSubscriptionsAndScripts)) {
             equalsBuilder.appendSuper(false);
             return ;
         }
@@ -222,15 +151,13 @@ public class NamedBaseConnectionDetailsWithPubSub
             return ;
         }
         super.equals(object, equalsBuilder);
-        final NamedBaseConnectionDetailsWithPubSub that = ((NamedBaseConnectionDetailsWithPubSub) object);
-        equalsBuilder.append(this.getName(), that.getName());
-        equalsBuilder.append(this.getPublication(), that.getPublication());
+        final BaseConnectionDetailsWithSubscriptionsAndScripts that = ((BaseConnectionDetailsWithSubscriptionsAndScripts) object);
         equalsBuilder.append(this.getSubscription(), that.getSubscription());
         equalsBuilder.append(this.getScript(), that.getScript());
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof NamedBaseConnectionDetailsWithPubSub)) {
+        if (!(object instanceof BaseConnectionDetailsWithSubscriptionsAndScripts)) {
             return false;
         }
         if (this == object) {
@@ -243,8 +170,6 @@ public class NamedBaseConnectionDetailsWithPubSub
 
     public void hashCode(HashCodeBuilder hashCodeBuilder) {
         super.hashCode(hashCodeBuilder);
-        hashCodeBuilder.append(this.getName());
-        hashCodeBuilder.append(this.getPublication());
         hashCodeBuilder.append(this.getSubscription());
         hashCodeBuilder.append(this.getScript());
     }
@@ -256,22 +181,8 @@ public class NamedBaseConnectionDetailsWithPubSub
     }
 
     public Object copyTo(Object target, CopyBuilder copyBuilder) {
-        final NamedBaseConnectionDetailsWithPubSub copy = ((target == null)?((NamedBaseConnectionDetailsWithPubSub) createCopy()):((NamedBaseConnectionDetailsWithPubSub) target));
+        final BaseConnectionDetailsWithSubscriptionsAndScripts copy = ((target == null)?((BaseConnectionDetailsWithSubscriptionsAndScripts) createCopy()):((BaseConnectionDetailsWithSubscriptionsAndScripts) target));
         super.copyTo(copy, copyBuilder);
-        {
-            String sourceName;
-            sourceName = this.getName();
-            String copyName = ((String) copyBuilder.copy(sourceName));
-            copy.setName(copyName);
-        }
-        {
-            List<PublicationDetails> sourcePublication;
-            sourcePublication = this.getPublication();
-            List<PublicationDetails> copyPublication = ((List<PublicationDetails> ) copyBuilder.copy(sourcePublication));
-            copy.publication = null;
-            List<PublicationDetails> uniquePublicationl = copy.getPublication();
-            uniquePublicationl.addAll(copyPublication);
-        }
         {
             List<SubscriptionDetails> sourceSubscription;
             sourceSubscription = this.getSubscription();
@@ -297,7 +208,7 @@ public class NamedBaseConnectionDetailsWithPubSub
     }
 
     public Object createCopy() {
-        return new NamedBaseConnectionDetailsWithPubSub();
+        return new BaseConnectionDetailsWithSubscriptionsAndScripts();
     }
 
 }

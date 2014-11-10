@@ -67,11 +67,11 @@ public class MqttConnectionTest extends TestCase
 		context.checking(new Expectations()
 		{
 			{
-				oneOf(mockEventManager).notifyConnectionStatusChanged(with(any(MqttConnection.class)));
+				oneOf(mockEventManager).notifyConnectionStatusChanged(with(any(MqttAsyncConnection.class)));
 			}
 		});
 		
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		final MqttAsyncConnection connection = new MqttAsyncConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
 		connection.setStatisticsManager(statisticsManager);
 		context.assertIsSatisfied();
 		
@@ -131,11 +131,11 @@ public class MqttConnectionTest extends TestCase
 		context.checking(new Expectations()
 		{
 			{
-				oneOf(mockEventManager).notifyConnectionStatusChanged(with(any(MqttConnection.class)));
+				oneOf(mockEventManager).notifyConnectionStatusChanged(with(any(MqttAsyncConnection.class)));
 			}
 		});
 		
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
+		final MqttAsyncConnection connection = new MqttAsyncConnection(connectionProperties, MqttConnectionStatus.CONNECTING, mockEventManager, new LinkedBlockingQueue<MqttSpyUIEvent>());
 		connection.setStatisticsManager(statisticsManager);
 		context.assertIsSatisfied();
 		

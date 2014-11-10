@@ -1,10 +1,10 @@
 package pl.baczkowicz.mqttspy.events.connectivity;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 
 public class MqttDisconnectionAttemptSuccessEvent extends MqttConnectionSuccessEvent
 {
-	public MqttDisconnectionAttemptSuccessEvent(final MqttConnection connection)
+	public MqttDisconnectionAttemptSuccessEvent(final MqttAsyncConnection connection)
 	{
 		super(connection);
 	}

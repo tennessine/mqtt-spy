@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.ui.format.ConversionException;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
@@ -65,7 +65,7 @@ public class NewPublicationController implements Initializable
 		
 	private ObservableList<String> publicationTopics = FXCollections.observableArrayList();
 
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
 	private boolean plainSelected = true;
 
@@ -270,7 +270,7 @@ public class NewPublicationController implements Initializable
 			      .showError();
 	}
 
-	public void setConnection(MqttConnection connection)
+	public void setConnection(MqttAsyncConnection connection)
 	{
 		this.connection = connection;
 	}

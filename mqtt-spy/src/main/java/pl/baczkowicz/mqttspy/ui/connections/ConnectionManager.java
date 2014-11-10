@@ -16,7 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
@@ -64,7 +64,7 @@ public class ConnectionManager
 			final Object parent, final RuntimeConnectionProperties connectionProperties)
 	{		
 		// Create connection
-		final MqttConnection connection = mqttManager.createConnection(connectionProperties, uiEventQueue);
+		final MqttAsyncConnection connection = mqttManager.createConnection(connectionProperties, uiEventQueue);
 		connection.setOpening(true);
 		connection.setStatisticsManager(statisticsManager);
 

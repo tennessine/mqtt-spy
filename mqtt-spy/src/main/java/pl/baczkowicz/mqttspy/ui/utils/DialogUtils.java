@@ -24,7 +24,7 @@ import org.controlsfx.dialog.Dialogs;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
@@ -143,7 +143,7 @@ public class DialogUtils
 				.showWarning();
 	}
 	
-	public static void updateConnectionTooltip(final MqttConnection connection, final Tooltip tooltip, final StatisticsManager statisticsManager)
+	public static void updateConnectionTooltip(final MqttAsyncConnection connection, final Tooltip tooltip, final StatisticsManager statisticsManager)
 	{
 		final StringBuffer sb = new StringBuffer();
 		sb.append("Status: " + connection.getConnectionStatus().toString().toLowerCase());

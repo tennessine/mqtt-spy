@@ -24,7 +24,7 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 
 	// private final EventManager eventManager;
 	
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
 	private boolean subscribing;
 
@@ -98,12 +98,12 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 		return subscriptionController;
 	}
 
-	public void setConnection(MqttConnection connection)
+	public void setConnection(MqttAsyncConnection connection)
 	{
 		this.connection = connection;		
 	}
 	
-	public MqttConnection getConnection()	
+	public MqttAsyncConnection getConnection()	
 	{
 		return connection;
 	}

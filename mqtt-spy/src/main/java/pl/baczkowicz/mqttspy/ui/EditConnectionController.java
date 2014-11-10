@@ -50,7 +50,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
@@ -215,7 +215,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 
 	private boolean openNewMode;
 
-	private MqttConnection existingConnection;
+	private MqttAsyncConnection existingConnection;
 
 	private int noModificationsLock;
 
@@ -812,7 +812,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 			
 			logger.debug("Editing connection id={} name={}", editedConnectionDetails.getId(),
 					editedConnectionDetails.getName());
-			for (final MqttConnection mqttConnection : mqttManager.getConnections())
+			for (final MqttAsyncConnection mqttConnection : mqttManager.getConnections())
 			{
 				if (connectionDetails.getId() == mqttConnection.getProperties().getConfiguredProperties().getId() && mqttConnection.isOpened())
 				{

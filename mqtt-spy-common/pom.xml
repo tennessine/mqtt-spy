@@ -51,6 +51,72 @@
 			<version>1.7.7</version>
 		</dependency>
 		
+		
+		<dependency>
+			<groupId>org.dna.mqtt</groupId>
+			<artifactId>moquette-broker</artifactId>
+			<scope>compile</scope>
+			<version>0.5</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-log4j12</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>hawtdb</artifactId>
+					<groupId>org.fusesource.hawtdb</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>hawtbuf</artifactId>
+					<groupId>org.fusesource.hawtbuf</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-codec</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-handler</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-transport</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-buffer</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>netty-common</artifactId>
+					<groupId>io.netty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>commons-logging</artifactId>
+					<groupId>commons-logging</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>org.osgi.compendium</artifactId>
+					<groupId>org.apache.felix</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>org.osgi.core</artifactId>
+					<groupId>org.apache.felix</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>disruptor</artifactId>
+					<groupId>com.googlecode.disruptor</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>moquette-netty-parser</artifactId>
+					<groupId>org.dna.mqtt</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
 		<!--=== SCHEMAS/JAXB === -->
 		<dependency>
 			<groupId>org.jvnet.jaxb2.maven2</groupId>

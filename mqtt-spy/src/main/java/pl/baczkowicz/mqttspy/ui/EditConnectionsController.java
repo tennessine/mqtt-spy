@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -430,7 +430,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	}
 
 	@Override
-	public void onConnectionStatusChanged(final MqttConnection changedConnection)
+	public void onConnectionStatusChanged(final MqttAsyncConnection changedConnection)
 	{
 		if (getSelectedIndex() >= 0)
 		{

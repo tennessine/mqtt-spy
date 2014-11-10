@@ -21,7 +21,7 @@ import javafx.util.Callback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
@@ -47,7 +47,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
     @FXML
     private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
 		
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
 	private InteractiveScriptManager scriptManager;
 
@@ -234,10 +234,10 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
 	private void refreshList()
 	{
-		scriptManager.populateScripts(connection.getProperties().getConfiguredProperties().getPublicationScripts());
+		scriptManager.addScripts(connection.getProperties().getConfiguredProperties().getPublicationScripts());
 	}
 
-	public void setConnection(MqttConnection connection)
+	public void setConnection(MqttAsyncConnection connection)
 	{
 		this.connection = connection;
 	}

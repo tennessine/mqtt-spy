@@ -23,9 +23,9 @@ import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class MqttConnection extends ManagedMessageStoreWithFiltering implements MqttConnectionInterface
+public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implements MqttConnectionInterface
 {
-	final static Logger logger = LoggerFactory.getLogger(MqttConnection.class);
+	final static Logger logger = LoggerFactory.getLogger(MqttAsyncConnection.class);
 
 	private MqttConnectionStatus connectionStatus;
 
@@ -57,7 +57,7 @@ public class MqttConnection extends ManagedMessageStoreWithFiltering implements 
 		this.statisticsManager = statisticsManager;
 	}
 
-	public MqttConnection(final RuntimeConnectionProperties properties, 
+	public MqttAsyncConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		// Max size is double the preferred size

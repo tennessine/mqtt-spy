@@ -113,14 +113,22 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 			logger.debug("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", script.getName(), publicationTopic, data, qos, retained);
 			connection.publish(publicationTopic, data, qos, retained);
 						
-			executor.execute(new Runnable()
-			{			
-				public void run()
-				{
-					script.setLastPublished(new Date());
-					script.setCount(publishedMessages);				
-				}
-			});
+			if (executor != null)
+			{
+				executor.execute(new Runnable()
+				{			
+					public void run()
+					{
+						script.setLastPublished(new Date());
+						script.setCount(publishedMessages);				
+					}
+				});
+			}
+			else
+			{
+				script.setLastPublished(new Date());
+				script.setCount(publishedMessages);		
+			}
 		}
 	}
 

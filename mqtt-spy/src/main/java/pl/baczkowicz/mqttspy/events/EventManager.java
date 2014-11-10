@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Platform;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
 import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
@@ -35,7 +35,7 @@ public class EventManager implements ScriptEventManagerInterface
 	
 	private final Map<MessageListChangedObserver, MessageListWithObservableTopicSummary> messageListChangeObservers = new HashMap<>();
 	
-	private final Map<ConnectionStatusChangeObserver, MqttConnection> connectionStatusChangeObservers = new HashMap<>();
+	private final Map<ConnectionStatusChangeObserver, MqttAsyncConnection> connectionStatusChangeObservers = new HashMap<>();
 	
 	private final Map<SubscriptionStatusChangeObserver, MqttSubscription> subscriptionStatusChangeObservers = new HashMap<>();
 	
@@ -60,7 +60,7 @@ public class EventManager implements ScriptEventManagerInterface
 	 * @param observer The observer to register
 	 * @param filter Null for all, or value to match
 	 */
-	public void registerConnectionStatusObserver(final ConnectionStatusChangeObserver observer, final MqttConnection filter)
+	public void registerConnectionStatusObserver(final ConnectionStatusChangeObserver observer, final MqttAsyncConnection filter)
 	{
 		connectionStatusChangeObservers.put(observer, filter);
 	}
@@ -171,7 +171,7 @@ public class EventManager implements ScriptEventManagerInterface
 		}				
 	}
 	
-	public void notifyConnectionStatusChanged(final MqttConnection changedConnection)
+	public void notifyConnectionStatusChanged(final MqttAsyncConnection changedConnection)
 	{
 		Platform.runLater(new Runnable()
 		{			
@@ -180,7 +180,7 @@ public class EventManager implements ScriptEventManagerInterface
 			{
 				for (final ConnectionStatusChangeObserver observer : connectionStatusChangeObservers.keySet())
 				{
-					final MqttConnection filter = connectionStatusChangeObservers.get(observer);
+					final MqttAsyncConnection filter = connectionStatusChangeObservers.get(observer);
 					
 					if (filter == null || filter.equals(changedConnection))
 					{				

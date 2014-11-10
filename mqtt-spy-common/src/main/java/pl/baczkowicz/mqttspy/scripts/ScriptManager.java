@@ -2,31 +2,90 @@ package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
 
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
+
+import org.slf4j.LoggerFactory;
+
+import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
+import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 
 public class ScriptManager
 {
 	private Map<File, PublicationScriptProperties> scripts = new HashMap<File, PublicationScriptProperties>();
-
+	
 	private ScriptEventManagerInterface eventManager;
 
 	private Executor executor;
+
+	private MqttConnectionInterface connection;
 	
-	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor)
+	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor, final MqttConnectionInterface connection)
 	{
 		this.eventManager = eventManager;
 		this.executor = executor;
+		this.connection = connection;
 	}
 	
 	public static String getScriptName(final File file)
 	{
 		return file.getName().replace(".js",  "");
+	}
+	
+	public void addScript(final String filename)
+	{
+		final File scriptFile = new File(filename);
+		
+		final String scriptName = getScriptName(scriptFile);
+		
+		final PublicationScriptProperties script = createScript(scriptName, scriptFile, connection);
+		
+		scripts.put(scriptFile, script);
+	}
+	
+	public void addScripts(final List<String> files)
+	{
+		for (final String filename : files)
+		{
+			addScript(filename);
+		}
+	}
+	
+	public Map<File, PublicationScriptProperties> getScripts()
+	{
+		return scripts;
+	}
+		
+	public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection)
+	{
+		final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
+		
+		if (scriptEngine != null)
+		{
+			final PublicationScriptProperties script = new PublicationScriptProperties(scriptName, scriptFile, 
+					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
+			
+			script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script, executor));
+			
+			final Map<String, Object> scriptVariables = new HashMap<String, Object>();
+			scriptVariables.put("mqttspy", script.getPublicationScriptIO());	
+			scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
+			
+			putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
+			
+			return script;
+		}
+		else
+		{
+			throw new CriticalException("Cannot instantiate the nashorn javascript engine - most likely you have an imcompatible JVM installed");
+		}
 	}
 					
 	public static void putJavaVariablesIntoEngine(final ScriptEngine engine, final Map<String, Object> variables)
@@ -41,20 +100,23 @@ public class ScriptManager
 		engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
-	public void evaluateScriptFile(final File scriptFile)
+	public void evaluateScriptFile(final PublicationScriptProperties script)
 	{
-		final PublicationScriptProperties script = scripts.get(scriptFile);
-		
 		// Only start if not running already
 		if (!script.getStatus().equals(ScriptRunningState.RUNNING))
 		{
 			new Thread(new ScriptRunner(eventManager, script, executor)).start();
 		}		
-	}
+	}	
 
-	public Map<File, PublicationScriptProperties> getScripts()
+	public void evaluateScriptFile(final File scriptFile)
 	{
-		return scripts;
+		evaluateScriptFile(getScript(scriptFile));
+	}
+	
+	public PublicationScriptProperties getScript(final File scriptFile)
+	{
+		return scripts.get(scriptFile);
 	}
 
 	public ScriptEventManagerInterface getEventManager()

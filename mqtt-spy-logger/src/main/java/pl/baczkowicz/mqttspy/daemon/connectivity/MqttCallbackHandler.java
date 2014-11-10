@@ -1,5 +1,9 @@
 package pl.baczkowicz.mqttspy.daemon.connectivity;
 
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -9,8 +13,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.daemon.connectivity.MqttMessageHandler;
+import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
+import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 
 /**
  * One MQTT callback handler per connection.
@@ -25,14 +32,28 @@ public class MqttCallbackHandler implements MqttCallback
 	/** Stores all received messages, so that we don't block the receiving thread. */
 	private final Queue<ReceivedMqttMessage> messageQueue = new LinkedBlockingQueue<ReceivedMqttMessage>();
 	
-	private MqttMessageHandler messageHandler;
+	private final MqttMessageHandler messageHandler;
+	
+	private final BaseMqttConnection connection;
+	
+	private final Map<String, SubscriptionDetails> subscriptions = new HashMap<String, SubscriptionDetails>();
+
+	private final ScriptManager scriptManager;
 	
 	private long currentId = 1;
 
-	public MqttCallbackHandler()
+	public MqttCallbackHandler(final BaseMqttConnection connection, final List<SubscriptionDetails> subscriptions, final ScriptManager scriptManager)
 	{
+		this.connection = connection;
+		this.scriptManager = scriptManager;
 		this.messageHandler = new MqttMessageHandler(messageQueue);
-		new Thread(messageHandler).start();
+		
+		for (final SubscriptionDetails subscriptionDetails : subscriptions)
+		{
+			this.subscriptions.put(subscriptionDetails.getTopic(), subscriptionDetails);
+		}
+		
+		new Thread(messageHandler).start();			
 	}
 
 	public void connectionLost(Throwable cause)
@@ -46,7 +67,28 @@ public class MqttCallbackHandler implements MqttCallback
 		{
 			logger.debug("[{}] Received message on topic \"{}\". Payload = \"{}\"", messageQueue.size(), topic, new String(message.getPayload()));
 		}
-		messageQueue.add(new ReceivedMqttMessage(currentId, topic, message));
+		
+		final ReceivedMqttMessage receivedMessage = new ReceivedMqttMessage(currentId, topic, message);
+		
+		// Add the received message to queue for logging
+		messageQueue.add(receivedMessage);
+		
+		// Check matching subscriptions
+		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
+		
+		// If configured, run scripts for the matching subscriptions
+		for (final String matchingSubscription : matchingSubscriptions)
+		{
+			final SubscriptionDetails subscriptionDetails = subscriptions.get(matchingSubscription);
+			
+			if (subscriptionDetails.getScript() != null)
+			{
+				final PublicationScriptProperties script = scriptManager.getScript(new File(subscriptionDetails.getScript()));
+				script.getScriptEngine().put("receivedMessage", receivedMessage);
+				scriptManager.evaluateScriptFile(script);
+			}
+		}
+		
 		currentId++;
 	}
 

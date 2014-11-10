@@ -23,7 +23,7 @@ import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -99,7 +99,7 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 	@FXML
 	private TabPane subscriptionTabs;
 
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
 	private Tab connectionTab;
 	
@@ -207,12 +207,12 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 		}
 	}
 
-	public MqttConnection getConnection()
+	public MqttAsyncConnection getConnection()
 	{
 		return connection;
 	}
 
-	public void setConnection(MqttConnection connection)
+	public void setConnection(MqttAsyncConnection connection)
 	{
 		this.connection = connection;
 	}
@@ -252,7 +252,7 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 		}
 	}
 	
-	public void onConnectionStatusChanged(final MqttConnection changedConnection)
+	public void onConnectionStatusChanged(final MqttAsyncConnection changedConnection)
 	{
 		final MqttConnectionStatus connectionStatus = changedConnection.getConnectionStatus();
 		

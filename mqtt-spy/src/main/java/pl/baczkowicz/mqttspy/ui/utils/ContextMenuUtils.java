@@ -10,7 +10,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -24,7 +24,7 @@ public class ContextMenuUtils
 	// private final static Logger logger = LoggerFactory.getLogger(ContextMenuUtils.class);
 	
 	public static ContextMenu createSubscriptionTabContextMenu(
-			final MqttConnection connection, final MqttSubscription subscription, 
+			final MqttAsyncConnection connection, final MqttSubscription subscription, 
 			final EventManager eventManager, final SubscriptionManager subscriptionManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
@@ -104,7 +104,7 @@ public class ContextMenuUtils
 	}
 
 	public static ContextMenu createAllSubscriptionsTabContextMenu(final Tab tab,
-			final MqttConnection connection, final EventManager eventManager)
+			final MqttAsyncConnection connection, final EventManager eventManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 
@@ -152,7 +152,7 @@ public class ContextMenuUtils
 	
 	
 
-	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttConnection connection, 
+	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttAsyncConnection connection, 
 			final ConnectionController connectionController, final ConnectionManager connectionManager)
 	{
 		// Context menu

@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -52,7 +52,7 @@ public class SubscriptionManager
 	}
 	
 	public void createSubscription(final Color color, final boolean subscribe, final TabbedSubscriptionDetails subscriptionDetails, 
-			final MqttConnection connection, final ConnectionController connectionController, Object parent)
+			final MqttAsyncConnection connection, final ConnectionController connectionController, Object parent)
 	{
 		logger.info("Creating subscription for " + subscriptionDetails.getTopic());
 		final MqttSubscription subscription = new MqttSubscription(subscriptionDetails.getTopic(),
@@ -107,7 +107,7 @@ public class SubscriptionManager
 	}
 
 	public SubscriptionController createSubscriptionTab(final boolean allTab, final Object parent,
-			final ManagedMessageStoreWithFiltering observableMessageStore, final MqttConnection connection,
+			final ManagedMessageStoreWithFiltering observableMessageStore, final MqttAsyncConnection connection,
 			final MqttSubscription subscription, final ConnectionController connectionController)
 	{
 		// Load a new tab and connection pane

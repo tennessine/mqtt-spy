@@ -5,7 +5,7 @@ package pl.baczkowicz.mqttspy.exceptions;
  * 
  * @author Kamil Baczkowicz
  */
-public class XMLException extends Exception
+public class XMLException extends MqttSpyException
 {
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 7600725489860423132L;

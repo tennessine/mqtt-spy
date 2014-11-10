@@ -30,7 +30,7 @@ public class MqttManager
 
 	private final static Logger logger = LoggerFactory.getLogger(MqttManager.class);
 
-	private Map<Integer, MqttConnection> connections = new HashMap<Integer, MqttConnection>();
+	private Map<Integer, MqttAsyncConnection> connections = new HashMap<Integer, MqttAsyncConnection>();
 	
 	private EventManager eventManager;
 		
@@ -39,10 +39,10 @@ public class MqttManager
 		this.eventManager = eventManager;
 	}
 	
-	public MqttConnection createConnection(final RuntimeConnectionProperties connectionProperties, final Queue<MqttSpyUIEvent> uiEventQueue)
+	public MqttAsyncConnection createConnection(final RuntimeConnectionProperties connectionProperties, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		// Storing all client properties in a simple object
-		final MqttConnection connection = new MqttConnection(connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager, uiEventQueue);
+		final MqttAsyncConnection connection = new MqttAsyncConnection(connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager, uiEventQueue);
 
 		// Store the created connection
 		connections.put(connectionProperties.getConfiguredProperties().getId(), connection);
@@ -50,7 +50,7 @@ public class MqttManager
 		return connection;
 	}
 
-	public MqttConnection connectToBroker(final MqttConnection connection)
+	public MqttAsyncConnection connectToBroker(final MqttAsyncConnection connection)
 	{
 		try
 		{
@@ -106,14 +106,14 @@ public class MqttManager
 		return null;
 	}
 	
-	public MqttConnection connectToBroker(final int connectionId)
+	public MqttAsyncConnection connectToBroker(final int connectionId)
 	{
 		return connectToBroker(connections.get(connectionId));
 	}
 
 	public void disconnectFromBroker(final int connectionId)
 	{
-		final MqttConnection connection = connections.get(connectionId);
+		final MqttAsyncConnection connection = connections.get(connectionId);
 
 		// TODO: check if connected?
 
@@ -143,20 +143,20 @@ public class MqttManager
 
 	public void disconnectAll()
 	{
-		for (final MqttConnection connection : connections.values())
+		for (final MqttAsyncConnection connection : connections.values())
 		{
 			disconnectFromBroker(connection.getId());
 		}
 	}
 	
-	public Collection<MqttConnection> getConnections()
+	public Collection<MqttAsyncConnection> getConnections()
 	{
 		return connections.values();
 	}
 
 	public void close(final int connectionId)
 	{
-		final MqttConnection connection = connections.get(connectionId);
+		final MqttAsyncConnection connection = connections.get(connectionId);
 		connection.setOpened(false);
 	}
 }

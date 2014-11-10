@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mqttspydc:MqttSpyDaemonConfiguration xmlns:mqttspydc="http://baczkowicz.pl/mqtt-spy/daemon/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Connection>
+  			<ServerURI>tcp://localhost</ServerURI>
+			<ClientID>mqtt-spy-logger</ClientID>
+						
+			<CleanSession>true</CleanSession>
+			<ConnectionTimeout>10</ConnectionTimeout>
+			<KeepAliveInterval>10</KeepAliveInterval>
+			
+			<Subscription topic="/test/#" qos="0" />	
+			<Subscription topic="/home/#" qos="0" script="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js" />
+			
+			<Script>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/bedroom.js</Script>
+  </Connection>
+</mqttspydc:MqttSpyDaemonConfiguration>

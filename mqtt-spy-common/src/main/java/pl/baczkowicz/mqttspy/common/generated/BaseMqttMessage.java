@@ -28,17 +28,18 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
 
 
 /**
- * <p>Java class for SubscriptionDetails complex type.
+ * <p>Java class for BaseMqttMessage complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="SubscriptionDetails">
+ * &lt;complexType name="BaseMqttMessage">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;attribute name="topic" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
- *       &lt;attribute name="qos" type="{http://baczkowicz.pl/mqtt-spy/common}qos" default="0" />
- *       &lt;attribute name="script" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="payload" use="required" type="{http://www.w3.org/2001/XMLSchema}string" />
+ *       &lt;attribute name="qos" type="{http://baczkowicz.pl/mqtt-spy/common}qos" />
+ *       &lt;attribute name="retained" type="{http://www.w3.org/2001/XMLSchema}boolean" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -47,17 +48,19 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SubscriptionDetails")
-public class SubscriptionDetails
+@XmlType(name = "BaseMqttMessage")
+public class BaseMqttMessage
     implements CopyTo, Copyable, Equals, HashCode, ToString
 {
 
     @XmlAttribute(name = "topic", required = true)
     protected String topic;
+    @XmlAttribute(name = "payload", required = true)
+    protected String payload;
     @XmlAttribute(name = "qos")
     protected Integer qos;
-    @XmlAttribute(name = "script")
-    protected String script;
+    @XmlAttribute(name = "retained")
+    protected Boolean retained;
 
     /**
      * Gets the value of the topic property.
@@ -84,6 +87,30 @@ public class SubscriptionDetails
     }
 
     /**
+     * Gets the value of the payload property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPayload() {
+        return payload;
+    }
+
+    /**
+     * Sets the value of the payload property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPayload(String value) {
+        this.payload = value;
+    }
+
+    /**
      * Gets the value of the qos property.
      * 
      * @return
@@ -91,12 +118,8 @@ public class SubscriptionDetails
      *     {@link Integer }
      *     
      */
-    public int getQos() {
-        if (qos == null) {
-            return  0;
-        } else {
-            return qos;
-        }
+    public Integer getQos() {
+        return qos;
     }
 
     /**
@@ -112,27 +135,27 @@ public class SubscriptionDetails
     }
 
     /**
-     * Gets the value of the script property.
+     * Gets the value of the retained property.
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link Boolean }
      *     
      */
-    public String getScript() {
-        return script;
+    public Boolean isRetained() {
+        return retained;
     }
 
     /**
-     * Sets the value of the script property.
+     * Sets the value of the retained property.
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link Boolean }
      *     
      */
-    public void setScript(String value) {
-        this.script = value;
+    public void setRetained(Boolean value) {
+        this.retained = value;
     }
 
     public void toString(ToStringBuilder toStringBuilder) {
@@ -142,14 +165,19 @@ public class SubscriptionDetails
             toStringBuilder.append("topic", theTopic);
         }
         {
+            String thePayload;
+            thePayload = this.getPayload();
+            toStringBuilder.append("payload", thePayload);
+        }
+        {
             Integer theQos;
             theQos = this.getQos();
             toStringBuilder.append("qos", theQos);
         }
         {
-            String theScript;
-            theScript = this.getScript();
-            toStringBuilder.append("script", theScript);
+            Boolean theRetained;
+            theRetained = this.isRetained();
+            toStringBuilder.append("retained", theRetained);
         }
     }
 
@@ -160,21 +188,22 @@ public class SubscriptionDetails
     }
 
     public void equals(Object object, EqualsBuilder equalsBuilder) {
-        if (!(object instanceof SubscriptionDetails)) {
+        if (!(object instanceof BaseMqttMessage)) {
             equalsBuilder.appendSuper(false);
             return ;
         }
         if (this == object) {
             return ;
         }
-        final SubscriptionDetails that = ((SubscriptionDetails) object);
+        final BaseMqttMessage that = ((BaseMqttMessage) object);
         equalsBuilder.append(this.getTopic(), that.getTopic());
+        equalsBuilder.append(this.getPayload(), that.getPayload());
         equalsBuilder.append(this.getQos(), that.getQos());
-        equalsBuilder.append(this.getScript(), that.getScript());
+        equalsBuilder.append(this.isRetained(), that.isRetained());
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof SubscriptionDetails)) {
+        if (!(object instanceof BaseMqttMessage)) {
             return false;
         }
         if (this == object) {
@@ -187,8 +216,9 @@ public class SubscriptionDetails
 
     public void hashCode(HashCodeBuilder hashCodeBuilder) {
         hashCodeBuilder.append(this.getTopic());
+        hashCodeBuilder.append(this.getPayload());
         hashCodeBuilder.append(this.getQos());
-        hashCodeBuilder.append(this.getScript());
+        hashCodeBuilder.append(this.isRetained());
     }
 
     public int hashCode() {
@@ -198,12 +228,18 @@ public class SubscriptionDetails
     }
 
     public Object copyTo(Object target, CopyBuilder copyBuilder) {
-        final SubscriptionDetails copy = ((target == null)?((SubscriptionDetails) createCopy()):((SubscriptionDetails) target));
+        final BaseMqttMessage copy = ((target == null)?((BaseMqttMessage) createCopy()):((BaseMqttMessage) target));
         {
             String sourceTopic;
             sourceTopic = this.getTopic();
             String copyTopic = ((String) copyBuilder.copy(sourceTopic));
             copy.setTopic(copyTopic);
+        }
+        {
+            String sourcePayload;
+            sourcePayload = this.getPayload();
+            String copyPayload = ((String) copyBuilder.copy(sourcePayload));
+            copy.setPayload(copyPayload);
         }
         {
             Integer sourceQos;
@@ -212,10 +248,10 @@ public class SubscriptionDetails
             copy.setQos(copyQos);
         }
         {
-            String sourceScript;
-            sourceScript = this.getScript();
-            String copyScript = ((String) copyBuilder.copy(sourceScript));
-            copy.setScript(copyScript);
+            Boolean sourceRetained;
+            sourceRetained = this.isRetained();
+            Boolean copyRetained = ((Boolean) copyBuilder.copy(sourceRetained));
+            copy.setRetained(copyRetained);
         }
         return copy;
     }
@@ -226,7 +262,7 @@ public class SubscriptionDetails
     }
 
     public Object createCopy() {
-        return new SubscriptionDetails();
+        return new BaseMqttMessage();
     }
 
 }

@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
@@ -49,7 +49,7 @@ public class NewSubscriptionController implements Initializable
 
 	private ObservableList<String> subscriptionTopics = FXCollections.observableArrayList();
 
-	private MqttConnection connection;
+	private MqttAsyncConnection connection;
 
 	private List<Color> colors = new ArrayList<Color>();
 
@@ -197,7 +197,7 @@ public class NewSubscriptionController implements Initializable
 		this.connectionController = connectionController;
 	}
 
-	public void setConnection(MqttConnection connection)
+	public void setConnection(MqttAsyncConnection connection)
 	{
 		this.connection = connection;
 	}

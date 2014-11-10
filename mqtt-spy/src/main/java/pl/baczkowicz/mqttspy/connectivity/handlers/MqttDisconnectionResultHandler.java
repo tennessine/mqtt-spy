@@ -7,7 +7,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptSuccessEvent;
 
@@ -17,7 +17,7 @@ public class MqttDisconnectionResultHandler implements IMqttActionListener
 
 	public void onSuccess(IMqttToken asyncActionToken)
 	{
-		final MqttConnection connection = (MqttConnection) asyncActionToken.getUserContext();
+		final MqttAsyncConnection connection = (MqttAsyncConnection) asyncActionToken.getUserContext();
 		try
 		{
 			logger.info(connection.getProperties().getName() + " disconnected");
@@ -31,7 +31,7 @@ public class MqttDisconnectionResultHandler implements IMqttActionListener
 
 	public void onFailure(IMqttToken asyncActionToken, Throwable exception)
 	{
-		final MqttConnection connection = (MqttConnection) asyncActionToken.getUserContext();
+		final MqttAsyncConnection connection = (MqttAsyncConnection) asyncActionToken.getUserContext();
 		Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptFailureEvent(connection, exception)));
 		logger.warn("Disconnecting from " + connection.getProperties().getName() + " failed");
 	}

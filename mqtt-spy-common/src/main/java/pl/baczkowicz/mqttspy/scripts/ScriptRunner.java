@@ -69,16 +69,23 @@ public class ScriptRunner implements Runnable
 	public static void changeState(final ScriptEventManagerInterface eventManager, final String scriptName, 
 			final ScriptRunningState newState, final PublicationScriptProperties script, final Executor executor)
 	{		
-		logger.debug("Changing script state to " + newState);
+		logger.trace("Changing [{}] script's state to [{}]", scriptName, newState);
 		script.setStatus(newState);
 		
-		executor.execute(new Runnable()
-		{			
-			public void run()
-			{						
-				eventManager.notifyScriptStateChange(scriptName, newState);			
-			}
-		});	
+		if (eventManager != null && executor != null)
+		{
+			executor.execute(new Runnable()
+			{			
+				public void run()
+				{							
+					eventManager.notifyScriptStateChange(scriptName, newState);
+				}
+			});
+		}
+		else
+		{
+			logger.info("Changed [{}] script's state to [{}]", scriptName, newState);
+		}
 	}
 	
 	private void changeState(final String scriptName, final ScriptRunningState newState, final PublicationScriptProperties script)

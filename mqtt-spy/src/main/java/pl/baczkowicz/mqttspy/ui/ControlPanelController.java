@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -179,7 +179,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	}
 	
 	@Override
-	public void onConnectionStatusChanged(final MqttConnection changedConnection)
+	public void onConnectionStatusChanged(final MqttAsyncConnection changedConnection)
 	{
 		refreshConnectionsStatus();		
 	}
@@ -263,10 +263,10 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 	
 	private Button createConnectionButton(final ConfiguredConnectionDetails connectionDetails)
 	{
-		MqttConnection connection = null; 
+		MqttAsyncConnection connection = null; 
 		//MqttConnectionStatus status = null;
 		//boolean opening = false;
-		for (final MqttConnection openedConnection : mqttManager.getConnections())
+		for (final MqttAsyncConnection openedConnection : mqttManager.getConnections())
 		{					
 			if (connectionDetails.getId() == openedConnection.getId())
 			{
