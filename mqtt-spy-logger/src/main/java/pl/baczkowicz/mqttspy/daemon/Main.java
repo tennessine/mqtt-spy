@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.Script;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
+import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
@@ -31,15 +32,24 @@ public class Main
 	 */
 	public static void main(String[] args)
 	{
-		if (args.length != 1)
-		{
-			logger.error("Expecting only 1 parameter with the configuration file location");
-			return;
-		}
-		
 		try
 		{
-			final ConfigurationLoader loader = new ConfigurationLoader();			
+			final ConfigurationLoader loader = new ConfigurationLoader();
+			
+			logger.info("#######################################################");
+			logger.info("### Starting mqtt-spy-daemon v{}", loader.getFullVersionName());
+			logger.info("### If you find it useful, please donate at http://fundraise.unicef.org.uk/MyPage/mqtt-spy :)");
+			logger.info("### Visit {} for more information on the project", loader.getProperty(PropertyFileLoader.DOWNLOAD_URL));
+			logger.info("### To get release updates follow @mqtt_spy on Twitter");
+			logger.info("#######################################################");
+			
+			if (args.length != 1)
+			{
+				logger.error("Expecting only 1 parameter with the configuration file location");
+				return;
+			}		
+		
+						
 			
 			loader.loadConfiguration(new File(args[0]));
 			

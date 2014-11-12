@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
+import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
-import pl.baczkowicz.mqttspy.utils.MessageLoggingUtils;
 
 /**
  * This class is responsible for handling received messages. One thread per connection expected here.
@@ -37,7 +37,7 @@ public class MqttMessageHandler implements Runnable
 			{
 				if (queue.size() > 0)
 				{
-					logger.info(MessageLoggingUtils.createLog(queue.remove(), connectionSettings.getMessageLog()));					
+					logger.info(LogParserUtils.createLog(queue.remove(), connectionSettings.getMessageLog()));					
 				}
 				else
 				{

@@ -10,6 +10,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.commons.codec.binary.Base64;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -36,7 +38,7 @@ import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class ConnectionManager
 {
-	// private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
+	private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
 	private final MqttManager mqttManager;
 	
@@ -181,14 +183,18 @@ public class ConnectionManager
 		        for (final LoggedMqttMessage loggedMessage : list)
 		        {
 		        	final MqttMessage mqttMessage = new MqttMessage();
-		        	if (Base64.isBase64(loggedMessage.getPayload().getBytes()))
+		        	
+		        	logger.info("Processing message with payload {}", loggedMessage.getValue());
+		        	
+		        	if (Boolean.TRUE.equals(loggedMessage.isEncoded()))
 		        	{
-		        		mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getPayload()));
+		        		mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getValue()));
 		        	}
 		        	else
 		        	{
-		        		mqttMessage.setPayload(loggedMessage.getPayload().getBytes());
+		        		mqttMessage.setPayload(loggedMessage.getValue().getBytes());
 		        	}
+		        	
 		        	mqttMessage.setQos(loggedMessage.getQos());
 		        	mqttMessage.setRetained(loggedMessage.isRetained());
 		        	

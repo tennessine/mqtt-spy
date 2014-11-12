@@ -8,11 +8,15 @@
 			<ConnectionTimeout>10</ConnectionTimeout>
 			<KeepAliveInterval>10</KeepAliveInterval>
 			
-			<MessageLog>XML_ENCODED_PAYLOAD</MessageLog>
+			<!-- 
+			<MessageLog>XML_WITH_ENCODED_PAYLOAD</MessageLog>
+			 -->
+			<MessageLog>XML_WITH_PLAIN_PAYLOAD</MessageLog>
 			
-			<Subscription topic="/test/#" qos="0" />	
-			<Subscription topic="/home/#" qos="0" scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js" />
-						
+			<Subscription topic="/test/#" qos="0" />
+			<!-- scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js" --> 	
+			<Subscription topic="/home/#" qos="0" scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js"/>
+
 			<BackgroundScript>
 				<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/bedroom.js</File>
 			</BackgroundScript>

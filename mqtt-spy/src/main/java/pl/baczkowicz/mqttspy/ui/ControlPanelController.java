@@ -397,7 +397,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 			@Override
 			public void handle(ActionEvent event)
 			{				
-				application.getHostServices().showDocument(configurationManager.getProperty(ConfigurationManager.UPDATE_URL));			
+				application.getHostServices().showDocument(configurationManager.getProperty(ConfigurationManager.DOWNLOAD_URL));			
 			}
 		});
 		

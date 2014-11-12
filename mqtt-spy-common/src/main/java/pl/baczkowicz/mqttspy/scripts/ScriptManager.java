@@ -85,7 +85,8 @@ public class ScriptManager
 		}
 		else
 		{
-			throw new CriticalException("Cannot instantiate the nashorn javascript engine - most likely you have an imcompatible JVM installed");
+			throw new CriticalException("Cannot instantiate the nashorn javascript engine - most likely you don't have Java 8 installed. "
+					+ "Please either disable scripts in your configuration file or install the appropriate JRE/JDK.");
 		}
 	}
 					

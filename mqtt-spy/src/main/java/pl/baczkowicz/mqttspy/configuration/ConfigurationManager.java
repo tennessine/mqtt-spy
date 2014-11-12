@@ -3,13 +3,11 @@ package pl.baczkowicz.mqttspy.configuration;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
@@ -23,7 +21,6 @@ import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.configuration.generated.MqttSpyConfiguration;
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.events.EventManager;
-import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
@@ -36,15 +33,9 @@ import pl.baczkowicz.mqttspy.xml.XMLParser;
  *
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class ConfigurationManager
+public class ConfigurationManager extends PropertyFileLoader
 {
 	final static Logger logger = LoggerFactory.getLogger(ConfigurationManager.class);
-	
-	public static final String VERSION_PROPERTY = "application.version";
-	
-	public static final String BUILD_PROPERTY = "application.build";
-	
-	public static final String UPDATE_URL = "application.download.url";
 	
 	public static final String VERSION_INFO_URL = "application.update.url";
 	
@@ -72,8 +63,6 @@ public class ConfigurationManager
 
 	private File loadedConfigurationFile;
 
-	private final Properties properties;
-
 	private Exception lastException;
 
 	private EventManager eventManager;
@@ -82,6 +71,8 @@ public class ConfigurationManager
 
 	public ConfigurationManager(final EventManager eventManager) throws XMLException
 	{
+		super(DEFAULT_PROPERTIES_FILE_NAME);
+		
 		this.parser = new XMLParser(PACKAGE, new String[] {COMMON_SCHEMA, SCHEMA});
 					
 		// Create empty configuration
@@ -90,7 +81,6 @@ public class ConfigurationManager
 		this.configuration.setFormatting(new Formatting());		
 		
 		this.eventManager = eventManager;
-		this.properties = readPropertyFile(DEFAULT_PROPERTIES_FILE_NAME);
 	}
 
 	public int getNextAvailableId()
@@ -195,28 +185,7 @@ public class ConfigurationManager
 		}		
 		
 		return false;
-	}
-	
-	public static Properties readPropertyFile(final String location) throws ConfigurationException
-	{
-		final Properties fileProperties = new Properties();
-	
-		try
-		{
-			final InputStream inputStream = ConfigurationManager.class.getResourceAsStream(location);
-			fileProperties.load(inputStream);
-			
-			if (inputStream == null)
-			{
-				throw new FileNotFoundException("Property file '" + location + "' not found in the classpath");
-			}
-		}
-		catch (IOException e)
-		{
-			throw new ConfigurationException("Cannot load the properties file", e);
-		}
-		return fileProperties;
-	}
+	}	
 
 	public boolean saveConfiguration()
 	{
@@ -283,11 +252,6 @@ public class ConfigurationManager
 		this.lastException = lastException;
 	}
 	
-	public String getProperty(final String propertyName)
-	{
-		return properties.getProperty(propertyName, "");
-	}
-	
 	public File getLoadedConfigurationFile()
 	{
 		return loadedConfigurationFile;
@@ -329,22 +293,5 @@ public class ConfigurationManager
 		loadedConfigurationFile = null;
 		lastException =  null;
 		lastUsedId = 0;
-	}
-	
-	public String getBuildNumber()
-	{
-		// TODO: change for release
-		return getProperty(ConfigurationManager.BUILD_PROPERTY);
-		// return "26";
-	}
-	
-	public String getFullVersionNumber()
-	{
-		return getProperty(ConfigurationManager.VERSION_PROPERTY) + "-" + getBuildNumber();
-	}
-	
-	public String getFullVersionName()
-	{
-		return getProperty(ConfigurationManager.VERSION_PROPERTY).replace("-", " ") + " (build " + getBuildNumber() + ")";
 	}
 }

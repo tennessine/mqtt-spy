@@ -7,15 +7,13 @@
 	<!-- === COMMON ========= -->
 	<!-- ==================== -->
 	<xs:complexType name="BaseMqttMessage">
-		<xs:sequence>
-			<xs:element name="Payload" 			type="xs:string" />
-		</xs:sequence>
-		<xs:attribute name="topic" 				type="xs:string" use="required" />
-		<!-- 
-		<xs:attribute name="payload" 			type="xs:string" use="required" />
-		 -->
-		<xs:attribute name="qos" 				type="mqttspycommon:qos" />
-		<xs:attribute name="retained" 			type="xs:boolean" />				
+		 <xs:simpleContent>
+      		<xs:extension base="xs:string">
+        		<xs:attribute name="topic" 				type="xs:string" use="required" />
+        		<xs:attribute name="qos" 				type="mqttspycommon:qos" />
+				<xs:attribute name="retained" 			type="xs:boolean" />
+      		</xs:extension>
+    	</xs:simpleContent>
 	</xs:complexType>		
 			
 	<!-- ==================== -->
@@ -108,25 +106,19 @@
 		<xs:complexContent>
 			<xs:extension base="mqttspycommon:BaseMqttMessage">
 				<xs:attribute name="id" 			type="xs:int" use="required" />			
-				<xs:attribute name="timestamp" 		type="xs:long" use="required" />
-				<xs:attribute name="source" 		type="mqttspycommon:Source" />				
+				<xs:attribute name="timestamp" 		type="xs:long" use="required" />				
 				<xs:attribute name="connection" 	type="xs:string" />
+				<xs:attribute name="subscription" 	type="xs:string" />
+				<xs:attribute name="encoded" 		type="xs:boolean" />
 	        </xs:extension>		
         </xs:complexContent>
 	</xs:complexType>
-	
-	<xs:simpleType name="Source">
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="SUB" />
-			<xs:enumeration value="PUB" />
-		</xs:restriction>
-	</xs:simpleType>
 		
 	<xs:simpleType name="MessageLog">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DISABLED" />
-			<xs:enumeration value="XML_ENCODED_PAYLOAD" />
-			<xs:enumeration value="XML_PLAIN_PAYLOAD" />
+			<xs:enumeration value="XML_WITH_ENCODED_PAYLOAD" />
+			<xs:enumeration value="XML_WITH_PLAIN_PAYLOAD" />
 		</xs:restriction>
 	</xs:simpleType>
  	

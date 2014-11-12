@@ -45,7 +45,7 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 		if (connectionDetails.getLastWillAndTestament() != null)
 		{
 			options.setWill(connectionDetails.getLastWillAndTestament().getTopic(), 
-					Base64.decodeBase64(connectionDetails.getLastWillAndTestament().getPayload()),
+					Base64.decodeBase64(connectionDetails.getLastWillAndTestament().getValue()),
 					connectionDetails.getLastWillAndTestament().getQos(),
 					connectionDetails.getLastWillAndTestament().isRetained());
 		}

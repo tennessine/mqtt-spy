@@ -6,11 +6,12 @@ import java.io.FileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.MqttSpyDaemonConfiguration;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
-public class ConfigurationLoader
+public class ConfigurationLoader extends PropertyFileLoader
 {
 	final static Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 	
@@ -20,12 +21,16 @@ public class ConfigurationLoader
 	
 	public static final String COMMON_SCHEMA = "/mqtt-spy-common.xsd";
 	
+	public static final String DEFAULT_PROPERTIES_FILE_NAME = "/mqtt-spy-daemon.properties";
+	
 	private final XMLParser parser;
 
 	private MqttSpyDaemonConfiguration configuration;
 	
 	public ConfigurationLoader() throws XMLException
 	{
+		super(DEFAULT_PROPERTIES_FILE_NAME);
+		
 		this.parser = new XMLParser(PACKAGE, new String[] {COMMON_SCHEMA, SCHEMA});					
 	}
 	
