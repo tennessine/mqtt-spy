@@ -8,24 +8,30 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.common.generated.BaseConnectionDetails;
+import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 
 public class SimpleMqttAsyncConnection extends BaseMqttConnection
 {
 	final static Logger logger = LoggerFactory.getLogger(SimpleMqttAsyncConnection.class);
 	
-	private final BaseConnectionDetails connectionDetails;
+	private final MqttConnectionDetails connectionDetails;
 	
 	private final MqttConnectOptions options;	
 
-	public SimpleMqttAsyncConnection(final BaseConnectionDetails connectionDetails)
+	public SimpleMqttAsyncConnection(final MqttConnectionDetails connectionDetails)
 	{
 		super();
 		
 		this.connectionDetails = connectionDetails;
 			
 		options = new MqttConnectOptions();
+		
+		if (connectionDetails.getServerURI().size() > 1)
+		{
+			options.setServerURIs((String[]) connectionDetails.getServerURI().toArray());
+		}
+		
 		options.setCleanSession(connectionDetails.isCleanSession());
 		options.setConnectionTimeout(connectionDetails.getConnectionTimeout());
 		options.setKeepAliveInterval(connectionDetails.getKeepAliveInterval());
@@ -56,7 +62,7 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 		{
 			// Creating MQTT client instance
 			client = new MqttAsyncClient(
-					connectionDetails.getServerURI(), 
+					connectionDetails.getServerURI().get(0), 
 					connectionDetails.getClientID(),
 					null);
 			

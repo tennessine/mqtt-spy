@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
@@ -201,7 +201,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	@FXML
 	public void newConnection()
 	{
-		final ConnectionDetails baseConnection = new ConnectionDetails();				
+		final UserInterfaceMqttConnectionDetailsV010 baseConnection = new UserInterfaceMqttConnectionDetailsV010();				
 		baseConnection.setServerURI("127.0.0.1");
 		baseConnection.setClientID(MqttUtils.generateClientIdWithTimestamp(System.getProperty("user.name")));
 		baseConnection.setName(EditConnectionController.composeConnectionName(baseConnection.getClientID(), baseConnection.getServerURI()));

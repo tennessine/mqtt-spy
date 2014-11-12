@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
+import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
+import pl.baczkowicz.mqttspy.common.generated.MessageLog;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
@@ -39,16 +41,19 @@ public class MqttCallbackHandler implements MqttCallback
 	private final Map<String, SubscriptionDetails> subscriptions = new HashMap<String, SubscriptionDetails>();
 
 	private final ScriptManager scriptManager;
+
+	private final DaemonMqttConnectionDetails connectionSettings;
 	
 	private long currentId = 1;
 
-	public MqttCallbackHandler(final BaseMqttConnection connection, final List<SubscriptionDetails> subscriptions, final ScriptManager scriptManager)
+	public MqttCallbackHandler(final BaseMqttConnection connection, final DaemonMqttConnectionDetails connectionSettings, final ScriptManager scriptManager)
 	{
 		this.connection = connection;
+		this.connectionSettings = connectionSettings;
 		this.scriptManager = scriptManager;
-		this.messageHandler = new MqttMessageHandler(messageQueue);
+		this.messageHandler = new MqttMessageHandler(messageQueue, connectionSettings);
 		
-		for (final SubscriptionDetails subscriptionDetails : subscriptions)
+		for (final SubscriptionDetails subscriptionDetails : connectionSettings.getSubscription())
 		{
 			this.subscriptions.put(subscriptionDetails.getTopic(), subscriptionDetails);
 		}
@@ -71,7 +76,10 @@ public class MqttCallbackHandler implements MqttCallback
 		final ReceivedMqttMessage receivedMessage = new ReceivedMqttMessage(currentId, topic, message);
 		
 		// Add the received message to queue for logging
-		messageQueue.add(receivedMessage);
+		if (!MessageLog.DISABLED.equals(connectionSettings.getMessageLog()))
+		{
+			messageQueue.add(receivedMessage);
+		}
 		
 		// Check matching subscriptions
 		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
@@ -81,9 +89,9 @@ public class MqttCallbackHandler implements MqttCallback
 		{
 			final SubscriptionDetails subscriptionDetails = subscriptions.get(matchingSubscription);
 			
-			if (subscriptionDetails.getScript() != null)
+			if (subscriptionDetails.getScriptFile() != null)
 			{
-				final PublicationScriptProperties script = scriptManager.getScript(new File(subscriptionDetails.getScript()));
+				final PublicationScriptProperties script = scriptManager.getScript(new File(subscriptionDetails.getScriptFile()));
 				script.getScriptEngine().put("receivedMessage", receivedMessage);
 				scriptManager.evaluateScriptFile(script);
 			}

@@ -47,13 +47,13 @@
 			<artifactId>mqtt-spy-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+		<!-- 
 		<dependency>
 			<groupId>pl.baczkowicz.mqttspy</groupId>
 			<artifactId>mqtt-spy-daemon</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		
+		 -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>

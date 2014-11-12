@@ -1,7 +1,7 @@
-package pl.baczkowicz.mqttspy.daemon;
+package pl.baczkowicz.mqttspy.logger;
 
+import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
-import pl.baczkowicz.mqttspy.logger.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 public class LogParser extends XMLParser

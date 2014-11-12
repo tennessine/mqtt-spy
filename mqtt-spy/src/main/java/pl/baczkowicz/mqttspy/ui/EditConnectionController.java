@@ -45,11 +45,11 @@ import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
@@ -727,9 +727,9 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		}				
 	}
 
-	private ConnectionDetails readValues()
+	private UserInterfaceMqttConnectionDetailsV010 readValues()
 	{
-		final ConnectionDetails connection = new ConnectionDetails();
+		final UserInterfaceMqttConnectionDetailsV010 connection = new UserInterfaceMqttConnectionDetailsV010();
 		
 		connection.setName(connectionNameText.getText());
 		connection.setServerURI(brokerAddressText.getText());
@@ -789,7 +789,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	
 	private boolean readAndDetectChanges()
 	{
-		final ConnectionDetails connection = readValues();
+		final UserInterfaceMqttConnectionDetailsV010 connection = readValues();
 		boolean changed = !connection.equals(editedConnectionDetails.getSavedValues());
 			
 		logger.debug("Values read. Changed = " + changed);

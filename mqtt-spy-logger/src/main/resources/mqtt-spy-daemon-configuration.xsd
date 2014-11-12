@@ -5,10 +5,25 @@
 			targetNamespace="http://baczkowicz.pl/mqtt-spy/daemon/configuration">
 
 	<xs:import namespace="http://baczkowicz.pl/mqtt-spy/common" />
-
+		
+	<xs:complexType name="DaemonMqttConnectionDetails">
+		<xs:complexContent>
+			<xs:extension base="mqttspycommon:MqttConnectionDetails">
+				<xs:sequence>
+					<xs:element name="MessageLog"			type="mqttspycommon:MessageLog" 			minOccurs="1" maxOccurs="1" />
+		        	<xs:element name="Subscription"			type="mqttspycommon:SubscriptionDetails" 	minOccurs="0" maxOccurs="unbounded" />
+		        	<xs:element name="BackgroundScript"		type="mqttspycommon:Script" 				minOccurs="0" maxOccurs="unbounded" />
+		        	<!-- 
+		        	<xs:element name="MessageLogReplay"		type="mqttspycommon:Replay" 				minOccurs="0" maxOccurs="unbounded" />
+		        	 -->
+				</xs:sequence>	
+	        </xs:extension>		
+        </xs:complexContent>
+	</xs:complexType>
+	
 	<xs:complexType name="MqttSpyDaemonConfiguration">
 		<xs:sequence>
-			<xs:element name="Connection" type="mqttspycommon:BaseConnectionDetailsWithSubscriptionsAndScripts" minOccurs="1" maxOccurs="1"/>			
+			<xs:element name="Connection" type="mqttspydc:DaemonMqttConnectionDetails" minOccurs="1" maxOccurs="1"/>			
 		</xs:sequence>
 	</xs:complexType>
 	

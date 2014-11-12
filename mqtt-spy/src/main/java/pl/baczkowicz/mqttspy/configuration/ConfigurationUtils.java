@@ -13,14 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.Main;
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.storage.MessageList;
 
 public class ConfigurationUtils
 {
 	private final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
 		
-	public static void populateConnectionDefaults(final ConnectionDetails connection)
+	public static void populateConnectionDefaults(final UserInterfaceMqttConnectionDetailsV010 connection)
 	{
 		if (connection.isCleanSession() == null)
 		{

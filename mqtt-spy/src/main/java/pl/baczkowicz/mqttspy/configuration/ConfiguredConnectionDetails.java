@@ -1,8 +1,8 @@
 package pl.baczkowicz.mqttspy.configuration;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 
-public class ConfiguredConnectionDetails extends ConnectionDetails
+public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDetailsV010
 {
 	private int id;
 	
@@ -16,7 +16,7 @@ public class ConfiguredConnectionDetails extends ConnectionDetails
 	
 	private boolean valid;
 
-	private ConnectionDetails lastSavedValues;
+	private UserInterfaceMqttConnectionDetailsV010 lastSavedValues;
 
 	public ConfiguredConnectionDetails()
 	{
@@ -24,7 +24,7 @@ public class ConfiguredConnectionDetails extends ConnectionDetails
 	}
 	
 	public ConfiguredConnectionDetails(final int id, final boolean created, final boolean newConnection,
-			final boolean modified, final ConnectionDetails connectionDetails)
+			final boolean modified, final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
 	{
 		this.id = id;
 		this.modified = modified;
@@ -35,7 +35,7 @@ public class ConfiguredConnectionDetails extends ConnectionDetails
 		setConnectionDetails(connectionDetails);
 	}
 
-	public void setConnectionDetails(final ConnectionDetails connectionDetails)
+	public void setConnectionDetails(final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
 	{
 		if (connectionDetails != null)
 		{
@@ -63,12 +63,12 @@ public class ConfiguredConnectionDetails extends ConnectionDetails
 		this.created = created;
 	}
 
-	public ConnectionDetails getSavedValues()
+	public UserInterfaceMqttConnectionDetailsV010 getSavedValues()
 	{
 		return lastSavedValues;
 	}
 
-	public void setSavedValues(ConnectionDetails savedValues)
+	public void setSavedValues(UserInterfaceMqttConnectionDetailsV010 savedValues)
 	{
 		this.lastSavedValues = savedValues;
 	}

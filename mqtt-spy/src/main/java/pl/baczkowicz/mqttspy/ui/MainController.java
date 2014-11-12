@@ -2,7 +2,6 @@ package pl.baczkowicz.mqttspy.ui;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,19 +32,18 @@ import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
-import pl.baczkowicz.mqttspy.daemon.LogParser;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
-import pl.baczkowicz.mqttspy.logger.generated.LoggedMqttMessage;
+import pl.baczkowicz.mqttspy.logger.LogParser;
+import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
-import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
@@ -343,7 +341,7 @@ public class MainController
 		controlPanelPaneController.refreshConfigurationFileStatus();		
 	}	
 	
-	private boolean completeUserAuthenticationCredentials(final ConnectionDetails connectionDetails)
+	private boolean completeUserAuthenticationCredentials(final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
 	{
 		if (connectionDetails.getUserAuthentication() != null)
 		{
@@ -402,7 +400,7 @@ public class MainController
 		}
 	}
 	
-	public void populateConnectionPanes(final ConnectionDetails connectionDetails, final ConnectionController connectionController)
+	public void populateConnectionPanes(final UserInterfaceMqttConnectionDetailsV010 connectionDetails, final ConnectionController connectionController)
 	{
 		for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
 		{

@@ -14,6 +14,7 @@ import javax.script.SimpleBindings;
 
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.Script;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 
@@ -50,11 +51,11 @@ public class ScriptManager
 		scripts.put(scriptFile, script);
 	}
 	
-	public void addScripts(final List<String> files)
+	public void addScripts(final List<Script> scriptFiles)
 	{
-		for (final String filename : files)
+		for (final Script script : scriptFiles)
 		{
-			addScript(filename);
+			addScript(script.getFile());
 		}
 	}
 	

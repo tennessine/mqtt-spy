@@ -17,11 +17,11 @@ import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Connectivity;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.configuration.generated.MqttSpyConfiguration;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -138,11 +138,19 @@ public class ConfigurationManager
 	
 	private void createConnections()
 	{
-		for (final ConnectionDetails connectionDetails : getConfiguration().getConnectivity().getConnection())
+		for (final Object connectionDetails : getConfiguration().getConnectivity().getConnectionOrConnectionV2())
 		{
-			// Put the defaults at the point of loading the config, so we don't need to do it again
-			ConfigurationUtils.populateConnectionDefaults(connectionDetails);
-			connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, connectionDetails));
+			if (connectionDetails instanceof UserInterfaceMqttConnectionDetailsV010)
+			{
+				// Put the defaults at the point of loading the config, so we don't need to do it again
+				ConfigurationUtils.populateConnectionDefaults((UserInterfaceMqttConnectionDetailsV010) connectionDetails);
+				connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, 
+						(UserInterfaceMqttConnectionDetailsV010) connectionDetails));
+			}
+			else
+			{
+				// TODO: 0.1.1 does not support the new config yet
+			}
 		}		
 	}
 	
@@ -216,8 +224,8 @@ public class ConfigurationManager
 		{
 			try
 			{
-				configuration.getConnectivity().getConnection().clear();
-				configuration.getConnectivity().getConnection().addAll(connections);				
+				configuration.getConnectivity().getConnectionOrConnectionV2().clear();
+				configuration.getConnectivity().getConnectionOrConnectionV2().addAll(connections);				
 				populateMissingFormatters(configuration.getFormatting().getFormatter(), connections);
 				
 				parser.saveToFile(loadedConfigurationFile, 

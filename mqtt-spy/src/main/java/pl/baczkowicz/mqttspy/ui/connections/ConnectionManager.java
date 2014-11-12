@@ -23,7 +23,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.UIEventHandler;
-import pl.baczkowicz.mqttspy.logger.generated.LoggedMqttMessage;
+import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
@@ -181,7 +181,14 @@ public class ConnectionManager
 		        for (final LoggedMqttMessage loggedMessage : list)
 		        {
 		        	final MqttMessage mqttMessage = new MqttMessage();
-		        	mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getPayload()));
+		        	if (Base64.isBase64(loggedMessage.getPayload().getBytes()))
+		        	{
+		        		mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getPayload()));
+		        	}
+		        	else
+		        	{
+		        		mqttMessage.setPayload(loggedMessage.getPayload().getBytes());
+		        	}
 		        	mqttMessage.setQos(loggedMessage.getQos());
 		        	mqttMessage.setRetained(loggedMessage.isRetained());
 		        	

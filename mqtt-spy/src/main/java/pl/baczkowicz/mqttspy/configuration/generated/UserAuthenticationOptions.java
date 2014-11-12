@@ -10,7 +10,7 @@ package pl.baczkowicz.mqttspy.configuration.generated;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
@@ -25,20 +25,22 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBCopyBuilder;
 import org.jvnet.jaxb2_commons.lang.builder.JAXBEqualsBuilder;
 import org.jvnet.jaxb2_commons.lang.builder.JAXBHashCodeBuilder;
 import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
-import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 
 
 /**
- * <p>Java class for TabbedSubscriptionDetails complex type.
+ * <p>Java class for UserAuthenticationOptions complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="TabbedSubscriptionDetails">
+ * &lt;complexType name="UserAuthenticationOptions">
  *   &lt;complexContent>
- *     &lt;extension base="{http://baczkowicz.pl/mqtt-spy/common}SubscriptionDetails">
- *       &lt;attribute name="createTab" type="{http://www.w3.org/2001/XMLSchema}boolean" default="false" />
- *     &lt;/extension>
+ *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
+ *       &lt;sequence>
+ *         &lt;element name="AskForUsername" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *         &lt;element name="AskForPassword" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
+ *       &lt;/sequence>
+ *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
@@ -46,49 +48,61 @@ import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TabbedSubscriptionDetails")
-public class TabbedSubscriptionDetails
-    extends SubscriptionDetails
+@XmlType(name = "UserAuthenticationOptions", propOrder = {
+    "askForUsername",
+    "askForPassword"
+})
+public class UserAuthenticationOptions
     implements CopyTo, Copyable, Equals, HashCode, ToString
 {
 
-    @XmlAttribute(name = "createTab")
-    protected Boolean createTab;
+    @XmlElement(name = "AskForUsername")
+    protected boolean askForUsername;
+    @XmlElement(name = "AskForPassword")
+    protected boolean askForPassword;
 
     /**
-     * Gets the value of the createTab property.
+     * Gets the value of the askForUsername property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
      */
-    public boolean isCreateTab() {
-        if (createTab == null) {
-            return false;
-        } else {
-            return createTab;
-        }
+    public boolean isAskForUsername() {
+        return askForUsername;
     }
 
     /**
-     * Sets the value of the createTab property.
+     * Sets the value of the askForUsername property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
      */
-    public void setCreateTab(Boolean value) {
-        this.createTab = value;
+    public void setAskForUsername(boolean value) {
+        this.askForUsername = value;
+    }
+
+    /**
+     * Gets the value of the askForPassword property.
+     * 
+     */
+    public boolean isAskForPassword() {
+        return askForPassword;
+    }
+
+    /**
+     * Sets the value of the askForPassword property.
+     * 
+     */
+    public void setAskForPassword(boolean value) {
+        this.askForPassword = value;
     }
 
     public void toString(ToStringBuilder toStringBuilder) {
-        super.toString(toStringBuilder);
         {
-            Boolean theCreateTab;
-            theCreateTab = this.isCreateTab();
-            toStringBuilder.append("createTab", theCreateTab);
+            boolean theAskForUsername;
+            theAskForUsername = this.isAskForUsername();
+            toStringBuilder.append("askForUsername", theAskForUsername);
+        }
+        {
+            boolean theAskForPassword;
+            theAskForPassword = this.isAskForPassword();
+            toStringBuilder.append("askForPassword", theAskForPassword);
         }
     }
 
@@ -99,20 +113,20 @@ public class TabbedSubscriptionDetails
     }
 
     public void equals(Object object, EqualsBuilder equalsBuilder) {
-        if (!(object instanceof TabbedSubscriptionDetails)) {
+        if (!(object instanceof UserAuthenticationOptions)) {
             equalsBuilder.appendSuper(false);
             return ;
         }
         if (this == object) {
             return ;
         }
-        super.equals(object, equalsBuilder);
-        final TabbedSubscriptionDetails that = ((TabbedSubscriptionDetails) object);
-        equalsBuilder.append(this.isCreateTab(), that.isCreateTab());
+        final UserAuthenticationOptions that = ((UserAuthenticationOptions) object);
+        equalsBuilder.append(this.isAskForUsername(), that.isAskForUsername());
+        equalsBuilder.append(this.isAskForPassword(), that.isAskForPassword());
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof TabbedSubscriptionDetails)) {
+        if (!(object instanceof UserAuthenticationOptions)) {
             return false;
         }
         if (this == object) {
@@ -124,8 +138,8 @@ public class TabbedSubscriptionDetails
     }
 
     public void hashCode(HashCodeBuilder hashCodeBuilder) {
-        super.hashCode(hashCodeBuilder);
-        hashCodeBuilder.append(this.isCreateTab());
+        hashCodeBuilder.append(this.isAskForUsername());
+        hashCodeBuilder.append(this.isAskForPassword());
     }
 
     public int hashCode() {
@@ -135,13 +149,18 @@ public class TabbedSubscriptionDetails
     }
 
     public Object copyTo(Object target, CopyBuilder copyBuilder) {
-        final TabbedSubscriptionDetails copy = ((target == null)?((TabbedSubscriptionDetails) createCopy()):((TabbedSubscriptionDetails) target));
-        super.copyTo(copy, copyBuilder);
+        final UserAuthenticationOptions copy = ((target == null)?((UserAuthenticationOptions) createCopy()):((UserAuthenticationOptions) target));
         {
-            Boolean sourceCreateTab;
-            sourceCreateTab = this.isCreateTab();
-            Boolean copyCreateTab = ((Boolean) copyBuilder.copy(sourceCreateTab));
-            copy.setCreateTab(copyCreateTab);
+            boolean sourceAskForUsername;
+            sourceAskForUsername = this.isAskForUsername();
+            boolean copyAskForUsername = ((boolean) copyBuilder.copy(sourceAskForUsername));
+            copy.setAskForUsername(copyAskForUsername);
+        }
+        {
+            boolean sourceAskForPassword;
+            sourceAskForPassword = this.isAskForPassword();
+            boolean copyAskForPassword = ((boolean) copyBuilder.copy(sourceAskForPassword));
+            copy.setAskForPassword(copyAskForPassword);
         }
         return copy;
     }
@@ -152,7 +171,7 @@ public class TabbedSubscriptionDetails
     }
 
     public Object createCopy() {
-        return new TabbedSubscriptionDetails();
+        return new UserAuthenticationOptions();
     }
 
 }

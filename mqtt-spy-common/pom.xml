@@ -194,6 +194,7 @@
 			    <artifactId>maven-jaxb2-plugin</artifactId>
 			    <version>0.9.0</version>
 			    <executions>
+			    
 			        <execution>
 			            <id>configuration</id>
 			            <phase>generate-resources</phase>
@@ -225,7 +226,7 @@
 							</plugins>
 			            </configuration>			            			          
 			        </execution>			       
-			        
+			        			 
 			    </executions>			    
 			</plugin> 
 			 

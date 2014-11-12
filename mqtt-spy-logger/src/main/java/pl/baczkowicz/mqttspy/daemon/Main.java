@@ -8,10 +8,11 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.common.generated.BaseConnectionDetailsWithSubscriptionsAndScripts;
+import pl.baczkowicz.mqttspy.common.generated.Script;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
+import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -42,11 +43,11 @@ public class Main
 			
 			loader.loadConfiguration(new File(args[0]));
 			
-			final BaseConnectionDetailsWithSubscriptionsAndScripts connectionSettings = loader.getConfiguration().getConnection();
+			final DaemonMqttConnectionDetails connectionSettings = loader.getConfiguration().getConnection();
 
 			final SimpleMqttAsyncConnection connection = new SimpleMqttAsyncConnection(connectionSettings);
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
-			connection.createClient(new MqttCallbackHandler(connection, connectionSettings.getSubscription(), scriptManager));
+			connection.createClient(new MqttCallbackHandler(connection, connectionSettings, scriptManager));
 			connection.connect();
 			
 			logger.info("Successfully connected to " + connectionSettings.getServerURI());
@@ -55,9 +56,9 @@ public class Main
 			// Subscribe to all configured subscriptions
 			for (final SubscriptionDetails subscription : connectionSettings.getSubscription())
 			{	
-				if (subscription.getScript() != null)
+				if (subscription.getScriptFile() != null)
 				{
-					scriptManager.addScript(subscription.getScript());
+					scriptManager.addScript(subscription.getScriptFile());
 				}
 					
 				connection.subscribe(subscription.getTopic(), subscription.getQos());
@@ -65,10 +66,10 @@ public class Main
 			}
 			
 			// Run all configured scripts
-			scriptManager.addScripts(connectionSettings.getScript());
-			for (final String script : connectionSettings.getScript())
+			scriptManager.addScripts(connectionSettings.getBackgroundScript());
+			for (final Script script : connectionSettings.getBackgroundScript())
 			{
-				scriptManager.evaluateScriptFile(new File(script));
+				scriptManager.evaluateScriptFile(new File(script.getFile()));
 			}
 		}
 		catch (XMLException e)

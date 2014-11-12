@@ -263,57 +263,7 @@
 								</plugin>
 							</plugins>
 			            </configuration>			            			          
-			        </execution>
-			        
-			        <execution>
-			            <id>logger</id>
-			            <phase>generate-resources</phase>
-			            <goals>
-			                <goal>generate</goal>
-			            </goals>
-			            <configuration>
-			                <schemaDirectory>src/main/resources/</schemaDirectory>
-			                <schemaIncludes>
-			                    <include>mqtt-spy-logger.xsd</include>
-			                </schemaIncludes>			                 
-			                <generateDirectory>src/main/java/</generateDirectory>			                
-			                <generatePackage>pl.baczkowicz.mqttspy.logger.generated</generatePackage>
-			                <removeOldOutput>false</removeOldOutput>
-			                
-			                <catalogs>
-			                	<catalog>
-			                		<dependencyResource>
-			                			<groupId>pl.baczkowicz.mqttspy</groupId>
-			                			<artifactId>mqtt-spy-common</artifactId>
-			                			<resource>mqtt-spy-common.catalog</resource>
-			                		</dependencyResource>
-			                	</catalog>
-			                </catalogs>
-			                
-			                <episode>false</episode>
-			                
-			                <episodes>
-			                	<episode>
-			                		<groupId>pl.baczkowicz.mqttspy</groupId>
-			                		<artifactId>mqtt-spy-common</artifactId>
-			                	</episode>
-			                </episodes>
-			                
-			                <args>			                
-						        <arg>-XtoString</arg>
-						        <arg>-Xequals</arg>
-						        <arg>-XhashCode</arg>						        
-                    			<arg>-Xcopyable</arg>					    
-			                </args>						 
-			                <plugins>
-								<plugin>
-									<groupId>org.jvnet.jaxb2_commons</groupId>
-									<artifactId>jaxb2-basics</artifactId>
-									<version>0.5.0</version>
-								</plugin>
-							</plugins>
-			            </configuration>			            			          
-			        </execution>			       
+			        </execution>			              
 			        
 			    </executions>			    
 			</plugin> 

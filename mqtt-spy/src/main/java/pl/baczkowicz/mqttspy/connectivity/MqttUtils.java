@@ -3,7 +3,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import pl.baczkowicz.mqttspy.configuration.generated.ConnectionDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 
 public class MqttUtils
@@ -67,7 +67,7 @@ public class MqttUtils
 		return MqttManager.TCP_PREFIX + serverURI;
 	}
 	
-	public static String validateConnectionDetails(final ConnectionDetails connectionDetails, final boolean finalCheck)
+	public static String validateConnectionDetails(final UserInterfaceMqttConnectionDetailsV010 connectionDetails, final boolean finalCheck)
 	{
 		if (connectionDetails.getServerURI() == null
 				|| connectionDetails.getServerURI().trim().isEmpty())
