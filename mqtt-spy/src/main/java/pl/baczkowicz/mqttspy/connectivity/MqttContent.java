@@ -27,6 +27,12 @@ public class MqttContent extends ReceivedMqttMessage
 		super(id, topic, message, date);
 		this.formattedPayload = new String(message.getPayload());
 	}
+	
+	public MqttContent(final ReceivedMqttMessage message)
+	{
+		super(message.getId(), message.getTopic(), message.getMessage(), message.getDate());
+		this.formattedPayload = new String(message.getMessage().getPayload());
+	}
 
 	public MqttSubscription getSubscription()
 	{

@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.ui.connections;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,16 +7,15 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.apache.commons.codec.binary.Base64;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
@@ -25,7 +23,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.UIEventHandler;
-import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
@@ -38,7 +36,7 @@ import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class ConnectionManager
 {
-	private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
+	// private final static Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
 	private final MqttManager mqttManager;
 	
@@ -133,7 +131,7 @@ public class ConnectionManager
 		});		
 	}
 	
-	public void loadReplayTab(final MainController mainController, final Object parent, final String name, final List<LoggedMqttMessage> list)
+	public void loadReplayTab(final MainController mainController, final Object parent, final String name, final List<ReceivedMqttMessage> list)
 	{		
 		// Load a new tab and connection pane
 		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
@@ -147,7 +145,7 @@ public class ConnectionManager
 		connectionController.setStatisticsManager(statisticsManager);
 		connectionController.setReplayMode(true);
 		
-		final Tab connectionTab = createConnectionTab(name, connectionPane, connectionController);
+		final Tab replayTab = createConnectionTab(name, connectionPane, connectionController);
 		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
 		
         final ManagedMessageStoreWithFiltering store = new ManagedMessageStoreWithFiltering(
@@ -166,9 +164,9 @@ public class ConnectionManager
 				connectionController.init();
 				subscriptionController.init();				
 								
-				mainController.addConnectionTab(connectionTab);
-				// TODO
-				//connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
+				mainController.addConnectionTab(replayTab);
+				
+				replayTab.setContextMenu(ContextMenuUtils.createReplayMenu(replayTab));
 				//subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
 								
 				// Add "All" subscription tab
@@ -176,29 +174,12 @@ public class ConnectionManager
 				connectionController.getSubscriptionTabs().getTabs().add(subscriptionController.getTab());							
 				
 				// Apply perspective
-				//mainController.showPerspective(connectionController);
 				connectionController.showReplayMode();
 				
 				// Process the messages
-		        for (final LoggedMqttMessage loggedMessage : list)
-		        {
-		        	final MqttMessage mqttMessage = new MqttMessage();
-		        	
-		        	logger.info("Processing message with payload {}", loggedMessage.getValue());
-		        	
-		        	if (Boolean.TRUE.equals(loggedMessage.isEncoded()))
-		        	{
-		        		mqttMessage.setPayload(Base64.decodeBase64(loggedMessage.getValue()));
-		        	}
-		        	else
-		        	{
-		        		mqttMessage.setPayload(loggedMessage.getValue().getBytes());
-		        	}
-		        	
-		        	mqttMessage.setQos(loggedMessage.getQos());
-		        	mqttMessage.setRetained(loggedMessage.isRetained());
-		        	
-		        	store.messageReceived(new MqttContent(loggedMessage.getId(), loggedMessage.getTopic(), mqttMessage, new Date(loggedMessage.getTimestamp())));
+		        for (final ReceivedMqttMessage mqttMessage : list)
+		        {		        	
+		        	store.messageReceived(new MqttContent(mqttMessage));
 		        }
 			}
 		});		

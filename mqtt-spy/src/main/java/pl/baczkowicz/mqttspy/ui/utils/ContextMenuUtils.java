@@ -250,4 +250,24 @@ public class ContextMenuUtils
 
 		return contextMenu;
 	}
+	
+	public static ContextMenu createReplayMenu(final Tab tab)
+	{
+		// Context menu
+		ContextMenu contextMenu = new ContextMenu();
+
+		MenuItem closedItem = new MenuItem("[Tab] Close");
+		closedItem.setOnAction(new EventHandler<ActionEvent>()
+		{			
+			@Override
+			public void handle(ActionEvent event)
+			{
+				TabUtils.requestClose(tab);				
+			}
+		});
+		
+		contextMenu.getItems().add(closedItem);
+
+		return contextMenu;
+	}
 }

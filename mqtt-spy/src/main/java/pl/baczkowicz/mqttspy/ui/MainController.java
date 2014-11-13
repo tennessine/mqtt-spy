@@ -1,14 +1,12 @@
 package pl.baczkowicz.mqttspy.ui;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,10 +23,12 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
+import org.controlsfx.dialog.Dialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
+import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
@@ -39,14 +39,16 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
+import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
-import pl.baczkowicz.mqttspy.logger.LogParser;
-import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
+import pl.baczkowicz.mqttspy.logger.LogParserUtils;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
+import pl.baczkowicz.mqttspy.ui.utils.TaskWithProgressUpdater;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class MainController
@@ -136,38 +138,67 @@ public class MainController
 		final File selectedFile = fileChooser.showOpenDialog(getParentWindow());
 
 		if (selectedFile != null)
-		{
-			try
+		{			
+			final MainController controller = this;
+			
+			final TaskWithProgressUpdater<List<ReceivedMqttMessage>> readAndProcess = new TaskWithProgressUpdater<List<ReceivedMqttMessage>>()
 			{
-				final LogParser parser = new LogParser();
-				
-				BufferedReader in = new BufferedReader(new FileReader(selectedFile));
-		        String str;
-		
-
-		        
-		        final List<LoggedMqttMessage> list = new ArrayList<>();
-		        while((str = in.readLine()) != null)
-		        {
-		        	try
-		        	{
-		        		list.add(parser.parse(str));
-		        	}
-		        	catch (XMLException e)
-		        	{
-		        		logger.error("Can't process message " + str, e);
-		        	}
-		        }
-		        
-		        in.close();
-		        logger.info("Processed {} messages from {}", list.size(), selectedFile.getAbsoluteFile());		        		       
-		        
-				connectionManager.loadReplayTab(this, this, selectedFile.getName(), list);
-			}
-			catch (IOException | XMLException e)
-			{
-				logger.error("Can't open the message log file at " + selectedFile.getAbsolutePath(), e);
-			}
+				@Override
+				protected List<ReceivedMqttMessage> call() throws Exception
+				{
+					updateMessage("Please wait - reading message log [1/4]");
+					updateProgress(0, 4);
+					final List<String> fileContent = LogParserUtils.readMessageLog(selectedFile);					
+					final long totalItems = fileContent.size();
+					updateProgress(totalItems, totalItems * 4);
+					
+					updateMessage("Please wait - parsing " + fileContent.size() + " messages [2/4]");					
+					final List<LoggedMqttMessage> loggedMessages = LogParserUtils.parseMessageLog(fileContent, this, totalItems, totalItems * 4);
+					updateProgress(totalItems * 2, totalItems * 4);
+										
+					updateMessage("Please wait - processing " + loggedMessages.size() + " messages [3/4]");					
+					final List<ReceivedMqttMessage> processedMessages = LogParserUtils.processMessageLog(loggedMessages, this, totalItems * 2, totalItems * 4);
+					updateProgress(totalItems * 3, totalItems * 4);
+					
+					updateMessage("Please wait - displaying " + loggedMessages.size() + " messages [4/4]");	
+					Platform.runLater(new Runnable()
+					{							
+						@Override
+						public void run()
+						{
+							connectionManager.loadReplayTab(controller, controller, selectedFile.getName(), processedMessages);								
+						}
+					});	
+					updateMessage("Finished!");
+					updateProgress(4, 4);
+					Thread.sleep(500);
+					
+					return processedMessages;					
+				}
+			};
+			Dialogs.create().showWorkerProgress(readAndProcess);
+			
+			new Thread(readAndProcess).start();
+			
+//			new Thread(new Runnable()
+//			{					
+//				@Override
+//				public void run()
+//				{
+////					try
+////					{
+//						new Thread(readAndProcess).start();
+//						
+//						//final List<ReceivedMqttMessage> list = readAndProcess.get();					        		      
+////				        							
+////						
+////					}
+////					catch (InterruptedException | ExecutionException e)
+////					{
+////						logger.error("Can't open the message log file at " + selectedFile.getAbsolutePath(), e);
+////					}
+//				}
+//			}).start();			
 		}
 	}
 	
