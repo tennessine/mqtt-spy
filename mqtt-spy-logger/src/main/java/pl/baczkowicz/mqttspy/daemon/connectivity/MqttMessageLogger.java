@@ -15,15 +15,15 @@ import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
  * @author Kamil Baczkowicz
  *
  */
-public class MqttMessageHandler implements Runnable
+public class MqttMessageLogger implements Runnable
 {
-	private final static Logger logger = LoggerFactory.getLogger(MqttMessageHandler.class);
+	private final static Logger logger = LoggerFactory.getLogger(MqttMessageLogger.class);
 	
 	private final Queue<ReceivedMqttMessage> queue;
 
 	private final DaemonMqttConnectionDetails connectionSettings;
 
-	public MqttMessageHandler(final Queue<ReceivedMqttMessage> queue, final DaemonMqttConnectionDetails connectionSettings)
+	public MqttMessageLogger(final Queue<ReceivedMqttMessage> queue, final DaemonMqttConnectionDetails connectionSettings)
 	{
 		this.queue = queue;
 		this.connectionSettings = connectionSettings;

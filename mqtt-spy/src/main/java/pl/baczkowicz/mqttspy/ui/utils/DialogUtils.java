@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
@@ -261,5 +262,10 @@ public class DialogUtils
 		}
 		
 		return configurationFileCreated;
+	}
+
+	public static void showWorkerDialog(final Task<?> readAndProcess)
+	{
+		Dialogs.create().showWorkerProgress(readAndProcess);
 	}
 }

@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
+import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ClearTabObserver;
@@ -131,13 +132,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 
 	private EventManager eventManager;
 
-	// private StatisticsManager statisticsManager;
-
-	// private Label summaryTitledPaneTitleLabel;
-
 	private ConnectionController connectionController;
-
-	// private Label titleLabel;
 
 	private Label statsLabel;
 
@@ -149,82 +144,7 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 
 	private boolean replayMode;
 
-	public SubscriptionController()
-	{
-		// eventDispatcher = new EventDispatcher();
-		// eventDispatcher.addObserver(this);
-	}
-	
-	public void setReplayMode(final boolean value)
-	{
-		replayMode = value;
-	}
-	
-	public void setDetailedViewVisibility(final boolean visible)
-	{
-		messagePaneController.setDetailedViewVisibility(visible);
-	}
-	
-	public void toggleDetailedViewVisibility()
-	{
-		messagePaneController.toggleDetailedViewVisibility();
-	}
-	
-	@Override
-	public void onClearTab(final ManagedMessageStoreWithFiltering subscription)
-	{	
-		messagePaneController.clear();
-		messageNavigationPaneController.clear();
-		
-		// TODO: not sure what this is for...
-		store.setAllShowValues(false);		
-	}
-	
-	public void onSubscriptionStatusChanged(final MqttSubscription changedSubscription)
-	{
-		subscription = changedSubscription;
-		updateContextMenu();
-	}
-
-	@FXML
-	public void formatWholeMessage()
-	{
-		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
-	
-		// formattingMenuButton.setText(store.getFormatter().getName());
-		eventManager.notifyFormatChanged(store);
-	}
-	
-	@FXML
-	public void formatSelection()
-	{
-		final FormatterDetails messageFormat = (FormatterDetails) selectionFormat.getSelectedToggle().getUserData();
-		
-		if (messageFormat != null)
-		{
-			// formattingMenuButton.setText("[Selection] " + messageFormat.getName());
-		}
-		else
-		{
-			// formattingMenuButton.setText(((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData()).getName());
-		}
-		messagePaneController.formatSelection(messageFormat);
-	}
-
-	public void updateMinHeights()
-	{
-		if (summaryTitledPane.isExpanded())
-		{
-			topicFilterBox.setVisible(true);
-			summaryTitledPane.setMinHeight(MIN_EXPANDED_SUMMARY_PANE_HEIGHT);
-		}
-		else
-		{
-			topicFilterBox.setVisible(false);
-			summaryTitledPane.setMinHeight(MIN_COLLAPSED_SUMMARY_PANE_HEIGHT);
-			splitPane.setDividerPosition(0, 0.95);
-		}
-	}
+	private Formatting formatting;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{			
@@ -317,16 +237,35 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		eventManager.registerMessageAddedObserver(messageNavigationPaneController, store.getMessageList());
 		eventManager.registerMessageRemovedObserver(messageNavigationPaneController, store.getMessageList());
 		
-		if (connectionProperties != null && connectionProperties.getFormatter() != null)
+		if (formatting.getFormatter().size() > 0)
 		{
 			customFormatterMenu.setDisable(false);
-			final RadioMenuItem customFormatterMenuItem = new RadioMenuItem(connectionProperties.getFormatter().getName());
+		}
+		
+		for (final FormatterDetails formatter : formatting.getFormatter())
+		{
+			final RadioMenuItem customFormatterMenuItem = new RadioMenuItem(formatter.getName());
 			customFormatterMenuItem.setToggleGroup(wholeMessageFormat);			
 			// TODO: check if this is really a custom one
-			customFormatterMenuItem.setUserData(connectionProperties.getFormatter());
-			customFormatterMenuItem.setSelected(true);
+			customFormatterMenuItem.setUserData(formatter);			
 			customFormatterMenu.getItems().add(customFormatterMenuItem);
+			
+			if (connectionProperties != null && formatter.equals(connectionProperties.getFormatter()))
+			{
+				customFormatterMenuItem.setSelected(true);
+			}
 		}
+		
+//		if (connectionProperties != null && connectionProperties.getFormatter() != null)
+//		{
+//		
+//			final RadioMenuItem customFormatterMenuItem = new RadioMenuItem(connectionProperties.getFormatter().getName());
+//			customFormatterMenuItem.setToggleGroup(wholeMessageFormat);			
+//			// TODO: check if this is really a custom one
+//			customFormatterMenuItem.setUserData(connectionProperties.getFormatter());
+//			customFormatterMenuItem.setSelected(true);
+//			customFormatterMenu.getItems().add(customFormatterMenuItem);
+//		}
 		
 		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());	
 		
@@ -396,6 +335,82 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		}
 		
 		// logger.info("init(); finished on SubscriptionController");
+	}
+
+	public void setReplayMode(final boolean value)
+	{
+		replayMode = value;
+	}
+	
+	public void setFormatting(final Formatting formatting)
+	{
+		this.formatting = formatting;
+	}
+	
+	public void setDetailedViewVisibility(final boolean visible)
+	{
+		messagePaneController.setDetailedViewVisibility(visible);
+	}
+	
+	public void toggleDetailedViewVisibility()
+	{
+		messagePaneController.toggleDetailedViewVisibility();
+	}
+	
+	@Override
+	public void onClearTab(final ManagedMessageStoreWithFiltering subscription)
+	{	
+		messagePaneController.clear();
+		messageNavigationPaneController.clear();
+		
+		// TODO: not sure what this is for...
+		store.setAllShowValues(false);		
+	}
+	
+	public void onSubscriptionStatusChanged(final MqttSubscription changedSubscription)
+	{
+		subscription = changedSubscription;
+		updateContextMenu();
+	}
+
+	@FXML
+	public void formatWholeMessage()
+	{
+		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
+	
+		// formattingMenuButton.setText(store.getFormatter().getName());
+		eventManager.notifyFormatChanged(store);
+	}
+	
+	@FXML
+	public void formatSelection()
+	{
+		final FormatterDetails messageFormat = (FormatterDetails) selectionFormat.getSelectedToggle().getUserData();
+		
+		if (messageFormat != null)
+		{
+			// formattingMenuButton.setText("[Selection] " + messageFormat.getName());
+		}
+		else
+		{
+			// formattingMenuButton.setText(((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData()).getName());
+		}
+		messagePaneController.formatSelection(messageFormat);
+	}
+
+	public void updateMinHeights()
+	{
+		if (summaryTitledPane.isExpanded())
+		{
+			topicFilterBox.setVisible(true);
+			summaryTitledPane.setMinHeight(MIN_EXPANDED_SUMMARY_PANE_HEIGHT);
+		}
+		else
+		{
+			topicFilterBox.setVisible(false);
+			summaryTitledPane.setMinHeight(MIN_COLLAPSED_SUMMARY_PANE_HEIGHT);
+			splitPane.setDividerPosition(0, 0.95);
+		}
 	}
 	
 	private void updateTitleWidth(final int value)

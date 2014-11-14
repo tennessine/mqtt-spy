@@ -1,9 +1,7 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
-import org.apache.commons.codec.binary.Base64;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,38 +15,12 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 	
 	private final MqttConnectionDetails connectionDetails;
 	
-	private final MqttConnectOptions options;	
 
 	public SimpleMqttAsyncConnection(final MqttConnectionDetails connectionDetails)
 	{
-		super();
+		super(connectionDetails);
 		
-		this.connectionDetails = connectionDetails;
-			
-		options = new MqttConnectOptions();
-		
-		if (connectionDetails.getServerURI().size() > 1)
-		{
-			options.setServerURIs((String[]) connectionDetails.getServerURI().toArray());
-		}
-		
-		options.setCleanSession(connectionDetails.isCleanSession());
-		options.setConnectionTimeout(connectionDetails.getConnectionTimeout());
-		options.setKeepAliveInterval(connectionDetails.getKeepAliveInterval());
-		
-		if (connectionDetails.getUserCredentials() != null)
-		{
-			options.setUserName(connectionDetails.getUserCredentials().getUsername());
-			options.setPassword(connectionDetails.getUserCredentials().getPassword().toCharArray());
-		}
-		
-		if (connectionDetails.getLastWillAndTestament() != null)
-		{
-			options.setWill(connectionDetails.getLastWillAndTestament().getTopic(), 
-					Base64.decodeBase64(connectionDetails.getLastWillAndTestament().getValue()),
-					connectionDetails.getLastWillAndTestament().getQos(),
-					connectionDetails.getLastWillAndTestament().isRetained());
-		}
+		this.connectionDetails = connectionDetails;		
 	}
 	
 	public void connect() throws MqttSpyException

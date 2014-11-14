@@ -16,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
@@ -44,18 +45,21 @@ public class ConnectionManager
 	
 	private final StatisticsManager statisticsManager;
 	
+	private final ConfigurationManager configurationManager;
+	
 	private final Map<Integer, ConnectionController> connectionControllers = new HashMap<>();
 	private final Map<Integer, Tab> connectionTabs = new HashMap<>();
 	private final Map<Integer, SubscriptionManager> subscriptionManagers = new HashMap<>();
 	private final Queue<MqttSpyUIEvent> uiEventQueue;
 
-	public ConnectionManager(final MqttManager mqttManager, final EventManager eventManager, final StatisticsManager statisticsManager)
+	public ConnectionManager(final MqttManager mqttManager, final EventManager eventManager, final StatisticsManager statisticsManager, final ConfigurationManager configurationManager)
 	{
 		this.uiEventQueue = new LinkedBlockingQueue<>();
 		
 		this.mqttManager = mqttManager;
 		this.eventManager = eventManager;
 		this.statisticsManager = statisticsManager;
+		this.configurationManager = configurationManager;
 		
 		new Thread(new UIEventHandler(uiEventQueue, eventManager)).start();
 	}
@@ -79,11 +83,12 @@ public class ConnectionManager
 		connectionController.setStatisticsManager(statisticsManager);
 		
 		final Tab connectionTab = createConnectionTab(connection.getProperties().getName(), connectionPane, connectionController);
-		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
+		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, configurationManager, uiEventQueue);			
 		
 		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
-				true, parent, connection, connection, null, connectionController);
+				true, parent, connection.getStore(), connection, null, connectionController);
 		subscriptionController.setConnectionController(connectionController);
+		subscriptionController.setFormatting(configurationManager.getConfiguration().getFormatting());
 		
 		final ConnectionManager connectionManager = this;
 		
@@ -146,7 +151,7 @@ public class ConnectionManager
 		connectionController.setReplayMode(true);
 		
 		final Tab replayTab = createConnectionTab(name, connectionPane, connectionController);
-		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, uiEventQueue);			
+		final SubscriptionManager subscriptionManager = new SubscriptionManager(eventManager, configurationManager, uiEventQueue);			
 		
         final ManagedMessageStoreWithFiltering store = new ManagedMessageStoreWithFiltering(
         		name, 0, list.size(), list.size(), uiEventQueue, eventManager);               
@@ -154,6 +159,7 @@ public class ConnectionManager
 		final SubscriptionController subscriptionController = subscriptionManager.createSubscriptionTab(
 				true, parent, store, null, null, connectionController);
 		subscriptionController.setConnectionController(connectionController);
+		subscriptionController.setFormatting(configurationManager.getConfiguration().getFormatting());
 		subscriptionController.setReplayMode(true);
 		
 		Platform.runLater(new Runnable()

@@ -2,11 +2,9 @@ package pl.baczkowicz.mqttspy.ui;
 
 import java.io.File;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +21,6 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
-import org.controlsfx.dialog.Dialogs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +36,6 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
-import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
@@ -100,6 +96,8 @@ public class MainController
 	private StatisticsManager statisticsManager;
 
 	private ConnectionManager connectionManager;
+
+	private Stage converterStage;
 	
 	public MainController() throws XMLException
 	{
@@ -110,7 +108,7 @@ public class MainController
 		
 		this.mqttManager = new MqttManager(eventManager);
 		this.configurationManager = new ConfigurationManager(eventManager);		
-		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager);			
+		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager, configurationManager);			
 	}
 
 	@FXML
@@ -125,6 +123,17 @@ public class MainController
 	public void editConnections()
 	{
 		showEditConnectionsWindow(false);
+	}
+	
+	@FXML
+	public void showConverter()
+	{
+		if (converterStage == null)
+		{
+			initialiseConverterWindow();
+		}
+		
+		converterStage.show();
 	}
 	
 	@FXML
@@ -176,29 +185,10 @@ public class MainController
 					return processedMessages;					
 				}
 			};
-			Dialogs.create().showWorkerProgress(readAndProcess);
 			
-			new Thread(readAndProcess).start();
+			DialogUtils.showWorkerDialog(readAndProcess);
 			
-//			new Thread(new Runnable()
-//			{					
-//				@Override
-//				public void run()
-//				{
-////					try
-////					{
-//						new Thread(readAndProcess).start();
-//						
-//						//final List<ReceivedMqttMessage> list = readAndProcess.get();					        		      
-////				        							
-////						
-////					}
-////					catch (InterruptedException | ExecutionException e)
-////					{
-////						logger.error("Can't open the message log file at " + selectedFile.getAbsolutePath(), e);
-////					}
-//				}
-//			}).start();			
+			new Thread(readAndProcess).start();			
 		}
 	}
 	
@@ -228,6 +218,21 @@ public class MainController
 		editConnectionsStage.initModality(Modality.WINDOW_MODAL);
 		editConnectionsStage.initOwner(getParentWindow());
 		editConnectionsStage.setScene(scene);
+	}
+	
+	private void initialiseConverterWindow()
+	{
+		final FXMLLoader loader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "ConverterWindow.fxml");
+		final AnchorPane converterWindow = Utils.loadAnchorPane(loader);
+		
+		Scene scene = new Scene(converterWindow);
+		scene.getStylesheets().addAll(mainPane.getScene().getStylesheets());		
+
+		converterStage = new Stage();
+		converterStage.setTitle("Converter");		
+		converterStage.setAlwaysOnTop(true);
+		converterStage.initOwner(getParentWindow());
+		converterStage.setScene(scene);
 	}
 	
 	private void showEditConnectionsWindow(final boolean createNew)

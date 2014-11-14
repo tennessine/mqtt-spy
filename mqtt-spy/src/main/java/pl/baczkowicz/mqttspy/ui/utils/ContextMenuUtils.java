@@ -140,9 +140,9 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				eventManager.notifyClearHistory(connection);
+				eventManager.notifyClearHistory(connection.getStore());
 				StatisticsManager.resetMessagesReceived(connection.getId());
-				connection.clear();
+				connection.getStore().clear();
 			}
 		});
 		contextMenu.getItems().add(clearItem);

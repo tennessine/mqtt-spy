@@ -23,7 +23,8 @@ import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implements MqttConnectionInterface
+// TODO: use BaseMqttConnection
+public class MqttAsyncConnection implements MqttConnectionInterface
 {
 	final static Logger logger = LoggerFactory.getLogger(MqttAsyncConnection.class);
 
@@ -42,6 +43,8 @@ public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implem
 	private boolean isOpened;
 	
 	private boolean isOpening;
+	
+	private final ManagedMessageStoreWithFiltering store;
 
 	/** Maximum number of messages to store for this connection in each message store. */
 	private int preferredStoreSize;
@@ -52,22 +55,21 @@ public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implem
 
 	private StatisticsManager statisticsManager;
 
-	public void setStatisticsManager(StatisticsManager statisticsManager)
-	{
-		this.statisticsManager = statisticsManager;
-	}
+	private EventManager eventManager;
 
 	public MqttAsyncConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
-	{
+	{ 
 		// Max size is double the preferred size
-		super(properties.getName(), 
+		store = new ManagedMessageStoreWithFiltering(properties.getName(), 
 				properties.getConfiguredProperties().getMinMessagesStoredPerTopic(), 
 				properties.getMaxMessagesStored(), 
 				properties.getMaxMessagesStored() * 2, 
 				uiEventQueue, eventManager);
+		
 		this.setPreferredStoreSize(properties.getMaxMessagesStored());
 		this.properties = properties;
+		this.eventManager = eventManager;
 		// this.eventManager = eventManager;
 		setConnectionStatus(status);
 
@@ -105,7 +107,7 @@ public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implem
 		statisticsManager.messageReceived(getId(), matchingActiveSubscriptionTopics);
 
 		// Pass the message for connection (all subscriptions) handling
-		super.messageReceived(message);
+		store.messageReceived(message);
 	}
 	
 	public boolean canPublish()
@@ -363,5 +365,20 @@ public class MqttAsyncConnection extends ManagedMessageStoreWithFiltering implem
 		eventManager.notifyConnectionStatusChanged(this);
 		
 		this.isOpening = isOpening;
+	}
+
+	public ManagedMessageStoreWithFiltering getStore()
+	{
+		return store;
+	}
+
+	public String getName()
+	{
+		return store.getName();
+	}	
+
+	public void setStatisticsManager(StatisticsManager statisticsManager)
+	{
+		this.statisticsManager = statisticsManager;
 	}
 }

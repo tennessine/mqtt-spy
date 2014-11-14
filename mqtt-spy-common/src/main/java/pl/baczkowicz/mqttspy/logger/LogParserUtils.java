@@ -31,7 +31,7 @@ public class LogParserUtils
 	public static String createLog(final ReceivedMqttMessage message, final MessageLog messageLog)
 	{
 		final StringBuffer logMessage = new StringBuffer();
-		logMessage.append("<MqttMessage ");
+		logMessage.append("<MqttMessage");
 		
 		appendAttribute(logMessage, "id", String.valueOf(message.getId()));
 		appendAttribute(logMessage, "timestamp", String.valueOf( message.getDate().getTime()));				
@@ -39,20 +39,28 @@ public class LogParserUtils
 		appendAttribute(logMessage, "qos", String.valueOf(message.getMessage().getQos()));		
 		appendAttribute(logMessage, "retained", String.valueOf(message.getMessage().isRetained()));		
 		
-		if (MessageLog.XML_WITH_ENCODED_PAYLOAD.equals(messageLog))
+		boolean encoded = MessageLog.XML_WITH_ENCODED_PAYLOAD.equals(messageLog);
+		final String payload = new String(message.getMessage().getPayload());
+		
+		if (!encoded && payload.contains(System.lineSeparator()))
+		{
+			logger.warn("Message on topic {} contains a new line separator, so it needs to be encoded", message.getTopic());
+			encoded = true;
+		}
+		
+		if (encoded)
 		{
 			appendAttribute(logMessage, "encoded", "true");
 		}
 		
 		logMessage.append(">");
 		
-		if (MessageLog.XML_WITH_ENCODED_PAYLOAD.equals(messageLog))
+		if (encoded)
 		{
 			appendValue(logMessage, Base64.encodeBase64String(message.getMessage().getPayload()));
 		}
 		else
-		{
-			final String payload = new String(message.getMessage().getPayload());
+		{			
 			final boolean useCData = XML_CHARS.matcher(payload).find();
 			if (useCData)
 			{
@@ -71,7 +79,7 @@ public class LogParserUtils
 	
 	public static void appendAttribute(final StringBuffer logMessage, final String attributeName, final String attributeValue)
 	{
-		logMessage.append(attributeName + "=\"" + attributeValue + "\" ");
+		logMessage.append(" " + attributeName + "=\"" + attributeValue + "\"");
 	}
 	
 	public static void appendElement(final StringBuffer logMessage, final String elementName, final String elementValue)

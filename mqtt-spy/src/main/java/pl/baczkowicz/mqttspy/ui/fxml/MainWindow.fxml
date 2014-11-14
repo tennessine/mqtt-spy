@@ -32,7 +32,7 @@
 					</items>
 				</Menu>
 				
-				<Menu mnemonicParsing="false" text="View">
+				<Menu mnemonicParsing="false" text="Window">
 					<items>
 						<Menu mnemonicParsing="false" text="Perspectives">
 							<items>
@@ -46,6 +46,7 @@
 								<RadioMenuItem fx:id="superSpyPerspective" mnemonicParsing="false" onAction="#showPerspective" text="Super Spy (subscriptions only)" toggleGroup="$perspective" />
 							</items>
 						</Menu>
+						<MenuItem mnemonicParsing="false" text="Converter" onAction="#showConverter" />
 					</items>
 				</Menu>
 				

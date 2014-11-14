@@ -34,7 +34,7 @@ public class MqttCallbackHandler implements MqttCallback
 	/** Stores all received messages, so that we don't block the receiving thread. */
 	private final Queue<ReceivedMqttMessage> messageQueue = new LinkedBlockingQueue<ReceivedMqttMessage>();
 	
-	private final MqttMessageHandler messageHandler;
+	private final MqttMessageLogger messageHandler;
 	
 	private final BaseMqttConnection connection;
 	
@@ -51,7 +51,7 @@ public class MqttCallbackHandler implements MqttCallback
 		this.connection = connection;
 		this.connectionSettings = connectionSettings;
 		this.scriptManager = scriptManager;
-		this.messageHandler = new MqttMessageHandler(messageQueue, connectionSettings);
+		this.messageHandler = new MqttMessageLogger(messageQueue, connectionSettings);
 		
 		for (final SubscriptionDetails subscriptionDetails : connectionSettings.getSubscription())
 		{

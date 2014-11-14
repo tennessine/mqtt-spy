@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.SubscriptionsStore;
 import org.dna.mqtt.moquette.proto.messages.AbstractMessage.QOSType;
@@ -11,6 +12,7 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 
+import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
@@ -21,10 +23,37 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	protected MqttAsyncClient client;
 	
+	protected final MqttConnectOptions options;	
+
 	private MqttConnectionStatus connectionStatus = MqttConnectionStatus.NOT_CONNECTED;
 	
-	public BaseMqttConnection()
+	public BaseMqttConnection(final MqttConnectionDetails connectionDetails)
 	{
+		options = new MqttConnectOptions();
+		
+		if (connectionDetails.getServerURI().size() > 1)
+		{
+			options.setServerURIs((String[]) connectionDetails.getServerURI().toArray());
+		}
+		
+		options.setCleanSession(connectionDetails.isCleanSession());
+		options.setConnectionTimeout(connectionDetails.getConnectionTimeout());
+		options.setKeepAliveInterval(connectionDetails.getKeepAliveInterval());
+		
+		if (connectionDetails.getUserCredentials() != null)
+		{
+			options.setUserName(connectionDetails.getUserCredentials().getUsername());
+			options.setPassword(connectionDetails.getUserCredentials().getPassword().toCharArray());
+		}
+		
+		if (connectionDetails.getLastWillAndTestament() != null)
+		{
+			options.setWill(connectionDetails.getLastWillAndTestament().getTopic(), 
+					Base64.decodeBase64(connectionDetails.getLastWillAndTestament().getValue()),
+					connectionDetails.getLastWillAndTestament().getQos(),
+					connectionDetails.getLastWillAndTestament().isRetained());
+		}
+		
 		// Manage subscriptions, based on moquette
 		subscriptionsStore = new SubscriptionsStore();
 		subscriptionsStore.init(new MapBasedSubscriptionStore());
@@ -93,4 +122,9 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 
 		return matchingSubscriptionTopics;
 	}
+
+	// public MqttConnectOptions getOptions()
+	// {
+	// return options;
+	// }
 }

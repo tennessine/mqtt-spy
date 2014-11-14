@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
@@ -43,10 +44,13 @@ public class SubscriptionManager
 	private final Map<String, SubscriptionController> subscriptionControllers = new HashMap<>();
 	
 	private final Queue<MqttSpyUIEvent> uiEventQueue;
+
+	private ConfigurationManager configurationManager;
 	
-	public SubscriptionManager(final EventManager eventManager, /*final StatisticsManager statisticsManager, */ final Queue<MqttSpyUIEvent> uiEventQueue)
+	public SubscriptionManager(final EventManager eventManager, final ConfigurationManager configurationManager, /*final StatisticsManager statisticsManager, */ final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		this.eventManager = eventManager;
+		this.configurationManager = configurationManager;
 		// this.statisticsManager = statisticsManager;
 		this.uiEventQueue = uiEventQueue;
 	}
@@ -67,6 +71,7 @@ public class SubscriptionManager
 		subscriptionController.getTab().setContextMenu(ContextMenuUtils.createSubscriptionTabContextMenu(
 				connection, subscription, eventManager, this));
 		subscriptionController.setConnectionController(connectionController);
+		subscriptionController.setFormatting(configurationManager.getConfiguration().getFormatting());
 		subscriptionController.init();
 		
 		subscription.setSubscriptionController(subscriptionController);

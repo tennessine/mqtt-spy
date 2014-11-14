@@ -66,6 +66,8 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	private FormatterDetails selectionFormat = null;
 
 	private Tooltip tooltip;
+	
+	private Tooltip lengthTooltip;
 
 	private SearchOptions searchOptions;
 
@@ -89,6 +91,9 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	{
 		tooltip = new Tooltip("");
 		tooltip.setWrapText(true);
+		
+		lengthTooltip = new Tooltip();
+		lengthLabel.setTooltip(lengthTooltip);
 	}
 	
 	private void updateVisibility()
@@ -191,10 +196,34 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 			topicField.setText(message.getTopic());
 			qosField.setText(String.valueOf(message.getMessage().getQos()));
 			timeField.setText(Utils.DATE_WITH_MILLISECONDS_SDF.format(message.getDate()));
-			lengthLabel.setText("(" + payload.length() + ")");
+			populateLength(payload.length());
 			retainedField.setSelected(message.getMessage().isRetained());
 	
 			showMessageData();
+		}
+	}
+	
+	private void populateLength(final long length)
+	{
+		lengthTooltip.setText("Message length = " + length);
+		
+		if (length < 1000)
+		{
+			lengthLabel.setText("(" + length + "B)");
+		}
+		else
+		{
+			final long lengthInKB = length / 1000;
+			
+			if (lengthInKB < 1000)
+			{
+				lengthLabel.setText("(" + lengthInKB + "kB)");
+			}
+			else
+			{
+				final long lengthInMB = lengthInKB / 1000;
+				lengthLabel.setText("(" + lengthInMB + "MB)");				
+			}
 		}
 	}
 
