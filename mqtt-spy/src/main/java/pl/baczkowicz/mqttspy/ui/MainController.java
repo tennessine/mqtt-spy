@@ -27,11 +27,11 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
 import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
+import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
-import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
@@ -43,6 +43,7 @@ import pl.baczkowicz.mqttspy.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TaskWithProgressUpdater;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
@@ -377,19 +378,19 @@ public class MainController
 		controlPanelPaneController.refreshConfigurationFileStatus();		
 	}	
 	
-	private boolean completeUserAuthenticationCredentials(final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
+	private boolean completeUserAuthenticationCredentials(final UserInterfaceMqttConnectionDetails connectionDetails)
 	{
 		if (connectionDetails.getUserAuthentication() != null)
 		{
 			// Copy so that we don't store it in the connection and don't save those values
-			final UserAuthentication userCredentials = new UserAuthentication();
+			final UserCredentials userCredentials = new UserCredentials();
 			connectionDetails.getUserAuthentication().copyTo(userCredentials);
 			
 			// Decode password stored in config
 			userCredentials.setPassword(MqttUtils.decodePassword(userCredentials.getPassword()));
 			
 			// Check if ask for username or password, and then override existing values if confirmed
-			if (userCredentials.isAskForPassword() || userCredentials.isAskForUsername())
+			if (connectionDetails.getUserAuthentication().isAskForPassword() || connectionDetails.getUserAuthentication().isAskForUsername())
 			{
 				if (!DialogUtils.showUsernameAndPasswordDialog(stage, connectionDetails.getName(), userCredentials))
 				{
@@ -397,8 +398,10 @@ public class MainController
 				}
 			}
 			
+			// TODO: encode password
+			
 			// Settings user credentials so they can be validated and passed onto the MQTT client library			
-			connectionDetails.setUserAuthentication(userCredentials);
+			connectionDetails.setUserCredentials(userCredentials);
 		}
 		
 		return false;
@@ -415,7 +418,7 @@ public class MainController
 		
 		if (!cancelled)
 		{
-			final String validationResult = MqttUtils.validateConnectionDetails(connectionDetails, true);
+			final String validationResult = ConnectionUtils.validateConnectionDetails(connectionDetails, true);
 			if (validationResult != null)
 			{
 				DialogUtils.showValidationWarning(validationResult);
@@ -436,7 +439,7 @@ public class MainController
 		}
 	}
 	
-	public void populateConnectionPanes(final UserInterfaceMqttConnectionDetailsV010 connectionDetails, final ConnectionController connectionController)
+	public void populateConnectionPanes(final UserInterfaceMqttConnectionDetails connectionDetails, final ConnectionController connectionController)
 	{
 		for (final PublicationDetails publicationDetails : connectionDetails.getPublication())
 		{

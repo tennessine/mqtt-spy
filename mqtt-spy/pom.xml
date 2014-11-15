@@ -20,26 +20,6 @@
 		<project.build.number>${buildNumber}</project.build.number>
 	</properties>
 
-	<repositories>
-
-		<repository>
-			<id>Eclipse Paho Repo</id>
-			<url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
-		</repository>
-
-		<repository>
-			<id>bintray</id>
-			<url>http://dl.bintray.com/andsel/maven/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-
-	</repositories>
-
 	<dependencies>
 
 		<dependency>
@@ -47,41 +27,11 @@
 			<artifactId>mqtt-spy-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<!-- 
-		<dependency>
-			<groupId>pl.baczkowicz.mqttspy</groupId>
-			<artifactId>mqtt-spy-daemon</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		 -->
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-			<version>1.9</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.eclipse.paho</groupId>
-			<artifactId>mqtt-client</artifactId>
-			<version>0.4.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.7</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.7</version>
 		</dependency>
 
 		<dependency>
@@ -94,29 +44,6 @@
 			<groupId>org.fxmisc.richtext</groupId>
 			<artifactId>richtextfx</artifactId>
 			<version>0.5.1</version>
-		</dependency>
-
-		
-		<!--=== SCHEMAS/JAXB === -->
-		<dependency>
-			<groupId>org.jvnet.jaxb2.maven2</groupId>
-			<artifactId>maven-jaxb2-plugin</artifactId>
-			<version>0.9.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.jaxb2_commons</groupId>
-			<artifactId>jaxb2-commons-lang</artifactId>
-			<version>2.3</version>
-		</dependency>		
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jvnet.jaxb2_commons</groupId>
-			<artifactId>jaxb2-basics-runtime</artifactId>
-			<version>0.5.0</version>
 		</dependency>
 
 		<!--=== TEST === -->
@@ -293,7 +220,8 @@
 						        <arg>-XtoString</arg>
 						        <arg>-Xequals</arg>
 						        <arg>-XhashCode</arg>						        
-                    			<arg>-Xcopyable</arg>					    
+                    			<arg>-Xcopyable</arg>		
+                    			<arg>-Xvalue-constructor</arg>			    
 			                </args>						 
 			                <plugins>
 								<plugin>
@@ -364,7 +292,14 @@
 							</plugins>
 			            </configuration>			            			          
 			        </execution>
-			    </executions>			    
+			    </executions>	
+			    <dependencies>
+	    			<dependency>
+						<groupId>org.jvnet.jaxb2_commons</groupId>
+						<artifactId>jaxb2-value-constructor</artifactId>
+						<version>3.0</version>
+					</dependency>
+			    </dependencies>	    		    
 			</plugin> 
 			 
 		</plugins>

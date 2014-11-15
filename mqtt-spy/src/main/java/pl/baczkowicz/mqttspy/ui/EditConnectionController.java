@@ -1,6 +1,8 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
@@ -40,16 +42,17 @@ import org.controlsfx.dialog.Dialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
+import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
-import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
+import pl.baczkowicz.mqttspy.configuration.generated.UserAuthenticationOptions;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
@@ -57,6 +60,7 @@ import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
 import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
+import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.KeyboardUtils;
@@ -628,7 +632,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		if (connectionNameText.getText().isEmpty()
 				|| lastGeneratedConnectionName.equals(connectionNameText.getText()))
 		{
-			final String newName = composeConnectionName(clientIdText.getText(), brokerAddressText.getText());
+			final String newName = ConnectionUtils.composeConnectionName(clientIdText.getText(), brokerAddressText.getText());
 			connectionNameText.setText(newName);
 			lastGeneratedConnectionName = newName;
 		}
@@ -648,7 +652,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	public void createConnection() throws ConfigurationException
 	{
 		readAndDetectChanges();
-		final String validationResult = MqttUtils.validateConnectionDetails(editedConnectionDetails, false);
+		final String validationResult = ConnectionUtils.validateConnectionDetails(editedConnectionDetails, false);
 		
 		if (validationResult != null)
 		{
@@ -727,12 +731,18 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		}				
 	}
 
-	private UserInterfaceMqttConnectionDetailsV010 readValues()
+	private UserInterfaceMqttConnectionDetails readValues()
 	{
-		final UserInterfaceMqttConnectionDetailsV010 connection = new UserInterfaceMqttConnectionDetailsV010();
+		final UserInterfaceMqttConnectionDetails connection = new UserInterfaceMqttConnectionDetails();
 		
 		connection.setName(connectionNameText.getText());
-		connection.setServerURI(brokerAddressText.getText());
+		
+		final List<String> serverURIs = Arrays.asList(brokerAddressText.getText().split(ConnectionUtils.SERVER_DELIMITER));
+		for (final String serverURI : serverURIs)
+		{
+			connection.getServerURI().add(serverURI.trim());
+		}
+		
 		connection.setClientID(clientIdText.getText());
 		
 		connection.setCleanSession(cleanSession.isSelected());
@@ -747,15 +757,17 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		if (userAuthentication.isSelected())
 		{
-			final UserAuthentication userAuthentication = new UserAuthentication();
-			
-			userAuthentication.setUsername(username.getText());
-			userAuthentication.setPassword(MqttUtils.encodePassword(password.getText()));
-			
+			final UserAuthenticationOptions userAuthentication = new UserAuthenticationOptions();
+						
 			userAuthentication.setAskForUsername(askForUsername.isSelected());
 			userAuthentication.setAskForPassword(askForPassword.isSelected());
 			
+			final UserCredentials userCredentials = new UserCredentials();
+			userCredentials.setUsername(username.getText());
+			userCredentials.setPassword(MqttUtils.encodePassword(password.getText()));			
+			
 			connection.setUserAuthentication(userAuthentication);
+			connection.setUserCredentials(userCredentials);
 		}
 		
 		connection.setPublicationScripts(publicationScriptsText.getText());
@@ -789,7 +801,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	
 	private boolean readAndDetectChanges()
 	{
-		final UserInterfaceMqttConnectionDetailsV010 connection = readValues();
+		final UserInterfaceMqttConnectionDetails connection = readValues();
 		boolean changed = !connection.equals(editedConnectionDetails.getSavedValues());
 			
 		logger.debug("Values read. Changed = " + changed);
@@ -823,7 +835,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 				}				
 			}
 			
-			if (editedConnectionDetails.getName().equals(composeConnectionName(editedConnectionDetails.getClientID(), editedConnectionDetails.getServerURI())))
+			if (editedConnectionDetails.getName().equals(
+					ConnectionUtils.composeConnectionName(editedConnectionDetails.getClientID(), editedConnectionDetails.getServerURI())))
 			{
 				lastGeneratedConnectionName = editedConnectionDetails.getName();
 			}
@@ -892,6 +905,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		}
 	}
 	
+
+	
 	private void displayConnectionDetails(final ConfiguredConnectionDetails connection)
 	{
 		ConfigurationUtils.populateConnectionDefaults(connection);
@@ -899,7 +914,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// Connectivity
 		connectionNameText.setText(connection.getName());			
 		
-		brokerAddressText.setText(connection.getServerURI());
+		brokerAddressText.setText(ConnectionUtils.serverURIsToString(connection.getServerURI()));
 		clientIdText.setText(connection.getClientID());
 				
 		connectionTimeout.setText(connection.getConnectionTimeout().toString());
@@ -907,12 +922,12 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		cleanSession.setSelected(connection.isCleanSession());
 
 		// Security
-		userAuthentication.setSelected(connection.getUserAuthentication() != null);
+		userAuthentication.setSelected(connection.getUserAuthentication() != null && connection.getUserCredentials() != null);
 
 		if (userAuthentication.isSelected())
 		{			
-			username.setText(connection.getUserAuthentication().getUsername());			
-			password.setText(MqttUtils.decodePassword(connection.getUserAuthentication().getPassword()));	
+			username.setText(connection.getUserCredentials().getUsername());			
+			password.setText(MqttUtils.decodePassword(connection.getUserCredentials().getPassword()));	
 			
 			askForUsername.setSelected(connection.getUserAuthentication().isAskForUsername());
 			askForPassword.setSelected(connection.getUserAuthentication().isAskForPassword());
@@ -997,11 +1012,6 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		
 		connection.setBeingCreated(false);
 	}		
-		
-	public static String composeConnectionName(final String cliendId, final String serverURI)
-	{
-		return cliendId + "@" + serverURI;
-	}
 
 	// ===============================
 	// === Setters and getters =======

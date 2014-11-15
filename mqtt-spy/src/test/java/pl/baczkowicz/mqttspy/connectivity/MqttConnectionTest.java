@@ -55,7 +55,7 @@ public class MqttConnectionTest extends TestCase
 		// Set up connection
 		final ConfiguredConnectionDetails configuredConnectionDetails = new ConfiguredConnectionDetails();
 		configuredConnectionDetails.setName(name);
-		configuredConnectionDetails.setServerURI(serverURI);
+		configuredConnectionDetails.getServerURI().add(serverURI);
 		configuredConnectionDetails.setClientID(clientId);
 		configuredConnectionDetails.setCleanSession(false);
 		configuredConnectionDetails.setConnectionTimeout(5);
@@ -118,7 +118,7 @@ public class MqttConnectionTest extends TestCase
 		// Set up connection
 		final ConfiguredConnectionDetails configuredConnectionDetails = new ConfiguredConnectionDetails();
 		configuredConnectionDetails.setName(name);
-		configuredConnectionDetails.setServerURI(serverURI);
+		configuredConnectionDetails.getServerURI().add(serverURI);
 		configuredConnectionDetails.setClientID(clientId);
 		configuredConnectionDetails.setCleanSession(false);
 		configuredConnectionDetails.setConnectionTimeout(5);

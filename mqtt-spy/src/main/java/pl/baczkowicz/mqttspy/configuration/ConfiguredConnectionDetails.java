@@ -1,8 +1,8 @@
 package pl.baczkowicz.mqttspy.configuration;
 
-import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 
-public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDetailsV010
+public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDetails
 {
 	private int id;
 	
@@ -16,7 +16,7 @@ public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDeta
 	
 	private boolean valid;
 
-	private UserInterfaceMqttConnectionDetailsV010 lastSavedValues;
+	private UserInterfaceMqttConnectionDetails lastSavedValues;
 
 	public ConfiguredConnectionDetails()
 	{
@@ -24,7 +24,7 @@ public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDeta
 	}
 	
 	public ConfiguredConnectionDetails(final int id, final boolean created, final boolean newConnection,
-			final boolean modified, final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
+			final boolean modified, final UserInterfaceMqttConnectionDetails connectionDetails)
 	{
 		this.id = id;
 		this.modified = modified;
@@ -35,7 +35,7 @@ public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDeta
 		setConnectionDetails(connectionDetails);
 	}
 
-	public void setConnectionDetails(final UserInterfaceMqttConnectionDetailsV010 connectionDetails)
+	public void setConnectionDetails(final UserInterfaceMqttConnectionDetails connectionDetails)
 	{
 		if (connectionDetails != null)
 		{
@@ -63,12 +63,12 @@ public class ConfiguredConnectionDetails extends UserInterfaceMqttConnectionDeta
 		this.created = created;
 	}
 
-	public UserInterfaceMqttConnectionDetailsV010 getSavedValues()
+	public UserInterfaceMqttConnectionDetails getSavedValues()
 	{
 		return lastSavedValues;
 	}
 
-	public void setSavedValues(UserInterfaceMqttConnectionDetailsV010 savedValues)
+	public void setSavedValues(UserInterfaceMqttConnectionDetails savedValues)
 	{
 		this.lastSavedValues = savedValues;
 	}

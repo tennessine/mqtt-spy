@@ -9,7 +9,8 @@ import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterFunction;
 import pl.baczkowicz.mqttspy.configuration.generated.SubstringConversionFormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubstringExtractFormatterDetails;
-import pl.baczkowicz.mqttspy.ui.format.ConversionException;
+import pl.baczkowicz.mqttspy.exceptions.ConversionException;
+import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 
 /**
  * 
@@ -26,7 +27,7 @@ public class FormattingUtilsTest
 	@Test
 	public final void testStringToHex()
 	{
-		assertEquals("7465737432", FormattingUtils.stringToHex("test2"));
+		assertEquals("7465737432", ConversionUtils.stringToHex("test2"));
 	}
 
 	/**
@@ -36,7 +37,7 @@ public class FormattingUtilsTest
 	@Test
 	public final void testHexToString() throws ConversionException
 	{
-		assertEquals("test2", FormattingUtils.hexToString("7465737432"));
+		assertEquals("test2", ConversionUtils.hexToString("7465737432"));
 	}
 	
 	/**
@@ -47,7 +48,7 @@ public class FormattingUtilsTest
 	(expected = ConversionException.class)
 	public final void testInvalidHexToString() throws ConversionException
 	{
-		assertEquals("not is not valid", FormattingUtils.hexToString("paosd9d"));
+		assertEquals("not is not valid", ConversionUtils.hexToString("paosd9d"));
 	}
 
 	/**
@@ -56,7 +57,7 @@ public class FormattingUtilsTest
 	@Test
 	public final void testHexToStringNoException()
 	{
-		assertEquals("[invalid hex]", FormattingUtils.hexToStringNoException("hello :)"));
+		assertEquals("[invalid hex]", ConversionUtils.hexToStringNoException("hello :)"));
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class FormattingUtilsTest
 	@Test
 	public final void testBase64ToString()
 	{
-		assertEquals("GOOD", FormattingUtils.base64ToString("R09PRA=="));
+		assertEquals("GOOD", ConversionUtils.base64ToString("R09PRA=="));
 	}
 
 	/**
@@ -74,7 +75,7 @@ public class FormattingUtilsTest
 	@Test
 	public final void testStringToBase64()
 	{
-		assertEquals("R09PRA==", FormattingUtils.stringToBase64("GOOD"));
+		assertEquals("R09PRA==", ConversionUtils.stringToBase64("GOOD"));
 	}
 
 	/**

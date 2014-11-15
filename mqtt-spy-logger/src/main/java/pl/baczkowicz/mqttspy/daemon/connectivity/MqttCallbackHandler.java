@@ -64,6 +64,7 @@ public class MqttCallbackHandler implements MqttCallback
 	public void connectionLost(Throwable cause)
 	{
 		logger.error("Connection lost", cause);
+		connection.connectionLost(cause);
 	}
 
 	public void messageArrived(final String topic, final MqttMessage message)

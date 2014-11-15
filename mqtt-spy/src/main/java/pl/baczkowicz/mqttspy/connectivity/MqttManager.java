@@ -7,25 +7,25 @@ import java.util.Queue;
 
 import javafx.application.Platform;
 
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttConnectionResultHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttDisconnectionResultHandler;
 import pl.baczkowicz.mqttspy.connectivity.handlers.MqttEventHandler;
+import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttManager
 {
-	public final static String TCP_PREFIX = "tcp://";
-	public final static String SSL_PREFIX = "ssl://";
 	public final static int CONNECT_DELAY = 500;
 
 	private final static Logger logger = LoggerFactory.getLogger(MqttManager.class);
@@ -33,10 +33,14 @@ public class MqttManager
 	private Map<Integer, MqttAsyncConnection> connections = new HashMap<Integer, MqttAsyncConnection>();
 	
 	private EventManager eventManager;
+
+	private ReconnectionManager reconnectionManager;
 		
 	public MqttManager(final EventManager eventManager)
 	{
 		this.eventManager = eventManager;
+		this.reconnectionManager = new ReconnectionManager();
+		new Thread(reconnectionManager).start();
 	}
 	
 	public MqttAsyncConnection createConnection(final RuntimeConnectionProperties connectionProperties, final Queue<MqttSpyUIEvent> uiEventQueue)
@@ -54,50 +58,56 @@ public class MqttManager
 	{
 		try
 		{
-			// Creating MQTT client instance
-			final MqttAsyncClient client = new MqttAsyncClient(
-					connection.getProperties().getServerURI(), 
-					connection.getProperties().getClientId(),
-					null);
+			connection.createClient(new MqttCallbackHandler(connection));
 			
-			// Set MQTT callback
-			client.setCallback(new MqttCallbackHandler(connection));
-
-			connection.setClient(client);
-			connection.setConnectionStatus(MqttConnectionStatus.CONNECTING);
-			
-			new Thread(new Runnable()
+			final Runnable connectionRunnable = new Runnable()
 			{				
 				@Override
 				public void run()
 				{
+					connection.setConnectionStatus(MqttConnectionStatus.CONNECTING);
+					
 					try
 					{
+						// TODO: move this away
 						Thread.sleep(CONNECT_DELAY);
 
 						// Asynch connect
 						logger.info("Connecting client ID [{}] to server [{}]; options = {}",
-								connection.getProperties().getClientId(), 
+								connection.getProperties().getClientID(), 
 								connection.getProperties().getServerURI(), 
 								connection.getProperties().getOptions().toString());
 						
-						connection.getClient().connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
-					}
-					catch (MqttException | IllegalArgumentException e)
-					{
-						Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptFailureEvent(connection, e)));
-						logger.error("Cannot connect to " + connection.getProperties().getServerURI(), e);
+						connection.connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
+						
+						// TODO: resubscribe when connection regained
 					}
 					catch (InterruptedException e)
 					{
 						return;
+					}
+					catch (MqttSpyException e)
+					{
+						Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptFailureEvent(connection, e)));
+						logger.error("Cannot connect to " + connection.getProperties().getServerURI(), e);
 					}				
 				}
-			}).start();
+			};
+			
+			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();
+			
+			if (reconnectionSettings == null)
+			{
+				new Thread(connectionRunnable).start();
+			}
+			else
+			{			
+				reconnectionManager.addConnection(connection, connectionRunnable);
+			}
 
 			return connection;
 		}
-		catch (MqttException | IllegalArgumentException e)
+		catch (IllegalArgumentException | MqttSpyException e)
 		{
 			Platform.runLater(new MqttEventHandler(new MqttConnectionAttemptFailureEvent(connection, e)));
 			logger.error("Cannot connect to " + connection.getProperties().getServerURI(), e);
@@ -112,8 +122,10 @@ public class MqttManager
 	}
 
 	public void disconnectFromBroker(final int connectionId)
-	{
+	{		
 		final MqttAsyncConnection connection = connections.get(connectionId);
+		
+		reconnectionManager.removeConnection(connection);
 
 		// TODO: check if connected?
 
@@ -122,7 +134,7 @@ public class MqttManager
 
 		try
 		{			
-			logger.info("Disconnecting " + connection.getProperties().getClientId() + " from "
+			logger.info("Disconnecting " + connection.getProperties().getClientID() + " from "
 					+ connection.getProperties().getServerURI());
 			if (connection.getClient() != null && connection.getClient().isConnected())
 			{

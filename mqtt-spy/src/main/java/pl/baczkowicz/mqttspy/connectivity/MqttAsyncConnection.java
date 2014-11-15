@@ -1,44 +1,31 @@
 package pl.baczkowicz.mqttspy.connectivity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
-import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.SubscriptionsStore;
-import org.dna.mqtt.moquette.proto.messages.AbstractMessage.QOSType;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
-import pl.baczkowicz.mqttspy.utils.Utils;
 
-// TODO: use BaseMqttConnection
-public class MqttAsyncConnection implements MqttConnectionInterface
+public class MqttAsyncConnection extends BaseMqttConnection
 {
 	final static Logger logger = LoggerFactory.getLogger(MqttAsyncConnection.class);
-
-	private MqttConnectionStatus connectionStatus;
 
 	private final Map<String, MqttSubscription> subscriptions = new HashMap<String, MqttSubscription>();
 	
 	private int lastUsedSubscriptionId = 0;
 
-	private SubscriptionsStore subscriptionsStore;
-
 	private final RuntimeConnectionProperties properties;
-
-	private MqttAsyncClient client;
 	
 	private boolean isOpened;
 	
@@ -49,10 +36,6 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 	/** Maximum number of messages to store for this connection in each message store. */
 	private int preferredStoreSize;
 
-	// private final EventManager eventManager;
-
-	private String disconnectionReason;
-
 	private StatisticsManager statisticsManager;
 
 	private EventManager eventManager;
@@ -60,6 +43,8 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 	public MqttAsyncConnection(final RuntimeConnectionProperties properties, 
 			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{ 
+		super(properties);
+		
 		// Max size is double the preferred size
 		store = new ManagedMessageStoreWithFiltering(properties.getName(), 
 				properties.getConfiguredProperties().getMinMessagesStoredPerTopic(), 
@@ -74,27 +59,26 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 		setConnectionStatus(status);
 
 		// Manage subscriptions, based on moquette
-		subscriptionsStore = new SubscriptionsStore();
-		subscriptionsStore.init(new MapBasedSubscriptionStore());
+//		subscriptionsStore = new SubscriptionsStore();
+//		subscriptionsStore.init(new MapBasedSubscriptionStore());
 	}
 
 	public void messageReceived(final MqttContent message)
 	{		
-		// Check matching subscription, based on moquette
-		final List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
-		
+		final List<String> matchingSubscriptionTopics = getMatchingSubscriptions(message);
+				
 		final List<String> matchingActiveSubscriptionTopics = new ArrayList<String>();
 		
 		// For all found subscriptions
-		for (final Subscription matchingSubscription : matchingSubscriptions)
+		for (final String matchingSubscription : matchingSubscriptionTopics)
 		{						
 			// Get the mqtt-spy's subscription object
-			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription.getTopic());
+			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription);
 
 			// If a match has been found, and the subscription is active
 			if (mqttSubscription != null && (mqttSubscription.isSubscribing() || mqttSubscription.isActive()))
 			{
-				matchingActiveSubscriptionTopics.add(matchingSubscription.getTopic());
+				matchingActiveSubscriptionTopics.add(matchingSubscription);
 				
 				// Set subscription reference on the message
 				message.setSubscription(mqttSubscription);
@@ -108,11 +92,6 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 
 		// Pass the message for connection (all subscriptions) handling
 		store.messageReceived(message);
-	}
-	
-	public boolean canPublish()
-	{
-		return client != null;
 	}
 	
 	public boolean publish(final String publicationTopic, final String data, final int qos, final boolean retained)
@@ -144,24 +123,8 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 
 	public void connectionLost(Throwable cause)
 	{
-		setDisconnectionReason(cause.getMessage());
-		setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
+		super.connectionLost(cause);
 		unsubscribeAll();
-	}
-
-	public void setDisconnectionReason(final String message)
-	{
-		this.disconnectionReason = message;
-		if (!message.isEmpty())
-		{
-			this.disconnectionReason = this.disconnectionReason + " ("
-					+ Utils.DATE_WITH_SECONDS_SDF.format(new Date()) + ")";
-		}
-	}
-	
-	public String getDisconnectionReason()
-	{
-		return disconnectionReason;
 	}
 
 	public void addSubscription(final MqttSubscription subscription)
@@ -169,9 +132,10 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 		// Add it to the store if it hasn't been created before
 		if (subscriptions.put(subscription.getTopic(), subscription) == null)
 		{
-			subscription.setId(lastUsedSubscriptionId++);			
-			subscriptionsStore.add(new Subscription(properties.getClientId(), subscription
-					.getTopic(), QOSType.MOST_ONE, true));
+			subscription.setId(lastUsedSubscriptionId++);	
+			addSubscriptionToStore(subscription.getTopic());
+//			subscriptionsStore.add(new Subscription(properties.getClientId(), subscription
+//					.getTopic(), QOSType.MOST_ONE, true));
 		}
 	}
 
@@ -288,18 +252,15 @@ public class MqttAsyncConnection implements MqttConnectionInterface
 	public void removeSubscription(final MqttSubscription subscription)
 	{
 		subscriptions.remove(subscription.getTopic());
-		subscriptionsStore.removeSubscription(subscription.getTopic(), getProperties()
-				.getClientId());
-	}
-
-	public MqttConnectionStatus getConnectionStatus()
-	{
-		return connectionStatus;
+		removeSubscriptionFromStore(subscription.getTopic());
+//		subscriptionsStore.removeSubscription(subscription.getTopic(), getProperties()
+//				.getClientId());
 	}
 
 	public void setConnectionStatus(MqttConnectionStatus connectionStatus)
 	{
-		this.connectionStatus = connectionStatus;
+		super.setConnectionStatus(connectionStatus);
+		// this.connectionStatus = connectionStatus;
 		eventManager.notifyConnectionStatusChanged(this);
 	}
 

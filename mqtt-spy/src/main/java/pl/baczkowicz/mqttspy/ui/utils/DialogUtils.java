@@ -22,9 +22,9 @@ import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.DialogAction;
 import org.controlsfx.dialog.Dialogs;
 
+import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
-import pl.baczkowicz.mqttspy.configuration.generated.UserAuthentication;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
@@ -104,7 +104,7 @@ public class DialogUtils
 	}
 
 	public static boolean showUsernameAndPasswordDialog(final Object owner,
-			String connectionName, final UserAuthentication userCredentials)
+			String connectionName, final UserCredentials userCredentials)
 	{
 		// final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), MqttUtils.decodePassword(userCredentials.getPassword()));
 		final Pair<String, String> userInfo = new Pair<String, String>(userCredentials.getUsername(), userCredentials.getPassword());

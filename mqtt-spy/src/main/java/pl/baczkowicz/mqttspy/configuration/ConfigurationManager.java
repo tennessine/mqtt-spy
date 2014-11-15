@@ -15,10 +15,13 @@ import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.Connectivity;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.Formatting;
 import pl.baczkowicz.mqttspy.configuration.generated.MqttSpyConfiguration;
+import pl.baczkowicz.mqttspy.configuration.generated.UserAuthenticationOptions;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -132,14 +135,51 @@ public class ConfigurationManager extends PropertyFileLoader
 		{
 			if (connectionDetails instanceof UserInterfaceMqttConnectionDetailsV010)
 			{
+				final UserInterfaceMqttConnectionDetailsV010 connectionDetailsV010 = (UserInterfaceMqttConnectionDetailsV010) connectionDetails;
+				
+				final UserInterfaceMqttConnectionDetails details = new UserInterfaceMqttConnectionDetails();
+				details.setName(connectionDetailsV010.getName());
+				details.getServerURI().add(connectionDetailsV010.getServerURI());
+				details.setClientID(connectionDetailsV010.getClientID());
+				details.setUserCredentials(connectionDetailsV010.getUserAuthentication());
+				if (connectionDetailsV010.getUserAuthentication() != null)
+				{
+					details.setUserAuthentication(new UserAuthenticationOptions(
+							connectionDetailsV010.getUserAuthentication().isAskForUsername(), 
+							connectionDetailsV010.getUserAuthentication().isAskForPassword()));
+				}
+				
+				if (connectionDetailsV010.getLastWillAndTestament() != null)
+				{
+					details.setLastWillAndTestament(new BaseMqttMessage(
+							connectionDetailsV010.getLastWillAndTestament().getPayload(), 
+							connectionDetailsV010.getLastWillAndTestament().getTopic(), 
+							connectionDetailsV010.getLastWillAndTestament().getQoS(), 
+							connectionDetailsV010.getLastWillAndTestament().isRetained()));
+				}
+				details.setCleanSession(connectionDetailsV010.isCleanSession());
+				details.setConnectionTimeout(connectionDetailsV010.getConnectionTimeout());
+				details.setKeepAliveInterval(connectionDetailsV010.getKeepAliveInterval());
+				
+				details.setAutoOpen(connectionDetailsV010.isAutoOpen());
+				details.setAutoConnect(connectionDetailsV010.isAutoConnect());
+				details.setFormatter(connectionDetailsV010.getFormatter());
+				details.setMinMessagesStoredPerTopic(connectionDetailsV010.getMinMessagesStoredPerTopic());
+				details.setMaxMessagesStored(connectionDetailsV010.getMaxMessagesStored());
+				details.setPublicationScripts(connectionDetailsV010.getPublicationScripts());
+				details.getPublication().addAll(connectionDetailsV010.getPublication());
+				details.getSubscription().addAll(connectionDetailsV010.getSubscription());
+				
 				// Put the defaults at the point of loading the config, so we don't need to do it again
-				ConfigurationUtils.populateConnectionDefaults((UserInterfaceMqttConnectionDetailsV010) connectionDetails);
-				connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, 
-						(UserInterfaceMqttConnectionDetailsV010) connectionDetails));
+				ConfigurationUtils.populateConnectionDefaults(details);
+				connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, details));
 			}
 			else
 			{
-				// TODO: 0.1.1 does not support the new config yet
+				// Put the defaults at the point of loading the config, so we don't need to do it again
+				ConfigurationUtils.populateConnectionDefaults((UserInterfaceMqttConnectionDetails) connectionDetails);
+				connections.add(new ConfiguredConnectionDetails(getNextAvailableId(), false, false, false, 
+						(UserInterfaceMqttConnectionDetails) connectionDetails));
 			}
 		}		
 	}

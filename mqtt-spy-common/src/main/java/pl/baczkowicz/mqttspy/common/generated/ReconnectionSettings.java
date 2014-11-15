@@ -28,17 +28,17 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
 
 
 /**
- * <p>Java class for UserCredentials complex type.
+ * <p>Java class for ReconnectionSettings complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="UserCredentials">
+ * &lt;complexType name="ReconnectionSettings">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="Username" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Password" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="RetryInterval" type="{http://www.w3.org/2001/XMLSchema}int"/>
+ *         &lt;element name="Resubscribe" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -48,23 +48,23 @@ import org.jvnet.jaxb2_commons.lang.builder.JAXBToStringBuilder;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "UserCredentials", propOrder = {
-    "username",
-    "password"
+@XmlType(name = "ReconnectionSettings", propOrder = {
+    "retryInterval",
+    "resubscribe"
 })
-public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToString
+public class ReconnectionSettings implements CopyTo, Copyable, Equals, HashCode, ToString
 {
 
-    @XmlElement(name = "Username", required = true)
-    protected String username;
-    @XmlElement(name = "Password", required = true)
-    protected String password;
+    @XmlElement(name = "RetryInterval")
+    protected int retryInterval;
+    @XmlElement(name = "Resubscribe")
+    protected boolean resubscribe;
 
     /**
      * Default no-arg constructor
      * 
      */
-    public UserCredentials() {
+    public ReconnectionSettings() {
         super();
     }
 
@@ -72,69 +72,53 @@ public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToSt
      * Fully-initialising value constructor
      * 
      */
-    public UserCredentials(final String username, final String password) {
-        this.username = username;
-        this.password = password;
+    public ReconnectionSettings(final int retryInterval, final boolean resubscribe) {
+        this.retryInterval = retryInterval;
+        this.resubscribe = resubscribe;
     }
 
     /**
-     * Gets the value of the username property.
+     * Gets the value of the retryInterval property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
-    public String getUsername() {
-        return username;
+    public int getRetryInterval() {
+        return retryInterval;
     }
 
     /**
-     * Sets the value of the username property.
+     * Sets the value of the retryInterval property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
      */
-    public void setUsername(String value) {
-        this.username = value;
+    public void setRetryInterval(int value) {
+        this.retryInterval = value;
     }
 
     /**
-     * Gets the value of the password property.
+     * Gets the value of the resubscribe property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
      */
-    public String getPassword() {
-        return password;
+    public boolean isResubscribe() {
+        return resubscribe;
     }
 
     /**
-     * Sets the value of the password property.
+     * Sets the value of the resubscribe property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
      */
-    public void setPassword(String value) {
-        this.password = value;
+    public void setResubscribe(boolean value) {
+        this.resubscribe = value;
     }
 
     public void toString(ToStringBuilder toStringBuilder) {
         {
-            String theUsername;
-            theUsername = this.getUsername();
-            toStringBuilder.append("username", theUsername);
+            int theRetryInterval;
+            theRetryInterval = this.getRetryInterval();
+            toStringBuilder.append("retryInterval", theRetryInterval);
         }
         {
-            String thePassword;
-            thePassword = this.getPassword();
-            toStringBuilder.append("password", thePassword);
+            boolean theResubscribe;
+            theResubscribe = this.isResubscribe();
+            toStringBuilder.append("resubscribe", theResubscribe);
         }
     }
 
@@ -145,20 +129,20 @@ public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToSt
     }
 
     public void equals(Object object, EqualsBuilder equalsBuilder) {
-        if (!(object instanceof UserCredentials)) {
+        if (!(object instanceof ReconnectionSettings)) {
             equalsBuilder.appendSuper(false);
             return ;
         }
         if (this == object) {
             return ;
         }
-        final UserCredentials that = ((UserCredentials) object);
-        equalsBuilder.append(this.getUsername(), that.getUsername());
-        equalsBuilder.append(this.getPassword(), that.getPassword());
+        final ReconnectionSettings that = ((ReconnectionSettings) object);
+        equalsBuilder.append(this.getRetryInterval(), that.getRetryInterval());
+        equalsBuilder.append(this.isResubscribe(), that.isResubscribe());
     }
 
     public boolean equals(Object object) {
-        if (!(object instanceof UserCredentials)) {
+        if (!(object instanceof ReconnectionSettings)) {
             return false;
         }
         if (this == object) {
@@ -170,8 +154,8 @@ public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToSt
     }
 
     public void hashCode(HashCodeBuilder hashCodeBuilder) {
-        hashCodeBuilder.append(this.getUsername());
-        hashCodeBuilder.append(this.getPassword());
+        hashCodeBuilder.append(this.getRetryInterval());
+        hashCodeBuilder.append(this.isResubscribe());
     }
 
     public int hashCode() {
@@ -181,18 +165,18 @@ public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToSt
     }
 
     public Object copyTo(Object target, CopyBuilder copyBuilder) {
-        final UserCredentials copy = ((target == null)?((UserCredentials) createCopy()):((UserCredentials) target));
+        final ReconnectionSettings copy = ((target == null)?((ReconnectionSettings) createCopy()):((ReconnectionSettings) target));
         {
-            String sourceUsername;
-            sourceUsername = this.getUsername();
-            String copyUsername = ((String) copyBuilder.copy(sourceUsername));
-            copy.setUsername(copyUsername);
+            int sourceRetryInterval;
+            sourceRetryInterval = this.getRetryInterval();
+            int copyRetryInterval = ((int) copyBuilder.copy(sourceRetryInterval));
+            copy.setRetryInterval(copyRetryInterval);
         }
         {
-            String sourcePassword;
-            sourcePassword = this.getPassword();
-            String copyPassword = ((String) copyBuilder.copy(sourcePassword));
-            copy.setPassword(copyPassword);
+            boolean sourceResubscribe;
+            sourceResubscribe = this.isResubscribe();
+            boolean copyResubscribe = ((boolean) copyBuilder.copy(sourceResubscribe));
+            copy.setResubscribe(copyResubscribe);
         }
         return copy;
     }
@@ -203,7 +187,7 @@ public class UserCredentials implements CopyTo, Copyable, Equals, HashCode, ToSt
     }
 
     public Object createCopy() {
-        return new UserCredentials();
+        return new ReconnectionSettings();
     }
 
 }

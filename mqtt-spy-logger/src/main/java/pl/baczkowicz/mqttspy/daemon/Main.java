@@ -8,10 +8,13 @@ import java.io.File;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.Script;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
+import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
+import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
@@ -47,10 +50,8 @@ public class Main
 			{
 				logger.error("Expecting only 1 parameter with the configuration file location");
 				return;
-			}		
-		
-						
-			
+			}				
+									
 			loader.loadConfiguration(new File(args[0]));
 			
 			final DaemonMqttConnectionDetails connectionSettings = loader.getConfiguration().getConnection();
@@ -58,21 +59,42 @@ public class Main
 			final SimpleMqttAsyncConnection connection = new SimpleMqttAsyncConnection(connectionSettings);
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
 			connection.createClient(new MqttCallbackHandler(connection, connectionSettings, scriptManager));
-			connection.connect();
-			
-			logger.info("Successfully connected to " + connectionSettings.getServerURI());
-			
-			
-			// Subscribe to all configured subscriptions
-			for (final SubscriptionDetails subscription : connectionSettings.getSubscription())
-			{	
-				if (subscription.getScriptFile() != null)
-				{
-					scriptManager.addScript(subscription.getScriptFile());
-				}
 					
-				connection.subscribe(subscription.getTopic(), subscription.getQos());
-				logger.info("Successfully subscribed to " + subscription.getTopic());
+			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();
+			
+			final Runnable connectionRunnable = new Runnable()
+			{
+				public void run()
+				{
+					final boolean neverStarted = connection.getLastConnectionAttempt() == BaseMqttConnection.NEVER_STARTED;
+					
+					// If successfully connected, and re-subscription is configured
+					if (connection.connect() 
+							&& (neverStarted || (reconnectionSettings != null && reconnectionSettings.isResubscribe())))
+					{
+						// Subscribe to all configured subscriptions
+						for (final SubscriptionDetails subscription : connectionSettings.getSubscription())
+						{	
+							if (neverStarted && subscription.getScriptFile() != null)
+							{
+								scriptManager.addScript(subscription.getScriptFile());
+							}
+								
+							connection.subscribe(subscription.getTopic(), subscription.getQos());							
+						}
+					}
+				}				
+			};
+			
+			if (reconnectionSettings == null)
+			{
+				new Thread(connectionRunnable).start();
+			}
+			else
+			{
+				final ReconnectionManager reconnectionManager = new ReconnectionManager();
+				reconnectionManager.addConnection(connection, connectionRunnable);
+				new Thread(reconnectionManager).start();
 			}
 			
 			// Run all configured scripts

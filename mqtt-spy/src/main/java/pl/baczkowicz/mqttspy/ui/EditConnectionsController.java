@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
-import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
@@ -31,6 +31,7 @@ import pl.baczkowicz.mqttspy.events.observers.ConnectionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
+import pl.baczkowicz.mqttspy.utils.ConnectionUtils;
 
 @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
 public class EditConnectionsController extends AnchorPane implements Initializable, ConnectionStatusChangeObserver
@@ -201,10 +202,10 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 	@FXML
 	public void newConnection()
 	{
-		final UserInterfaceMqttConnectionDetailsV010 baseConnection = new UserInterfaceMqttConnectionDetailsV010();				
-		baseConnection.setServerURI("127.0.0.1");
+		final UserInterfaceMqttConnectionDetails baseConnection = new UserInterfaceMqttConnectionDetails();				
+		baseConnection.getServerURI().add("127.0.0.1");
 		baseConnection.setClientID(MqttUtils.generateClientIdWithTimestamp(System.getProperty("user.name")));
-		baseConnection.setName(EditConnectionController.composeConnectionName(baseConnection.getClientID(), baseConnection.getServerURI()));
+		baseConnection.setName(ConnectionUtils.composeConnectionName(baseConnection.getClientID(), baseConnection.getServerURI()));
 		baseConnection.setAutoConnect(true);
 		
 		final ConfiguredConnectionDetails connection = new ConfiguredConnectionDetails(configurationManager.getNextAvailableId(), true, true, true, baseConnection);

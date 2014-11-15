@@ -8,6 +8,12 @@
 			<ConnectionTimeout>10</ConnectionTimeout>
 			<KeepAliveInterval>10</KeepAliveInterval>
 			
+			<ReconnectionSettings>
+				<!-- How long (in ms) to wait after previous connection attempt before trying to connect again -->
+				<RetryInterval>5000</RetryInterval>				
+				<!-- Whether to resubscribe to all topics when the connection is regained -->
+				<Resubscribe>true</Resubscribe>
+			</ReconnectionSettings>
 			<!-- 
 			<MessageLog>XML_WITH_ENCODED_PAYLOAD</MessageLog>
 			 -->

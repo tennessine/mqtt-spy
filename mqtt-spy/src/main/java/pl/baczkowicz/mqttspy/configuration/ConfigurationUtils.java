@@ -8,34 +8,20 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.Main;
-import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetailsV010;
+import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.storage.MessageList;
 
 public class ConfigurationUtils
 {
 	private final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
 		
-	public static void populateConnectionDefaults(final UserInterfaceMqttConnectionDetailsV010 connection)
+	public static void populateConnectionDefaults(final UserInterfaceMqttConnectionDetails connection)
 	{
-		if (connection.isCleanSession() == null)
-		{
-			connection.setCleanSession(MqttConnectOptions.CLEAN_SESSION_DEFAULT);
-		}
-		
-		if (connection.getConnectionTimeout() == null)
-		{
-			connection.setConnectionTimeout(MqttConnectOptions.CONNECTION_TIMEOUT_DEFAULT);
-		}		
-
-		if (connection.getKeepAliveInterval() == null)
-		{
-			connection.setKeepAliveInterval(MqttConnectOptions.KEEP_ALIVE_INTERVAL_DEFAULT);
-		}
+		pl.baczkowicz.mqttspy.utils.ConfigurationUtils.populateConnectionDefaults(connection);
 		
 		if (connection.getMaxMessagesStored() == null)
 		{

@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.ui.format;
+package pl.baczkowicz.mqttspy.exceptions;
 
 /**
  * Represents an exception during text conversion.

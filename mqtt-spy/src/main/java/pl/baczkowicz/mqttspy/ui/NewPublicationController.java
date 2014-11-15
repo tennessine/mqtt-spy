@@ -24,11 +24,11 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.configuration.generated.BaseMqttMessage;
+import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
-import pl.baczkowicz.mqttspy.ui.format.ConversionException;
-import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
+import pl.baczkowicz.mqttspy.exceptions.ConversionException;
+import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
 @SuppressWarnings("deprecation")
@@ -120,7 +120,7 @@ public class NewPublicationController implements Initializable
 		{
 			try
 			{
-				final String convertedText = FormattingUtils.hexToString(publicationData.getText());
+				final String convertedText = ConversionUtils.hexToString(publicationData.getText());
 				logger.info("Converted {} to {}", publicationData.getText(), convertedText);
 				
 				publicationData.clear();				
@@ -146,7 +146,7 @@ public class NewPublicationController implements Initializable
 		plainSelected = false;
 		if (previouslyPlainSelected != plainSelected)
 		{
-			final String convertedText = FormattingUtils.stringToHex(publicationData.getText());
+			final String convertedText = ConversionUtils.stringToHex(publicationData.getText());
 			logger.info("Converted {} to {}", publicationData.getText(), convertedText);
 			
 			publicationData.clear();
@@ -202,9 +202,9 @@ public class NewPublicationController implements Initializable
 		else
 		{
 			publicationTopicText.setValue(message.getTopic());
-			publicationQosChoice.getSelectionModel().select(message.getQoS());
+			publicationQosChoice.getSelectionModel().select(message.getQos());
 			publicationData.clear();
-			publicationData.appendText(message.getPayload());
+			publicationData.appendText(message.getValue());
 			retainedBox.setSelected(message.isRetained());
 		}
 	}
@@ -231,12 +231,12 @@ public class NewPublicationController implements Initializable
 		
 			if (!previouslyPlainSelected)
 			{
-				data = FormattingUtils.hexToString(data);
+				data = ConversionUtils.hexToString(data);
 			}
 					
 			message.setTopic(publicationTopicText.getValue());
-			message.setQoS(publicationQosChoice.getSelectionModel().getSelectedIndex());
-			message.setPayload(data);
+			message.setQos(publicationQosChoice.getSelectionModel().getSelectedIndex());
+			message.setValue(data);
 			message.setRetained(retainedBox.isSelected());
 			
 			return message;
@@ -253,7 +253,7 @@ public class NewPublicationController implements Initializable
 	{						
 		final BaseMqttMessage message = readMessage(true);
 				
-		connection.publish(message.getTopic(), message.getPayload(), message.getQoS(), message.isRetained());
+		connection.publish(message.getTopic(), message.getValue(), message.getQos(), message.isRetained());
 		
 		recordPublicationTopic(message.getTopic());		
 	}

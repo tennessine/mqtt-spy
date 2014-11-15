@@ -38,6 +38,14 @@
 			<artifactId>mqtt-client</artifactId>
 			<version>0.4.0</version>
 		</dependency>
+		
+		<!--
+		<dependency>
+			<groupId>org.eclipse.paho</groupId>
+			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+			<version>1.0.0</version>
+		</dependency> 
+		 -->
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -137,7 +145,7 @@
 			<groupId>org.jvnet.jaxb2_commons</groupId>
 			<artifactId>jaxb2-basics-runtime</artifactId>
 			<version>0.5.0</version>
-		</dependency>
+		</dependency>		
 
 		<!--=== TEST === -->
 	
@@ -215,7 +223,8 @@
 						        <arg>-XtoString</arg>
 						        <arg>-Xequals</arg>
 						        <arg>-XhashCode</arg>						        
-                    			<arg>-Xcopyable</arg>					    
+                    			<arg>-Xcopyable</arg>	
+                    			<arg>-Xvalue-constructor</arg>				    
 			                </args>						 
 			                <plugins>
 								<plugin>
@@ -227,7 +236,14 @@
 			            </configuration>			            			          
 			        </execution>			       
 			        			 
-			    </executions>			    
+			    </executions>		
+			    <dependencies>
+	    			<dependency>
+						<groupId>org.jvnet.jaxb2_commons</groupId>
+						<artifactId>jaxb2-value-constructor</artifactId>
+						<version>3.0</version>
+					</dependency>
+			    </dependencies>	    
 			</plugin> 
 			 
 		</plugins>

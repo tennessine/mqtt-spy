@@ -1,8 +1,5 @@
 package pl.baczkowicz.mqttspy.ui.utils;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,50 +11,13 @@ import pl.baczkowicz.mqttspy.configuration.generated.SubstringConversionFormatte
 import pl.baczkowicz.mqttspy.configuration.generated.SubstringExtractFormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubstringFormatterDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.SubstringReplaceFormatterDetails;
-import pl.baczkowicz.mqttspy.ui.format.ConversionException;
+import pl.baczkowicz.mqttspy.exceptions.ConversionException;
+import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 
 public class FormattingUtils
 {
 	final static Logger logger = LoggerFactory.getLogger(FormattingUtils.class);
 	
-	public static String stringToHex(final String data)
-	{
-		return new String(Hex.encodeHex(data.getBytes()));
-	}
-	
-	public static String hexToString(final String data) throws ConversionException
-	{
-		try
-		{
-			return new String(Hex.decodeHex(data.toCharArray()));
-		}
-		catch (DecoderException e)
-		{
-			throw new ConversionException("Cannot convert given hex text into plain text", e);
-		}
-	}
-	
-	public static String hexToStringNoException(final String data)
-	{
-		try
-		{
-			return new String(Hex.decodeHex(data.toCharArray()));
-		}
-		catch (DecoderException e)
-		{
-			return "[invalid hex]";
-		}
-	}
-
-	public static String base64ToString(final String data)
-	{
-		return new String(Base64.decodeBase64(data));
-	}
-	
-	public static String stringToBase64(final String data)
-	{
-		return Base64.encodeBase64String(data.getBytes());
-	}
 
 	public static String custom(final FormatterDetails customFormatter, final String text)
 	{
@@ -231,19 +191,19 @@ public class FormattingUtils
 			}
 			case HEX_ENCODE:
 			{
-				return FormattingUtils.stringToHex(text);
+				return ConversionUtils.stringToHex(text);
 			}
 			case HEX_DECODE:
 			{
-				return FormattingUtils.hexToStringNoException(text);
+				return ConversionUtils.hexToStringNoException(text);
 			}
 			case BASE_64_ENCODE:
 			{
-				return FormattingUtils.stringToBase64(text);
+				return ConversionUtils.stringToBase64(text);
 			}
 			case BASE_64_DECODE:
 			{
-				return FormattingUtils.base64ToString(text);
+				return ConversionUtils.base64ToString(text);
 			}		
 			default:
 				return text;
