@@ -56,7 +56,7 @@ public class MqttUtils
 		return newClientId;
 	}
 	
-	public static String getServerURI(final String brokerAddress)
+	public static String getCompleteServerURI(final String brokerAddress)
 	{
 		String serverURI = brokerAddress;
 

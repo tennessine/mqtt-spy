@@ -23,7 +23,7 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 		try
 		{
 			connectAndWait(connectionDetails.getOptions());
-			logger.error("Successfully connected to {}", connectionDetails.getName());
+			logger.info("Successfully connected to {}", connectionDetails.getName());
 			setConnectionStatus(MqttConnectionStatus.CONNECTED);
 			return true;
 		}

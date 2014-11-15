@@ -28,9 +28,6 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		
 		ConfigurationUtils.populateConnectionDefaults(this);
 		
-		// TODO: IMPORTANT
-		// this.serverURI = MqttUtils.getServerURI(serverURI);
-		
 		// Populate MQTT options
 		options = new MqttConnectOptions();
 		
@@ -38,7 +35,7 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		{
 			if (getServerURI().size() > 1)
 			{
-				options.setServerURIs((String[]) getServerURI().toArray());
+				options.setServerURIs(getServerURI().toArray(new String[getServerURI().size()]));
 			}
 			
 			options.setCleanSession(isCleanSession());

@@ -114,8 +114,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 			
 			if (!connections.get(getSelectedIndex()).isBeingCreated())
 			{
-				// TODO:
-				// logger.info("Editing connection {}", connections.get(getSelectedIndex()).getName());
+				logger.trace("Editing connection {}", connections.get(getSelectedIndex()).getName());
 				
 				editConnectionPaneController.setRecordModifications(false);
 				editConnectionPaneController.editConnection(connections.get(getSelectedIndex()));
@@ -156,8 +155,7 @@ public class EditConnectionsController extends AnchorPane implements Initializab
 						}
 						catch (ConfigurationException e)
 						{
-							// TODO
-							e.printStackTrace();
+							logger.error("Cannot create connection", e);
 						}
 					}
 				}

@@ -1,13 +1,31 @@
 package pl.baczkowicz.mqttspy.utils;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
+import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 
 public class ConfigurationUtils
 {
+	final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
+	
 	public static void populateConnectionDefaults(final MqttConnectionDetails connection)
 	{
+		for (int i = 0; i < connection.getServerURI().size(); i++)
+		{
+			final String serverURI = connection.getServerURI().get(i);			
+			final String completeServerURI = MqttUtils.getCompleteServerURI(serverURI);
+			
+			// Replace the existing value if it is not complete
+			if (!completeServerURI.equals(serverURI))
+			{
+				logger.debug("Auto-complete for server URI ({} -> {})", serverURI, completeServerURI);
+				connection.getServerURI().set(i, completeServerURI);
+			}
+		}
+		
 		if (connection.getName() == null || connection.getName().isEmpty())
 		{
 			connection.setName(ConnectionUtils.composeConnectionName(connection.getClientID(), connection.getServerURI()));

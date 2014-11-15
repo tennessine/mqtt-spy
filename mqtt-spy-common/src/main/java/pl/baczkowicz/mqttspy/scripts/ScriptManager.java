@@ -12,6 +12,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.SimpleBindings;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.Script;
@@ -20,6 +21,8 @@ import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 
 public class ScriptManager
 {
+	final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
+	
 	private Map<File, PublicationScriptProperties> scripts = new HashMap<File, PublicationScriptProperties>();
 	
 	private ScriptEventManagerInterface eventManager;
@@ -48,6 +51,7 @@ public class ScriptManager
 		
 		final PublicationScriptProperties script = createScript(scriptName, scriptFile, connection);
 		
+		logger.debug("Adding script {}", filename);
 		scripts.put(scriptFile, script);
 	}
 	
@@ -105,7 +109,7 @@ public class ScriptManager
 	public void evaluateScriptFile(final PublicationScriptProperties script)
 	{
 		// Only start if not running already
-		if (!script.getStatus().equals(ScriptRunningState.RUNNING))
+		if (!ScriptRunningState.RUNNING.equals(script.getStatus()))
 		{
 			new Thread(new ScriptRunner(eventManager, script, executor)).start();
 		}		
@@ -113,7 +117,17 @@ public class ScriptManager
 
 	public void evaluateScriptFile(final File scriptFile)
 	{
-		evaluateScriptFile(getScript(scriptFile));
+		final PublicationScriptProperties script = getScript(scriptFile); 
+		
+		if (script != null)
+		{
+			evaluateScriptFile(script);
+		}
+		else
+		{
+			// Not good in this happens... ;-)
+			logger.warn("No script for {}", scriptFile.getName());
+		}
 	}
 	
 	public PublicationScriptProperties getScript(final File scriptFile)

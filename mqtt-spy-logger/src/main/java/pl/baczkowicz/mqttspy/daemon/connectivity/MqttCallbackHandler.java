@@ -93,8 +93,16 @@ public class MqttCallbackHandler implements MqttCallback
 			if (subscriptionDetails.getScriptFile() != null)
 			{
 				final PublicationScriptProperties script = scriptManager.getScript(new File(subscriptionDetails.getScriptFile()));
-				script.getScriptEngine().put("receivedMessage", receivedMessage);
-				scriptManager.evaluateScriptFile(script);
+				
+				if (script != null)
+				{
+					script.getScriptEngine().put("receivedMessage", receivedMessage);
+					scriptManager.evaluateScriptFile(script);
+				}
+				else
+				{
+					logger.warn("No script found for {}", subscriptionDetails.getScriptFile());
+				}
 			}
 		}
 		

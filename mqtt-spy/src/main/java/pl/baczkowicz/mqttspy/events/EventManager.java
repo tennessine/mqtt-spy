@@ -315,17 +315,17 @@ public class EventManager implements ScriptEventManagerInterface
 
 	public void notifyConfigurationFileWriteFailure()
 	{
-		// TODO Auto-generated method stub
+		// No action
 	}
 
 	public void notifyConfigurationFileCopyFailure()
 	{
-		// TODO Auto-generated method stub		
+		// No action		
 	}
 
 	public void notifyConfigurationFileReadFailure()
 	{
-		// TODO Auto-generated method stub
+		// No action
 	}
 
 	public void notifyClearHistory(final ManagedMessageStoreWithFiltering store)

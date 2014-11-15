@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mqttspydc:MqttSpyDaemonConfiguration xmlns:mqttspydc="http://baczkowicz.pl/mqtt-spy/daemon/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Connection>
+  			<ServerURI>localhost:2000</ServerURI>
+  			<!-- <ServerURI>tcp://localhost:2000</ServerURI> -->
+  			<!-- <ServerURI>tcp://localhost</ServerURI> -->
   			<ServerURI>tcp://localhost</ServerURI>
 			<ClientID>mqtt-spy-logger</ClientID>
+			
+			<UserCredentials>
+				<Username>test3</Username>
+				<Password></Password>
+			</UserCredentials>
+			
+			<!-- TODO: ADD LTW -->
 						
 			<CleanSession>true</CleanSession>
 			<ConnectionTimeout>10</ConnectionTimeout>

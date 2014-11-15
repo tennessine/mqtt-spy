@@ -302,8 +302,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 					}
 					catch (ConfigurationException e)
 					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						logger.error("Cannot open connection", e);
 					}							
 				}
 			});

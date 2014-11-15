@@ -24,7 +24,7 @@ public class XMLParserTest
 	// @Test
 	// public final void testLoadFromInputStream()
 	// {
-	// fail("Not yet implemented"); // TODO
+	// fail("Not yet implemented");
 	// }
 
 	@Test
@@ -38,28 +38,27 @@ public class XMLParserTest
 	// @Test
 	// public final void testSaveToFile()
 	// {
-	// fail("Not yet implemented"); // TODO
+	// fail("Not yet implemented");
 	// }
 	//
 	// @Ignore
 	// @Test
 	// public final void testGetMarshaller()
 	// {
-	// fail("Not yet implemented"); // TODO
+	// fail("Not yet implemented");
 	// }
 	//
 	// @Ignore
 	// @Test
 	// public final void testGetUnmarshaller()
 	// {
-	// fail("Not yet implemented"); // TODO
+	// fail("Not yet implemented");
 	// }
 	//
 	// @Ignore
 	// @Test
 	// public final void testCreateSchema()
 	// {
-	// fail("Not yet implemented"); // TODO
+	// fail("Not yet implemented");
 	// }
-
 }

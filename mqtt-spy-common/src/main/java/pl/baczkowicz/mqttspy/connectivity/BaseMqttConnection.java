@@ -138,7 +138,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 
 	public boolean canPublish()
 	{
-		return client != null;
+		return client != null && client.isConnected();
 	}
 	
 	public MqttConnectionStatus getConnectionStatus()
