@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mqttspydc:MqttSpyDaemonConfiguration xmlns:mqttspydc="http://baczkowicz.pl/mqtt-spy/daemon/configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Connection>
+  			<!-- Server URI can be supplied without the tcp:// prefix -->
   			<ServerURI>localhost:2000</ServerURI>
-  			<!-- <ServerURI>tcp://localhost:2000</ServerURI> -->
-  			<!-- <ServerURI>tcp://localhost</ServerURI> -->
   			<ServerURI>tcp://localhost</ServerURI>
-			<ClientID>mqtt-spy-logger</ClientID>
+  			
+			<ClientID>mqtt-spy-daemon</ClientID>
 			
 			<UserCredentials>
-				<Username>test3</Username>
-				<Password></Password>
+				<Username>test2</Username>
+				<!-- Password is base64 encoded -->
+				<Password>dGVzdDI=</Password>
 			</UserCredentials>
 			
-			<!-- TODO: ADD LTW -->
-						
+			<!-- Payload is base64 encoded -->
+			<LastWillAndTestament topic="/ltw/mqtt-spy-daemon" qos="0" retained="false">TXkgbGFzdCB3aWxsLi4u</LastWillAndTestament>
+									
 			<CleanSession>true</CleanSession>
 			<ConnectionTimeout>10</ConnectionTimeout>
 			<KeepAliveInterval>10</KeepAliveInterval>
@@ -24,13 +26,11 @@
 				<!-- Whether to resubscribe to all topics when the connection is regained -->
 				<Resubscribe>true</Resubscribe>
 			</ReconnectionSettings>
-			<!-- 
-			<MessageLog>XML_WITH_ENCODED_PAYLOAD</MessageLog>
-			 -->
+			
+			<!-- For binary payloads, change it to XML_WITH_ENCODED_PAYLOAD -->
 			<MessageLog>XML_WITH_PLAIN_PAYLOAD</MessageLog>
 			
-			<Subscription topic="/test/#" qos="0" />
-			<!-- scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js" --> 	
+			<Subscription topic="/test/#" qos="0" />	
 			<Subscription topic="/home/#" qos="0" scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js"/>
 
 			<BackgroundScript>

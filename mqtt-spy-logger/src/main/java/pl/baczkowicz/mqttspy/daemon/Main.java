@@ -66,7 +66,7 @@ public class Main
 			{
 				public void run()
 				{
-					final boolean neverStarted = connection.getLastConnectionAttempt() == BaseMqttConnection.NEVER_STARTED;
+					final boolean neverStarted = connection.getLastConnectionAttemptTimestamp() == BaseMqttConnection.NEVER_STARTED;
 					
 					// If successfully connected, and re-subscription is configured
 					if (connection.connect() 

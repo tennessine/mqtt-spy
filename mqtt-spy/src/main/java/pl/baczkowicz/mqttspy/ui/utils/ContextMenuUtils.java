@@ -37,7 +37,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				connection.unsubscribe(subscription);
+				connection.unsubscribe(subscription, true);
 			}
 		});
 		contextMenu.getItems().add(cancelItem);
@@ -113,7 +113,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				connection.unsubscribeAll();
+				connection.unsubscribeAll(true);
 			}
 		});
 		contextMenu.getItems().add(cancelItem);
@@ -125,7 +125,7 @@ public class ContextMenuUtils
 		{
 			public void handle(ActionEvent e)
 			{
-				connection.resubscribeAll();
+				connection.resubscribeAll(false);
 			}
 		});
 		contextMenu.getItems().add(resubscribeItem);

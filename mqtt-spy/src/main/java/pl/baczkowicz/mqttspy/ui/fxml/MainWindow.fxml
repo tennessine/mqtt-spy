@@ -11,8 +11,10 @@
 			<menus>
 				<Menu mnemonicParsing="false" text="File">
 					<items>
+						<!-- 
 						<MenuItem mnemonicParsing="false" onAction="#openMessageLog" text="Open MQTT message log" />
 						<SeparatorMenuItem mnemonicParsing="false" />
+						 -->
 	            		<MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
 					</items>
 				</Menu>

@@ -130,7 +130,7 @@ public class MqttManager
 		// TODO: check if connected?
 
 		connection.setConnectionStatus(MqttConnectionStatus.DISCONNECTING);
-		connection.unsubscribeAll();
+		connection.unsubscribeAll(true);
 
 		try
 		{			

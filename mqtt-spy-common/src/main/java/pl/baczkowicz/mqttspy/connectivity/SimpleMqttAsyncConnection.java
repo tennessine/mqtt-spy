@@ -68,7 +68,7 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 		}
 		else
 		{
-			logger.warn("No connection established yet...");
+			logger.warn("Publication attempt failure - no connection available...");
 		}
 		
 		return false;

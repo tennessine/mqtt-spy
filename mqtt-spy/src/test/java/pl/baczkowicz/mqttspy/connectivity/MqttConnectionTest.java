@@ -168,7 +168,7 @@ public class MqttConnectionTest extends TestCase
 		connection.messageReceived(message);
 
 		// This should remove the subscription
-		connection.unsubscribe(subscription);
+		connection.unsubscribe(subscription, true);
 
 		// This should be ignored - subscription not active
 		connection.messageReceived(message);

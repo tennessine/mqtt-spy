@@ -27,6 +27,7 @@ import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
+import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 
 @SuppressWarnings("deprecation")
@@ -106,8 +107,10 @@ public class DialogUtils
 	public static boolean showUsernameAndPasswordDialog(final Object owner,
 			String connectionName, final UserCredentials userCredentials)
 	{
-		// final UserInfo userInfo = new UserInfo(userCredentials.getUsername(), MqttUtils.decodePassword(userCredentials.getPassword()));
-		final Pair<String, String> userInfo = new Pair<String, String>(userCredentials.getUsername(), userCredentials.getPassword());
+		// final Pair<String, String> userInfo = new Pair<String, String>(userCredentials.getUsername(), userCredentials.getPassword());
+		final Pair<String, String> userInfo = new Pair<String, String>(
+				userCredentials.getUsername(), 
+				MqttUtils.decodePassword(userCredentials.getPassword()));
 		
 		final CustomDialogs dialog = new CustomDialogs();
 		dialog.owner(owner);
@@ -118,7 +121,9 @@ public class DialogUtils
 		if (response.isPresent())
 		{
 			userCredentials.setUsername(response.get().getKey());
-			userCredentials.setPassword(response.get().getValue());
+			
+			userCredentials.setPassword(MqttUtils.encodePassword(response.get().getValue()));
+			// userCredentials.setPassword(response.get().getValue());
 			return true;
 		}
 		
@@ -148,13 +153,23 @@ public class DialogUtils
 	{
 		final StringBuffer sb = new StringBuffer();
 		sb.append("Status: " + connection.getConnectionStatus().toString().toLowerCase());
-		if (connection.getConnectionStatus().equals(MqttConnectionStatus.DISCONNECTED))
+		
+		if (MqttConnectionStatus.CONNECTED.equals(connection.getConnectionStatus()))
 		{
-			if (!connection.getDisconnectionReason().isEmpty())
-			{
-				sb.append(System.getProperty("line.separator") + "Reason: " + connection.getDisconnectionReason().toLowerCase());
-			}
+			sb.append(" (" + connection.getLastSuccessfulyConnectionAttempt() + ")");
 		}
+		
+		if (connection.getConnectionAttempts() > 1)
+		{
+			sb.append(System.getProperty("line.separator"));
+			sb.append("Connection attempts: " + connection.getConnectionAttempts());
+		}
+				
+		if (connection.getDisconnectionReason() != null && !connection.getDisconnectionReason().isEmpty())
+		{
+			sb.append(System.getProperty("line.separator"));
+			sb.append("Last error: " + connection.getDisconnectionReason().toLowerCase());
+		}	
 		
 		tooltip.setText(sb.toString());
 	}

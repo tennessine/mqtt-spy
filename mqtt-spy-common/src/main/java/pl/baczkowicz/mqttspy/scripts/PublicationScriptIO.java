@@ -101,18 +101,19 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 	public void publish(final String publicationTopic, final String data, final int qos, final boolean retained)
 	{
 		touch();
-		if (connection.canPublish())
+
+		if (!script.getStatus().equals(ScriptRunningState.RUNNING))
 		{
+			ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.RUNNING, script, executor);
+		}
+		
+		logger.debug("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", script.getName(), publicationTopic, data, qos, retained);
+		final boolean published = connection.publish(publicationTopic, data, qos, retained);
+		
+		if (published)
+		{				
 			publishedMessages++;
 			
-			if (!script.getStatus().equals(ScriptRunningState.RUNNING))
-			{
-				ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.RUNNING, script, executor);
-			}
-			
-			logger.debug("[JS {}] Publishing message to {} with payload = {}, qos = {}, retained = {}", script.getName(), publicationTopic, data, qos, retained);
-			connection.publish(publicationTopic, data, qos, retained);
-						
 			if (executor != null)
 			{
 				executor.execute(new Runnable()

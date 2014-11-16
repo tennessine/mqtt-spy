@@ -46,7 +46,7 @@ public class ReconnectionManager implements Runnable
 			}
 			
 			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();				
-			if (connection.getLastConnectionAttempt() + reconnectionSettings.getRetryInterval() > Utils.getMonotonicTimeInMilliseconds())
+			if (connection.getLastConnectionAttemptTimestamp() + reconnectionSettings.getRetryInterval() > Utils.getMonotonicTimeInMilliseconds())
 			{
 				// If we're not due to reconnect yet
 				continue;

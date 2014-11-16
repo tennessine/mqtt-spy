@@ -17,16 +17,16 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 	private Integer qos;
 
 	private Color color;
-	
-	private Boolean active;
-
-	private SubscriptionController subscriptionController;
-
-	// private final EventManager eventManager;
-	
-	private MqttAsyncConnection connection;
 
 	private boolean subscribing;
+	
+	private boolean subscriptionRequested;
+
+	private boolean active;
+	
+	private SubscriptionController subscriptionController;
+
+	private MqttAsyncConnection connection;
 
 	public MqttSubscription(final String topic, final Integer qos, final Color color, 
 			final int minMessagesPerTopic, final int preferredStoreSize, final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
@@ -38,8 +38,7 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 		this.qos = qos;
 		this.color = color;
 		this.active = false;
-		
-		// this.eventManager = eventManager;
+		this.subscriptionRequested = false;
 	}
 
 	public String getTopic()
@@ -72,12 +71,12 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 		this.color = color;
 	}
 
-	public Boolean isActive()
+	public boolean isActive()
 	{
 		return active;
 	}
 
-	public void setActive(Boolean active)
+	public void setActive(final boolean active)
 	{
 		this.active = active;
 		subscriptionStatusChanged();
@@ -126,5 +125,15 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 	public void setSubscribing(final boolean value)
 	{
 		subscribing = value;
+	}
+
+	public boolean getSubscriptionRequested()
+	{
+		return subscriptionRequested;
+	}
+
+	public void setSubscriptionRequested(final boolean subscriptionRequested)
+	{
+		this.subscriptionRequested = subscriptionRequested;
 	}
 }

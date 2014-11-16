@@ -33,7 +33,6 @@ import pl.baczkowicz.mqttspy.configuration.ConfiguredConnectionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.generated.UserInterfaceMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttManager;
-import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -255,7 +254,9 @@ public class MainController
 	@FXML
 	public void exit()
 	{
-		mqttManager.disconnectAll();		
+		// This is triggered by the user
+		mqttManager.disconnectAll();
+		
 		statisticsManager.saveStats();
 		System.exit(0);
 	}
@@ -384,21 +385,17 @@ public class MainController
 		{
 			// Copy so that we don't store it in the connection and don't save those values
 			final UserCredentials userCredentials = new UserCredentials();
-			connectionDetails.getUserAuthentication().copyTo(userCredentials);
-			
-			// Decode password stored in config
-			userCredentials.setPassword(MqttUtils.decodePassword(userCredentials.getPassword()));
+			connectionDetails.getUserCredentials().copyTo(userCredentials);
 			
 			// Check if ask for username or password, and then override existing values if confirmed
 			if (connectionDetails.getUserAuthentication().isAskForPassword() || connectionDetails.getUserAuthentication().isAskForUsername())
 			{
+				// Password is decoded and encoded in this utility method
 				if (!DialogUtils.showUsernameAndPasswordDialog(stage, connectionDetails.getName(), userCredentials))
 				{
 					return true;
 				}
 			}
-			
-			// TODO: encode password
 			
 			// Settings user credentials so they can be validated and passed onto the MQTT client library			
 			connectionDetails.setUserCredentials(userCredentials);
@@ -452,7 +449,7 @@ public class MainController
 			// Check if we should create a tab for the subscription
 			if (subscriptionDetails.isCreateTab())
 			{
-				connectionController.newSubscriptionPaneController.subscribe(subscriptionDetails, false);
+				connectionController.newSubscriptionPaneController.subscribe(subscriptionDetails, connectionDetails.isAutoSubscribe());
 			}
 			
 			// Add it to the list of pre-defined topics

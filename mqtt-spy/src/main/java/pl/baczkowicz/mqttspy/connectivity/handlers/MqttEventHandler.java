@@ -1,5 +1,9 @@
 package pl.baczkowicz.mqttspy.connectivity.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.events.MqttSpyEvent;
 import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptSuccessEvent;
@@ -9,6 +13,8 @@ import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptSuccess
 
 public class MqttEventHandler implements Runnable
 {
+	private final static Logger logger = LoggerFactory.getLogger(MqttEventHandler.class);
+	
 	private MqttSpyEvent event;
 
 	public MqttEventHandler(final MqttSpyEvent event)
@@ -35,7 +41,14 @@ public class MqttEventHandler implements Runnable
 		
 		if (event instanceof MqttConnectionAttemptSuccessEvent)
 		{
-			((MqttConnectionAttemptSuccessEvent) event).getConnection().setConnectionStatus(MqttConnectionStatus.CONNECTED);
+			final MqttAsyncConnection connection = ((MqttConnectionAttemptSuccessEvent) event).getConnection(); 
+			
+			connection.setConnectionStatus(MqttConnectionStatus.CONNECTED);
+			connection.recordSuccessfulConnection();
+			
+			// This should restore any previously requested subscriptions
+			logger.info("About to resubscribe to all requested topics");
+			connection.resubscribeAll(true);
 		}
 		
 		if (event instanceof MqttDisconnectionAttemptSuccessEvent)

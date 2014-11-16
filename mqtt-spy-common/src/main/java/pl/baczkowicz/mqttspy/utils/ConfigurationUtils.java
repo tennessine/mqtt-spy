@@ -11,7 +11,7 @@ public class ConfigurationUtils
 {
 	final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
 	
-	public static void populateConnectionDefaults(final MqttConnectionDetails connection)
+	public static void populateServerURIs(final MqttConnectionDetails connection)
 	{
 		for (int i = 0; i < connection.getServerURI().size(); i++)
 		{
@@ -21,11 +21,13 @@ public class ConfigurationUtils
 			// Replace the existing value if it is not complete
 			if (!completeServerURI.equals(serverURI))
 			{
-				logger.debug("Auto-complete for server URI ({} -> {})", serverURI, completeServerURI);
+				logger.info("Auto-complete for server URI ({} -> {})", serverURI, completeServerURI);
 				connection.getServerURI().set(i, completeServerURI);
 			}
-		}
-		
+		}	
+	}
+	public static void populateConnectionDefaults(final MqttConnectionDetails connection)
+	{	
 		if (connection.getName() == null || connection.getName().isEmpty())
 		{
 			connection.setName(ConnectionUtils.composeConnectionName(connection.getClientID(), connection.getServerURI()));

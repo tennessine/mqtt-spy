@@ -83,6 +83,7 @@ public class SubscriptionManager
 		
 		if (subscribe)
 		{
+			logger.debug("Trying to subscribe {}", subscription.getTopic());
 			connection.subscribe(subscription);
 		}
 		else

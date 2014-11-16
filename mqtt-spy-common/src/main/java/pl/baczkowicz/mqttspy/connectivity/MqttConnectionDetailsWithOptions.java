@@ -26,6 +26,7 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		this.setUserCredentials(details.getUserCredentials());
 		this.setReconnectionSettings(details.getReconnectionSettings());
 		
+		ConfigurationUtils.populateServerURIs(this);
 		ConfigurationUtils.populateConnectionDefaults(this);
 		
 		// Populate MQTT options

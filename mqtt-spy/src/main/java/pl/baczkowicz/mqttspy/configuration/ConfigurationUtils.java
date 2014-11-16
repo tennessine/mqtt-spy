@@ -18,11 +18,13 @@ import pl.baczkowicz.mqttspy.storage.MessageList;
 public class ConfigurationUtils
 {
 	private final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
+	
+	public final static int DEFAULT_RECONNECTION_INTERVAL = 5000;
 		
 	public static void populateConnectionDefaults(final UserInterfaceMqttConnectionDetails connection)
 	{
 		pl.baczkowicz.mqttspy.utils.ConfigurationUtils.populateConnectionDefaults(connection);
-		
+				
 		if (connection.getMaxMessagesStored() == null)
 		{
 			connection.setMaxMessagesStored(MessageList.DEFAULT_MAX_SIZE);

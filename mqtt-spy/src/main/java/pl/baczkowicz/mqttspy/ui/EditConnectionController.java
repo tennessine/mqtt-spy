@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
+import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationUtils;
@@ -74,6 +75,15 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	
 	@FXML
 	private TextField brokerAddressText;
+	
+	@FXML
+	private CheckBox reconnect;
+		
+	@FXML
+	private TextField reconnectionInterval;
+	
+	@FXML
+	private CheckBox resubscribe;
 
 	@FXML
 	private TextField clientIdText;
@@ -97,13 +107,16 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private CheckBox cleanSession;
 
 	// UI & Formatting
+		
+	@FXML
+	private CheckBox autoOpen;
 	
 	@FXML
 	private CheckBox autoConnect;
 	
 	@FXML
-	private CheckBox autoOpen;
-	
+	private CheckBox autoSubscribe;
+		
 	@FXML
 	private TextField maxMessagesStored;
 	
@@ -271,6 +284,21 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		keepAlive.textProperty().addListener(basicOnChangeListener);
 		keepAlive.addEventFilter(KeyEvent.KEY_TYPED, KeyboardUtils.nonNumericKeyConsumer);
 		
+		reconnect.selectedProperty().addListener(new ChangeListener()
+		{
+			@Override
+			public void changed(ObservableValue observable, Object oldValue, Object newValue)
+			{
+				updateReconnection();
+				
+				onChange();
+			}		
+		});
+		reconnectionInterval.textProperty().addListener(basicOnChangeListener);
+		reconnectionInterval.addEventFilter(KeyEvent.KEY_TYPED, KeyboardUtils.nonNumericKeyConsumer);
+		resubscribe.selectedProperty().addListener(basicOnChangeListener);
+		
+		
 		// Security
 		userAuthentication.selectedProperty().addListener(new ChangeListener()
 		{
@@ -299,6 +327,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// UI
 		autoConnect.selectedProperty().addListener(basicOnChangeListener);
 		autoOpen.selectedProperty().addListener(basicOnChangeListener);
+		autoSubscribe.selectedProperty().addListener(basicOnChangeListener);
 		
 		maxMessagesStored.textProperty().addListener(basicOnChangeListener);
 		maxMessagesStored.addEventFilter(KeyEvent.KEY_TYPED, KeyboardUtils.nonNumericKeyConsumer);
@@ -724,7 +753,8 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 				updateButtons();
 				updateClientId(false);
 				updateClientIdLength();
-				updateConnectionName();								
+				updateConnectionName();		
+				updateReconnection();
 				updateUserAuthentication();
 				editConnectionsController.listConnections();
 			}
@@ -740,7 +770,13 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		final List<String> serverURIs = Arrays.asList(brokerAddressText.getText().split(ConnectionUtils.SERVER_DELIMITER));
 		for (final String serverURI : serverURIs)
 		{
+			logger.trace("Adding " + serverURI);
 			connection.getServerURI().add(serverURI.trim());
+		}
+		if (brokerAddressText.getText().endsWith(ConnectionUtils.SERVER_DELIMITER))
+		{
+			logger.trace("Adding empty");
+			connection.getServerURI().add("");
 		}
 		
 		connection.setClientID(clientIdText.getText());
@@ -749,8 +785,17 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		connection.setConnectionTimeout(Integer.valueOf(connectionTimeout.getText()));
 		connection.setKeepAliveInterval(Integer.valueOf(keepAlive.getText()));
 		
+		if (reconnect.isSelected())
+		{
+			connection.setReconnectionSettings(
+					new ReconnectionSettings(
+							Integer.valueOf(reconnectionInterval.getText()), 
+							resubscribe.isSelected()));
+		}
+		
 		connection.setAutoConnect(autoConnect.isSelected());
 		connection.setAutoOpen(autoOpen.isSelected());
+		connection.setAutoSubscribe(autoSubscribe.isSelected());
 		connection.setFormatter(formatter.getSelectionModel().getSelectedItem());
 		connection.setMaxMessagesStored(Integer.valueOf(maxMessagesStored.getText()));
 		connection.setMinMessagesStoredPerTopic(Integer.valueOf(minMessagesPerTopicStored.getText()));
@@ -905,7 +950,23 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		}
 	}
 	
-
+	private void updateReconnection()
+	{
+		if (reconnect.isSelected())
+		{
+			reconnectionInterval.setDisable(false);
+			if (reconnectionInterval.getText().length() == 0)
+			{
+				reconnectionInterval.setText(String.valueOf(ConfigurationUtils.DEFAULT_RECONNECTION_INTERVAL));
+			}
+			resubscribe.setDisable(false);
+		}
+		else
+		{
+			reconnectionInterval.setDisable(true);
+			resubscribe.setDisable(true);
+		}
+	}
 	
 	private void displayConnectionDetails(final ConfiguredConnectionDetails connection)
 	{
@@ -920,6 +981,22 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		connectionTimeout.setText(connection.getConnectionTimeout().toString());
 		keepAlive.setText(connection.getKeepAliveInterval().toString());
 		cleanSession.setSelected(connection.isCleanSession());
+		
+		reconnect.setSelected(connection.getReconnectionSettings() != null);
+		if (connection.getReconnectionSettings() != null)
+		{
+			reconnect.setSelected(true);
+			reconnectionInterval.setText(String.valueOf(connection.getReconnectionSettings().getRetryInterval()));
+			resubscribe.setSelected(connection.getReconnectionSettings().isResubscribe());
+		}
+		else
+		{
+			reconnect.setSelected(false);
+			reconnectionInterval.setText("");
+			resubscribe.setSelected(false);
+		}
+		
+		updateReconnection();
 
 		// Security
 		userAuthentication.setSelected(connection.getUserAuthentication() != null && connection.getUserCredentials() != null);
@@ -952,6 +1029,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		// UI
 		autoConnect.setSelected(connection.isAutoConnect() == null ? false : connection.isAutoConnect());
 		autoOpen.setSelected(connection.isAutoOpen() == null ? false : connection.isAutoOpen());
+		autoSubscribe.setSelected(connection.isAutoSubscribe() == null ? false : connection.isAutoSubscribe());
 		maxMessagesStored.setText(connection.getMaxMessagesStored().toString());
 		minMessagesPerTopicStored.setText(connection.getMinMessagesStoredPerTopic().toString());
 				

@@ -22,18 +22,22 @@ import pl.baczkowicz.mqttspy.utils.Utils;
 public abstract class BaseMqttConnection implements MqttConnectionInterface
 {
 	public static final long NEVER_STARTED = 0;
+
+	private int connectionAttempts = 0;
+
+	private long lastConnectionAttemptTimestamp = NEVER_STARTED;
+	
+	private Date lastSuccessfulConnectionAttempt;
 	
 	private SubscriptionsStore subscriptionsStore;
 	
-	protected MqttAsyncClient client;
-	
+	protected MqttAsyncClient client;	
+
 	protected final MqttConnectionDetailsWithOptions connectionDetails;	
 
 	private MqttConnectionStatus connectionStatus = MqttConnectionStatus.NOT_CONNECTED;
 
 	private String disconnectionReason;
-	
-	private long lastConnectionAttempt = NEVER_STARTED;
 	
 	public BaseMqttConnection(final MqttConnectionDetailsWithOptions connectionDetails)
 	{
@@ -69,7 +73,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	public void connect(final MqttConnectOptions options, final Object userContext, final IMqttActionListener callback) throws MqttSpyException
 	{
-		setLastConnectionAttempt(Utils.getMonotonicTimeInMilliseconds());
+		recordConnectionAttempt();
 		
 		try
 		{
@@ -91,7 +95,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	public void connectAndWait(final MqttConnectOptions options) throws MqttSpyException
 	{
-		setLastConnectionAttempt(Utils.getMonotonicTimeInMilliseconds());
+		recordConnectionAttempt();
 		
 		try
 		{
@@ -111,6 +115,23 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 		}
 	}
 	
+	protected void recordConnectionAttempt()
+	{
+		lastConnectionAttemptTimestamp = Utils.getMonotonicTimeInMilliseconds();
+		connectionAttempts++;
+		
+	}
+	
+	public void recordSuccessfulConnection()
+	{
+		lastSuccessfulConnectionAttempt = new Date();
+	}
+	
+	public String getLastSuccessfulyConnectionAttempt()
+	{
+		return Utils.DATE_WITH_SECONDS_SDF.format(lastSuccessfulConnectionAttempt);
+	}
+	
 	public void subscribe(final String topic, final int qos) throws MqttSpyException
 	{
 		try
@@ -128,7 +149,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	protected void addSubscriptionToStore(final String topic)
 	{
 		// Store the subscription topic for further matching
-		subscriptionsStore.add(new Subscription(client.getClientId(), topic, QOSType.MOST_ONE, true));
+		subscriptionsStore.add(new Subscription(connectionDetails.getClientID(), topic, QOSType.MOST_ONE, true));
 	}
 	
 	protected void removeSubscriptionFromStore(final String topic)
@@ -193,13 +214,13 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 		return connectionDetails;
 	}
 
-	public long getLastConnectionAttempt()
+	public long getLastConnectionAttemptTimestamp()
 	{
-		return lastConnectionAttempt;
+		return lastConnectionAttemptTimestamp;
 	}
 
-	public void setLastConnectionAttempt(long lastConnectionAttempt)
+	public int getConnectionAttempts()
 	{
-		this.lastConnectionAttempt = lastConnectionAttempt;
+		return connectionAttempts;
 	}
 }
