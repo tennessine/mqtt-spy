@@ -84,7 +84,9 @@
 		<!-- TODO
 		<xs:attribute 	name="name" 				type="xs:string" />
 		<xs:attribute 	name="initialDelay" 		type="xs:int" default="0" />
+		-->
 		<xs:attribute 	name="repeat"				type="xs:boolean" />
+		<!-- 
 		<xs:attribute 	name="repeatCount" 			type="xs:int" default="0" />
 		<xs:attribute 	name="delayBetweenRuns" 	type="xs:int" default="0" />
 		 -->
@@ -103,6 +105,7 @@
         </xs:complexContent>
 	</xs:complexType>
 	
+	<!-- to be executed from a normal task/script? -->
 	<xs:complexType name="Replay">
 		<xs:complexContent>
 			<xs:extension base="mqttspycommon:Task">

@@ -13,11 +13,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.MessageLog;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
-import pl.baczkowicz.mqttspy.common.generated.MessageLog;
-import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
 import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 
@@ -32,7 +32,7 @@ public class MqttCallbackHandler implements MqttCallback
 	private final static Logger logger = LoggerFactory.getLogger(MqttCallbackHandler.class);
 	
 	/** Stores all received messages, so that we don't block the receiving thread. */
-	private final Queue<ReceivedMqttMessage> messageQueue = new LinkedBlockingQueue<ReceivedMqttMessage>();
+	private final Queue<ReceivedMqttMessageWithSubscriptions> messageQueue = new LinkedBlockingQueue<ReceivedMqttMessageWithSubscriptions>();
 	
 	private final MqttMessageLogger messageHandler;
 	
@@ -74,16 +74,17 @@ public class MqttCallbackHandler implements MqttCallback
 			logger.debug("[{}] Received message on topic \"{}\". Payload = \"{}\"", messageQueue.size(), topic, new String(message.getPayload()));
 		}
 		
-		final ReceivedMqttMessage receivedMessage = new ReceivedMqttMessage(currentId, topic, message);
+		final ReceivedMqttMessageWithSubscriptions receivedMessage = new ReceivedMqttMessageWithSubscriptions(currentId, topic, message);
+				
+		// Check matching subscriptions
+		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
+		receivedMessage.setSubscriptions(matchingSubscriptions);
 		
 		// Add the received message to queue for logging
 		if (!MessageLog.DISABLED.equals(connectionSettings.getMessageLog()))
 		{
 			messageQueue.add(receivedMessage);
 		}
-		
-		// Check matching subscriptions
-		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
 		
 		// If configured, run scripts for the matching subscriptions
 		for (final String matchingSubscription : matchingSubscriptions)
@@ -97,7 +98,7 @@ public class MqttCallbackHandler implements MqttCallback
 				if (script != null)
 				{
 					script.getScriptEngine().put("receivedMessage", receivedMessage);
-					scriptManager.evaluateScriptFile(script);
+					scriptManager.runScriptFile(script);
 				}
 				else
 				{

@@ -3,34 +3,21 @@ package pl.baczkowicz.mqttspy.scripts;
 import java.io.File;
 import java.util.Date;
 
-//import javafx.beans.property.SimpleIntegerProperty;
-//import javafx.beans.property.SimpleObjectProperty;
-//import javafx.beans.property.SimpleStringProperty;
-
-
 import javax.script.ScriptEngine;
 
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-//import pl.baczkowicz.mqttspy.ui.utils.Utils;
-
 public class PublicationScriptProperties
 {
-//	private SimpleStringProperty name;
-//	
-//	private SimpleObjectProperty<ScriptRunningState> status;
-//	
-//	private SimpleStringProperty lastPublished;
-//	
-//	private SimpleIntegerProperty count;
-	
 	private String name;
 	
 	private ScriptRunningState status;
 	
+	private boolean repeat;
+	
 	private String lastPublished;
 	
-	private Integer count;
+	private Long messageCount;
 
 	private File file;
 
@@ -42,7 +29,8 @@ public class PublicationScriptProperties
 	
 	private long scriptTimeout = ScriptHealthDetector.DEFAULT_THREAD_TIMEOUT;
 
-	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, final int messageCount, final ScriptEngine scriptEngine)
+	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, 
+			final long messageCount, final ScriptEngine scriptEngine, final boolean repeat)
 	{
 //		this.name = new SimpleStringProperty(name);
 //		this.status = new SimpleObjectProperty<ScriptRunningState>(state);		
@@ -51,9 +39,10 @@ public class PublicationScriptProperties
 		this.name = name;
 		this.status = state;		
 		this.lastPublished = lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
-		this.count = messageCount;
+		this.messageCount = messageCount;
 		
 		this.file = file;
+		this.repeat = repeat;
 		this.scriptEngine = scriptEngine;
 	}
 	
@@ -77,10 +66,10 @@ public class PublicationScriptProperties
 //		return this.count;
 //	}
 	
-	public void setCount(final int messageCount)
+	public void setCount(final long messageCount)
 	{
 		// this.count.set(messageCount);
-		this.count = messageCount;
+		this.messageCount = messageCount;
 	}
 	
 	public String getLastPublished()
@@ -88,9 +77,9 @@ public class PublicationScriptProperties
 		return lastPublished;
 	}
 
-	public Integer getCount()
+	public Long getCount()
 	{
-		return count;
+		return messageCount;
 	}
 
 	public void setLastPublished(final Date lastPublished)
@@ -155,5 +144,15 @@ public class PublicationScriptProperties
 	public long getScriptTimeout()
 	{
 		return scriptTimeout;
+	}
+
+	public boolean isRepeat()
+	{
+		return repeat;
+	}
+
+	public void setRepeat(boolean repeat)
+	{
+		this.repeat = repeat;
 	}
 }

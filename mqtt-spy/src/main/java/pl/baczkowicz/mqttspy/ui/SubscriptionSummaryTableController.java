@@ -73,8 +73,6 @@ public class SubscriptionSummaryTableController implements Initializable
 	private ObservableList<SubscriptionTopicSummaryProperties> nonFilteredData;
 	
 	private Set<String> shownTopics = new HashSet<>();
-
-	// private ObservableList<SubscriptionTopicSummaryProperties> nonFilteredData;
 	
 	public void initialize(URL location, ResourceBundle resources)
 	{				
@@ -95,23 +93,7 @@ public class SubscriptionSummaryTableController implements Initializable
 						super.updateItem(checked, empty);
 						if (!isEmpty() && checked != null && this.getTableRow() != null && this.getTableRow().getItem() != null && store != null)
 						{
-							final SubscriptionTopicSummaryProperties item = (SubscriptionTopicSummaryProperties) this.getTableRow().getItem();
-							
-							logger.trace("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
-														
-							if (store.getFilteredMessageStore().updateFilter(item.topicProperty().getValue(), checked))
-							{
-								// Wouldn't get updated properly if this is in the same thread 
-								Platform.runLater(new Runnable()
-								{
-									@Override
-									public void run()
-									{
-										eventManager.navigateToFirst(store);	
-										eventManager.notifyMessageListChanged(store.getMessageList());
-									}											
-								});
-							}																			
+							changeShowProperty((SubscriptionTopicSummaryProperties) this.getTableRow().getItem(), checked);															
 						}									
 					}
 				};
@@ -214,9 +196,23 @@ public class SubscriptionSummaryTableController implements Initializable
 		});				
 	}
 	
-	public void setEventManager(final EventManager eventManager)
+	private void changeShowProperty(final SubscriptionTopicSummaryProperties item, final boolean checked)
 	{
-		this.eventManager = eventManager;
+		logger.trace("[{}] Show property changed; topic = {}, show value = {}", store.getName(), item.topicProperty().getValue(), checked);
+									
+		if (store.getFilteredMessageStore().updateFilter(item.topicProperty().getValue(), checked))
+		{
+			// Wouldn't get updated properly if this is in the same thread 
+			Platform.runLater(new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					eventManager.navigateToFirst(store);	
+					eventManager.notifyMessageListChanged(store.getMessageList());
+				}											
+			});
+		}				
 	}
 	
 	public void init()
@@ -288,22 +284,6 @@ public class SubscriptionSummaryTableController implements Initializable
 				}
 			});						
 		}
-	}
-
-	public void setStore(final ManagedMessageStoreWithFiltering store)
-	{
-		this.store = store;
-	}
-	
-	// public void setNavigationEventDispatcher(final EventDispatcher
-	// navigationEventDispatcher)
-	// {
-	// this.navigationEventDispatcher = navigationEventDispatcher;
-	// }
-	
-	public void setConnectionController(final ConnectionController connectionController)
-	{
-		this.connectionController = connectionController;
 	}
 	
 	public ContextMenu createTopicTableContextMenu()
@@ -502,5 +482,20 @@ public class SubscriptionSummaryTableController implements Initializable
 		contextMenu.getItems().add(selectOnlyThisItem);
 
 		return contextMenu;
+	}
+		
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
+	}
+	
+	public void setStore(final ManagedMessageStoreWithFiltering store)
+	{
+		this.store = store;
+	}
+	
+	public void setConnectionController(final ConnectionController connectionController)
+	{
+		this.connectionController = connectionController;
 	}
 }

@@ -10,13 +10,12 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.Script;
-import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
-import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
+import pl.baczkowicz.mqttspy.daemon.connectivity.ConnectionRunnable;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -60,31 +59,8 @@ public class Main
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
 			connection.createClient(new MqttCallbackHandler(connection, connectionSettings, scriptManager));
 					
-			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();
-			
-			final Runnable connectionRunnable = new Runnable()
-			{
-				public void run()
-				{
-					final boolean neverStarted = connection.getLastConnectionAttemptTimestamp() == BaseMqttConnection.NEVER_STARTED;
-					
-					// If successfully connected, and re-subscription is configured
-					if (connection.connect() 
-							&& (neverStarted || (reconnectionSettings != null && reconnectionSettings.isResubscribe())))
-					{
-						// Subscribe to all configured subscriptions
-						for (final SubscriptionDetails subscription : connectionSettings.getSubscription())
-						{	
-							if (neverStarted && subscription.getScriptFile() != null)
-							{
-								scriptManager.addScript(subscription.getScriptFile());
-							}
-								
-							connection.subscribe(subscription.getTopic(), subscription.getQos());							
-						}
-					}
-				}				
-			};
+			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();			
+			final Runnable connectionRunnable = new ConnectionRunnable(scriptManager, connection, connectionSettings);
 			
 			if (reconnectionSettings == null)
 			{
@@ -101,7 +77,7 @@ public class Main
 			scriptManager.addScripts(connectionSettings.getBackgroundScript());
 			for (final Script script : connectionSettings.getBackgroundScript())
 			{
-				scriptManager.evaluateScriptFile(new File(script.getFile()));
+				scriptManager.runScriptFile(new File(script.getFile()));
 			}
 		}
 		catch (XMLException e)

@@ -378,7 +378,6 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	{
 		store.setFormatter((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData());
 	
-		// formattingMenuButton.setText(store.getFormatter().getName());
 		eventManager.notifyFormatChanged(store);
 	}
 	
@@ -387,14 +386,6 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	{
 		final FormatterDetails messageFormat = (FormatterDetails) selectionFormat.getSelectedToggle().getUserData();
 		
-		if (messageFormat != null)
-		{
-			// formattingMenuButton.setText("[Selection] " + messageFormat.getName());
-		}
-		else
-		{
-			// formattingMenuButton.setText(((FormatterDetails) wholeMessageFormat.getSelectedToggle().getUserData()).getName());
-		}
 		messagePaneController.formatSelection(messageFormat);
 	}
 
@@ -458,11 +449,6 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 	{
 		return tab;
 	}
-
-	// public void setStatisticsManager(StatisticsManager statisticsManager)
-	// {
-	// this.statisticsManager = statisticsManager;
-	// }
 	
 	public void setConnectionController(final ConnectionController connectionController)
 	{

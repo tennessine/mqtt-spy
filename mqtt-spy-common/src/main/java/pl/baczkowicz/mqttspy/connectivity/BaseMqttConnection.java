@@ -13,6 +13,8 @@ import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
@@ -21,6 +23,8 @@ import pl.baczkowicz.mqttspy.utils.Utils;
 
 public abstract class BaseMqttConnection implements MqttConnectionInterface
 {
+	final static Logger logger = LoggerFactory.getLogger(BaseMqttConnection.class);
+	
 	public static final long NEVER_STARTED = 0;
 
 	private int connectionAttempts = 0;
@@ -134,6 +138,12 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	public void subscribe(final String topic, final int qos) throws MqttSpyException
 	{
+		if (client == null || !client.isConnected())
+		{
+			logger.warn("Client not connected");
+			return;
+		}
+		
 		try
 		{
 			client.subscribe(topic, qos);

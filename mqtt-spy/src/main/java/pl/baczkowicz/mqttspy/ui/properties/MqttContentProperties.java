@@ -24,6 +24,11 @@ public class MqttContentProperties
 		this.lastReceivedPayload = new SimpleStringProperty();
 		setMessage(message, format);
 	}
+	
+	public void setFormat(final FormatterDetails format)
+	{
+		this.lastReceivedPayload.set(mqttContent.getFormattedPayload(format));
+	}
 
 	public StringProperty topicProperty()
 	{

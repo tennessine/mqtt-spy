@@ -29,7 +29,7 @@ public class ScriptManager
 
 	private Executor executor;
 
-	private MqttConnectionInterface connection;
+	protected MqttConnectionInterface connection;
 	
 	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor, final MqttConnectionInterface connection)
 	{
@@ -43,23 +43,28 @@ public class ScriptManager
 		return file.getName().replace(".js",  "");
 	}
 	
-	public void addScript(final String filename)
+	public void addScript(final Script scriptDetails)
 	{
-		final File scriptFile = new File(filename);
+		final File scriptFile = new File(scriptDetails.getFile());
 		
 		final String scriptName = getScriptName(scriptFile);
 		
-		final PublicationScriptProperties script = createScript(scriptName, scriptFile, connection);
+		final PublicationScriptProperties script = createScript(scriptName, scriptFile, connection, scriptDetails);
 		
-		logger.debug("Adding script {}", filename);
+		logger.debug("Adding script {}", scriptDetails.getFile());
 		scripts.put(scriptFile, script);
+	}
+	
+	public void addScript(final String filename)
+	{
+		addScript(new Script(false, filename));
 	}
 	
 	public void addScripts(final List<Script> scriptFiles)
 	{
 		for (final Script script : scriptFiles)
 		{
-			addScript(script.getFile());
+			addScript(script);
 		}
 	}
 	
@@ -68,14 +73,14 @@ public class ScriptManager
 		return scripts;
 	}
 		
-	public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection)
+	public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
 	{
 		final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
 		
 		if (scriptEngine != null)
 		{
 			final PublicationScriptProperties script = new PublicationScriptProperties(scriptName, scriptFile, 
-					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine);
+					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine, scriptDetails.isRepeat());
 			
 			script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script, executor));
 			
@@ -106,7 +111,7 @@ public class ScriptManager
 		engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
-	public void evaluateScriptFile(final PublicationScriptProperties script)
+	public void runScriptFile(final PublicationScriptProperties script)
 	{
 		// Only start if not running already
 		if (!ScriptRunningState.RUNNING.equals(script.getStatus()))
@@ -115,13 +120,13 @@ public class ScriptManager
 		}		
 	}	
 
-	public void evaluateScriptFile(final File scriptFile)
+	public void runScriptFile(final File scriptFile)
 	{
 		final PublicationScriptProperties script = getScript(scriptFile); 
 		
 		if (script != null)
 		{
-			evaluateScriptFile(script);
+			runScriptFile(script);
 		}
 		else
 		{

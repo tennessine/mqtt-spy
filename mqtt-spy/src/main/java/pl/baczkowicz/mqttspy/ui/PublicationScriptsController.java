@@ -244,7 +244,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
 	public void startScript(final File file)
 	{
-		scriptManager.evaluateScriptFile(file);
+		scriptManager.runScriptFile(file);
 	}
 	
 	public void stopScript(final File file)

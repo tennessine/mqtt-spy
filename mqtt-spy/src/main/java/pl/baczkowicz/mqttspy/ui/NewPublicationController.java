@@ -19,7 +19,6 @@ import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 
-import org.controlsfx.dialog.Dialogs;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +27,10 @@ import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.exceptions.ConversionException;
+import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-@SuppressWarnings("deprecation")
 public class NewPublicationController implements Initializable
 {
 	final static Logger logger = LoggerFactory.getLogger(NewPublicationController.class);
@@ -99,6 +98,8 @@ public class NewPublicationController implements Initializable
 				}
 			}
 		});
+			
+		publicationData.setWrapText(true);
 	}
 
 	public void recordPublicationTopic(final String publicationTopic)
@@ -215,12 +216,7 @@ public class NewPublicationController implements Initializable
 		{
 			logger.error("Cannot publish to an empty topic");
 			
-			Dialogs.create()
-			      .owner(null)
-			      .title("Invalid topic")
-			      .masthead(null)
-			      .message("Cannot publish to an empty topic.")
-			      .showError();
+			DialogUtils.showError("Invalid topic", "Cannot publish to an empty topic.");
 			return null;
 		}
 		
@@ -262,12 +258,7 @@ public class NewPublicationController implements Initializable
 	{
 		logger.error("Cannot convert " + publicationData.getText() + " to plain text");
 		
-		Dialogs.create()
-			      .owner(null)
-			      .title("Invalid hex format")
-			      .masthead(null)
-			      .message("Provided text is not a valid hex string.")
-			      .showError();
+		DialogUtils.showError("Invalid hex format", "Provided text is not a valid hex string.");
 	}
 
 	public void setConnection(MqttAsyncConnection connection)

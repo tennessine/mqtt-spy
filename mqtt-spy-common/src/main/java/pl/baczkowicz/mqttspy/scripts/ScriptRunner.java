@@ -31,6 +31,7 @@ public class ScriptRunner implements Runnable
 		changeState(script.getName(), ScriptRunningState.RUNNING, script);
 		new Thread(new ScriptHealthDetector(eventManager, script, executor)).start();		
 		
+		// TODO: repeat the script if configured
 		try
 		{
 			final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));

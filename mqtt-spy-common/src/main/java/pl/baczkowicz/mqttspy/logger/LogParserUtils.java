@@ -18,6 +18,7 @@ import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.MessageLog;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.utils.ProgressUpdater;
 
@@ -28,7 +29,8 @@ public class LogParserUtils
 	/** Pattern that is used to decide whether a string should be wrapped in CDATA. */
     private static final Pattern XML_CHARS = Pattern.compile("[&<>]");
     
-	public static String createLog(final ReceivedMqttMessage message, final MessageLog messageLog)
+	public static String createReceivedMessageLog(final ReceivedMqttMessageWithSubscriptions message, 
+			final MessageLog messageLog)
 	{
 		final StringBuffer logMessage = new StringBuffer();
 		logMessage.append("<MqttMessage");
@@ -37,7 +39,13 @@ public class LogParserUtils
 		appendAttribute(logMessage, "timestamp", String.valueOf( message.getDate().getTime()));				
 		appendAttribute(logMessage, "topic", message.getTopic());		
 		appendAttribute(logMessage, "qos", String.valueOf(message.getMessage().getQos()));		
-		appendAttribute(logMessage, "retained", String.valueOf(message.getMessage().isRetained()));		
+		appendAttribute(logMessage, "retained", String.valueOf(message.getMessage().isRetained()));
+		
+		if (message.getSubscriptions() != null && message.getSubscriptions().size() > 0)
+		{
+			// Log the first matching subscription
+			appendAttribute(logMessage, "subscription", message.getSubscriptions().get(0));
+		}
 		
 		boolean encoded = MessageLog.XML_WITH_ENCODED_PAYLOAD.equals(messageLog);
 		final String payload = new String(message.getMessage().getPayload());
@@ -92,11 +100,10 @@ public class LogParserUtils
 		logMessage.append(value);
 	}
 	
-	// public static List<ReceivedMqttMessage> readAndConvertMessageLog(final
-	// File selectedFile) throws MqttSpyException
-	// {
-	// return processMessageLog(parseMessageLog(readMessageLog(selectedFile)));
-	// }
+	public static List<ReceivedMqttMessage> readAndConvertMessageLog(final File selectedFile) throws MqttSpyException
+	{
+		return processMessageLog(parseMessageLog(readMessageLog(selectedFile), null, 0, 0), null, 0, 0);
+	}
 	
 	public static List<String> readMessageLog(final File selectedFile) throws MqttSpyException
 	{
@@ -134,10 +141,13 @@ public class LogParserUtils
 	        
 	        for (final String message : messages)
 	        {
-	        	item++;
-	        	if (item % 1000 == 0)
+	        	if (progress != null)
 	        	{
-	        		progress.update(current + item, max);
+		        	item++;
+		        	if (item % 1000 == 0)
+		        	{
+		        		progress.update(current + item, max);
+		        	}
 	        	}
 	        	
 	        	try
@@ -169,10 +179,13 @@ public class LogParserUtils
 		// Process the messages
         for (final LoggedMqttMessage loggedMessage : list)
         {
-        	item++;
-        	if (item % 1000 == 0)
+        	if (progress != null)
         	{
-        		progress.update(current + item, max);
+	        	item++;
+	        	if (item % 1000 == 0)
+	        	{
+	        		progress.update(current + item, max);
+	        	}
         	}
         	
         	final MqttMessage mqttMessage = new MqttMessage();

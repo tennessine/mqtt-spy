@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
 
@@ -103,5 +104,15 @@ public class ObservableTopicSummary extends TopicSummary
 	public ObservableList<SubscriptionTopicSummaryProperties> getObservableMessagesPerTopic()
 	{
 		return observableTopicSummaryList;
+	}
+	
+	public void setFormatter(final FormatterDetails messageFormat)
+	{
+		super.setFormatter(messageFormat);
+		
+		for (final SubscriptionTopicSummaryProperties item : observableTopicSummaryList)
+		{
+			item.setFormat(messageFormat);
+		}
 	}
 }

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.logger.LogParserUtils;
-import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
 
 /**
  * This class is responsible for handling received messages. One thread per connection expected here.
@@ -19,11 +19,11 @@ public class MqttMessageLogger implements Runnable
 {
 	private final static Logger logger = LoggerFactory.getLogger(MqttMessageLogger.class);
 	
-	private final Queue<ReceivedMqttMessage> queue;
+	private final Queue<ReceivedMqttMessageWithSubscriptions> queue;
 
 	private final DaemonMqttConnectionDetails connectionSettings;
 
-	public MqttMessageLogger(final Queue<ReceivedMqttMessage> queue, final DaemonMqttConnectionDetails connectionSettings)
+	public MqttMessageLogger(final Queue<ReceivedMqttMessageWithSubscriptions> queue, final DaemonMqttConnectionDetails connectionSettings)
 	{
 		this.queue = queue;
 		this.connectionSettings = connectionSettings;
@@ -37,7 +37,7 @@ public class MqttMessageLogger implements Runnable
 			{
 				if (queue.size() > 0)
 				{
-					logger.info(LogParserUtils.createLog(queue.remove(), connectionSettings.getMessageLog()));					
+					logger.info(LogParserUtils.createReceivedMessageLog(queue.remove(), connectionSettings.getMessageLog()));					
 				}
 				else
 				{

@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.Script;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.ui.utils.RunLaterExecutor;
@@ -20,7 +21,7 @@ public class InteractiveScriptManager extends ScriptManager
 	
 	private final ObservableList<PublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
 	
-	private MqttConnectionInterface connection;
+	// private MqttConnectionInterface connection;
 	
 	public InteractiveScriptManager(final ScriptEventManagerInterface eventManager, final MqttConnectionInterface connection)
 	{
@@ -54,7 +55,7 @@ public class InteractiveScriptManager extends ScriptManager
 			{
 				final String scriptName = getScriptName(scriptFile);
 				
-				script = createScript(scriptName, scriptFile, connection);
+				script = createScript(scriptName, scriptFile, connection, new Script(false, scriptFile.getName()));
 				
 				observableScriptList.add(script);
 				getScripts().put(scriptFile, script);

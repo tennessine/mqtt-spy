@@ -173,9 +173,9 @@ public class MqttAsyncConnection extends BaseMqttConnection
 			return false;
 		}
 
-		if (!client.isConnected())
+		if (client == null || !client.isConnected())
 		{
-			logger.info("Client not connected");
+			logger.warn("Client not connected");
 			return false;
 		}
 
