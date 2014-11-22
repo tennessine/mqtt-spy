@@ -49,7 +49,9 @@ public class ScriptManager
 		
 		final String scriptName = getScriptName(scriptFile);
 		
-		final PublicationScriptProperties script = createScript(scriptName, scriptFile, connection, scriptDetails);
+		final PublicationScriptProperties script = new PublicationScriptProperties();
+				
+		createScript(script, scriptName, scriptFile, connection, scriptDetails);
 		
 		logger.debug("Adding script {}", scriptDetails.getFile());
 		scripts.put(scriptFile, script);
@@ -73,24 +75,31 @@ public class ScriptManager
 		return scripts;
 	}
 		
-	public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
+	public void createScript(final PublicationScriptProperties scriptProperties,
+			String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
+	// public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
 	{
 		final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
 		
 		if (scriptEngine != null)
 		{
-			final PublicationScriptProperties script = new PublicationScriptProperties(scriptName, scriptFile, 
-					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine, scriptDetails.isRepeat());
+//			final PublicationScriptProperties script = new PublicationScriptProperties(scriptName, scriptFile, 
+//					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine, scriptDetails.isRepeat());
+			scriptProperties.setScriptName(scriptName);
+			scriptProperties.setScriptFile(scriptFile);
+			scriptProperties.setStatus(ScriptRunningState.NOT_STARTED);
+			scriptProperties.setScriptEngine(scriptEngine);
+			scriptProperties.setRepeat(scriptDetails.isRepeat());
 			
-			script.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, script, executor));
+			scriptProperties.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, scriptProperties, executor));
 			
 			final Map<String, Object> scriptVariables = new HashMap<String, Object>();
-			scriptVariables.put("mqttspy", script.getPublicationScriptIO());	
+			scriptVariables.put("mqttspy", scriptProperties.getPublicationScriptIO());	
 			scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
 			
 			putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
 			
-			return script;
+//			return script;
 		}
 		else
 		{

@@ -29,13 +29,13 @@
 						<MenuItem mnemonicParsing="false" onAction="#editConnections" text="Manage connections" />
 					</items>
 				</Menu>
-				
+				<!-- 
 				<Menu mnemonicParsing="false" text="Logger">
 					<items>
 						<MenuItem mnemonicParsing="false" onAction="#openMessageLog" text="Open message log for off-line analysis" />
 					</items>
 				</Menu>
-				
+				 -->
 				<Menu mnemonicParsing="false" text="Window">
 					<items>
 						<Menu mnemonicParsing="false" text="Perspectives">

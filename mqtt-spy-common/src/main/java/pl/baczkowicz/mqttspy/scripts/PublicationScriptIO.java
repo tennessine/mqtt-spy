@@ -120,14 +120,14 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 				{			
 					public void run()
 					{
-						script.setLastPublished(new Date());
+						script.setLastPublishedDate(new Date());
 						script.setCount(publishedMessages);				
 					}
 				});
 			}
 			else
 			{
-				script.setLastPublished(new Date());
+				script.setLastPublishedDate(new Date());
 				script.setCount(publishedMessages);		
 			}
 		}

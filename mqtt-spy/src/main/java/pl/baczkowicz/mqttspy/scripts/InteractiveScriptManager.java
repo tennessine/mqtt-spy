@@ -19,7 +19,7 @@ public class InteractiveScriptManager extends ScriptManager
 {
 	private final static Logger logger = LoggerFactory.getLogger(InteractiveScriptManager.class);
 	
-	private final ObservableList<PublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
+	private final ObservableList<ObservablePublicationScriptProperties> observableScriptList = FXCollections.observableArrayList();
 	
 	// private MqttConnectionInterface connection;
 	
@@ -50,22 +50,24 @@ public class InteractiveScriptManager extends ScriptManager
 	{
 		for (final File scriptFile : files)
 		{
-			PublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
+			ObservablePublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
 			if (script == null)					
 			{
 				final String scriptName = getScriptName(scriptFile);
 				
-				script = createScript(scriptName, scriptFile, connection, new Script(false, scriptFile.getName()));
+				final ObservablePublicationScriptProperties properties = new ObservablePublicationScriptProperties();
 				
-				observableScriptList.add(script);
-				getScripts().put(scriptFile, script);
+				createScript(properties, scriptName, scriptFile, connection, new Script(false, scriptFile.getName())); 			
+				
+				observableScriptList.add(properties);
+				getScripts().put(scriptFile, properties);
 			}				
 		}			
 	}
 	
-	private static PublicationScriptProperties retrievePublicationScriptProperties(final List<PublicationScriptProperties> scriptList, final File scriptFile)
+	private static ObservablePublicationScriptProperties retrievePublicationScriptProperties(final List<ObservablePublicationScriptProperties> scriptList, final File scriptFile)
 	{
-		for (final PublicationScriptProperties script : scriptList)
+		for (final ObservablePublicationScriptProperties script : scriptList)
 		{
 			if (script.getFile().getAbsolutePath().equals(scriptFile.getAbsolutePath()))
 			{
@@ -114,9 +116,9 @@ public class InteractiveScriptManager extends ScriptManager
 		}
 	}
 	
-	public static PublicationScriptProperties getPublicationScriptProperties(final ObservableList<PublicationScriptProperties> observableScriptList, final String scriptName)
+	public static ObservablePublicationScriptProperties getPublicationScriptProperties(final ObservableList<ObservablePublicationScriptProperties> observableScriptList, final String scriptName)
 	{
-		for (final PublicationScriptProperties script : observableScriptList)
+		for (final ObservablePublicationScriptProperties script : observableScriptList)
 		{
 			if (script.getName().equals(scriptName))
 			{
@@ -127,7 +129,7 @@ public class InteractiveScriptManager extends ScriptManager
 		return null;
 	}
 	
-	public ObservableList<PublicationScriptProperties> getObservableScriptList()
+	public ObservableList<ObservablePublicationScriptProperties> getObservableScriptList()
 	{
 		return observableScriptList;
 	}		

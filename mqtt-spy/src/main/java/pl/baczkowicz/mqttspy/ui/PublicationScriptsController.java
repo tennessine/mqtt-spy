@@ -25,7 +25,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
-import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
+import pl.baczkowicz.mqttspy.scripts.ObservablePublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 
 public class PublicationScriptsController implements Initializable, ScriptStateChangeObserver
@@ -33,19 +33,19 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	final static Logger logger = LoggerFactory.getLogger(PublicationScriptsController.class);
 	
 	@FXML
-	private TableView<PublicationScriptProperties> scriptTable;
+	private TableView<ObservablePublicationScriptProperties> scriptTable;
 	
     @FXML
-    private TableColumn<PublicationScriptProperties, String> nameColumn;
+    private TableColumn<ObservablePublicationScriptProperties, String> nameColumn;
         
     @FXML
-    private TableColumn<PublicationScriptProperties, ScriptRunningState> runningStatusColumn;
+    private TableColumn<ObservablePublicationScriptProperties, ScriptRunningState> runningStatusColumn;
     
     @FXML
-    private TableColumn<PublicationScriptProperties, String> lastPublishedColumn;
+    private TableColumn<ObservablePublicationScriptProperties, String> lastPublishedColumn;
     
     @FXML
-    private TableColumn<PublicationScriptProperties, Integer> messageCountColumn;
+    private TableColumn<ObservablePublicationScriptProperties, Long> messageCountColumn;
 		
 	private MqttAsyncConnection connection;
 
@@ -56,19 +56,19 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		// Table
-		nameColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>("name"));
+		nameColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, String>("name"));
 
-		messageCountColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, Integer>("count"));
+		messageCountColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, Long>("count"));
 		messageCountColumn
-		.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, Integer>, TableCell<PublicationScriptProperties, Integer>>()
+		.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, Long>, TableCell<ObservablePublicationScriptProperties, Long>>()
 		{
-			public TableCell<PublicationScriptProperties, Integer> call(
-					TableColumn<PublicationScriptProperties, Integer> param)
+			public TableCell<ObservablePublicationScriptProperties, Long> call(
+					TableColumn<ObservablePublicationScriptProperties, Long> param)
 			{
-				final TableCell<PublicationScriptProperties, Integer> cell = new TableCell<PublicationScriptProperties, Integer>()
+				final TableCell<ObservablePublicationScriptProperties, Long> cell = new TableCell<ObservablePublicationScriptProperties, Long>()
 				{
 					@Override
-					public void updateItem(Integer item, boolean empty)
+					public void updateItem(Long item, boolean empty)
 					{
 						super.updateItem(item, empty);
 						if (!isEmpty())
@@ -87,14 +87,14 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 			}
 		});
 		
-		runningStatusColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, ScriptRunningState>("status"));
+		runningStatusColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, ScriptRunningState>("status"));
 		runningStatusColumn
-			.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, ScriptRunningState>, TableCell<PublicationScriptProperties, ScriptRunningState>>()
+			.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, ScriptRunningState>, TableCell<ObservablePublicationScriptProperties, ScriptRunningState>>()
 		{
-			public TableCell<PublicationScriptProperties, ScriptRunningState> call(
-					TableColumn<PublicationScriptProperties, ScriptRunningState> param)
+			public TableCell<ObservablePublicationScriptProperties, ScriptRunningState> call(
+					TableColumn<ObservablePublicationScriptProperties, ScriptRunningState> param)
 			{
-				final TableCell<PublicationScriptProperties, ScriptRunningState> cell = new TableCell<PublicationScriptProperties, ScriptRunningState>()				
+				final TableCell<ObservablePublicationScriptProperties, ScriptRunningState> cell = new TableCell<ObservablePublicationScriptProperties, ScriptRunningState>()				
 				{
 					@Override
 					public void updateItem(ScriptRunningState item, boolean empty)
@@ -134,13 +134,13 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 			}
 		});
 
-		lastPublishedColumn.setCellValueFactory(new PropertyValueFactory<PublicationScriptProperties, String>("lastPublished"));
-		lastPublishedColumn.setCellFactory(new Callback<TableColumn<PublicationScriptProperties, String>, TableCell<PublicationScriptProperties, String>>()
+		lastPublishedColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, String>("lastPublished"));
+		lastPublishedColumn.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, String>, TableCell<ObservablePublicationScriptProperties, String>>()
 		{
-			public TableCell<PublicationScriptProperties, String> call(
-					TableColumn<PublicationScriptProperties, String> param)
+			public TableCell<ObservablePublicationScriptProperties, String> call(
+					TableColumn<ObservablePublicationScriptProperties, String> param)
 			{
-				final TableCell<PublicationScriptProperties, String> cell = new TableCell<PublicationScriptProperties, String>()
+				final TableCell<ObservablePublicationScriptProperties, String> cell = new TableCell<ObservablePublicationScriptProperties, String>()
 				{
 					@Override
 					public void updateItem(String item, boolean empty)
@@ -267,7 +267,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		{
 			public void handle(ActionEvent e)
 			{
-				final PublicationScriptProperties item = scriptTable.getSelectionModel()
+				final ObservablePublicationScriptProperties item = scriptTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{
@@ -283,7 +283,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		{
 			public void handle(ActionEvent e)
 			{
-				final PublicationScriptProperties item = scriptTable.getSelectionModel()
+				final ObservablePublicationScriptProperties item = scriptTable.getSelectionModel()
 						.getSelectedItem();
 				if (item != null)
 				{

@@ -23,19 +23,22 @@ public class PublicationScriptProperties
 
 	private Thread thread;
 	
-	private final ScriptEngine scriptEngine;
+	private ScriptEngine scriptEngine;
 
 	private PublicationScriptIO publicationScriptIO;
 	
 	private long scriptTimeout = ScriptHealthDetector.DEFAULT_THREAD_TIMEOUT;
 
+	private Date lastPublishedDate;
+
+	public PublicationScriptProperties()
+	{
+		// Default
+	}
+	
 	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, 
 			final long messageCount, final ScriptEngine scriptEngine, final boolean repeat)
 	{
-//		this.name = new SimpleStringProperty(name);
-//		this.status = new SimpleObjectProperty<ScriptRunningState>(state);		
-//		this.lastPublished = new SimpleStringProperty(lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished));
-//		this.count = new SimpleIntegerProperty(messageCount);
 		this.name = name;
 		this.status = state;		
 		this.lastPublished = lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
@@ -46,29 +49,8 @@ public class PublicationScriptProperties
 		this.scriptEngine = scriptEngine;
 	}
 	
-//	public SimpleStringProperty nameProperty()
-//	{
-//		return this.name;
-//	}
-//	
-//	public SimpleObjectProperty<ScriptRunningState> statusProperty()
-//	{
-//		return this.status;
-//	}
-//	
-//	public SimpleStringProperty lastPublishedProperty()
-//	{
-//		return this.lastPublished;
-//	}
-//	
-//	public SimpleIntegerProperty countProperty()
-//	{
-//		return this.count;
-//	}
-	
 	public void setCount(final long messageCount)
 	{
-		// this.count.set(messageCount);
 		this.messageCount = messageCount;
 	}
 	
@@ -76,21 +58,25 @@ public class PublicationScriptProperties
 	{
 		return lastPublished;
 	}
+	
+	public Date getLastPublishedDate()
+	{
+		return lastPublishedDate;
+	}
 
 	public Long getCount()
 	{
 		return messageCount;
 	}
 
-	public void setLastPublished(final Date lastPublished)
+	public void setLastPublishedDate(final Date lastPublishedDate)
 	{
-		// this.lastPublished.set(Utils.DATE_WITH_SECONDS_SDF.format(lastStarted));
-		this.lastPublished = Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
+		this.lastPublishedDate = lastPublishedDate;
+		this.lastPublished = Utils.DATE_WITH_SECONDS_SDF.format(lastPublishedDate);
 	}
 	
 	public void setStatus(final ScriptRunningState state)
 	{
-		// this.status.setValue(state);
 		this.status = state;
 	}
 	
@@ -116,13 +102,11 @@ public class PublicationScriptProperties
 
 	public String getName()
 	{
-		// return nameProperty().getValue();
 		return name;
 	}
 
 	public ScriptRunningState getStatus()
 	{
-		// return status.getValue();
 		return status;
 	}
 
@@ -154,5 +138,20 @@ public class PublicationScriptProperties
 	public void setRepeat(boolean repeat)
 	{
 		this.repeat = repeat;
+	}
+
+	public void setScriptEngine(final ScriptEngine scriptEngine)
+	{
+		this.scriptEngine = scriptEngine;
+	}
+
+	public void setScriptFile(final File scriptFile)
+	{
+		this.file = scriptFile;
+	}
+
+	public void setScriptName(String scriptName)
+	{
+		this.name = scriptName;
 	}
 }
