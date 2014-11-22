@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.MqttSpyUncaughtExceptionHandler;
-import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.PublicationDetails;
 import pl.baczkowicz.mqttspy.common.generated.UserCredentials;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
@@ -36,15 +35,15 @@ import pl.baczkowicz.mqttspy.connectivity.MqttManager;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
-import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.stats.ConnectionStatsUpdater;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
+import pl.baczkowicz.mqttspy.ui.messagelog.LogReaderTask;
+import pl.baczkowicz.mqttspy.ui.messagelog.TaskWithProgressUpdater;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
-import pl.baczkowicz.mqttspy.ui.utils.TaskWithProgressUpdater;
 import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class MainController
@@ -148,43 +147,7 @@ public class MainController
 
 		if (selectedFile != null)
 		{			
-			final MainController controller = this;
-			
-			final TaskWithProgressUpdater<List<ReceivedMqttMessage>> readAndProcess = new TaskWithProgressUpdater<List<ReceivedMqttMessage>>()
-			{
-				@Override
-				protected List<ReceivedMqttMessage> call() throws Exception
-				{
-					updateMessage("Please wait - reading message log [1/4]");
-					updateProgress(0, 4);
-					final List<String> fileContent = LogParserUtils.readMessageLog(selectedFile);					
-					final long totalItems = fileContent.size();
-					updateProgress(totalItems, totalItems * 4);
-					
-					updateMessage("Please wait - parsing " + fileContent.size() + " messages [2/4]");					
-					final List<LoggedMqttMessage> loggedMessages = LogParserUtils.parseMessageLog(fileContent, this, totalItems, totalItems * 4);
-					updateProgress(totalItems * 2, totalItems * 4);
-										
-					updateMessage("Please wait - processing " + loggedMessages.size() + " messages [3/4]");					
-					final List<ReceivedMqttMessage> processedMessages = LogParserUtils.processMessageLog(loggedMessages, this, totalItems * 2, totalItems * 4);
-					updateProgress(totalItems * 3, totalItems * 4);
-					
-					updateMessage("Please wait - displaying " + loggedMessages.size() + " messages [4/4]");	
-					Platform.runLater(new Runnable()
-					{							
-						@Override
-						public void run()
-						{
-							connectionManager.loadReplayTab(controller, controller, selectedFile.getName(), processedMessages);								
-						}
-					});	
-					updateMessage("Finished!");
-					updateProgress(4, 4);
-					Thread.sleep(500);
-					
-					return processedMessages;					
-				}
-			};
+			final TaskWithProgressUpdater<List<ReceivedMqttMessage>> readAndProcess = new LogReaderTask(selectedFile, connectionManager, this);
 			
 			DialogUtils.showWorkerDialog(readAndProcess);
 			

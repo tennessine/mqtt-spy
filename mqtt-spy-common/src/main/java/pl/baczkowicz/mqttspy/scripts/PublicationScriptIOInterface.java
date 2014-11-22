@@ -23,5 +23,5 @@ public interface PublicationScriptIOInterface
 
 	boolean instantiate(String className);
 
-	String execute(String command) throws IOException, InterruptedException;
+	String execute(String command) throws IOException, InterruptedException;	
 }

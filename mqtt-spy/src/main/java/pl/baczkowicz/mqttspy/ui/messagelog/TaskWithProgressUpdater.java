@@ -1,4 +1,4 @@
-package pl.baczkowicz.mqttspy.ui.utils;
+package pl.baczkowicz.mqttspy.ui.messagelog;
 
 import pl.baczkowicz.mqttspy.utils.ProgressUpdater;
 import javafx.concurrent.Task;

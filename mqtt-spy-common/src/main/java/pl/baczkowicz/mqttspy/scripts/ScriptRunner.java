@@ -28,43 +28,51 @@ public class ScriptRunner implements Runnable
 		script.getPublicationScriptIO().touch();
 		script.setThread(Thread.currentThread());
 
-		changeState(script.getName(), ScriptRunningState.RUNNING, script);
-		new Thread(new ScriptHealthDetector(eventManager, script, executor)).start();		
-		
-		// TODO: repeat the script if configured
-		try
+		while (script.isRepeat())
 		{
-			final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));
-			logger.debug("Script {} returned with value {}", script.getName(), returnValue);
+			changeState(script.getName(), ScriptRunningState.RUNNING, script);
+			new Thread(new ScriptHealthDetector(eventManager, script, executor)).start();		
 			
-			// If nothing returned, assume all good
-			if (returnValue == null)
+			try
 			{
-				changeState(script.getName(), ScriptRunningState.FINISHED, script);
-			}
-			// If boolean returned, check if OK
-			else if (returnValue instanceof Boolean)
-			{
-				if ((Boolean) returnValue)
+				final Object returnValue = script.getScriptEngine().eval(new FileReader(script.getFile()));
+				logger.debug("Script {} returned with value {}", script.getName(), returnValue);
+				
+				// If nothing returned, assume all good
+				if (returnValue == null)
 				{
 					changeState(script.getName(), ScriptRunningState.FINISHED, script);
 				}
+				// If boolean returned, check if OK
+				else if (returnValue instanceof Boolean)
+				{
+					if ((Boolean) returnValue)
+					{
+						changeState(script.getName(), ScriptRunningState.FINISHED, script);
+					}
+					else
+					{
+						changeState(script.getName(), ScriptRunningState.STOPPED, script);
+					}
+				}
+				// Anything else, assume all good
 				else
 				{
-					changeState(script.getName(), ScriptRunningState.STOPPED, script);
+					changeState(script.getName(), ScriptRunningState.FINISHED, script);
 				}
 			}
-			// Anything else, assume all good
-			else
+			catch (Exception e)
 			{
-				changeState(script.getName(), ScriptRunningState.FINISHED, script);
+				changeState(script.getName(), ScriptRunningState.FAILED, script);
+				logger.error("Script execution exception", e);
+				break;
+			}		
+			
+			if (script.isRepeat())
+			{
+				logger.debug("Re-running script {}", script.getName());
 			}
 		}
-		catch (Exception e)
-		{
-			changeState(script.getName(), ScriptRunningState.FAILED, script);
-			logger.error("Script execution exception", e);
-		}		
 	}
 	
 	public static void changeState(final ScriptEventManagerInterface eventManager, final String scriptName, 

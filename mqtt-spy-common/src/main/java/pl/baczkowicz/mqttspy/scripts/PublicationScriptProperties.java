@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.script.ScriptEngine;
 
+import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class PublicationScriptProperties
@@ -13,7 +14,7 @@ public class PublicationScriptProperties
 	
 	private ScriptRunningState status;
 	
-	private boolean repeat;
+	// private boolean repeat;
 	
 	private String lastPublished;
 	
@@ -31,23 +32,25 @@ public class PublicationScriptProperties
 
 	private Date lastPublishedDate;
 
+	private ScriptDetails scriptDetails;
+
 	public PublicationScriptProperties()
 	{
 		// Default
 	}
 	
-	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, 
-			final long messageCount, final ScriptEngine scriptEngine, final boolean repeat)
-	{
-		this.name = name;
-		this.status = state;		
-		this.lastPublished = lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
-		this.messageCount = messageCount;
-		
-		this.file = file;
-		this.repeat = repeat;
-		this.scriptEngine = scriptEngine;
-	}
+//	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, 
+//			final long messageCount, final ScriptEngine scriptEngine, final boolean repeat)
+//	{
+//		this.name = name;
+//		this.status = state;		
+//		this.lastPublished = lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
+//		this.messageCount = messageCount;
+//		
+//		this.file = file;
+//		this.repeat = repeat;
+//		this.scriptEngine = scriptEngine;
+//	}
 	
 	public void setCount(final long messageCount)
 	{
@@ -132,13 +135,13 @@ public class PublicationScriptProperties
 
 	public boolean isRepeat()
 	{
-		return repeat;
+		return scriptDetails.isRepeat();
 	}
 
-	public void setRepeat(boolean repeat)
-	{
-		this.repeat = repeat;
-	}
+//	public void setRepeat(boolean repeat)
+//	{
+//		this.repeat = repeat;
+//	}
 
 	public void setScriptEngine(final ScriptEngine scriptEngine)
 	{
@@ -153,5 +156,15 @@ public class PublicationScriptProperties
 	public void setScriptName(String scriptName)
 	{
 		this.name = scriptName;
+	}
+
+	public void setDetails(final ScriptDetails scriptDetails)
+	{
+		this.scriptDetails = scriptDetails;		
+	}
+	
+	public ScriptDetails getScriptDetails()
+	{
+		return this.scriptDetails ;
 	}
 }

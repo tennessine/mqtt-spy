@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
-import pl.baczkowicz.mqttspy.common.generated.Script;
+import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
@@ -75,7 +75,7 @@ public class Main
 			
 			// Run all configured scripts
 			scriptManager.addScripts(connectionSettings.getBackgroundScript());
-			for (final Script script : connectionSettings.getBackgroundScript())
+			for (final ScriptDetails script : connectionSettings.getBackgroundScript())
 			{
 				scriptManager.runScriptFile(new File(script.getFile()));
 			}

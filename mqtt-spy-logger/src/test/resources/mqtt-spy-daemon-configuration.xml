@@ -33,7 +33,7 @@
 			<Subscription topic="/test/#" qos="0" />	
 			<Subscription topic="/home/#" qos="0" scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js"/>
 
-			<BackgroundScript>
+			<BackgroundScript repeat="true">
 				<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/bedroom.js</File>
 			</BackgroundScript>
   </Connection>

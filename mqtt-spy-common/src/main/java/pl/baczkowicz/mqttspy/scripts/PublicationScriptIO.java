@@ -30,6 +30,8 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 	private final ScriptEventManagerInterface eventManager;
 
 	private Executor executor;
+
+	private final MessageLogIOInterface messageLog;
 	
 	public PublicationScriptIO(
 			final MqttConnectionInterface connection, final ScriptEventManagerInterface eventManager, 
@@ -39,6 +41,11 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 		this.connection = connection;
 		this.script = script;
 		this.executor = executor;
+		this.messageLog = new MessageLogIO();
+		
+		final Bindings bindings = script.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+		bindings.put("messageLog", messageLog);
+		script.getScriptEngine().setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
 	public void touch()

@@ -92,7 +92,7 @@
 		 -->
 	</xs:complexType>
 	
-	<xs:complexType name="Script">
+	<xs:complexType name="ScriptDetails">
 		<xs:complexContent>
 			<xs:extension base="mqttspycommon:Task">
 				<xs:choice>

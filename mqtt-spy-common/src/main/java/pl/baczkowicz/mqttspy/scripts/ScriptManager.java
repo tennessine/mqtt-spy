@@ -15,7 +15,7 @@ import javax.script.SimpleBindings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.common.generated.Script;
+import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 
@@ -43,7 +43,7 @@ public class ScriptManager
 		return file.getName().replace(".js",  "");
 	}
 	
-	public void addScript(final Script scriptDetails)
+	public void addScript(final ScriptDetails scriptDetails)
 	{
 		final File scriptFile = new File(scriptDetails.getFile());
 		
@@ -59,12 +59,12 @@ public class ScriptManager
 	
 	public void addScript(final String filename)
 	{
-		addScript(new Script(false, filename));
+		addScript(new ScriptDetails(false, filename));
 	}
 	
-	public void addScripts(final List<Script> scriptFiles)
+	public void addScripts(final List<ScriptDetails> scriptFiles)
 	{
-		for (final Script script : scriptFiles)
+		for (final ScriptDetails script : scriptFiles)
 		{
 			addScript(script);
 		}
@@ -76,7 +76,7 @@ public class ScriptManager
 	}
 		
 	public void createScript(final PublicationScriptProperties scriptProperties,
-			String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
+			String scriptName, File scriptFile, final MqttConnectionInterface connection, final ScriptDetails scriptDetails)
 	// public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
 	{
 		final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										
@@ -89,7 +89,7 @@ public class ScriptManager
 			scriptProperties.setScriptFile(scriptFile);
 			scriptProperties.setStatus(ScriptRunningState.NOT_STARTED);
 			scriptProperties.setScriptEngine(scriptEngine);
-			scriptProperties.setRepeat(scriptDetails.isRepeat());
+			scriptProperties.setDetails(scriptDetails);
 			
 			scriptProperties.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, scriptProperties, executor));
 			
