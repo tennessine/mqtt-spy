@@ -5,18 +5,24 @@ import java.util.List;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
+
 public class ReceivedMqttMessageWithSubscriptions extends ReceivedMqttMessage
 {
 	private List<String> subscriptions;
 	
-	public ReceivedMqttMessageWithSubscriptions(final long id, final String topic, final MqttMessage message)
+	private final BaseMqttConnection connection;
+	
+	public ReceivedMqttMessageWithSubscriptions(final long id, final String topic, final MqttMessage message, final BaseMqttConnection connection)
 	{
 		super(id, topic, message);
+		this.connection = connection;
 	}
 	
-	public ReceivedMqttMessageWithSubscriptions(final long id, final String topic, final MqttMessage message, final Date date)
+	public ReceivedMqttMessageWithSubscriptions(final long id, final String topic, final MqttMessage message, final Date date, final BaseMqttConnection connection)
 	{
 		super(id, topic, message, date);
+		this.connection = connection;
 	}
 
 	public List<String> getSubscriptions()
@@ -27,5 +33,10 @@ public class ReceivedMqttMessageWithSubscriptions extends ReceivedMqttMessage
 	public void setSubscriptions(final List<String> subscriptions)
 	{
 		this.subscriptions = subscriptions;
+	}
+
+	public BaseMqttConnection getConnection()
+	{
+		return connection;
 	}
 }

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
 import pl.baczkowicz.mqttspy.common.generated.MessageLog;
+import pl.baczkowicz.mqttspy.common.generated.MessageLogEnum;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
@@ -29,8 +30,7 @@ public class LogParserUtils
 	/** Pattern that is used to decide whether a string should be wrapped in CDATA. */
     private static final Pattern XML_CHARS = Pattern.compile("[&<>]");
     
-	public static String createReceivedMessageLog(final ReceivedMqttMessageWithSubscriptions message, 
-			final MessageLog messageLog)
+	public static String createReceivedMessageLog(final ReceivedMqttMessageWithSubscriptions message, final MessageLog messageLog)
 	{
 		final StringBuffer logMessage = new StringBuffer();
 		logMessage.append("<MqttMessage");
@@ -38,16 +38,42 @@ public class LogParserUtils
 		appendAttribute(logMessage, "id", String.valueOf(message.getId()));
 		appendAttribute(logMessage, "timestamp", String.valueOf( message.getDate().getTime()));				
 		appendAttribute(logMessage, "topic", message.getTopic());		
-		appendAttribute(logMessage, "qos", String.valueOf(message.getMessage().getQos()));		
-		appendAttribute(logMessage, "retained", String.valueOf(message.getMessage().isRetained()));
 		
-		if (message.getSubscriptions() != null && message.getSubscriptions().size() > 0)
+		// Quality of service
+		if (messageLog.isLogQos())
+		{
+			appendAttribute(logMessage, "qos", String.valueOf(message.getMessage().getQos()));
+		}
+		
+		// Retained flag
+		if (messageLog.isLogRetained())
+		{
+			appendAttribute(logMessage, "retained", String.valueOf(message.getMessage().isRetained()));
+		}
+		
+		// Connection info
+		if (messageLog.isLogConnection())
+		{
+			appendAttribute(logMessage, "connection", message.getConnection().getMqttConnectionDetails().getName());
+		}
+		
+		// Subscription (logs the first one only)
+		if (messageLog.isLogSubscription() && message.getSubscriptions() != null && message.getSubscriptions().size() > 0)
 		{
 			// Log the first matching subscription
 			appendAttribute(logMessage, "subscription", message.getSubscriptions().get(0));
 		}
 		
-		boolean encoded = MessageLog.XML_WITH_ENCODED_PAYLOAD.equals(messageLog);
+		populatePayload(logMessage, message, messageLog);
+		
+		logMessage.append("</MqttMessage>");
+		
+		return logMessage.toString();
+	}
+	
+	private static void populatePayload(final StringBuffer logMessage, final ReceivedMqttMessageWithSubscriptions message, final MessageLog messageLog)
+	{
+		boolean encoded = MessageLogEnum.XML_WITH_ENCODED_PAYLOAD.equals(messageLog);
 		final String payload = new String(message.getMessage().getPayload());
 		
 		if (!encoded && payload.contains(System.lineSeparator()))
@@ -79,10 +105,6 @@ public class LogParserUtils
 				appendValue(logMessage, payload);
 			}
 		}
-		
-		logMessage.append("</MqttMessage>");
-		
-		return logMessage.toString();
 	}
 	
 	public static void appendAttribute(final StringBuffer logMessage, final String attributeName, final String attributeValue)
@@ -119,7 +141,7 @@ public class LogParserUtils
 	        }
 	        
 	        in.close();
-	        logger.info("Read {} messages from {}", list.size(), selectedFile.getAbsoluteFile());		        		       
+	        logger.info("Message log - read {} messages from {}", list.size(), selectedFile.getAbsoluteFile());		        		       
 	        
 	        return list;
 		}
@@ -160,7 +182,7 @@ public class LogParserUtils
 	        	}
 	        }
 	        
-	        logger.info("Parsed {} messages", list.size());		        		       
+	        logger.info("Message log - parsed {} XML messages", list.size());		        		       
 	        
 	        return list;
 		}
@@ -204,11 +226,13 @@ public class LogParserUtils
         		mqttMessage.setPayload(loggedMessage.getValue().getBytes());
         	}
         	
-        	mqttMessage.setQos(loggedMessage.getQos());
-        	mqttMessage.setRetained(loggedMessage.isRetained());
+        	mqttMessage.setQos(loggedMessage.getQos() == null ? 0 : loggedMessage.getQos());
+        	mqttMessage.setRetained(loggedMessage.isRetained() == null ? false : loggedMessage.isRetained());
         	
         	mqttMessageList.add(new ReceivedMqttMessage(loggedMessage.getId(), loggedMessage.getTopic(), mqttMessage, new Date(loggedMessage.getTimestamp())));
         }
+        logger.info("Message log - processed {} MQTT messages", list.size());		        	
+        
         return mqttMessageList;
 	}
 }

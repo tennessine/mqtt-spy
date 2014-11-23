@@ -3,7 +3,7 @@ package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.IOException;
 
-public interface PublicationScriptIOInterface
+public interface IPublicationScriptIO
 {
 	void publish(String publicationTopic, String data);
 

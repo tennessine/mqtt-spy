@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class PublicationScriptIO implements PublicationScriptIOInterface
+public class PublicationScriptIO implements IPublicationScriptIO
 {
 	private final static Logger logger = LoggerFactory.getLogger(PublicationScriptIO.class);
 	
@@ -31,7 +31,7 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 
 	private Executor executor;
 
-	private final MessageLogIOInterface messageLog;
+	private final IMessageLogIO messageLog;
 	
 	public PublicationScriptIO(
 			final MqttConnectionInterface connection, final ScriptEventManagerInterface eventManager, 
@@ -43,9 +43,9 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 		this.executor = executor;
 		this.messageLog = new MessageLogIO();
 		
-		final Bindings bindings = script.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
-		bindings.put("messageLog", messageLog);
-		script.getScriptEngine().setBindings(bindings, ScriptContext.ENGINE_SCOPE);
+//		final Bindings bindings = script.getScriptEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+//		bindings.put("messageLog", messageLog);
+//		script.getScriptEngine().setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
 	public void touch()
@@ -143,5 +143,10 @@ public class PublicationScriptIO implements PublicationScriptIOInterface
 	public long getLastTouch()
 	{
 		return lastTouch;
+	}
+
+	public IMessageLogIO getMessageLog()
+	{
+		return messageLog;
 	}
 }

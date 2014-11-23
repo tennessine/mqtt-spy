@@ -193,7 +193,7 @@ public class MainController
 
 		converterStage = new Stage();
 		converterStage.setTitle("Converter");		
-		converterStage.setAlwaysOnTop(true);
+		// converterStage.setAlwaysOnTop(true);
 		converterStage.initOwner(getParentWindow());
 		converterStage.setScene(scene);
 	}

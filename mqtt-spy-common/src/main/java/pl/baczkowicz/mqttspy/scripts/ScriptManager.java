@@ -96,6 +96,7 @@ public class ScriptManager
 			final Map<String, Object> scriptVariables = new HashMap<String, Object>();
 			scriptVariables.put("mqttspy", scriptProperties.getPublicationScriptIO());	
 			scriptVariables.put("logger", LoggerFactory.getLogger(ScriptRunner.class));
+			scriptVariables.put("messageLog", scriptProperties.getPublicationScriptIO().getMessageLog());
 			
 			putJavaVariablesIntoEngine(scriptEngine, scriptVariables);
 			

@@ -105,20 +105,6 @@
         </xs:complexContent>
 	</xs:complexType>
 	
-	<!-- to be executed from a normal task/script? -->
-	<xs:complexType name="Replay">
-		<xs:complexContent>
-			<xs:extension base="mqttspycommon:Task">
-				<xs:sequence>
-					<xs:element name="File" 				type="xs:string" />
-					<!-- TODO
-					<xs:element name="Speed" 				type="xs:float" minOccurs="0" maxOccurs="1" />
-					 -->			
-				</xs:sequence>
-			 </xs:extension>		
-        </xs:complexContent>
-	</xs:complexType>
-	
 	<!-- ===================== -->
 	<!-- === LOGGING ========= -->
 	<!-- ===================== -->
@@ -134,14 +120,25 @@
 	        </xs:extension>		
         </xs:complexContent>
 	</xs:complexType>
-		
-	<xs:simpleType name="MessageLog">
+	
+	<xs:simpleType name="MessageLogEnum">
 		<xs:restriction base="xs:string">
 			<xs:enumeration value="DISABLED" />
 			<xs:enumeration value="XML_WITH_ENCODED_PAYLOAD" />
 			<xs:enumeration value="XML_WITH_PLAIN_PAYLOAD" />
 		</xs:restriction>
 	</xs:simpleType>
+	
+	<xs:complexType name="MessageLog">
+		<xs:simpleContent>
+			<xs:extension base="mqttspycommon:MessageLogEnum">
+	       		<xs:attribute name="logQos" 			type="xs:boolean" />
+	       		<xs:attribute name="logRetained" 		type="xs:boolean" />
+	       		<xs:attribute name="logConnection" 		type="xs:boolean" />
+	       		<xs:attribute name="logSubscription" 	type="xs:boolean" />
+	        </xs:extension>		
+        </xs:simpleContent>
+	</xs:complexType>
  	
 	<!-- ================ -->
 	<!-- === ELEMENTS === -->

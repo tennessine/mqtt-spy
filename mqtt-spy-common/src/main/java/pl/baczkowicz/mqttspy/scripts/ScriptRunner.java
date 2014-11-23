@@ -27,9 +27,13 @@ public class ScriptRunner implements Runnable
 	{
 		script.getPublicationScriptIO().touch();
 		script.setThread(Thread.currentThread());
+		
+		boolean firstRun = true;
 
-		while (script.isRepeat())
+		while (firstRun || script.isRepeat())
 		{
+			firstRun = false;
+			
 			changeState(script.getName(), ScriptRunningState.RUNNING, script);
 			new Thread(new ScriptHealthDetector(eventManager, script, executor)).start();		
 			

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.MqttSpyDaemonConfiguration;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
@@ -38,7 +39,8 @@ public class ConfigurationLoader extends PropertyFileLoader
 	{
 		try
 		{
-			setConfiguration((MqttSpyDaemonConfiguration) parser.loadFromFile(file));			
+			setConfiguration((MqttSpyDaemonConfiguration) parser.loadFromFile(file));	
+			populateDefaults();
 			return true;
 		}
 		catch (XMLException e)
@@ -51,6 +53,41 @@ public class ConfigurationLoader extends PropertyFileLoader
 		}
 		
 		return false;
+	}
+
+	private void populateDefaults()
+	{
+		for (final ScriptDetails scriptDetails : configuration.getConnection().getBackgroundScript())
+		{
+			if (scriptDetails.isRepeat() == null)
+			{
+				scriptDetails.setRepeat(false);
+			}
+		}
+		
+		// Connection
+		if (configuration.getConnection().getMessageLog().isLogConnection() == null)
+		{
+			configuration.getConnection().getMessageLog().setLogConnection(false);
+		}
+		
+		// QoS
+		if (configuration.getConnection().getMessageLog().isLogQos() == null)
+		{
+			configuration.getConnection().getMessageLog().setLogQos(false);
+		}
+		
+		// Retained
+		if (configuration.getConnection().getMessageLog().isLogRetained() == null)
+		{
+			configuration.getConnection().getMessageLog().setLogRetained(false);
+		}
+		
+		// Subscription
+		if (configuration.getConnection().getMessageLog().isLogSubscription() == null)
+		{
+			configuration.getConnection().getMessageLog().setLogSubscription(false);
+		}
 	}
 
 	public MqttSpyDaemonConfiguration getConfiguration()

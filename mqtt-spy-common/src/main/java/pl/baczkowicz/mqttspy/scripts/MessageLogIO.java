@@ -10,7 +10,7 @@ import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class MessageLogIO implements MessageLogIOInterface, Runnable
+public class MessageLogIO implements IMessageLogIO, Runnable
 {
 	private final static Logger logger = LoggerFactory.getLogger(MessageLogIO.class);
 	
@@ -22,7 +22,7 @@ public class MessageLogIO implements MessageLogIOInterface, Runnable
 
 	private long lastUpdated;
 
-	private double speed;
+	private double speed = 1;
 
 	public int readFromFile(String logLocation)
 	{
@@ -62,15 +62,36 @@ public class MessageLogIO implements MessageLogIOInterface, Runnable
 		running = false;		
 	}
 
-	public void setSpeed(double speed)
+	public void setSpeed(double newSpeed)
 	{
-		this.speed = speed;
+		if (newSpeed > 1)
+		{
+			if (this.speed <= 1)
+			{
+				logger.info("Warp enabled. Changing replay speed from {} to {}", this.speed, newSpeed);
+			}
+			else
+			{
+				logger.info("Warp still on. Changing replay speed from {} to {}", this.speed, newSpeed);
+			}		
+		}
+		else if (newSpeed == 1)
+		{
+			logger.info("Back to normal. Changing replay speed from {} to {}", this.speed, newSpeed);
+		}
+		else
+		{
+			logger.info("Tea time! Changing replay speed from {} to {}", this.speed, newSpeed);
+		}
+		
+		this.speed = newSpeed;
 	}
 
 	public boolean isReadyToPublish(final int messageIndex)
 	{
 		if (messageLog != null && messageLog.size() > messageIndex)
 		{
+			// logger.info("Replay date = {}, message date = {}", replayDate, messageLog.get(messageIndex).getDate().getTime());
 			if (replayDate > messageLog.get(messageIndex).getDate().getTime())
 			{
 				return true;
@@ -80,7 +101,7 @@ public class MessageLogIO implements MessageLogIOInterface, Runnable
 		return false;
 	}
 	
-	public ReceivedMqttMessage get(final int messageIndex)
+	public ReceivedMqttMessage getMessage(final int messageIndex)
 	{
 		if (messageLog != null && messageLog.size() > messageIndex)
 		{
@@ -101,7 +122,7 @@ public class MessageLogIO implements MessageLogIOInterface, Runnable
 				final long sinceLastUpdated = now - lastUpdated;				
 				final double increase = sinceLastUpdated * speed;
 				
-				replayDate =+ (long) increase;
+				replayDate =  replayDate + (long) increase;
 				lastUpdated = now;
 			}
 			
@@ -115,6 +136,16 @@ public class MessageLogIO implements MessageLogIOInterface, Runnable
 			}
 		}	
 		stop();
+	}
+	
+	public int getMessageCount()
+	{
+		if (messageLog == null)
+		{
+			return 0;
+		}
+		
+		return messageLog.size();
 	}
 
 }
