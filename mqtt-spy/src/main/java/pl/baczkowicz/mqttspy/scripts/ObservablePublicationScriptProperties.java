@@ -2,6 +2,8 @@ package pl.baczkowicz.mqttspy.scripts;
 
 import java.util.Date;
 
+import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,6 +16,8 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 
 	private SimpleLongProperty countProperty;
 	
+	private SimpleBooleanProperty repeatProperty;
+	
 	public ObservablePublicationScriptProperties()
 	{
 		super();
@@ -21,6 +25,7 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 		this.statusProperty = new SimpleObjectProperty<ScriptRunningState>(ScriptRunningState.NOT_STARTED);		
 		this.lastPublishedProperty = new SimpleStringProperty("");
 		this.countProperty = new SimpleLongProperty(0);
+		this.repeatProperty = new SimpleBooleanProperty(false);
 	}
 	
 //	public ObservablePublicationScriptProperties(final PublicationScriptProperties properties)
@@ -62,6 +67,22 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 	public SimpleLongProperty countProperty()
 	{
 		return this.countProperty;
+	}
+	
+	public SimpleBooleanProperty repeatProperty()
+	{
+		return this.repeatProperty;
+	}
+	
+	public boolean isRepeat()
+	{
+		return this.repeatProperty.getValue();
+	}
+	
+	public void setDetails(final ScriptDetails scriptDetails)
+	{
+		super.setDetails(scriptDetails);
+		this.repeatProperty.set(scriptDetails.isRepeat());		
 	}
 	
 	public void setCount(final long messageCount)

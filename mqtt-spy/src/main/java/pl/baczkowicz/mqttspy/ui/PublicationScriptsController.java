@@ -15,6 +15,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 
@@ -37,6 +38,9 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
     @FXML
     private TableColumn<ObservablePublicationScriptProperties, String> nameColumn;
+    
+    @FXML
+    private TableColumn<ObservablePublicationScriptProperties, Boolean> repeatColumn;
         
     @FXML
     private TableColumn<ObservablePublicationScriptProperties, ScriptRunningState> runningStatusColumn;
@@ -58,6 +62,38 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		// Table
 		nameColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, String>("name"));
 
+		repeatColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, Boolean>("repeat"));
+		repeatColumn
+		.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, Boolean>, TableCell<ObservablePublicationScriptProperties, Boolean>>()
+		{
+			public TableCell<ObservablePublicationScriptProperties, Boolean> call(
+					TableColumn<ObservablePublicationScriptProperties, Boolean> param)
+			{
+				final CheckBoxTableCell<ObservablePublicationScriptProperties, Boolean> cell = new CheckBoxTableCell<ObservablePublicationScriptProperties, Boolean>()
+				{
+					@Override
+					public void updateItem(final Boolean checked, boolean empty)
+					{
+						super.updateItem(checked, empty);
+						if (!isEmpty() && checked != null && this.getTableRow() != null && this.getTableRow().getItem() != null)
+						{
+							final ObservablePublicationScriptProperties item = (ObservablePublicationScriptProperties) this.getTableRow().getItem();
+							
+							if (logger.isTraceEnabled())
+							{
+								logger.trace("Setting repeat for {} to {}", item.getName(), checked);
+							}
+							
+							item.repeatProperty().setValue(checked);
+						}									
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
+		
 		messageCountColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, Long>("count"));
 		messageCountColumn
 		.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, Long>, TableCell<ObservablePublicationScriptProperties, Long>>()
