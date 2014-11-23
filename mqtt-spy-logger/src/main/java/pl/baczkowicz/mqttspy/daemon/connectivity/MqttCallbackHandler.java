@@ -1,6 +1,5 @@
 package pl.baczkowicz.mqttspy.daemon.connectivity;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
-import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 
 /**
@@ -93,17 +91,7 @@ public class MqttCallbackHandler implements MqttCallback
 			
 			if (subscriptionDetails.getScriptFile() != null)
 			{
-				final PublicationScriptProperties script = scriptManager.getScript(new File(subscriptionDetails.getScriptFile()));
-				
-				if (script != null)
-				{
-					script.getScriptEngine().put("receivedMessage", receivedMessage);
-					scriptManager.runScriptFile(script);
-				}
-				else
-				{
-					logger.warn("No script found for {}", subscriptionDetails.getScriptFile());
-				}
+				scriptManager.runScriptFile(subscriptionDetails.getScriptFile(), receivedMessage);
 			}
 		}
 		

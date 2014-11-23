@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
+import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
@@ -40,8 +41,11 @@ public class MqttAsyncConnection extends BaseMqttConnection
 
 	private EventManager eventManager;
 
+	private InteractiveScriptManager scriptManager;
+
 	public MqttAsyncConnection(final RuntimeConnectionProperties properties, 
-			final MqttConnectionStatus status, final EventManager eventManager, final Queue<MqttSpyUIEvent> uiEventQueue)
+			final MqttConnectionStatus status, final EventManager eventManager,
+			final Queue<MqttSpyUIEvent> uiEventQueue)
 	{ 
 		super(properties);
 		
@@ -57,7 +61,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 		this.eventManager = eventManager;
 		setConnectionStatus(status);
 	}
-
+	
 	public void messageReceived(final MqttContent message)
 	{		
 		final List<String> matchingSubscriptionTopics = getMatchingSubscriptions(message);
@@ -77,6 +81,11 @@ public class MqttAsyncConnection extends BaseMqttConnection
 				
 				// Set subscription reference on the message
 				message.setSubscription(mqttSubscription);
+				
+				if (mqttSubscription.getDetails() != null && mqttSubscription.getDetails().getScriptFile() != null)
+				{
+					scriptManager.runScriptFile(mqttSubscription.getDetails().getScriptFile(), message);
+				}
 				
 				// Pass the message for subscription handling
 				mqttSubscription.messageReceived(message);
@@ -350,8 +359,18 @@ public class MqttAsyncConnection extends BaseMqttConnection
 		return store.getName();
 	}	
 
-	public void setStatisticsManager(StatisticsManager statisticsManager)
+	public void setStatisticsManager(final StatisticsManager statisticsManager)
 	{
 		this.statisticsManager = statisticsManager;
+	}
+
+	public void setScriptManager(final InteractiveScriptManager scriptManager)
+	{
+		this.scriptManager = scriptManager;
+	}
+	
+	public InteractiveScriptManager getScriptManager()
+	{
+		return this.scriptManager;
 	}
 }

@@ -1,13 +1,12 @@
 package pl.baczkowicz.mqttspy.scripts;
 
-public enum ScriptRunningState
+public enum ScriptTypeEnum
 {
-	NOT_STARTED("Not started"), FAILED("Failed"), /*ACTIVE("Active"), */RUNNING("Running"), STOPPED("Stopped"), 
-	FINISHED("Finished"), FROZEN("Not responding");
-
+	PUBLICATION("Script folder"), SUBSCRIPTION("Subscription"), BACKGROUND("Predefined");
+	
 	private final String name;
 
-	private ScriptRunningState(String s)
+	private ScriptTypeEnum(String s)
 	{
 		name = s;
 	}

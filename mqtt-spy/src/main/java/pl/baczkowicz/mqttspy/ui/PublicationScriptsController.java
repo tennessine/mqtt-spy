@@ -2,6 +2,8 @@ package pl.baczkowicz.mqttspy.ui;
 
 import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
@@ -14,6 +16,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -28,6 +31,7 @@ import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
 import pl.baczkowicz.mqttspy.scripts.ObservablePublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
+import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 
 public class PublicationScriptsController implements Initializable, ScriptStateChangeObserver
 {
@@ -38,6 +42,9 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
     @FXML
     private TableColumn<ObservablePublicationScriptProperties, String> nameColumn;
+
+    @FXML
+    private TableColumn<ObservablePublicationScriptProperties, ScriptTypeEnum> typeColumn;
     
     @FXML
     private TableColumn<ObservablePublicationScriptProperties, Boolean> repeatColumn;
@@ -57,10 +64,43 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 
 	private EventManager eventManager;
 
+	private Map<ScriptTypeEnum, ContextMenu> contextMenus = new HashMap<>();
+
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		// Table
 		nameColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, String>("name"));
+		
+		typeColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, ScriptTypeEnum>("type"));
+		typeColumn
+			.setCellFactory(new Callback<TableColumn<ObservablePublicationScriptProperties, ScriptTypeEnum>, TableCell<ObservablePublicationScriptProperties, ScriptTypeEnum>>()
+		{
+			public TableCell<ObservablePublicationScriptProperties, ScriptTypeEnum> call(
+					TableColumn<ObservablePublicationScriptProperties, ScriptTypeEnum> param)
+			{
+				final TableCell<ObservablePublicationScriptProperties, ScriptTypeEnum> cell = new TableCell<ObservablePublicationScriptProperties, ScriptTypeEnum>()				
+				{
+					@Override
+					public void updateItem(ScriptTypeEnum item, boolean empty)
+					{
+						super.updateItem(item, empty);
+						
+						if (!isEmpty())
+						{
+							setText(item.toString());
+						}
+						else
+						{
+							setText(null);
+							setGraphic(null);
+						}
+					}
+				};
+				cell.setAlignment(Pos.TOP_CENTER);
+				
+				return cell;
+			}
+		});
 
 		repeatColumn.setCellValueFactory(new PropertyValueFactory<ObservablePublicationScriptProperties, Boolean>("repeat"));
 		repeatColumn
@@ -79,12 +119,21 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 						{
 							final ObservablePublicationScriptProperties item = (ObservablePublicationScriptProperties) this.getTableRow().getItem();
 							
-							if (logger.isTraceEnabled())
-							{
-								logger.trace("Setting repeat for {} to {}", item.getName(), checked);
+							// Anything but subscription scripts can be repeated
+							if (!ScriptTypeEnum.SUBSCRIPTION.equals(item.typeProperty().getValue()))
+							{	
+								this.setDisable(false);
+								if (logger.isTraceEnabled())
+								{
+									logger.trace("Setting repeat for {} to {}", item.getName(), checked);
+								}
+								
+								item.repeatProperty().setValue(checked);
 							}
-							
-							item.repeatProperty().setValue(checked);
+							else
+							{
+								this.setDisable(true);
+							}
 						}									
 					}
 				};
@@ -197,6 +246,31 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 				return cell;
 			}
 		});
+		
+		scriptTable
+			.setRowFactory(new Callback<TableView<ObservablePublicationScriptProperties>, TableRow<ObservablePublicationScriptProperties>>()
+			{
+				public TableRow<ObservablePublicationScriptProperties> call(
+						TableView<ObservablePublicationScriptProperties> tableView)
+				{
+					final TableRow<ObservablePublicationScriptProperties> row = new TableRow<ObservablePublicationScriptProperties>()
+					{
+						@Override
+						protected void updateItem(ObservablePublicationScriptProperties item, boolean empty)
+						{
+							super.updateItem(item, empty);
+							if (!isEmpty() && item != null)
+							{
+								final ContextMenu rowMenu = contextMenus.get(item.typeProperty().getValue());
+
+								this.setContextMenu(rowMenu);
+							}
+						}
+					};
+	
+					return row;
+				}
+			});				
 
 		// scriptTable
 		// .setRowFactory(new Callback<TableView<PublicationScriptProperties>,
@@ -261,16 +335,19 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	
 	public void init()
 	{
-		scriptManager = new InteractiveScriptManager(eventManager, connection);
+		scriptManager = connection.getScriptManager();
 		eventManager.registerScriptStateChangeObserver(this, null);
 		refreshList();
-		scriptTable.setItems(scriptManager.getObservableScriptList());		
-		scriptTable.setContextMenu(createScriptTableContextMenu());
+		scriptTable.setItems(scriptManager.getObservableScriptList());
+		
+		// Note: subscription script don't have context menus because they can't be started/stopped manually - for future, consider enabled/disabled
+		contextMenus.put(ScriptTypeEnum.PUBLICATION, createDirectoryTypeScriptTableContextMenu());		
 	}
 	
 	private void refreshList()
 	{
 		scriptManager.addScripts(connection.getProperties().getConfiguredProperties().getPublicationScripts());
+		scriptManager.addSubscriptionScripts(connection.getProperties().getConfiguredProperties().getSubscription());
 	}
 
 	public void setConnection(MqttAsyncConnection connection)
@@ -293,7 +370,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		this.eventManager = eventManager;
 	}
 	
-	public ContextMenu createScriptTableContextMenu()
+	public ContextMenu createDirectoryTypeScriptTableContextMenu()
 	{
 		final ContextMenu contextMenu = new ContextMenu();
 		

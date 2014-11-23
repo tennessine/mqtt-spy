@@ -3,6 +3,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 import java.util.Queue;
 
 import javafx.scene.paint.Color;
+import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
@@ -27,6 +28,8 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 	private SubscriptionController subscriptionController;
 
 	private MqttAsyncConnection connection;
+	
+	private SubscriptionDetails details;
 
 	public MqttSubscription(final String topic, final Integer qos, final Color color, 
 			final int minMessagesPerTopic, final int preferredStoreSize, final Queue<MqttSpyUIEvent> uiEventQueue, final EventManager eventManager)
@@ -135,5 +138,15 @@ public class MqttSubscription extends ManagedMessageStoreWithFiltering
 	public void setSubscriptionRequested(final boolean subscriptionRequested)
 	{
 		this.subscriptionRequested = subscriptionRequested;
+	}
+
+	public SubscriptionDetails getDetails()
+	{
+		return details;
+	}
+
+	public void setDetails(SubscriptionDetails details)
+	{
+		this.details = details;
 	}
 }

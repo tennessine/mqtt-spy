@@ -64,6 +64,7 @@ public class SubscriptionManager
 				connection.getProperties().getConfiguredProperties().getMinMessagesStoredPerTopic(),
 				connection.getPreferredStoreSize(), uiEventQueue, eventManager);
 		subscription.setConnection(connection);
+		subscription.setDetails(subscriptionDetails);
 		
 		// Add a new tab
 		final SubscriptionController subscriptionController = createSubscriptionTab(false, parent, subscription, connection,

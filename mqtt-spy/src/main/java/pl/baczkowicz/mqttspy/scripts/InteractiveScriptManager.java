@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
+import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.ui.utils.RunLaterExecutor;
 
@@ -43,10 +44,25 @@ public class InteractiveScriptManager extends ScriptManager
 			files.addAll(getFileNamesForDirectory(ConfigurationManager.getDefaultHomeDirectory(), ".js"));
 		}	
 		
-		populateScriptsFromFileList(files);
+		populateScriptsFromFileList(files, ScriptTypeEnum.PUBLICATION);
 	}
 	
-	public void populateScriptsFromFileList(final List<File> files)
+	public void addSubscriptionScripts(final List<TabbedSubscriptionDetails> list)
+	{
+		final List<ScriptDetails> scripts = new ArrayList<>(); 
+		
+		for (final TabbedSubscriptionDetails sub : list)
+		{
+			if (sub.getScriptFile() != null  && !sub.getScriptFile().trim().isEmpty())
+			{
+				scripts.add(new ScriptDetails(false, sub.getScriptFile()));
+			}
+		}
+		
+		populateScripts(scripts, ScriptTypeEnum.SUBSCRIPTION);
+	}
+	
+	public void populateScriptsFromFileList(final List<File> files, final ScriptTypeEnum type)
 	{
 		for (final File scriptFile : files)
 		{
@@ -56,12 +72,44 @@ public class InteractiveScriptManager extends ScriptManager
 				final String scriptName = getScriptName(scriptFile);
 				
 				final ObservablePublicationScriptProperties properties = new ObservablePublicationScriptProperties();
+				properties.typeProperty().setValue(type);
 				
 				createScript(properties, scriptName, scriptFile, connection, new ScriptDetails(false, scriptFile.getName())); 			
 				
 				observableScriptList.add(properties);
 				getScripts().put(scriptFile, properties);
 			}				
+		}			
+	}
+	
+	public void populateScripts(final List<ScriptDetails> scriptDetails, final ScriptTypeEnum type)
+	{
+		for (final ScriptDetails details : scriptDetails)
+		{
+			final File scriptFile = new File(details.getFile());
+			
+			if (!scriptFile.exists())					
+			{
+				logger.warn("Script {} does not exist!", details.getFile());
+			}
+			else
+			{
+				logger.info("Adding script {}", details.getFile());
+							
+				ObservablePublicationScriptProperties script = retrievePublicationScriptProperties(observableScriptList, scriptFile);
+				if (script == null)					
+				{
+					final String scriptName = getScriptName(scriptFile);
+					
+					final ObservablePublicationScriptProperties properties = new ObservablePublicationScriptProperties();
+					properties.typeProperty().setValue(type);
+					
+					createScript(properties, scriptName, scriptFile, connection, details); 			
+					
+					observableScriptList.add(properties);
+					getScripts().put(scriptFile, properties);
+				}	
+			}
 		}			
 	}
 	

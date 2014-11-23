@@ -18,9 +18,10 @@
 	        </columnResizePolicy>
 	     <columns>
 	         <TableColumn fx:id="nameColumn" editable="false" minWidth="100.0" prefWidth="100.0" maxWidth="1.7976931348623157E308" text="Script name" />
+	         <TableColumn fx:id="typeColumn" maxWidth="100.0" minWidth="100.0" resizable="false" text="Source" />
 	         <TableColumn fx:id="repeatColumn" maxWidth="80.0" minWidth="80.0" resizable="false" text="Repeat" />
 	         <TableColumn fx:id="runningStatusColumn" editable="false" maxWidth="120.0" minWidth="120.0" resizable="false" text="Status" />
-	         <TableColumn fx:id="messageCountColumn" editable="false" maxWidth="120.0" minWidth="120.0" prefWidth="100.0" resizable="false" text="Messages" />
+	         <TableColumn fx:id="messageCountColumn" editable="false" maxWidth="110.0" minWidth="110.0" prefWidth="100.0" resizable="false" text="Messages" />
 	         <TableColumn fx:id="lastPublishedColumn" editable="false" maxWidth="160.0" minWidth="160.0" prefWidth="160.0" resizable="false" text="Last published" />
 	     </columns>
 	   </TableView>

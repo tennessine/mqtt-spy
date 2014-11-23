@@ -11,6 +11,8 @@ import javafx.beans.property.SimpleStringProperty;
 public class ObservablePublicationScriptProperties extends PublicationScriptProperties
 {
 	private SimpleObjectProperty<ScriptRunningState> statusProperty;
+	
+	private SimpleObjectProperty<ScriptTypeEnum> typeProperty;
 
 	private SimpleStringProperty lastPublishedProperty;
 
@@ -23,6 +25,7 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 		super();
 		
 		this.statusProperty = new SimpleObjectProperty<ScriptRunningState>(ScriptRunningState.NOT_STARTED);		
+		this.typeProperty = new SimpleObjectProperty<ScriptTypeEnum>(ScriptTypeEnum.PUBLICATION);
 		this.lastPublishedProperty = new SimpleStringProperty("");
 		this.countProperty = new SimpleLongProperty(0);
 		this.repeatProperty = new SimpleBooleanProperty(false);
@@ -57,6 +60,11 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 	public SimpleObjectProperty<ScriptRunningState> statusProperty()
 	{
 		return this.statusProperty;
+	}
+	
+	public SimpleObjectProperty<ScriptTypeEnum> typeProperty()
+	{
+		return this.typeProperty;
 	}
 	
 	public SimpleStringProperty lastPublishedProperty()

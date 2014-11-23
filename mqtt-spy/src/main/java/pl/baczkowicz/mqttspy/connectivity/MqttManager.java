@@ -22,6 +22,8 @@ import pl.baczkowicz.mqttspy.events.connectivity.MqttConnectionAttemptFailureEve
 import pl.baczkowicz.mqttspy.events.connectivity.MqttDisconnectionAttemptFailureEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
+import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
+import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 
 public class MqttManager
@@ -46,7 +48,14 @@ public class MqttManager
 	public MqttAsyncConnection createConnection(final RuntimeConnectionProperties connectionProperties, final Queue<MqttSpyUIEvent> uiEventQueue)
 	{
 		// Storing all client properties in a simple object
-		final MqttAsyncConnection connection = new MqttAsyncConnection(connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager, uiEventQueue);
+		final MqttAsyncConnection connection = new MqttAsyncConnection(
+				connectionProperties, MqttConnectionStatus.DISCONNECTED, eventManager, uiEventQueue);
+		
+		final InteractiveScriptManager scriptManager = new InteractiveScriptManager(eventManager, connection);
+		connection.setScriptManager(scriptManager);
+		
+		// TODO: no UI to populate that at the moment
+		scriptManager.populateScripts(connectionProperties.getConfiguredProperties().getBackgroundScript(), ScriptTypeEnum.BACKGROUND);	
 
 		// Store the created connection
 		connections.put(connectionProperties.getConfiguredProperties().getId(), connection);

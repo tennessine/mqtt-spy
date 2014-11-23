@@ -189,6 +189,9 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	private TableColumn<AdvancedTopicProperties, String> subscriptionTopicColumn;
 	
 	@FXML
+	private TableColumn<AdvancedTopicProperties, String> scriptColumn;
+	
+	@FXML
 	private TableColumn<AdvancedTopicProperties, Integer> qosSubscriptionColumn;
 	
 	@FXML
@@ -455,11 +458,27 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 					}		
 				});
 		
+		scriptColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, String>("script"));
+		scriptColumn.setCellFactory(TextFieldTableCell.<AdvancedTopicProperties>forTableColumn());
+		scriptColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<AdvancedTopicProperties, String>>()
+				{
+					@Override
+					public void handle(CellEditEvent<AdvancedTopicProperties, String> event)
+					{
+						AdvancedTopicProperties p = event.getRowValue();
+			            String newValue = event.getNewValue();
+			            p.scriptProperty().set(newValue);            
+						logger.debug("New value = {}", subscriptionsTable.getSelectionModel().getSelectedItem().scriptProperty().getValue());
+						onChange();
+					}		
+				});
+		
 		final ObservableList<Integer> qosChoice = FXCollections.observableArrayList (
 			    new Integer(0),
 			    new Integer(1),
 			    new Integer(2)
 			);
+		
 		qosSubscriptionColumn.setCellValueFactory(new PropertyValueFactory<AdvancedTopicProperties, Integer>("qos"));
 		qosSubscriptionColumn.setCellFactory(new Callback<TableColumn<AdvancedTopicProperties, Integer>, TableCell<AdvancedTopicProperties, Integer>>()
 				{
@@ -629,7 +648,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	@FXML
 	private void addSubscription()
 	{
-		final AdvancedTopicProperties item = new AdvancedTopicProperties("/sampleSubscription/", 0, false);		
+		final AdvancedTopicProperties item = new AdvancedTopicProperties("/sampleSubscription/", "", 0, false);		
 		subscriptionsTable.getItems().add(item);
 		onChange();
 	}
@@ -827,6 +846,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		{
 			final TabbedSubscriptionDetails newSubscriptionDetails = new TabbedSubscriptionDetails();
 			newSubscriptionDetails.setTopic(subscriptionDetails.topicProperty().getValue());
+			newSubscriptionDetails.setScriptFile(subscriptionDetails.scriptProperty().getValue());
 			newSubscriptionDetails.setCreateTab(subscriptionDetails.showProperty().getValue());
 			newSubscriptionDetails.setQos(subscriptionDetails.qosProperty().getValue());
 			connection.getSubscription().add(newSubscriptionDetails);
@@ -1073,7 +1093,10 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 		subscriptionsTable.getItems().clear();
 		for (final TabbedSubscriptionDetails sub : connection.getSubscription())
 		{
-			subscriptionsTable.getItems().add(new AdvancedTopicProperties(sub.getTopic(), sub.getQos(), sub.isCreateTab()));
+			subscriptionsTable.getItems().add(new AdvancedTopicProperties(
+					sub.getTopic(), 
+					sub.getScriptFile() == null ? "" : sub.getScriptFile(), 
+					sub.getQos(), sub.isCreateTab()));
 		}
 		subscriptionsTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener()
 		{

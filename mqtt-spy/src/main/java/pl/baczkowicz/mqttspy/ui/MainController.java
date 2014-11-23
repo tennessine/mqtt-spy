@@ -104,7 +104,6 @@ public class MainController
 		 
 		this.statisticsManager = new StatisticsManager();
 		this.eventManager = new EventManager();		
-		
 		this.mqttManager = new MqttManager(eventManager);
 		this.configurationManager = new ConfigurationManager(eventManager);		
 		this.connectionManager = new ConnectionManager(mqttManager, eventManager, statisticsManager, configurationManager);			

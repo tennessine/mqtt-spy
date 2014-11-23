@@ -18,10 +18,13 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
+import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 
 public class ScriptManager
 {
-	final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
+	public static final String RECEIVED_MESSAGE_PARAMETER = "receivedMessage";
+	
+	private final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
 	
 	private Map<File, PublicationScriptProperties> scripts = new HashMap<File, PublicationScriptProperties>();
 	
@@ -142,6 +145,21 @@ public class ScriptManager
 		{
 			// Not good in this happens... ;-)
 			logger.warn("No script for {}", scriptFile.getName());
+		}
+	}
+	
+	public void runScriptFile(final String scriptFile, final ReceivedMqttMessage receivedMessage)
+	{
+		final PublicationScriptProperties script = getScript(new File(scriptFile));
+		
+		if (script != null)
+		{
+			script.getScriptEngine().put(ScriptManager.RECEIVED_MESSAGE_PARAMETER, receivedMessage);
+			runScriptFile(script);
+		}
+		else
+		{
+			logger.warn("No script found for {}", scriptFile);
 		}
 	}
 	
