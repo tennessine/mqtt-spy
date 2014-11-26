@@ -9,12 +9,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
@@ -36,7 +38,7 @@ public class NewPublicationController implements Initializable
 	final static Logger logger = LoggerFactory.getLogger(NewPublicationController.class);
 
 	@FXML
-	private Button publishButton;
+	private SplitMenuButton publishButton;
 
 	@FXML
 	private ComboBox<String> publicationTopicText;
@@ -100,6 +102,10 @@ public class NewPublicationController implements Initializable
 		});
 			
 		publicationData.setWrapText(true);
+		
+		// publishButton.setContentDisplay(ContentDisplay.TOP);
+//		final MenuItem noScript = new MenuItem("No script");
+//		publishButton.getItems().add(new MenuItem("No script"));
 	}
 
 	public void recordPublicationTopic(final String publicationTopic)
@@ -170,7 +176,7 @@ public class NewPublicationController implements Initializable
 		}
 		else
 		{
-			AnchorPane.setRightAnchor(publicationTopicText, 126.0);
+			AnchorPane.setRightAnchor(publicationTopicText, 128.0);
 			publicationQosChoice.setVisible(false);
 			publicationQosLabel.setVisible(false);
 			retainedBox.setVisible(false);

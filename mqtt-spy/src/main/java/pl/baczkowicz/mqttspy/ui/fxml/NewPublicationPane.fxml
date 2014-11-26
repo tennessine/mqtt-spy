@@ -10,6 +10,7 @@
 <?import javafx.collections.*?>
 <?import javafx.scene.control.ComboBox?>
 <?import org.fxmisc.richtext.StyleClassedTextArea?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 
 <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.baczkowicz.mqttspy.ui.NewPublicationController">
 	<padding><Insets top="6" right="6" bottom="3" left="6" /></padding>
@@ -24,12 +25,12 @@
         <StyleClassedTextArea fx:id="publicationData" prefHeight="25.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="326" AnchorPane.topAnchor="31.0" />
         
         <!-- Retained flag -->
-        <Label fx:id="retainedLabel" layoutX="359.0" layoutY="5.0" text="Retained" AnchorPane.rightAnchor="150" AnchorPane.topAnchor="5.0" />
-        <CheckBox fx:id="retainedBox" layoutX="446.0" layoutY="4.0" mnemonicParsing="false" AnchorPane.rightAnchor="120" AnchorPane.topAnchor="4.0" />
+        <Label fx:id="retainedLabel" text="Retained" AnchorPane.rightAnchor="153" AnchorPane.topAnchor="5.0" />
+        <CheckBox fx:id="retainedBox" mnemonicParsing="false" AnchorPane.rightAnchor="123" AnchorPane.topAnchor="4.0" />
 
 		<!-- QoS -->
         <Label fx:id="publicationQosLabel" layoutX="473.0" layoutY="5.0" text="QoS" AnchorPane.rightAnchor="291" AnchorPane.topAnchor="5.0" />        
-        <ChoiceBox fx:id="publicationQosChoice" layoutX="506.0" prefHeight="25.0" prefWidth="14.0" value="0" AnchorPane.rightAnchor="244" AnchorPane.topAnchor="0.0">
+        <ChoiceBox fx:id="publicationQosChoice" prefHeight="25.0" prefWidth="14.0" value="0" AnchorPane.rightAnchor="244" AnchorPane.topAnchor="0.0">
            <items>
               <FXCollections fx:factory="observableArrayList">
                  <String fx:value="0" />
@@ -39,7 +40,7 @@
            </items>
         </ChoiceBox>
         
-        <MenuButton fx:id="formatMenu" mnemonicParsing="false" prefHeight="26.0" prefWidth="192.0" text="Input format: Plain" AnchorPane.rightAnchor="125" AnchorPane.topAnchor="32.0">
+        <MenuButton fx:id="formatMenu" mnemonicParsing="false" prefHeight="26.0" prefWidth="189.0" text="Input format: Plain" AnchorPane.rightAnchor="128" AnchorPane.topAnchor="32.0">
 		  <items>
 		      <RadioMenuItem mnemonicParsing="false" text="Plain">
 		         <toggleGroup>
@@ -50,16 +51,26 @@
 		  </items>
 		</MenuButton>        
 		
-		<Button fx:id="publishButton" disable="true" mnemonicParsing="false" onAction="#publish" prefHeight="58.0" prefWidth="115" text="Publish" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-		<padding><Insets bottom="1.0" left="2.0" right="2.0" top="1.0" /></padding>
-		<graphic>
-      		<ImageView fx:id="settingsIcon" fitHeight="24" fitWidth="24" pickOnBounds="true">
-		         <image>
-		            <Image url="/images/send-icon.png" />
-		         </image>
-		      </ImageView>
-      	</graphic>
-		</Button>
+		<SplitMenuButton fx:id="publishButton" disable="true" mnemonicParsing="false" onAction="#publish" prefHeight="58.0" prefWidth="120" text="Publish" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+		
+			<!-- <padding><Insets bottom="1.0" left="2.0" right="2.0" top="1.0" /></padding> -->
+
+			<graphic>
+	      		<ImageView fx:id="settingsIcon" fitHeight="24" fitWidth="24" pickOnBounds="true">
+			         <image>
+			            <Image url="/images/send-icon.png" />
+			         </image>
+			      </ImageView>
+	      	</graphic>
+	      	
+	      	<items>
+                  <RadioMenuItem mnemonicParsing="false" selected="true" text="Publish with no script">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="publishScript" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+            </items>
+		</SplitMenuButton>
 		
    	</children>
 </AnchorPane>

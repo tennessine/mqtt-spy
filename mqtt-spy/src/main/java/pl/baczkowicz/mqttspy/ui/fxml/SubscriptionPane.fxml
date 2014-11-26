@@ -17,7 +17,7 @@
     		</children>
       </AnchorPane>
       
-      <MenuButton fx:id="formattingMenuButton" focusTraversable="false" mnemonicParsing="false" prefWidth="115.0" text="Settings" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="7.0">
+      <MenuButton fx:id="formattingMenuButton" focusTraversable="false" mnemonicParsing="false" prefWidth="120.0" text="Settings" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="7.0">
       	<graphic>
       		<ImageView fx:id="settingsIcon" fitHeight="18.0" fitWidth="18.0" pickOnBounds="true">
 		         <image>
@@ -62,7 +62,7 @@
          </font>
       </MenuButton>
 
-      <ToggleButton fx:id="searchButton" graphicTextGap="6" focusTraversable="false" mnemonicParsing="false" prefHeight="26" prefWidth="90" onAction="#showSearchWindow" text="Search" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="7.0">
+      <ToggleButton fx:id="searchButton" graphicTextGap="6" focusTraversable="false" mnemonicParsing="false" prefHeight="26" prefWidth="90" onAction="#showSearchWindow" text="Search" AnchorPane.rightAnchor="128.0" AnchorPane.topAnchor="7.0">
        <padding><Insets bottom="1.0" left="1.0" right="1.0" top="1.0" /></padding>
         <graphic>
       		<ImageView fx:id="searchIcon" fitHeight="20" fitWidth="20" pickOnBounds="true">

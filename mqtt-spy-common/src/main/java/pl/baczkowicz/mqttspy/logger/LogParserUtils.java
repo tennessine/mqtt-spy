@@ -73,7 +73,7 @@ public class LogParserUtils
 	
 	private static void populatePayload(final StringBuffer logMessage, final ReceivedMqttMessageWithSubscriptions message, final MessageLog messageLog)
 	{
-		boolean encoded = MessageLogEnum.XML_WITH_ENCODED_PAYLOAD.equals(messageLog);
+		boolean encoded = MessageLogEnum.XML_WITH_ENCODED_PAYLOAD.equals(messageLog.getValue());
 		final String payload = new String(message.getMessage().getPayload());
 		
 		if (!encoded && payload.contains(System.lineSeparator()))
