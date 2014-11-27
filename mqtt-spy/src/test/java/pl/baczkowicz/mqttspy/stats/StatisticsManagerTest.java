@@ -21,27 +21,27 @@ public class StatisticsManagerTest
 	{
 		statisticsManager.messagePublished(3, "/test");
 		statisticsManager.messagePublished(3, "/test");
-		statisticsManager.nextInterval();
-		assertEquals(0.4, statisticsManager.getMessagesPublished(3, 5).overallCount, 0);
+		StatisticsManager.nextInterval();
+		assertEquals(0.4, StatisticsManager.getMessagesPublished(3, 5).overallCount, 0);
 		
 		statisticsManager.messagePublished(3, "/test");
 		statisticsManager.messagePublished(3, "/test");
 		statisticsManager.messagePublished(3, "/test");
 		statisticsManager.messagePublished(3, "/test");
 		statisticsManager.messagePublished(3, "/test");
-		statisticsManager.nextInterval();
-		assertEquals(1.4, statisticsManager.getMessagesPublished(3, 5).overallCount, 0);
+		StatisticsManager.nextInterval();
+		assertEquals(1.4, StatisticsManager.getMessagesPublished(3, 5).overallCount, 0);
 		
-		statisticsManager.nextInterval();
-		statisticsManager.nextInterval();
-		statisticsManager.nextInterval();
-		assertEquals(1.4, statisticsManager.getMessagesPublished(3, 5).overallCount, 0);
+		StatisticsManager.nextInterval();
+		StatisticsManager.nextInterval();
+		StatisticsManager.nextInterval();
+		assertEquals(1.4, StatisticsManager.getMessagesPublished(3, 5).overallCount, 0);
 		
-		statisticsManager.nextInterval();
-		assertEquals(1.0, statisticsManager.getMessagesPublished(3, 5).overallCount, 0);
+		StatisticsManager.nextInterval();
+		assertEquals(1.0, StatisticsManager.getMessagesPublished(3, 5).overallCount, 0);
 		
-		statisticsManager.nextInterval();
-		assertEquals(0, statisticsManager.getMessagesPublished(3, 5).overallCount, 0);
+		StatisticsManager.nextInterval();
+		assertEquals(0, StatisticsManager.getMessagesPublished(3, 5).overallCount, 0);
 	}
 
 }

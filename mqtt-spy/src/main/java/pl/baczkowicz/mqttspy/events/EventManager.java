@@ -15,6 +15,7 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexIncrementObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexToFirstObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageListChangedObserver;
+import pl.baczkowicz.mqttspy.events.observers.ScriptListChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
@@ -52,6 +53,8 @@ public class EventManager implements ScriptEventManagerInterface
 	private final Map<MessageFormatChangeObserver, MessageStore> formatChangeObservers = new HashMap<>();
 	
 	private final Map<ScriptStateChangeObserver, String> scriptStateChangeObservers = new HashMap<>();
+	
+	private final Map<ScriptListChangeObserver, MqttAsyncConnection> scriptListChangeObservers = new HashMap<>();
 	
 	/**
 	 * 
@@ -130,6 +133,11 @@ public class EventManager implements ScriptEventManagerInterface
 	public void registerScriptStateChangeObserver(final ScriptStateChangeObserver observer, final String filter)
 	{
 		scriptStateChangeObservers.put(observer, filter);
+	}
+	
+	public void registerScriptListChangeObserver(final ScriptListChangeObserver observer, final MqttAsyncConnection filter)
+	{
+		scriptListChangeObservers.put(observer, filter);
 	}
 	
 	public void notifyMessageAdded(final BrowseReceivedMessageEvent browseEvent)
@@ -358,7 +366,26 @@ public class EventManager implements ScriptEventManagerInterface
 					}
 				}
 			}
+		});		
+	}
+
+	public void notifyScriptListChange(final MqttAsyncConnection connection)
+	{
+		Platform.runLater(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				for (final ScriptListChangeObserver observer : scriptListChangeObservers.keySet())
+				{
+					final MqttAsyncConnection filter = scriptListChangeObservers.get(observer);
+
+					if (filter == null || filter.equals(connection))
+					{
+						observer.onScriptListChange();
+					}
+				}
+			}
 		});
-		
 	}
 }

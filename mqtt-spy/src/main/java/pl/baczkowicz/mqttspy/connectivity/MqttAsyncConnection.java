@@ -84,7 +84,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 				
 				if (mqttSubscription.getDetails() != null && mqttSubscription.getDetails().getScriptFile() != null)
 				{
-					scriptManager.runScriptFile(mqttSubscription.getDetails().getScriptFile(), message);
+					scriptManager.runScriptFileWithReceivedMessage(mqttSubscription.getDetails().getScriptFile(), message);
 				}
 				
 				// Pass the message for subscription handling

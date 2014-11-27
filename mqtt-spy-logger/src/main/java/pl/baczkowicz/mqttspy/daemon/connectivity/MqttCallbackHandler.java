@@ -91,7 +91,7 @@ public class MqttCallbackHandler implements MqttCallback
 			
 			if (subscriptionDetails.getScriptFile() != null)
 			{
-				scriptManager.runScriptFile(subscriptionDetails.getScriptFile(), receivedMessage);
+				scriptManager.runScriptFileWithReceivedMessage(subscriptionDetails.getScriptFile(), receivedMessage);
 			}
 		}
 		

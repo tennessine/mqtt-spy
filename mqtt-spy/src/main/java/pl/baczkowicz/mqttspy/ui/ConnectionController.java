@@ -152,6 +152,10 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 			panes.put(newSubscriptionTitledPane, true);
 			
 			newPublicationPaneController.setConnection(connection);
+			newPublicationPaneController.setScriptManager(connection.getScriptManager());
+			newPublicationPaneController.setEventManager(eventManager);
+			newPublicationPaneController.init();
+			
 			newSubscriptionPaneController.setConnection(connection);
 			newSubscriptionPaneController.setConnectionController(this);
 			newSubscriptionPaneController.setConnectionManager(connectionManager);

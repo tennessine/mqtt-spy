@@ -1,6 +1,8 @@
 package pl.baczkowicz.mqttspy.ui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -12,10 +14,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -28,17 +30,27 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
+import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.events.observers.ScriptListChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConversionException;
+import pl.baczkowicz.mqttspy.messages.BaseMqttMessageWrapper;
+import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
+import pl.baczkowicz.mqttspy.scripts.ObservablePublicationScriptProperties;
+import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
+import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
-public class NewPublicationController implements Initializable
+public class NewPublicationController implements Initializable, ScriptListChangeObserver
 {
 	final static Logger logger = LoggerFactory.getLogger(NewPublicationController.class);
 
 	@FXML
 	private SplitMenuButton publishButton;
+	
+	@FXML
+	private ToggleGroup publishScript;
 
 	@FXML
 	private ComboBox<String> publicationTopicText;
@@ -73,6 +85,10 @@ public class NewPublicationController implements Initializable
 	private boolean previouslyPlainSelected = true;
 
 	private boolean detailedView;
+	
+	private InteractiveScriptManager scriptManager;
+
+	private EventManager eventManager;
 
 	public void initialize(URL location, ResourceBundle resources)
 	{
@@ -103,9 +119,50 @@ public class NewPublicationController implements Initializable
 			
 		publicationData.setWrapText(true);
 		
-		// publishButton.setContentDisplay(ContentDisplay.TOP);
-//		final MenuItem noScript = new MenuItem("No script");
-//		publishButton.getItems().add(new MenuItem("No script"));
+		publishScript.getToggles().get(0).setUserData(null);
+	}		
+
+	public void init()
+	{
+		eventManager.registerScriptListChangeObserver(this, connection);		
+	}
+
+	@Override
+	public void onScriptListChange()
+	{
+		List<ObservablePublicationScriptProperties> scripts = scriptManager.getObservableScriptList();
+		
+		List<ObservablePublicationScriptProperties> pubScripts = new ArrayList<>();
+		
+		for (final ObservablePublicationScriptProperties script : scripts)
+		{
+			if (ScriptTypeEnum.PUBLICATION.equals(script.typeProperty().getValue()))
+			{
+				pubScripts.add(script);
+			}
+		}
+		
+		updateScriptList(pubScripts);
+	}
+	
+	public void updateScriptList(final List<ObservablePublicationScriptProperties> scripts)
+	{
+		while (publishButton.getItems().size() > 1)
+		{
+			publishButton.getItems().remove(1);
+		}
+		
+		if (scripts.size() > 1)
+		{
+			publishButton.getItems().add(new SeparatorMenuItem());
+			for (final ObservablePublicationScriptProperties script : scripts)
+			{
+				final RadioMenuItem item = new RadioMenuItem("Publish with '" + script.getName() + "' script");
+				item.setToggleGroup(publishScript);
+				item.setUserData(script);
+				publishButton.getItems().add(item);
+			}
+		}
 	}
 
 	public void recordPublicationTopic(final String publicationTopic)
@@ -254,10 +311,23 @@ public class NewPublicationController implements Initializable
 	public void publish()
 	{						
 		final BaseMqttMessage message = readMessage(true);
-				
-		connection.publish(message.getTopic(), message.getValue(), message.getQos(), message.isRetained());
 		
-		recordPublicationTopic(message.getTopic());		
+		final PublicationScriptProperties script = (PublicationScriptProperties) publishScript.getSelectedToggle().getUserData();
+				
+		if (script == null)
+		{			
+			logger.debug("Publishing with no script");
+			connection.publish(message.getTopic(), message.getValue(), message.getQos(), message.isRetained());
+		
+			recordPublicationTopic(message.getTopic());
+		}
+		else
+		{
+			logger.debug("Publishing with '{}' script", script.getName());
+			
+			// Publish with script
+			scriptManager.runScriptFileWithMessage(script, new BaseMqttMessageWrapper(message));
+		}
 	}
 	
 	private void showAndLogHexError()
@@ -295,5 +365,15 @@ public class NewPublicationController implements Initializable
 	public CheckBox getRetainedBox()
 	{
 		return retainedBox;
+	}
+	
+	public void setScriptManager(final InteractiveScriptManager scriptManager)
+	{
+		this.scriptManager = scriptManager;
+	}
+	
+	public void setEventManager(final EventManager eventManager)
+	{
+		this.eventManager = eventManager;
 	}
 }

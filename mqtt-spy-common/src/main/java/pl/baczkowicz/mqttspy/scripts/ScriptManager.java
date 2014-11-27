@@ -18,11 +18,13 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
-import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.messages.IMqttMessage;
 
 public class ScriptManager
 {
 	public static final String RECEIVED_MESSAGE_PARAMETER = "receivedMessage";
+	
+	public static final String MESSAGE_PARAMETER = "message";
 	
 	private final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
 	
@@ -148,7 +150,7 @@ public class ScriptManager
 		}
 	}
 	
-	public void runScriptFile(final String scriptFile, final ReceivedMqttMessage receivedMessage)
+	public void runScriptFileWithReceivedMessage(final String scriptFile, final IMqttMessage receivedMessage)
 	{
 		final PublicationScriptProperties script = getScript(new File(scriptFile));
 		
@@ -161,6 +163,12 @@ public class ScriptManager
 		{
 			logger.warn("No script found for {}", scriptFile);
 		}
+	}
+	
+	public void runScriptFileWithMessage(final PublicationScriptProperties script, final IMqttMessage message)
+	{				
+		script.getScriptEngine().put(ScriptManager.MESSAGE_PARAMETER, message);
+		runScriptFile(script);		
 	}
 	
 	public PublicationScriptProperties getScript(final File scriptFile)

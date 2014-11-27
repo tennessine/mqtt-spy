@@ -348,6 +348,9 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 	{
 		scriptManager.addScripts(connection.getProperties().getConfiguredProperties().getPublicationScripts());
 		scriptManager.addSubscriptionScripts(connection.getProperties().getConfiguredProperties().getSubscription());
+		
+		// TODO: move this to script manager?
+		eventManager.notifyScriptListChange(connection);
 	}
 
 	public void setConnection(MqttAsyncConnection connection)

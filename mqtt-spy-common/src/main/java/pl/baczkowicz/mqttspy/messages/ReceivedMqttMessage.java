@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
-public class ReceivedMqttMessage
+public class ReceivedMqttMessage implements IMqttMessage
 {
 	private String topic;
 	
@@ -63,5 +63,22 @@ public class ReceivedMqttMessage
 	public long getId()
 	{
 		return id;
+	}
+	
+	// Convenience methods for accessing the message object
+	
+	public String getPayload()
+	{
+		return new String(this.message.getPayload());
+	}
+	
+	public int getQoS()
+	{
+		return this.message.getQos();
+	}
+	
+	public boolean isRetained()
+	{
+		return this.message.isRetained();
 	}
 }
