@@ -105,4 +105,9 @@ public class MqttCallbackHandler implements MqttCallback
 			logger.trace("Delivery complete for " + token.getMessageId());
 		}
 	}
+	
+	public void stop()
+	{
+		messageHandler.stop();
+	}
 }

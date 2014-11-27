@@ -180,4 +180,17 @@ public class ScriptManager
 	{
 		return eventManager;
 	}
+
+	public boolean areScriptsRunning()
+	{
+		for (final PublicationScriptProperties script : scripts.values())
+		{
+			if (ScriptRunningState.RUNNING.equals(script.getStatus()))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

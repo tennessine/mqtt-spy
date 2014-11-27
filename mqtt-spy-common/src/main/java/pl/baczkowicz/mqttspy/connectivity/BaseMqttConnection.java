@@ -233,4 +233,18 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	{
 		return connectionAttempts;
 	}
+	
+
+	public void disconnect()
+	{
+		try
+		{
+			client.disconnect(0);
+			logger.info("Client {} disconnected", client.getClientId());
+		}
+		catch (MqttException e)
+		{
+			logger.error("Cannot disconnect", e);
+		}
+	}
 }

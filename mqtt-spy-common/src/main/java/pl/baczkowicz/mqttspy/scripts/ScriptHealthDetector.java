@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class ScriptHealthDetector implements Runnable
@@ -28,6 +29,9 @@ public class ScriptHealthDetector implements Runnable
 	
 	public void run()
 	{
+		Thread.currentThread().setName("Script Health Detector");
+		ThreadingUtils.logStarting();
+		
 		while (script.getStatus().equals(ScriptRunningState.RUNNING))
 		{
 			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < Utils.getMonotonicTimeInMilliseconds())
@@ -45,5 +49,7 @@ public class ScriptHealthDetector implements Runnable
 				break;
 			}
 		}
+		
+		ThreadingUtils.logEnding();
 	}
 }

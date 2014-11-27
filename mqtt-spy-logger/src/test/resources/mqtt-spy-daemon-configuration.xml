@@ -46,10 +46,12 @@
 	<BackgroundScript>
 		<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/bedroom.js</File>
 	</BackgroundScript>
-	<BackgroundScript repeat="true">
+	<BackgroundScript repeat="false">
 		<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/replay.js</File>
 	</BackgroundScript>
 	
+	<!-- Use CONTINUOUS or SCRIPTS_ONLY -->
+	<RunningMode>CONTINUOUS</RunningMode>
   </Connection>
   
 </mqttspydc:MqttSpyDaemonConfiguration>

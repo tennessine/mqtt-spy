@@ -3,8 +3,13 @@ package pl.baczkowicz.mqttspy.utils;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Utils
 {
+	final static Logger logger = LoggerFactory.getLogger(Utils.class);
+	
 	public final static String WITH_MILLISECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss:SSS";
 	
 	public final static String WITH_SECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
@@ -36,4 +41,16 @@ public class Utils
 	{
 		return System.nanoTime() / 1000000;
 	}
+	
+	public static void sleep(final long milliseconds)	
+	{
+		try
+		{
+			Thread.sleep(milliseconds);
+		}
+		catch (InterruptedException e)
+		{
+			logger.warn("Thread {} has been interrupted", Thread.currentThread().getName(), e);
+		}
+	}	
 }

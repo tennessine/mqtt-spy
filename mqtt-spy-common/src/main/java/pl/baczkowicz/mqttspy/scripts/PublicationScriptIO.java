@@ -149,4 +149,9 @@ public class PublicationScriptIO implements IPublicationScriptIO
 	{
 		return messageLog;
 	}
+	
+	public void stop()
+	{
+		messageLog.stop();
+	}
 }

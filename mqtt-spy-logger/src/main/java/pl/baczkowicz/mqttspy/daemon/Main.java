@@ -11,15 +11,18 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
+import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
+import pl.baczkowicz.mqttspy.daemon.configuration.generated.RunningMode;
 import pl.baczkowicz.mqttspy.daemon.connectivity.ConnectionRunnable;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
+import pl.baczkowicz.mqttspy.utils.Utils;
 
 /**
  * @author kamil
@@ -57,10 +60,12 @@ public class Main
 
 			final SimpleMqttAsyncConnection connection = new SimpleMqttAsyncConnection(connectionSettings);
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
-			connection.createClient(new MqttCallbackHandler(connection, connectionSettings, scriptManager));
+			final MqttCallbackHandler callback = new MqttCallbackHandler(connection, connectionSettings, scriptManager); 
+			connection.createClient(callback);
 					
 			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();			
 			final Runnable connectionRunnable = new ConnectionRunnable(scriptManager, connection, connectionSettings);
+			ReconnectionManager reconnectionManager = null;
 			
 			if (reconnectionSettings == null)
 			{
@@ -68,7 +73,7 @@ public class Main
 			}
 			else
 			{
-				final ReconnectionManager reconnectionManager = new ReconnectionManager();
+				reconnectionManager = new ReconnectionManager();
 				reconnectionManager.addConnection(connection, connectionRunnable);
 				new Thread(reconnectionManager).start();
 			}
@@ -79,6 +84,11 @@ public class Main
 			{
 				scriptManager.runScriptFile(new File(script.getFile()));
 			}
+			
+			if (RunningMode.SCRIPTS_ONLY.equals(connectionSettings.getRunningMode()))
+			{
+				stop(scriptManager, reconnectionManager, connection, reconnectionManager);
+			}
 		}
 		catch (XMLException e)
 		{
@@ -88,5 +98,32 @@ public class Main
 		{
 			logger.error("Error occurred while connecting to broker", e);
 		}
+	}
+	
+	private static void stop(final ScriptManager scriptManager, final ReconnectionManager reconnectionManager, 
+			final BaseMqttConnection connection, final ReconnectionManager callback)
+	{
+		Utils.sleep(1000);
+		
+		// Wait until all scripts have completed or got frozen
+		while (scriptManager.areScriptsRunning())
+		{
+			Utils.sleep(1000);
+		}
+		
+		// Stop reconnection manager
+		if (reconnectionManager != null)
+		{
+			reconnectionManager.stop();
+		}
+						
+		// Disconnect
+		connection.disconnect();
+		
+		// Stop message logger
+		callback.stop();
+		
+		Utils.sleep(1000);
+		logger.info("All tasks completed - bye bye...");
 	}
 }

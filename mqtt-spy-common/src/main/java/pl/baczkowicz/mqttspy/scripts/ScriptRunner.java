@@ -6,6 +6,8 @@ import java.util.concurrent.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
+
 public class ScriptRunner implements Runnable
 {
 	private final static Logger logger = LoggerFactory.getLogger(ScriptRunner.class);
@@ -25,6 +27,9 @@ public class ScriptRunner implements Runnable
 	
 	public void run()
 	{
+		Thread.currentThread().setName("Script " + script.getName());
+		ThreadingUtils.logStarting();
+		
 		script.getPublicationScriptIO().touch();
 		script.setThread(Thread.currentThread());
 		
@@ -77,6 +82,10 @@ public class ScriptRunner implements Runnable
 				logger.debug("Re-running script {}", script.getName());
 			}
 		}
+		
+		script.getPublicationScriptIO().stop();
+		
+		ThreadingUtils.logEnding();
 	}
 	
 	public static void changeState(final ScriptEventManagerInterface eventManager, final String scriptName, 

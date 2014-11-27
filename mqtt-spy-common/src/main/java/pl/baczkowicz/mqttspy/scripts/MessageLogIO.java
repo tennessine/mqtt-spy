@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class MessageLogIO implements IMessageLogIO, Runnable
@@ -113,6 +114,9 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 	
 	public void run()
 	{
+		Thread.currentThread().setName("Message Log IO");
+		ThreadingUtils.logStarting();
+		
 		while (running)
 		{
 			final long now = Utils.getMonotonicTimeInMilliseconds();
@@ -136,6 +140,8 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 			}
 		}	
 		stop();
+		
+		ThreadingUtils.logEnding();
 	}
 	
 	public int getMessageCount()

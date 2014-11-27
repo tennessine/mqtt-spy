@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class ReconnectionManager implements Runnable
@@ -18,6 +19,8 @@ public class ReconnectionManager implements Runnable
 	private final Map<BaseMqttConnection, Runnable> connections = new HashMap<BaseMqttConnection, Runnable>();
 	
 	private final static int SLEEP = 100;
+	
+	boolean running;
 	
 	public void addConnection(final BaseMqttConnection connection, final Runnable connectingRunnable)
 	{
@@ -63,7 +66,12 @@ public class ReconnectionManager implements Runnable
 
 	public void run()
 	{
-		while (true)
+		Thread.currentThread().setName("Reconnection Manager ");
+		ThreadingUtils.logStarting();
+		
+		running = true;
+		
+		while (running)
 		{
 			synchronized (connections)
 			{
@@ -79,6 +87,13 @@ public class ReconnectionManager implements Runnable
 				logger.error("Thread interrupted - stopping reconnection manager", e);
 				break;
 			}
-		}		
+		}	
+		
+		ThreadingUtils.logEnding();
+	}
+	
+	public void stop()
+	{
+		running = false;
 	}
 }

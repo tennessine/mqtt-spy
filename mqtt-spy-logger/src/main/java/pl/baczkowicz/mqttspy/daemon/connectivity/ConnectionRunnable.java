@@ -1,14 +1,20 @@
 package pl.baczkowicz.mqttspy.daemon.connectivity;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.SubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class ConnectionRunnable implements Runnable
 {
+	final static Logger logger = LoggerFactory.getLogger(ConnectionRunnable.class);
+	
 	private final SimpleMqttAsyncConnection connection;
 	
 	private final DaemonMqttConnectionDetails connectionSettings;
@@ -24,6 +30,9 @@ public class ConnectionRunnable implements Runnable
 	
 	public void run()
 	{
+		Thread.currentThread().setName("Connection " + connection.getMqttConnectionDetails().getName());
+		ThreadingUtils.logStarting();
+		
 		final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();
 		
 		final boolean neverStarted = connection.getLastConnectionAttemptTimestamp() == BaseMqttConnection.NEVER_STARTED;
@@ -43,5 +52,7 @@ public class ConnectionRunnable implements Runnable
 				connection.subscribe(subscription.getTopic(), subscription.getQos());							
 			}
 		}
+		
+		ThreadingUtils.logEnding();
 	}				
 }
