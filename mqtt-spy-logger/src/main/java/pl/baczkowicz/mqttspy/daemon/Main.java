@@ -87,7 +87,7 @@ public class Main
 			
 			if (RunningMode.SCRIPTS_ONLY.equals(connectionSettings.getRunningMode()))
 			{
-				stop(scriptManager, reconnectionManager, connection, reconnectionManager);
+				stop(scriptManager, reconnectionManager, connection, callback);
 			}
 		}
 		catch (XMLException e)
@@ -101,7 +101,7 @@ public class Main
 	}
 	
 	private static void stop(final ScriptManager scriptManager, final ReconnectionManager reconnectionManager, 
-			final BaseMqttConnection connection, final ReconnectionManager callback)
+			final BaseMqttConnection connection, final MqttCallbackHandler callback)
 	{
 		Utils.sleep(1000);
 		
@@ -124,6 +124,10 @@ public class Main
 		callback.stop();
 		
 		Utils.sleep(1000);
+		for (final Thread thread : Thread.getAllStackTraces().keySet())
+		{
+			logger.trace("Thread {} is still running", thread.getName());
+		}
 		logger.info("All tasks completed - bye bye...");
 	}
 }

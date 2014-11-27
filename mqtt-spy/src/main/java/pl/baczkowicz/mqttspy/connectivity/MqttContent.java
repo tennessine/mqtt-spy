@@ -16,6 +16,19 @@ public class MqttContent extends ReceivedMqttMessage
 	
 	private String formattedPayload;
 	
+	public MqttContent(final MqttContent message)
+	{
+		super(message.getId(), message.getTopic(), copyMqttMessage(message.getMessage()));
+		this.formattedPayload = message.getFormattedPayload();
+		this.lastUsedFormatter = message.getLastUsedFormatter();
+		this.subscription = message.getSubscription();
+	}
+	
+	public FormatterDetails getLastUsedFormatter()
+	{
+		return lastUsedFormatter;
+	}
+
 	public MqttContent(final long id, final String topic, final MqttMessage message)
 	{
 		super(id, topic, message);

@@ -88,6 +88,12 @@ public class ConfigurationLoader extends PropertyFileLoader
 		{
 			configuration.getConnection().getMessageLog().setLogSubscription(false);
 		}
+		
+		// Log before scripts
+		if (configuration.getConnection().getMessageLog().isLogBeforeScripts() == null)
+		{
+			configuration.getConnection().getMessageLog().setLogBeforeScripts(false);
+		}
 	}
 
 	public MqttSpyDaemonConfiguration getConfiguration()

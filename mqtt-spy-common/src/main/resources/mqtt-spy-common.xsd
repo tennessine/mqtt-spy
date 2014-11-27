@@ -131,6 +131,7 @@
 	       		<xs:attribute name="logRetained" 		type="xs:boolean" />
 	       		<xs:attribute name="logConnection" 		type="xs:boolean" />
 	       		<xs:attribute name="logSubscription" 	type="xs:boolean" />
+	       		<xs:attribute name="logBeforeScripts" 	type="xs:boolean" />
 	        </xs:extension>		
         </xs:simpleContent>
 	</xs:complexType>

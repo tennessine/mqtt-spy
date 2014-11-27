@@ -62,15 +62,20 @@ public class MqttAsyncConnection extends BaseMqttConnection
 		setConnectionStatus(status);
 	}
 	
-	public void messageReceived(final MqttContent message)
+	public void messageReceived(final MqttContent receivedMessage)
 	{		
-		final List<String> matchingSubscriptionTopics = getMatchingSubscriptions(message);
+		final List<String> matchingSubscriptionTopics = getMatchingSubscriptions(receivedMessage);
 				
 		final List<String> matchingActiveSubscriptionTopics = new ArrayList<String>();
 		
+		MqttContent message = new MqttContent(receivedMessage);
+		
 		// For all found subscriptions
 		for (final String matchingSubscription : matchingSubscriptionTopics)
-		{						
+		{					
+			// Create a copy of the message for each subscription
+			message = new MqttContent(receivedMessage);
+			
 			// Get the mqtt-spy's subscription object
 			final MqttSubscription mqttSubscription = subscriptions.get(matchingSubscription);
 
@@ -84,7 +89,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 				
 				if (mqttSubscription.getDetails() != null && mqttSubscription.getDetails().getScriptFile() != null)
 				{
-					scriptManager.runScriptFileWithReceivedMessage(mqttSubscription.getDetails().getScriptFile(), message);
+					scriptManager.runScriptFileWithReceivedMessage(mqttSubscription.getDetails().getScriptFile(), false, message);
 				}
 				
 				// Pass the message for subscription handling

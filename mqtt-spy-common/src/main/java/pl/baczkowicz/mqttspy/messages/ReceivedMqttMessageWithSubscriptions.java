@@ -13,6 +13,16 @@ public class ReceivedMqttMessageWithSubscriptions extends ReceivedMqttMessage
 	
 	private final BaseMqttConnection connection;
 	
+	public ReceivedMqttMessageWithSubscriptions(final ReceivedMqttMessageWithSubscriptions message)
+	{
+		this(
+				message.getId(), message.getTopic(), 
+				copyMqttMessage(message.getMessage()), 
+				message.getDate(), message.getConnection());
+		
+		this.setSubscriptions(message.getSubscriptions());
+	}
+	
 	public ReceivedMqttMessageWithSubscriptions(final long id, final String topic, final MqttMessage message, final BaseMqttConnection connection)
 	{
 		super(id, topic, message);

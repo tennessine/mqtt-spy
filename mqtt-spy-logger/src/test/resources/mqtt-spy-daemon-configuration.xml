@@ -36,7 +36,7 @@
 		To log QoS, Retained flag, connection name or subscription, use:
 		logQos="true" logRetained="true" logConnection="true" logSubscription="true" 
 	-->
-	<MessageLog>XML_WITH_PLAIN_PAYLOAD</MessageLog>
+	<MessageLog logBeforeScripts="false">XML_WITH_PLAIN_PAYLOAD</MessageLog>
 			
 	<Subscription topic="/test/#" qos="0" />
 	<!-- Use the script file for things like auto-reply or additional logging -->
@@ -46,12 +46,13 @@
 	<BackgroundScript>
 		<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/bedroom.js</File>
 	</BackgroundScript>
+	<!-- 
 	<BackgroundScript repeat="false">
 		<File>/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/replay.js</File>
 	</BackgroundScript>
-	
+	 -->
 	<!-- Use CONTINUOUS or SCRIPTS_ONLY -->
-	<RunningMode>CONTINUOUS</RunningMode>
+	<RunningMode>SCRIPTS_ONLY</RunningMode>
   </Connection>
   
 </mqttspydc:MqttSpyDaemonConfiguration>

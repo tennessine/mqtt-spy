@@ -30,4 +30,9 @@ public class BaseMqttMessageWrapper implements IMqttMessage
 	{
 		return message.isRetained();
 	}
+
+	public void setPayload(String payload)
+	{
+		message.setValue(payload);		
+	}
 }

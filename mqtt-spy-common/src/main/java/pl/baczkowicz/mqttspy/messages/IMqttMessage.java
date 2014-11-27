@@ -6,6 +6,8 @@ public interface IMqttMessage
 	
 	String getPayload();
 	
+	void setPayload(final String payload);
+	
 	int getQoS();
 	
 	boolean isRetained();

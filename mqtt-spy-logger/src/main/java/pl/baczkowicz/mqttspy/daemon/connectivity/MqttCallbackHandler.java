@@ -73,15 +73,16 @@ public class MqttCallbackHandler implements MqttCallback
 		}
 		
 		final ReceivedMqttMessageWithSubscriptions receivedMessage = new ReceivedMqttMessageWithSubscriptions(currentId, topic, message, connection);
-				
+		
 		// Check matching subscriptions
 		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
 		receivedMessage.setSubscriptions(matchingSubscriptions);
 		
-		// Add the received message to queue for logging
-		if (!MessageLogEnum.DISABLED.equals(connectionSettings.getMessageLog()))
+		// Before scripts
+		if (connectionSettings.getMessageLog().isLogBeforeScripts())
 		{
-			messageQueue.add(receivedMessage);
+			// Log a copy, so that it cannot be modified
+			logMessage(new ReceivedMqttMessageWithSubscriptions(receivedMessage));
 		}
 		
 		// If configured, run scripts for the matching subscriptions
@@ -91,11 +92,26 @@ public class MqttCallbackHandler implements MqttCallback
 			
 			if (subscriptionDetails.getScriptFile() != null)
 			{
-				scriptManager.runScriptFileWithReceivedMessage(subscriptionDetails.getScriptFile(), receivedMessage);
+				scriptManager.runScriptFileWithReceivedMessage(subscriptionDetails.getScriptFile(), false, receivedMessage);
 			}
 		}
 		
+		// After scripts
+		if (!connectionSettings.getMessageLog().isLogBeforeScripts())
+		{
+			logMessage(receivedMessage);
+		}
+		
 		currentId++;
+	}
+	
+	public void logMessage(final ReceivedMqttMessageWithSubscriptions receivedMessage)
+	{
+		// Add the received message to queue for logging
+		if (!MessageLogEnum.DISABLED.equals(connectionSettings.getMessageLog().getValue()))
+		{
+			messageQueue.add(receivedMessage);
+		}
 	}
 
 	public void deliveryComplete(IMqttDeliveryToken token)

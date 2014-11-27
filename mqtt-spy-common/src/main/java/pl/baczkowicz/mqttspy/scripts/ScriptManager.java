@@ -128,11 +128,25 @@ public class ScriptManager
 	
 	public void runScriptFile(final PublicationScriptProperties script)
 	{
+		runScriptFile(script, true);
+	}
+	
+	public void runScriptFile(final PublicationScriptProperties script, final boolean asynchronous)
+	{
 		// Only start if not running already
 		if (!ScriptRunningState.RUNNING.equals(script.getStatus()))
 		{
-			new Thread(new ScriptRunner(eventManager, script, executor)).start();
-		}		
+			script.createScriptRunner(eventManager, script, executor);
+			
+			if (asynchronous)
+			{
+				new Thread(script.getScriptRunner()).start();
+			}
+			else
+			{
+				script.getScriptRunner().run();
+			}
+		}
 	}	
 
 	public void runScriptFile(final File scriptFile)
@@ -150,14 +164,14 @@ public class ScriptManager
 		}
 	}
 	
-	public void runScriptFileWithReceivedMessage(final String scriptFile, final IMqttMessage receivedMessage)
+	public void runScriptFileWithReceivedMessage(final String scriptFile, final boolean asynchronous, final IMqttMessage receivedMessage)
 	{
 		final PublicationScriptProperties script = getScript(new File(scriptFile));
 		
 		if (script != null)
 		{
 			script.getScriptEngine().put(ScriptManager.RECEIVED_MESSAGE_PARAMETER, receivedMessage);
-			runScriptFile(script);
+			runScriptFile(script, asynchronous);
 		}
 		else
 		{

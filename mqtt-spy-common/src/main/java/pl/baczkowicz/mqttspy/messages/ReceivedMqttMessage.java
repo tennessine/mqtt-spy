@@ -29,6 +29,17 @@ public class ReceivedMqttMessage implements IMqttMessage
 		this.message = message;
 		this.setDate(date);
 	}
+	
+	public static MqttMessage copyMqttMessage(final MqttMessage message)
+	{
+		final MqttMessage copy = new MqttMessage();
+		
+		copy.setPayload(message.getPayload());
+		copy.setQos(message.getQos());
+		copy.setRetained(message.isRetained());
+		
+		return copy;
+	}
 
 	public MqttMessage getMessage()
 	{
@@ -70,6 +81,11 @@ public class ReceivedMqttMessage implements IMqttMessage
 	public String getPayload()
 	{
 		return new String(this.message.getPayload());
+	}
+	
+	public void setPayload(final String payload)
+	{
+		this.message.setPayload(payload.getBytes());
 	}
 	
 	public int getQoS()

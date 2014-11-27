@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.File;
 import java.util.Date;
+import java.util.concurrent.Executor;
 
 import javax.script.ScriptEngine;
 
@@ -13,8 +14,6 @@ public class PublicationScriptProperties
 	private String name;
 	
 	private ScriptRunningState status;
-	
-	// private boolean repeat;
 	
 	private String lastPublished;
 	
@@ -33,24 +32,13 @@ public class PublicationScriptProperties
 	private Date lastPublishedDate;
 
 	private ScriptDetails scriptDetails;
+	
+	private ScriptRunner scriptRunner;
 
 	public PublicationScriptProperties()
 	{
 		// Default
 	}
-	
-//	public PublicationScriptProperties(final String name, final File file, final ScriptRunningState state, final Date lastPublished, 
-//			final long messageCount, final ScriptEngine scriptEngine, final boolean repeat)
-//	{
-//		this.name = name;
-//		this.status = state;		
-//		this.lastPublished = lastPublished == null ? "" : Utils.DATE_WITH_SECONDS_SDF.format(lastPublished);
-//		this.messageCount = messageCount;
-//		
-//		this.file = file;
-//		this.repeat = repeat;
-//		this.scriptEngine = scriptEngine;
-//	}
 	
 	public void setCount(final long messageCount)
 	{
@@ -138,11 +126,6 @@ public class PublicationScriptProperties
 		return scriptDetails.isRepeat();
 	}
 
-//	public void setRepeat(boolean repeat)
-//	{
-//		this.repeat = repeat;
-//	}
-
 	public void setScriptEngine(final ScriptEngine scriptEngine)
 	{
 		this.scriptEngine = scriptEngine;
@@ -166,5 +149,19 @@ public class PublicationScriptProperties
 	public ScriptDetails getScriptDetails()
 	{
 		return this.scriptDetails ;
+	}
+
+	public void createScriptRunner(ScriptEventManagerInterface eventManager,
+			PublicationScriptProperties script, Executor executor)
+	{
+		if (scriptRunner == null)
+		{
+			this.scriptRunner = new ScriptRunner(eventManager, script, executor);
+		}
+	}
+
+	public ScriptRunner getScriptRunner()
+	{
+		return this.scriptRunner;
 	}
 }
