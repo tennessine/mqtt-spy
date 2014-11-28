@@ -31,7 +31,7 @@ public class VersionManager extends XMLParser
 
 	public VersionManager(final ConfigurationManager configurationManager) throws XMLException
 	{
-		super(SCHEMA, PACKAGE);
+		super(PACKAGE, SCHEMA);
 		this.configurationManager = configurationManager;
 					
 		this.versions = new MqttSpyVersions();

@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 import pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.ScriptListChangeObserver;
 import pl.baczkowicz.mqttspy.exceptions.ConversionException;
@@ -40,7 +41,6 @@ import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
 import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class NewPublicationController implements Initializable, ScriptListChangeObserver
 {
@@ -167,7 +167,7 @@ public class NewPublicationController implements Initializable, ScriptListChange
 
 	public void recordPublicationTopic(final String publicationTopic)
 	{
-		Utils.recordTopic(publicationTopic, publicationTopics);
+		MqttUtils.recordTopic(publicationTopic, publicationTopics);
 	}
 	
 	public void setConnected(final boolean connected)

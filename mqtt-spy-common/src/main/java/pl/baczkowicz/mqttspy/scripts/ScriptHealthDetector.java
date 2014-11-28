@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class ScriptHealthDetector implements Runnable
 {
@@ -34,17 +34,14 @@ public class ScriptHealthDetector implements Runnable
 		
 		while (script.getStatus().equals(ScriptRunningState.RUNNING))
 		{
-			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < Utils.getMonotonicTimeInMilliseconds())
+			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < TimeUtils.getMonotonicTimeInMilliseconds())
 			{
 				logger.warn("Script {} detected as frozen, last touch = {}, current time = {}", script.getName(), 
-						script.getPublicationScriptIO().getLastTouch(), Utils.getMonotonicTimeInMilliseconds());
+						script.getPublicationScriptIO().getLastTouch(), TimeUtils.getMonotonicTimeInMilliseconds());
 				ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.FROZEN, script, executor);
 			}
-			try
-			{
-				Thread.sleep(1000);
-			}
-			catch (InterruptedException e)
+			
+			if (ThreadingUtils.sleep(1000))			
 			{
 				break;
 			}

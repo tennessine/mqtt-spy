@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.events.EventManager;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class UIEventHandler implements Runnable
 {
@@ -41,13 +42,8 @@ public class UIEventHandler implements Runnable
 			}
 			
 			// Sleep so that we don't run all the time - updating the UI 20 times a second should be more than enough
-			try
+			if (ThreadingUtils.sleep(50))			
 			{
-				Thread.sleep(50);
-			}
-			catch (InterruptedException e)
-			{
-				logger.error(UIEventHandler.class + " thread interrupted", e);
 				break;
 			}
 		}		

@@ -13,6 +13,7 @@ import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class LogReaderTask extends TaskWithProgressUpdater<List<ReceivedMqttMessage>>
 {
@@ -59,7 +60,7 @@ public class LogReaderTask extends TaskWithProgressUpdater<List<ReceivedMqttMess
 			});	
 			updateMessage("Finished!");
 			updateProgress(4, 4);
-			Thread.sleep(500);
+			ThreadingUtils.sleep(500);
 			
 			return processedMessages;
 		}

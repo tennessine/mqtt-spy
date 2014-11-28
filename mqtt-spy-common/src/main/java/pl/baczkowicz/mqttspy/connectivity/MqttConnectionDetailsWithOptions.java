@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.connectivity;
 
 import org.apache.commons.codec.binary.Base64;
@@ -8,12 +22,22 @@ import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.utils.ConfigurationUtils;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 
+/**
+ * Extends JAXB-generated class for storing MQTT connection details, by adding the Paho's MqttConnectOptions.
+ */
 public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 {
+	/** Paho's MQTT connection options. */
 	private MqttConnectOptions options;
 
+	/**
+	 * 
+	 * @param details
+	 * @throws ConfigurationException
+	 */
 	public MqttConnectionDetailsWithOptions(final MqttConnectionDetails details) throws ConfigurationException
 	{
+		// Copy all parameters
 		this.setName(details.getName());
 		this.setClientID(details.getClientID());
 		this.getServerURI().addAll(details.getServerURI());
@@ -26,40 +50,48 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		this.setUserCredentials(details.getUserCredentials());
 		this.setReconnectionSettings(details.getReconnectionSettings());
 		
-		ConfigurationUtils.populateServerURIs(this);
+		ConfigurationUtils.completeServerURIs(this);
 		ConfigurationUtils.populateConnectionDefaults(this);
-		
-		// Populate MQTT options
-		options = new MqttConnectOptions();
 		
 		try
 		{
-			if (getServerURI().size() > 1)
-			{
-				options.setServerURIs(getServerURI().toArray(new String[getServerURI().size()]));
-			}
-			
-			options.setCleanSession(isCleanSession());
-			options.setConnectionTimeout(getConnectionTimeout());
-			options.setKeepAliveInterval(getKeepAliveInterval());
-			
-			if (getUserCredentials() != null)
-			{
-				options.setUserName(getUserCredentials().getUsername());
-				options.setPassword(ConversionUtils.base64ToString(getUserCredentials().getPassword()).toCharArray());
-			}
-			
-			if (getLastWillAndTestament() != null)
-			{
-				options.setWill(getLastWillAndTestament().getTopic(), 
-						Base64.decodeBase64(getLastWillAndTestament().getValue()),
-						getLastWillAndTestament().getQos(),
-						getLastWillAndTestament().isRetained());
-			}
+			populateMqttConnectOptions();
 		}
 		catch (IllegalArgumentException e)
 		{
 			throw new ConfigurationException("Invalid parameters", e);
+		}
+	}
+	
+	/**
+	 * Populates the Paho's MqttConnectOptions based on the supplied MqttConnectionDetails.
+	 */
+	private void populateMqttConnectOptions()
+	{
+		// Populate MQTT options
+		options = new MqttConnectOptions();
+				
+		if (getServerURI().size() > 1)
+		{
+			options.setServerURIs(getServerURI().toArray(new String[getServerURI().size()]));
+		}
+		
+		options.setCleanSession(isCleanSession());
+		options.setConnectionTimeout(getConnectionTimeout());
+		options.setKeepAliveInterval(getKeepAliveInterval());
+		
+		if (getUserCredentials() != null)
+		{
+			options.setUserName(getUserCredentials().getUsername());
+			options.setPassword(ConversionUtils.base64ToString(getUserCredentials().getPassword()).toCharArray());
+		}
+		
+		if (getLastWillAndTestament() != null)
+		{
+			options.setWill(getLastWillAndTestament().getTopic(), 
+					Base64.decodeBase64(getLastWillAndTestament().getValue()),
+					getLastWillAndTestament().getQos(),
+					getLastWillAndTestament().isRetained());
 		}
 	}
 	

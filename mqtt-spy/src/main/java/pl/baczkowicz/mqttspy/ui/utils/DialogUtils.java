@@ -29,6 +29,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 @SuppressWarnings("deprecation")
 public class DialogUtils
@@ -190,14 +191,8 @@ public class DialogUtils
 			@Override
 			public void run()			
 			{
-				try
-				{
-					Thread.sleep(5000);
-				}
-				catch (InterruptedException e)
-				{
-					e.printStackTrace();
-				}
+				ThreadingUtils.sleep(5000);
+				
 				Platform.runLater(new Runnable()
 				{
 					@Override

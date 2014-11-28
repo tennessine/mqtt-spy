@@ -22,7 +22,7 @@ import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 /**
  * @author kamil
@@ -103,12 +103,12 @@ public class Main
 	private static void stop(final ScriptManager scriptManager, final ReconnectionManager reconnectionManager, 
 			final BaseMqttConnection connection, final MqttCallbackHandler callback)
 	{
-		Utils.sleep(1000);
+		ThreadingUtils.sleep(1000);
 		
 		// Wait until all scripts have completed or got frozen
 		while (scriptManager.areScriptsRunning())
 		{
-			Utils.sleep(1000);
+			ThreadingUtils.sleep(1000);
 		}
 		
 		// Stop reconnection manager
@@ -123,7 +123,7 @@ public class Main
 		// Stop message logger
 		callback.stop();
 		
-		Utils.sleep(1000);
+		ThreadingUtils.sleep(1000);
 		for (final Thread thread : Thread.getAllStackTraces().keySet())
 		{
 			logger.trace("Thread {} is still running", thread.getName());

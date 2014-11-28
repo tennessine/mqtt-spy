@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.xml;
 
 import java.io.File;
@@ -22,20 +36,26 @@ import org.xml.sax.SAXException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 
 /**
- * 
- * Handles XML marshalling and unmarshalling.
- * 
- * @author Kamil Baczkowicz
- *
+ * Simplifies XML marshalling and unmarshalling.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class XMLParser
 {	
+	/** XML marshaller. */
 	private final Marshaller marshaller;
 	
+	/** XML unmarshaller. */
 	private final Unmarshaller unmarshaller;
 	
-	public XMLParser(final String schema, final String namespace) throws XMLException
+	/**
+	 * Creates the XMLParser with the namespace and schema file for validation.
+	 * 
+	 * @param namespace The context path / namespace
+	 * @param schema The schema file to be used for validation 
+	 * 
+	 * @throws XMLException Thrown when cannot instantiate the marshaller/unmarshaller
+	 */
+	public XMLParser(final String namespace, final String schema) throws XMLException
 	{
 		try
 		{
@@ -52,7 +72,15 @@ public class XMLParser
 		}
 	}
 	
-	public XMLParser(final String schema, final Class classToBeBound) throws XMLException
+	/**
+	 * Creates the XMLParser with the given class as root and schema file for validation.
+	 * 
+	 * @param classToBeBound The class to be bound
+	 * @param schema The schema file to be used for validation
+	 * 
+	 * @throws XMLException Thrown when cannot instantiate the marshaller/unmarshaller
+	 */
+	public XMLParser(final Class classToBeBound, final String schema) throws XMLException
 	{
 		try
 		{
@@ -69,6 +97,14 @@ public class XMLParser
 		}
 	}
 	
+	/**
+	 * Creates the XMLParser with the namespace and schema files for validation.
+	 * 
+	 * @param namespace The context path / namespace
+	 * @param schemas The schema files to be used for validation 
+	 * 
+	 * @throws XMLException Thrown when cannot instantiate the marshaller/unmarshaller
+	 */
 	public XMLParser(final String namespace, final String[] schemas) throws XMLException
 	{
 		try
@@ -86,6 +122,13 @@ public class XMLParser
 		}
 	}
 	
+	/**
+	 * Creates the XMLParser with the given class as root and schema files for validation.
+	 * 
+	 * @param classToBeBound The class to be bound
+	 * 
+	 * @throws XMLException Thrown when cannot instantiate the marshaller/unmarshaller
+	 */
 	public XMLParser(final Class classToBeBound, final String[] schemas) throws XMLException
 	{
 		try
@@ -103,6 +146,13 @@ public class XMLParser
 		}
 	}
 	
+	/**
+	 * Creates the XMLParser with the given class as root. No schema validation.
+	 * 
+	 * @param classToBeBound The class to be bound
+	 * 
+	 * @throws XMLException Thrown when cannot instantiate the marshaller/unmarshaller
+	 */
 	public XMLParser(final Class classToBeBound) throws XMLException
 	{
 		try
@@ -118,6 +168,15 @@ public class XMLParser
 		}
 	}
 	
+	/**
+	 * Unmarshals the given XML.
+	 * 
+	 * @param xml The XML to unmarshal
+	 * 
+	 * @return The unmarshalled XML document
+	 * 
+	 * @throws XMLException When cannot unmarshal the XML document 
+	 */
 	public Object unmarshal(final String xml) throws XMLException
 	{
 		Object readObject = null;
@@ -141,6 +200,16 @@ public class XMLParser
 		return readObject;
 	}
 	
+	/**
+	 * Unmarshals the given XML with the given root class.
+	 * 
+	 * @param xml The XML to unmarshal
+	 * @param rootClass The root class
+	 * 
+	 * @return The unmarshalled XML document
+	 * 
+	 * @throws XMLException When cannot unmarshal the XML document 
+	 */
 	public Object unmarshal(final String xml, final Class rootClass) throws XMLException
 	{
 		Object readObject = null;
@@ -180,6 +249,15 @@ public class XMLParser
 		return readObject;
 	}
 
+	/**
+	 * Loads an XML document from a stream and unmarshals it.
+	 * 
+	 * @param inputStream The stream to load from
+	 * 
+	 * @return The unmarshalled XML document
+	 * 
+	 * @throws XMLException When cannot unmarshal the XML document 
+	 */
 	public Object loadFromInputStream(final InputStream inputStream) throws XMLException
 	{
 		Object readObject = null;
@@ -193,21 +271,35 @@ public class XMLParser
 		}
 		catch (JAXBException e)		
 		{
-			throw new XMLException("Cannot read the XML ", e);
+			throw new XMLException("Cannot unmarshal the XML ", e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new XMLException("Cannot read the XML ", e);
+			throw new XMLException("Cannot unmarshal the XML ", e);
 		}
 
 		return readObject;
 	}
 	
+	/**
+	 * Loads an XML document from a file and unmarshals it.
+	 * 
+	 * @param file The file to load from
+	 * 
+	 * @return The unmarshalled XML document
+	 * 
+	 * @throws XMLException When cannot unmarshal the XML document 
+	 * @throws FileNotFoundException When cannot read from the given file
+	 */
 	public Object loadFromFile(final File file) throws XMLException, FileNotFoundException
 	{
-		if (file == null || !file.exists())
+		if (file == null)
 		{
-			throw new FileNotFoundException("Cannot load the configuration " + (file != null ? "from " + file.getAbsolutePath() : ""));
+			throw new FileNotFoundException("Cannot load a null file");
+		}
+		else if (!file.exists())
+		{
+			throw new FileNotFoundException("Cannot load the file from " + file.getAbsolutePath());
 		}
 		
 		Object readObject = null;
@@ -221,16 +313,24 @@ public class XMLParser
 		}
 		catch (JAXBException e)		
 		{
-			throw new XMLException("Cannot load the configuration from " + file.getAbsolutePath(), e);
+			throw new XMLException("Cannot unmarshal the XML from " + file.getAbsolutePath(), e);
 		}
 		catch (IllegalArgumentException e)
 		{
-			throw new XMLException("Cannot load the configuration from " + file.getAbsolutePath(), e);
+			throw new XMLException("Cannot unmarshal the XML from " + file.getAbsolutePath(), e);
 		}
 
 		return readObject;
 	}
 
+	/**
+	 * Marshals and saves the given object to a file.
+	 * 
+	 * @param file The file to write to
+	 * @param objectToSave The object to save
+	 * 
+	 * @throws XMLException Thrown if any errors occur
+	 */
 	public void saveToFile(final File file, final Object objectToSave) throws XMLException
 	{
 		try
@@ -239,17 +339,7 @@ public class XMLParser
 		}
 		catch (JAXBException e)
 		{
-			throw new XMLException("Cannot save configuration to " + file.getAbsolutePath(), e);
+			throw new XMLException("Cannot save to " + file.getAbsolutePath(), e);
 		}
-	}
-
-	public Marshaller getMarshaller()
-	{
-		return marshaller;
-	}
-
-	public Unmarshaller getUnmarshaller()
-	{
-		return unmarshaller;
 	}
 }

@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
+import pl.baczkowicz.mqttspy.connectivity.IMqttConnection;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 import pl.baczkowicz.mqttspy.messages.IMqttMessage;
 
@@ -34,9 +34,9 @@ public class ScriptManager
 
 	private Executor executor;
 
-	protected MqttConnectionInterface connection;
+	protected IMqttConnection connection;
 	
-	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor, final MqttConnectionInterface connection)
+	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor, final IMqttConnection connection)
 	{
 		this.eventManager = eventManager;
 		this.executor = executor;
@@ -81,7 +81,7 @@ public class ScriptManager
 	}
 		
 	public void createScript(final PublicationScriptProperties scriptProperties,
-			String scriptName, File scriptFile, final MqttConnectionInterface connection, final ScriptDetails scriptDetails)
+			String scriptName, File scriptFile, final IMqttConnection connection, final ScriptDetails scriptDetails)
 	// public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
 	{
 		final ScriptEngine scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");										

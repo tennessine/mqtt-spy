@@ -9,6 +9,7 @@ import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.events.ui.BrowseRemovedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.MqttSpyUIEvent;
 import pl.baczkowicz.mqttspy.events.ui.TopicSummaryRemovedMessageEvent;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class MessageStoreGarbageCollector implements Runnable
 {
@@ -99,11 +100,7 @@ public class MessageStoreGarbageCollector implements Runnable
 				
 		while (true)		
 		{			
-			try
-			{				
-				Thread.sleep(1000);				
-			}
-			catch (InterruptedException e)
+			if (ThreadingUtils.sleep(1000))			
 			{
 				break;
 			}

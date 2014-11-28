@@ -25,6 +25,7 @@ import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
 import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class MqttManager
 {
@@ -79,7 +80,10 @@ public class MqttManager
 					try
 					{
 						// TODO: move this away
-						Thread.sleep(CONNECT_DELAY);
+						if (ThreadingUtils.sleep(CONNECT_DELAY))							
+						{
+							return;
+						}
 
 						// Asynch connect
 						logger.info("Connecting client ID [{}] to server [{}]; options = {}",
@@ -90,10 +94,6 @@ public class MqttManager
 						connection.connect(connection.getProperties().getOptions(), connection, new MqttConnectionResultHandler());
 						
 						// TODO: resubscribe when connection regained
-					}
-					catch (InterruptedException e)
-					{
-						return;
 					}
 					catch (MqttSpyException e)
 					{

@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
+import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
 
 public class NewSubscriptionController implements Initializable
 {
@@ -147,7 +147,7 @@ public class NewSubscriptionController implements Initializable
 
 	public boolean recordSubscriptionTopic(final String subscriptionTopic)
 	{
-		return Utils.recordTopic(subscriptionTopic, subscriptionTopics);
+		return MqttUtils.recordTopic(subscriptionTopic, subscriptionTopics);
 	}
 	
 	@FXML

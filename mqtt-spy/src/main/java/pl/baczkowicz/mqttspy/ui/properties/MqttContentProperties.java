@@ -5,7 +5,7 @@ import javafx.beans.property.StringProperty;
 import pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
 import pl.baczkowicz.mqttspy.connectivity.MqttSubscription;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class MqttContentProperties
 {
@@ -59,8 +59,7 @@ public class MqttContentProperties
 	{
 		this.mqttContent = message;
 
-		this.lastReceivedTimestamp.set(Utils.DATE_WITH_MILLISECONDS_SDF.format(mqttContent
-				.getDate()));
+		this.lastReceivedTimestamp.set(TimeUtils.DATE_WITH_MILLISECONDS_SDF.format(mqttContent.getDate()));
 		this.lastReceivedPayload.set(mqttContent.getFormattedPayload(format));
 	}
 

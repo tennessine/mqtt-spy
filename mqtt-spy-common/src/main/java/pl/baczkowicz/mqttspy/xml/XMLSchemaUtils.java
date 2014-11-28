@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.xml;
 
 import java.io.File;
@@ -21,7 +35,9 @@ public class XMLSchemaUtils
      * Creates the schema object.
      * 
      * @param schemaLocation Location of the XML schema file
+     * 
      * @return Instance of the Schema object, based on the supplied XSD file
+     * 
      * @throws XMLException Thrown when cannot create the schema object
      */
     public static Schema createSchema(final String schemaLocation) throws XMLException
@@ -40,7 +56,7 @@ public class XMLSchemaUtils
                 final InputStream resourceAsStream = XMLParser.class.getResourceAsStream(schemaLocation);
                 if (resourceAsStream == null)
                 {
-                    throw new XMLException("Cannot load the schema from file or classpath. Fix the schema or amend the location: " + schemaLocation);
+                    throw new XMLException("Cannot load the schema from file or classpath - fix the schema or amend the location: " + schemaLocation);
                 }
 
                 schema = schemaFactory.newSchema(new StreamSource(resourceAsStream));
@@ -50,7 +66,7 @@ public class XMLSchemaUtils
         }
         catch (SAXException e)
         {
-            throw new XMLException("Cannot set the schema. Please fix the schema or the location", e);
+            throw new XMLException("Cannot set the schema - please fix the schema or the location", e);
         }
     }
 
@@ -58,23 +74,20 @@ public class XMLSchemaUtils
 	 * Sets the schemas for validation. The files specified can be either an
 	 * absolute file or a resources' location in the classpath.
 	 *
-	 * @param resourceLocations
-	 *            Schema file locations
-	 * @return Instance of the Schema object, based on the supplied message XML
-	 *         schema file
-	 * @throws XMLException
-	 *             Thrown when the schema is wrong.
+	 * @param resourceLocations Schema file locations
+	 * 
+	 * @return Instance of the Schema object, based on the supplied message XML schema file
+	 * 
+	 * @throws XMLException Thrown when the schema is wrong.
 	 */
-	public static Schema createSchema(final String[] resourceLocations)
-			throws XMLException
+	public static Schema createSchema(final String[] resourceLocations) throws XMLException
 	{
 		if (resourceLocations == null)
 		{
 			throw new XMLException("Schema file locations not specified");
 		}
 
-		final SchemaFactory schemaFactory = SchemaFactory
-				.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		final SchemaFactory schemaFactory = SchemaFactory.newInstance(javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI);
 		Schema schema = null;
 
 		final Source[] schemaSources = new Source[resourceLocations.length];
@@ -101,10 +114,7 @@ public class XMLSchemaUtils
 							.getResourceAsStream(resourceLocation);
 					if (resourceAsStream == null)
 					{
-						throw new XMLException(
-								String.format(
-										"Cannot load the schema from file or classpath. Fix the schema or amend the location: %s",
-										resourceLocation));
+						throw new XMLException("Cannot load the schema from file or classpath - fix the schema or amend the location: " + resourceLocation);
 					}
 
 					schemaSources[i] = new StreamSource(resourceAsStream);
@@ -114,11 +124,9 @@ public class XMLSchemaUtils
 
 			return schema;
 		}
-		catch (final SAXException ex)
+		catch (final SAXException e)
 		{
-			throw new XMLException(
-					"Cannot set the schema. Fix the schema or the location.",
-					ex);
+			throw new XMLException("Cannot set the schema - fix the schema or the location", e);
 		}
 	}
 }

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.stats.generated.MqttSpyStats;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -51,7 +52,7 @@ public class StatisticsManager implements Runnable
 	
 	public StatisticsManager() throws XMLException
 	{
-		this.parser = new XMLParser(SCHEMA, PACKAGE);
+		this.parser = new XMLParser(PACKAGE, SCHEMA);
 		
 		statsFile = new File(ConfigurationManager.getDefaultHomeDirectory() + STATS_FILENAME);
 
@@ -286,15 +287,12 @@ public class StatisticsManager implements Runnable
 	{
 		while (true)
 		{
-			try
-			{
-				Thread.sleep(1000);
-				nextInterval();
-			}
-			catch (InterruptedException e)
+			if (ThreadingUtils.sleep(1000))
 			{
 				break;
 			}
+			
+			nextInterval();			
 		}					
 	}
 }

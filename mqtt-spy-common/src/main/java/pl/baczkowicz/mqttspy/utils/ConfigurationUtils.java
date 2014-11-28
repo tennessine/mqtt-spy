@@ -11,7 +11,7 @@ public class ConfigurationUtils
 {
 	final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
 	
-	public static void populateServerURIs(final MqttConnectionDetails connection)
+	public static void completeServerURIs(final MqttConnectionDetails connection)
 	{
 		for (int i = 0; i < connection.getServerURI().size(); i++)
 		{

@@ -39,6 +39,7 @@ import pl.baczkowicz.mqttspy.ui.controlpanel.UnicefTooltip;
 import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.versions.VersionManager;
 import pl.baczkowicz.mqttspy.versions.generated.MqttSpyVersions;
 import pl.baczkowicz.mqttspy.versions.generated.ReleaseStatus;
@@ -415,14 +416,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 				try
 				{
 					// Wait some time for the app to start properly
-					try
-					{
-						Thread.sleep(5000);
-					}
-					catch (InterruptedException e)
-					{
-						e.printStackTrace();
-					}
+					ThreadingUtils.sleep(5000);					
 					
 					final MqttSpyVersions versions = versionManager.loadVersions();
 					logger.debug("Retrieved version info = " + versions.toString());

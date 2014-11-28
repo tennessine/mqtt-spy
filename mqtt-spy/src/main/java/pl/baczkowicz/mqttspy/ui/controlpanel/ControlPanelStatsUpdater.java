@@ -16,7 +16,8 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.ui.ControlPanelItemController;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class ControlPanelStatsUpdater implements Runnable
 {
@@ -26,7 +27,7 @@ public class ControlPanelStatsUpdater implements Runnable
 	
 	private final static String inDays = days > 1 ? (" in " + days + " days") : "";
 	
-	private final static String since = " since " + Utils.DATE_SDF.format(StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime());
+	private final static String since = " since " + TimeUtils.DATE_SDF.format(StatisticsManager.stats.getStartDate().toGregorianCalendar().getTime());
 	
 	private final static int STATS_MESSAGES = 6;
 	
@@ -254,14 +255,10 @@ public class ControlPanelStatsUpdater implements Runnable
 				secondCounter = 0;
 			}			
 			
-			try
-			{
-				Thread.sleep(REFRESH_INTERVAL);
-			}
-			catch (InterruptedException e)
+			if (ThreadingUtils.sleep(REFRESH_INTERVAL))
 			{
 				break;
-			}
+			}			
 		}
 	}
 }

@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.connectivity;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 
@@ -77,5 +78,20 @@ public class MqttUtils
 	public static String decodePassword(final String value)
 	{
 		return ConversionUtils.base64ToString(value);
+	}
+	
+	public static boolean recordTopic(final String newTopic, final List<String> topics)
+	{
+		for (final String topic : topics)
+		{
+			if (topic.equals(newTopic))
+			{
+				// If the topic is already on the list, don't add it again
+				return false;
+			}
+		}
+
+		topics.add(newTopic);
+		return true;
 	}
 }

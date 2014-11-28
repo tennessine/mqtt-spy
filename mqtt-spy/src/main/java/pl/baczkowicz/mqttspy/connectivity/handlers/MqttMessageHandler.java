@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 /**
  * This class is responsible for handling received messages. One thread per connection expected here.
@@ -33,26 +34,18 @@ public class MqttMessageHandler implements Runnable
 		logger.debug("Starting processing thread for connection " + connection.getProperties().getName());
 		while (true)
 		{
-			try
+			if (queue.size() > 0)
 			{
-				if (queue.size() > 0)
-				{
-					final MqttContent content = queue.remove();
-					connection.messageReceived(content);
-					
-					// Let other threads do stuff
-					Thread.sleep(1);
-				}
-				else
-				{
-					// If no messages present, sleep a bit
-					Thread.sleep(10);
-				}
+				final MqttContent content = queue.remove();
+				connection.messageReceived(content);
+				
+				// Let other threads do stuff
+				ThreadingUtils.sleep(1);
 			}
-			catch (InterruptedException e)
+			else
 			{
-				// Not expected
-				logger.error("Thread interrupted", e);
+				// If no messages present, sleep a bit
+				ThreadingUtils.sleep(10);
 			}
 		}
 	}

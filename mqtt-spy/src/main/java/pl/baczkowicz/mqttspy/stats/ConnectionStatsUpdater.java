@@ -2,6 +2,7 @@ package pl.baczkowicz.mqttspy.stats;
 
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import javafx.application.Platform;
 
 public class ConnectionStatsUpdater implements Runnable
@@ -20,11 +21,7 @@ public class ConnectionStatsUpdater implements Runnable
 	{
 		while (true)
 		{
-			try
-			{
-				Thread.sleep(REFRESH_INTERVAL);
-			}
-			catch (InterruptedException e)
+			if (ThreadingUtils.sleep(REFRESH_INTERVAL))			
 			{
 				break;
 			}

@@ -12,14 +12,14 @@ import javax.script.ScriptContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.connectivity.IMqttConnection;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class PublicationScriptIO implements IPublicationScriptIO
 {
 	private final static Logger logger = LoggerFactory.getLogger(PublicationScriptIO.class);
 	
-	private final MqttConnectionInterface connection;
+	private final IMqttConnection connection;
 	
 	private PublicationScriptProperties script;
 	
@@ -34,7 +34,7 @@ public class PublicationScriptIO implements IPublicationScriptIO
 	private final IMessageLogIO messageLog;
 	
 	public PublicationScriptIO(
-			final MqttConnectionInterface connection, final ScriptEventManagerInterface eventManager, 
+			final IMqttConnection connection, final ScriptEventManagerInterface eventManager, 
 			final PublicationScriptProperties script, final Executor executor)
 	{
 		this.eventManager = eventManager;
@@ -50,7 +50,7 @@ public class PublicationScriptIO implements IPublicationScriptIO
 	
 	public void touch()
 	{
-		this.lastTouch = Utils.getMonotonicTimeInMilliseconds();
+		this.lastTouch = TimeUtils.getMonotonicTimeInMilliseconds();
 	}
 	
 	public void setScriptTimeout(final long customTimeout)

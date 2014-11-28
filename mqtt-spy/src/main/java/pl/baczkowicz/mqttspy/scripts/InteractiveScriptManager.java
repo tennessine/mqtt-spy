@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttConnectionInterface;
+import pl.baczkowicz.mqttspy.connectivity.IMqttConnection;
 import pl.baczkowicz.mqttspy.ui.utils.RunLaterExecutor;
 
 public class InteractiveScriptManager extends ScriptManager
@@ -24,7 +24,7 @@ public class InteractiveScriptManager extends ScriptManager
 	
 	// private MqttConnectionInterface connection;
 	
-	public InteractiveScriptManager(final ScriptEventManagerInterface eventManager, final MqttConnectionInterface connection)
+	public InteractiveScriptManager(final ScriptEventManagerInterface eventManager, final IMqttConnection connection)
 	{
 		super(eventManager, new RunLaterExecutor(), connection);
 	}

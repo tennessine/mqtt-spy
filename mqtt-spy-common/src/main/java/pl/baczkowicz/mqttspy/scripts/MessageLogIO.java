@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.logger.LogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class MessageLogIO implements IMessageLogIO, Runnable
 {
@@ -45,7 +45,7 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		if (messageLog != null)
 		{
 			replayDate = messageLog.get(0).getDate().getTime();
-			lastUpdated = Utils.getMonotonicTimeInMilliseconds();
+			lastUpdated = TimeUtils.getMonotonicTimeInMilliseconds();
 			running = true;
 			
 			new Thread(this).start();
@@ -119,7 +119,7 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		
 		while (running)
 		{
-			final long now = Utils.getMonotonicTimeInMilliseconds();
+			final long now = TimeUtils.getMonotonicTimeInMilliseconds();
 			
 			if (now > lastUpdated)
 			{
@@ -130,11 +130,7 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 				lastUpdated = now;
 			}
 			
-			try
-			{
-				Thread.sleep(10);
-			}
-			catch (InterruptedException e)
+			if (ThreadingUtils.sleep(10))			
 			{
 				break;
 			}

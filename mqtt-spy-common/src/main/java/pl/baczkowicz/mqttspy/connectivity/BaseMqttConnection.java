@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.connectivity;
 
 import java.util.ArrayList;
@@ -19,9 +33,9 @@ import org.slf4j.LoggerFactory;
 import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
-public abstract class BaseMqttConnection implements MqttConnectionInterface
+public abstract class BaseMqttConnection implements IMqttConnection
 {
 	final static Logger logger = LoggerFactory.getLogger(BaseMqttConnection.class);
 	
@@ -121,7 +135,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	protected void recordConnectionAttempt()
 	{
-		lastConnectionAttemptTimestamp = Utils.getMonotonicTimeInMilliseconds();
+		lastConnectionAttemptTimestamp = TimeUtils.getMonotonicTimeInMilliseconds();
 		connectionAttempts++;
 		
 	}
@@ -133,7 +147,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 	
 	public String getLastSuccessfulyConnectionAttempt()
 	{
-		return Utils.DATE_WITH_SECONDS_SDF.format(lastSuccessfulConnectionAttempt);
+		return TimeUtils.DATE_WITH_SECONDS_SDF.format(lastSuccessfulConnectionAttempt);
 	}
 	
 	public void subscribe(final String topic, final int qos) throws MqttSpyException
@@ -210,7 +224,7 @@ public abstract class BaseMqttConnection implements MqttConnectionInterface
 		if (!message.isEmpty())
 		{
 			this.disconnectionReason = this.disconnectionReason + " ("
-					+ Utils.DATE_WITH_SECONDS_SDF.format(new Date()) + ")";
+					+ TimeUtils.DATE_WITH_SECONDS_SDF.format(new Date()) + ")";
 		}
 	}
 	

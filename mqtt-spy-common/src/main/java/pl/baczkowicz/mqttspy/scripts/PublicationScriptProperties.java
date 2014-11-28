@@ -7,7 +7,7 @@ import java.util.concurrent.Executor;
 import javax.script.ScriptEngine;
 
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class PublicationScriptProperties
 {
@@ -63,7 +63,7 @@ public class PublicationScriptProperties
 	public void setLastPublishedDate(final Date lastPublishedDate)
 	{
 		this.lastPublishedDate = lastPublishedDate;
-		this.lastPublished = Utils.DATE_WITH_SECONDS_SDF.format(lastPublishedDate);
+		this.lastPublished = TimeUtils.DATE_WITH_SECONDS_SDF.format(lastPublishedDate);
 	}
 	
 	public void setStatus(final ScriptRunningState state)

@@ -26,7 +26,7 @@ import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.SearchOptions;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class MessageController implements Initializable, MessageIndexChangeObserver, MessageFormatChangeObserver
 {
@@ -195,7 +195,7 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	
 			topicField.setText(message.getTopic());
 			qosField.setText(String.valueOf(message.getMessage().getQos()));
-			timeField.setText(Utils.DATE_WITH_MILLISECONDS_SDF.format(message.getDate()));
+			timeField.setText(TimeUtils.DATE_WITH_MILLISECONDS_SDF.format(message.getDate()));
 			populateLength(payload.length());
 			retainedField.setSelected(message.getMessage().isRetained());
 	

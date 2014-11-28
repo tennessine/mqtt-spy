@@ -10,7 +10,7 @@ import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
-import pl.baczkowicz.mqttspy.utils.Utils;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 public class ReconnectionManager implements Runnable
 {
@@ -49,7 +49,7 @@ public class ReconnectionManager implements Runnable
 			}
 			
 			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();				
-			if (connection.getLastConnectionAttemptTimestamp() + reconnectionSettings.getRetryInterval() > Utils.getMonotonicTimeInMilliseconds())
+			if (connection.getLastConnectionAttemptTimestamp() + reconnectionSettings.getRetryInterval() > TimeUtils.getMonotonicTimeInMilliseconds())
 			{
 				// If we're not due to reconnect yet
 				continue;
@@ -78,13 +78,8 @@ public class ReconnectionManager implements Runnable
 				oneCycle();
 			}
 			
-			try
+			if (ThreadingUtils.sleep(SLEEP))
 			{
-				Thread.sleep(SLEEP);
-			}
-			catch (InterruptedException e)
-			{
-				logger.error("Thread interrupted - stopping reconnection manager", e);
 				break;
 			}
 		}	
