@@ -54,7 +54,8 @@ public class Main extends Application
 			// Set the stage's properties
 			primaryStage.setScene(scene);			
 			primaryStage.setMinWidth(WIDTH);
-			primaryStage.setMinHeight(HEIGHT);
+			primaryStage.setMinHeight(HEIGHT / 2);
+			primaryStage.setHeight(HEIGHT);
 
 			// Initialise resources in the main controller			
 			mainController.setApplication(this);

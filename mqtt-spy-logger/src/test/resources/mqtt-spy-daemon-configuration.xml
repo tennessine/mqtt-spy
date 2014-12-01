@@ -40,7 +40,8 @@
 			
 	<Subscription topic="/test/#" qos="0" />
 	<!-- Use the script file for things like auto-reply or additional logging -->
-	<Subscription topic="/home/#" qos="0" scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js"/>
+	<!-- scriptFile="/home/kamil/Programming/Git/mqtt-spy-logger/src/test/resources/reply.js" -->
+	<Subscription topic="/home/#" qos="0" />
 			 
 	<!-- Use these for publishing messages -->
 	<BackgroundScript>
@@ -52,7 +53,7 @@
 	</BackgroundScript>
 	 -->
 	<!-- Use CONTINUOUS or SCRIPTS_ONLY -->
-	<RunningMode>SCRIPTS_ONLY</RunningMode>
+	<RunningMode>CONTINUOUS</RunningMode>
   </Connection>
   
 </mqttspydc:MqttSpyDaemonConfiguration>
