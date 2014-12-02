@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.File;
@@ -30,13 +44,13 @@ public class ScriptManager
 	
 	private Map<File, PublicationScriptProperties> scripts = new HashMap<File, PublicationScriptProperties>();
 	
-	private ScriptEventManagerInterface eventManager;
+	private IScriptEventManager eventManager;
 
 	private Executor executor;
 
 	protected IMqttConnection connection;
 	
-	public ScriptManager(final ScriptEventManagerInterface eventManager, final Executor executor, final IMqttConnection connection)
+	public ScriptManager(final IScriptEventManager eventManager, final Executor executor, final IMqttConnection connection)
 	{
 		this.eventManager = eventManager;
 		this.executor = executor;
@@ -190,7 +204,7 @@ public class ScriptManager
 		return scripts.get(scriptFile);
 	}
 
-	public ScriptEventManagerInterface getEventManager()
+	public IScriptEventManager getEventManager()
 	{
 		return eventManager;
 	}

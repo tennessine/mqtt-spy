@@ -12,23 +12,19 @@
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
  *    
  */
-package pl.baczkowicz.mqttspy.exceptions;
+package pl.baczkowicz.mqttspy.scripts;
 
 /**
- * Represents a base exception.
+ * Interface for notifying script's state changes.
  */
-public class MqttSpyException extends Exception
+public interface IScriptEventManager
 {
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = -1041373917140441043L;
-
-	public MqttSpyException(String error)
-	{
-		super(error);
-	}
-	
-	public MqttSpyException(String error, Throwable e)
-	{
-		super(error, e);
-	}
+	/**
+	 * Notifies any consumers that the state of the given script has changed.
+	 * 
+	 * @param scriptName The name of the script
+	 * @param state The new state
+	 */
+	// TODO: could possibly change the scriptName to the script object
+	void notifyScriptStateChange(final String scriptName, final ScriptRunningState state);
 }

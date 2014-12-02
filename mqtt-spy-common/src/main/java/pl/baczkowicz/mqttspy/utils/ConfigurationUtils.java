@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.utils;
 
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
@@ -5,12 +19,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
-import pl.baczkowicz.mqttspy.connectivity.MqttUtils;
 
+/**
+ * Configuration utilities.
+ */
 public class ConfigurationUtils
 {
-	final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
+	/** Diagnostic logger. */
+	private final static Logger logger = LoggerFactory.getLogger(ConfigurationUtils.class);
 	
+	/**
+	 * Goes through all server URIs and completes them with the TCP prefix if necessary.
+	 * 
+	 * @param connection Connection details
+	 */
 	public static void completeServerURIs(final MqttConnectionDetails connection)
 	{
 		for (int i = 0; i < connection.getServerURI().size(); i++)
@@ -26,6 +48,12 @@ public class ConfigurationUtils
 			}
 		}	
 	}
+	
+	/**
+	 * Populates the connection details with missing parameters, e.g. name, clean session, etc.
+	 * 
+	 * @param connection The connection details to complete
+	 */
 	public static void populateConnectionDefaults(final MqttConnectionDetails connection)
 	{	
 		if (connection.getName() == null || connection.getName().isEmpty())

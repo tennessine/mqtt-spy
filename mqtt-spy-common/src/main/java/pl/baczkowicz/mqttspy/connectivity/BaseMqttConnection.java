@@ -135,7 +135,7 @@ public abstract class BaseMqttConnection implements IMqttConnection
 	
 	protected void recordConnectionAttempt()
 	{
-		lastConnectionAttemptTimestamp = TimeUtils.getMonotonicTimeInMilliseconds();
+		lastConnectionAttemptTimestamp = TimeUtils.getMonotonicTime();
 		connectionAttempts++;
 		
 	}

@@ -12,23 +12,20 @@
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
  *    
  */
-package pl.baczkowicz.mqttspy.exceptions;
+package pl.baczkowicz.mqttspy.tasks;
+
+import java.util.concurrent.Executor;
 
 /**
- * Represents a base exception.
+ * Simple runnable executor.
  */
-public class MqttSpyException extends Exception
+public class SimpleExecutor implements Executor
 {
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = -1041373917140441043L;
-
-	public MqttSpyException(String error)
+	/**
+	 * Starts a new thread for the given runnable.
+	 */
+	public void execute(final Runnable runnable)
 	{
-		super(error);
-	}
-	
-	public MqttSpyException(String error, Throwable e)
-	{
-		super(error, e);
-	}
+		new Thread(runnable).start();
+	}	 
 }

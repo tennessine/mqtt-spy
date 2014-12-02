@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.scripts;
 
 import java.util.concurrent.Executor;
@@ -16,11 +30,11 @@ public class ScriptHealthDetector implements Runnable
 	
 	private final PublicationScriptProperties script;
 
-	private ScriptEventManagerInterface eventManager;
+	private IScriptEventManager eventManager;
 
 	private Executor executor;
 
-	public ScriptHealthDetector(final ScriptEventManagerInterface eventManager, final PublicationScriptProperties script, final Executor executor)
+	public ScriptHealthDetector(final IScriptEventManager eventManager, final PublicationScriptProperties script, final Executor executor)
 	{
 		this.script = script;
 		this.eventManager = eventManager;
@@ -34,10 +48,10 @@ public class ScriptHealthDetector implements Runnable
 		
 		while (script.getStatus().equals(ScriptRunningState.RUNNING))
 		{
-			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < TimeUtils.getMonotonicTimeInMilliseconds())
+			if (script.getPublicationScriptIO().getLastTouch() + script.getScriptTimeout() < TimeUtils.getMonotonicTime())
 			{
 				logger.warn("Script {} detected as frozen, last touch = {}, current time = {}", script.getName(), 
-						script.getPublicationScriptIO().getLastTouch(), TimeUtils.getMonotonicTimeInMilliseconds());
+						script.getPublicationScriptIO().getLastTouch(), TimeUtils.getMonotonicTime());
 				ScriptRunner.changeState(eventManager, script.getName(), ScriptRunningState.FROZEN, script, executor);
 			}
 			

@@ -12,23 +12,18 @@
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
  *    
  */
-package pl.baczkowicz.mqttspy.exceptions;
+package pl.baczkowicz.mqttspy.tasks;
 
 /**
- * Represents a base exception.
+ * Simple interface for updating progress of a task.
  */
-public class MqttSpyException extends Exception
+public interface ProgressUpdater
 {
-	/** Generated serialVersionUID */
-	private static final long serialVersionUID = -1041373917140441043L;
-
-	public MqttSpyException(String error)
-	{
-		super(error);
-	}
-	
-	public MqttSpyException(String error, Throwable e)
-	{
-		super(error, e);
-	}
+	/**
+	 * Updates the progress of a task.
+	 * 
+	 * @param current Current progress
+	 * @param max Maximum progress value
+	 */
+	void update(final long current, final long max);
 }

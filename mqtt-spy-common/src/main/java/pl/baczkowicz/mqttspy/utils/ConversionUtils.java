@@ -25,11 +25,27 @@ import pl.baczkowicz.mqttspy.exceptions.ConversionException;
  */
 public class ConversionUtils
 {
+	/**
+	 * Converts the given string into a HEX string.
+	 * 
+	 * @param data The string to convert
+	 * 
+	 * @return Converted string in HEX form
+	 */
 	public static String stringToHex(final String data)
 	{
 		return new String(Hex.encodeHex(data.getBytes()));
 	}
 	
+	/**
+	 * Converts the given HEX string into a plain string.
+	 * 
+	 * @param data The HEX string to convert from
+	 * 
+	 * @return The plain string
+	 * 
+	 * @throws ConversionException Thrown if the given string is not a valid HEX string
+	 */
 	public static String hexToString(final String data) throws ConversionException
 	{
 		try
@@ -42,6 +58,13 @@ public class ConversionUtils
 		}
 	}
 	
+	/**
+	 * Converts the given HEX string into a plain string.
+	 * 
+	 * @param data The HEX string to convert from
+	 * 
+	 * @return The plain string or [invalid hex] if invalid HEX string detected
+	 */
 	public static String hexToStringNoException(final String data)
 	{
 		try
@@ -54,11 +77,25 @@ public class ConversionUtils
 		}
 	}
 
+	/**
+	 * Converts Base64 string to a plain string.
+	 * 
+	 * @param data The Base64 string to decode
+	 * 
+	 * @return Decoded string
+	 */
 	public static String base64ToString(final String data)
 	{
 		return new String(Base64.decodeBase64(data));
 	}
 	
+	/**
+	 * Converts plain string into Base64 string.
+	 *  
+	 * @param data The string to encode to Base64
+	 * 
+	 * @return Encoded string (Base64)
+	 */
 	public static String stringToBase64(final String data)
 	{
 		return Base64.encodeBase64String(data.getBytes());

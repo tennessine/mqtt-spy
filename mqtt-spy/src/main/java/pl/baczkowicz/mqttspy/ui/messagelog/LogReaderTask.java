@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.LoggedMqttMessage;
-import pl.baczkowicz.mqttspy.logger.LogParserUtils;
+import pl.baczkowicz.mqttspy.logger.MessageLogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
@@ -37,16 +37,16 @@ public class LogReaderTask extends TaskWithProgressUpdater<List<ReceivedMqttMess
 		{
 			updateMessage("Please wait - reading message log [1/4]");
 			updateProgress(0, 4);
-			final List<String> fileContent = LogParserUtils.readMessageLog(selectedFile);					
+			final List<String> fileContent = MessageLogParserUtils.readMessageLog(selectedFile);					
 			final long totalItems = fileContent.size();
 			updateProgress(totalItems, totalItems * 4);
 			
 			updateMessage("Please wait - parsing " + fileContent.size() + " messages [2/4]");					
-			final List<LoggedMqttMessage> loggedMessages = LogParserUtils.parseMessageLog(fileContent, this, totalItems, totalItems * 4);
+			final List<LoggedMqttMessage> loggedMessages = MessageLogParserUtils.parseMessageLog(fileContent, this, totalItems, totalItems * 4);
 			updateProgress(totalItems * 2, totalItems * 4);
 								
 			updateMessage("Please wait - processing " + loggedMessages.size() + " messages [3/4]");					
-			final List<ReceivedMqttMessage> processedMessages = LogParserUtils.processMessageLog(loggedMessages, this, totalItems * 2, totalItems * 4);
+			final List<ReceivedMqttMessage> processedMessages = MessageLogParserUtils.processMessageLog(loggedMessages, this, totalItems * 2, totalItems * 4);
 			updateProgress(totalItems * 3, totalItems * 4);
 			
 			updateMessage("Please wait - displaying " + loggedMessages.size() + " messages [4/4]");	

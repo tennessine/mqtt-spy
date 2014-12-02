@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.File;
@@ -6,32 +20,42 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.logger.LogParserUtils;
+import pl.baczkowicz.mqttspy.logger.MessageLogParserUtils;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
+/**
+ * Implementation of the interface between a script and the messageLog object.
+ */
 public class MessageLogIO implements IMessageLogIO, Runnable
 {
+	/** Diagnostic logger. */
 	private final static Logger logger = LoggerFactory.getLogger(MessageLogIO.class);
 	
-	private List<ReceivedMqttMessage> messageLog;	
+	/** Messages. */
+	private List<ReceivedMqttMessage> messages;	
 
-	private long replayDate;
+	/** Current replay time (as in the message log). */
+	private long replayTime;
+
+	/** Timestamp of the last time checker run. */
+	private long lastUpdated;
 	
+	/** Flag indicating whether the time checker is running. */
 	private boolean running = false;
 
-	private long lastUpdated;
-
+	/** The current running speed. */
 	private double speed = 1;
-
-	public int readFromFile(String logLocation)
+	
+	@Override
+	public int readFromFile(final String logLocation)
 	{
 		try
 		{
-			messageLog = LogParserUtils.readAndConvertMessageLog(new File(logLocation));
+			messages = MessageLogParserUtils.readAndConvertMessageLog(new File(logLocation));
 						
-			return messageLog.size();
+			return messages.size();
 		}
 		catch (Exception e)
 		{
@@ -40,29 +64,26 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		}
 	}
 	
+	@Override
 	public void start()
 	{
-		if (messageLog != null)
+		if (messages != null)
 		{
-			replayDate = messageLog.get(0).getDate().getTime();
-			lastUpdated = TimeUtils.getMonotonicTimeInMilliseconds();
+			replayTime = messages.get(0).getDate().getTime();
+			lastUpdated = TimeUtils.getMonotonicTime();
 			running = true;
 			
 			new Thread(this).start();
 		}		
 	}
-
-//	public void pause()
-//	{
-//		// TODO Auto-generated method stub
-//		
-//	}
-
+	
+	@Override
 	public void stop()
 	{
 		running = false;		
 	}
 
+	@Override
 	public void setSpeed(double newSpeed)
 	{
 		if (newSpeed > 1)
@@ -88,12 +109,12 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		this.speed = newSpeed;
 	}
 
+	@Override
 	public boolean isReadyToPublish(final int messageIndex)
 	{
-		if (messageLog != null && messageLog.size() > messageIndex)
+		if (messages != null && messages.size() > messageIndex)
 		{
-			// logger.info("Replay date = {}, message date = {}", replayDate, messageLog.get(messageIndex).getDate().getTime());
-			if (replayDate > messageLog.get(messageIndex).getDate().getTime())
+			if (replayTime > messages.get(messageIndex).getDate().getTime())
 			{
 				return true;
 			}
@@ -102,16 +123,18 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		return false;
 	}
 	
+	@Override
 	public ReceivedMqttMessage getMessage(final int messageIndex)
 	{
-		if (messageLog != null && messageLog.size() > messageIndex)
+		if (messages != null && messages.size() > messageIndex)
 		{
-			return messageLog.get(messageIndex);
+			return messages.get(messageIndex);
 		}
 		
 		return null;
 	}
 	
+	@Override
 	public void run()
 	{
 		Thread.currentThread().setName("Message Log IO");
@@ -119,14 +142,14 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		
 		while (running)
 		{
-			final long now = TimeUtils.getMonotonicTimeInMilliseconds();
+			final long now = TimeUtils.getMonotonicTime();
 			
 			if (now > lastUpdated)
 			{
 				final long sinceLastUpdated = now - lastUpdated;				
 				final double increase = sinceLastUpdated * speed;
 				
-				replayDate =  replayDate + (long) increase;
+				replayTime =  replayTime + (long) increase;
 				lastUpdated = now;
 			}
 			
@@ -140,14 +163,14 @@ public class MessageLogIO implements IMessageLogIO, Runnable
 		ThreadingUtils.logEnding();
 	}
 	
+	@Override
 	public int getMessageCount()
 	{
-		if (messageLog == null)
+		if (messages == null)
 		{
 			return 0;
 		}
 		
-		return messageLog.size();
+		return messages.size();
 	}
-
 }

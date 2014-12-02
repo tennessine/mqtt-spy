@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
-import pl.baczkowicz.mqttspy.logger.LogParserUtils;
+import pl.baczkowicz.mqttspy.logger.SimpleMessageLogComposer;
 import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
@@ -44,7 +44,7 @@ public class MqttMessageLogger implements Runnable
 			{
 				if (queue.size() > 0)
 				{
-					logger.info(LogParserUtils.createReceivedMessageLog(queue.remove(), connectionSettings.getMessageLog()));					
+					logger.info(SimpleMessageLogComposer.createReceivedMessageLog(queue.remove(), connectionSettings.getMessageLog()));					
 				}
 				else
 				{

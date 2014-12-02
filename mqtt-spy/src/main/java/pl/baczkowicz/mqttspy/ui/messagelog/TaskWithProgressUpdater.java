@@ -1,6 +1,6 @@
 package pl.baczkowicz.mqttspy.ui.messagelog;
 
-import pl.baczkowicz.mqttspy.utils.ProgressUpdater;
+import pl.baczkowicz.mqttspy.tasks.ProgressUpdater;
 import javafx.concurrent.Task;
 
 public abstract class TaskWithProgressUpdater<T> extends Task<T> implements ProgressUpdater

@@ -22,12 +22,18 @@ import org.slf4j.LoggerFactory;
  */
 public class ThreadingUtils
 {
-	public final static Logger logger = LoggerFactory.getLogger(ThreadingUtils.class);
+	/** Diagnostic logger. */
+	private final static Logger logger = LoggerFactory.getLogger(ThreadingUtils.class);
 	
-	public static final String STARTING_THREAD = "Starting %s thread...";
+	/** Log entry for starting a thread. */
+	private static final String STARTING_THREAD = "Starting %s thread...";
 	
-	public static final String ENDING_THREAD = "Ending %s thread...";	 
+	/** Log entry for stopping a thread. */
+	private static final String ENDING_THREAD = "Ending %s thread...";	 
 	
+	/**
+	 * Logs the fact of starting a thread.
+	 */
 	public static void logStarting()
 	{
 		if (logger.isTraceEnabled())
@@ -36,6 +42,9 @@ public class ThreadingUtils
 		}
 	}
 	
+	/**
+	 * Logs the fact of finishing a thread.
+	 */
 	public static void logEnding()
 	{
 		if (logger.isTraceEnabled())
@@ -44,6 +53,13 @@ public class ThreadingUtils
 		}
 	}
 	
+	/**
+	 * Performs a sleep on the current thread.
+	 * 
+	 * @param milliseconds How log to sleep for in milliseconds
+	 * 
+	 * @return True if interrupted
+	 */
 	public static boolean sleep(final long milliseconds)	
 	{
 		try

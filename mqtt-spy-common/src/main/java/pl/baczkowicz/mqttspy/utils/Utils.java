@@ -22,5 +22,5 @@ import org.slf4j.LoggerFactory;
  */
 public class Utils
 {
-	final static Logger logger = LoggerFactory.getLogger(Utils.class);
+	public final static Logger logger = LoggerFactory.getLogger(Utils.class);
 }

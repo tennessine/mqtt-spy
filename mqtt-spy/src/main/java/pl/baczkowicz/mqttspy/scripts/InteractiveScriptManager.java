@@ -24,7 +24,7 @@ public class InteractiveScriptManager extends ScriptManager
 	
 	// private MqttConnectionInterface connection;
 	
-	public InteractiveScriptManager(final ScriptEventManagerInterface eventManager, final IMqttConnection connection)
+	public InteractiveScriptManager(final IScriptEventManager eventManager, final IMqttConnection connection)
 	{
 		super(eventManager, new RunLaterExecutor(), connection);
 	}

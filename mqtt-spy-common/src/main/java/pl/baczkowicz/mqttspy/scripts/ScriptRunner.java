@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.scripts;
 
 import java.io.FileReader;
@@ -14,11 +28,11 @@ public class ScriptRunner implements Runnable
 	
 	private final PublicationScriptProperties script;
 
-	private ScriptEventManagerInterface eventManager;
+	private IScriptEventManager eventManager;
 
 	private Executor executor;
 
-	public ScriptRunner(final ScriptEventManagerInterface eventManager, final PublicationScriptProperties script, final Executor executor)
+	public ScriptRunner(final IScriptEventManager eventManager, final PublicationScriptProperties script, final Executor executor)
 	{
 		this.script = script;
 		this.eventManager = eventManager;
@@ -88,7 +102,7 @@ public class ScriptRunner implements Runnable
 		ThreadingUtils.logEnding();
 	}
 	
-	public static void changeState(final ScriptEventManagerInterface eventManager, final String scriptName, 
+	public static void changeState(final IScriptEventManager eventManager, final String scriptName, 
 			final ScriptRunningState newState, final PublicationScriptProperties script, final Executor executor)
 	{		
 		logger.trace("Changing [{}] script's state to [{}]", scriptName, newState);

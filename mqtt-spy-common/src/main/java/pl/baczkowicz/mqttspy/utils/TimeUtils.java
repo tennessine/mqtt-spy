@@ -21,19 +21,26 @@ import java.text.SimpleDateFormat;
  */
 public class TimeUtils
 {	
-	public final static String WITH_MILLISECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss:SSS";
+	public final static String DATE_FORMAT_WITH_MILLISECONDS = "yyyy/MM/dd HH:mm:ss:SSS";
 	
-	public final static String WITH_SECONDS_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
+	public final static String DATE_FORMAT_WITH_SECONDS = "yyyy/MM/dd HH:mm:ss";
 	
-	public final static String DATE_ONLY_FORMAT = "yyyy/MM/dd";
+	public final static String DATE_FORMAT_NO_TIME = "yyyy/MM/dd";
 
-	public final static SimpleDateFormat DATE_WITH_MILLISECONDS_SDF = new SimpleDateFormat(WITH_MILLISECONDS_DATE_FORMAT);
+	public final static SimpleDateFormat DATE_WITH_MILLISECONDS_SDF = new SimpleDateFormat(DATE_FORMAT_WITH_MILLISECONDS);
 	
-	public final static SimpleDateFormat DATE_WITH_SECONDS_SDF = new SimpleDateFormat(WITH_SECONDS_DATE_FORMAT);
+	public final static SimpleDateFormat DATE_WITH_SECONDS_SDF = new SimpleDateFormat(DATE_FORMAT_WITH_SECONDS);
 	
-	public final static SimpleDateFormat DATE_SDF = new SimpleDateFormat(DATE_ONLY_FORMAT);
+	public final static SimpleDateFormat DATE_SDF = new SimpleDateFormat(DATE_FORMAT_NO_TIME);
 	
-	public static long getMonotonicTimeInMilliseconds()
+	/**
+	 * Returns the monotonic (not system) time in milliseconds. This can be used
+	 * for measuring time intervals as this time is not affected by time
+	 * adjustment in the OS.
+	 * 
+	 * @return The monotonic time in milliseconds
+	 */
+	public static long getMonotonicTime()
 	{
 		return System.nanoTime() / 1000000;
 	}

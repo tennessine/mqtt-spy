@@ -20,13 +20,13 @@ import pl.baczkowicz.mqttspy.events.observers.ScriptStateChangeObserver;
 import pl.baczkowicz.mqttspy.events.observers.SubscriptionStatusChangeObserver;
 import pl.baczkowicz.mqttspy.events.ui.BrowseReceivedMessageEvent;
 import pl.baczkowicz.mqttspy.events.ui.BrowseRemovedMessageEvent;
-import pl.baczkowicz.mqttspy.scripts.ScriptEventManagerInterface;
+import pl.baczkowicz.mqttspy.scripts.IScriptEventManager;
 import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.storage.MessageListWithObservableTopicSummary;
 import pl.baczkowicz.mqttspy.storage.MessageStore;
 
-public class EventManager implements ScriptEventManagerInterface
+public class EventManager implements IScriptEventManager
 {
 	// final static Logger logger = LoggerFactory.getLogger(EventManager.class);
 	
