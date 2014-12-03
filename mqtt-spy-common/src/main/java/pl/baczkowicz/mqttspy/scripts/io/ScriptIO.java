@@ -12,7 +12,7 @@
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
  *    
  */
-package pl.baczkowicz.mqttspy.scripts;
+package pl.baczkowicz.mqttspy.scripts.io;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,21 +27,25 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.connectivity.IMqttConnection;
+import pl.baczkowicz.mqttspy.scripts.IScriptEventManager;
+import pl.baczkowicz.mqttspy.scripts.Script;
+import pl.baczkowicz.mqttspy.scripts.ScriptRunner;
+import pl.baczkowicz.mqttspy.scripts.ScriptRunningState;
 import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
 /**
  * Implementation of the interface between a script and the mqttspy object.
  */
-public class PublicationScriptIO implements IPublicationScriptIO
+public class ScriptIO implements IScriptIO
 {
 	/** Diagnostic logger. */
-	private final static Logger logger = LoggerFactory.getLogger(PublicationScriptIO.class);
+	private final static Logger logger = LoggerFactory.getLogger(ScriptIO.class);
 	
 	/** Reference to the MQTT connection. */
 	private final IMqttConnection connection;
 	
 	/** Script properties. */
-	private PublicationScriptProperties script;
+	private Script script;
 	
 	// TODO: could possibly replace that with a local variable
 	/** The number of messages published by the script. */
@@ -67,9 +71,9 @@ public class PublicationScriptIO implements IPublicationScriptIO
 	 * @param script The script itself
 	 * @param executor Task executor
 	 */
-	public PublicationScriptIO(
+	public ScriptIO(
 			final IMqttConnection connection, final IScriptEventManager eventManager, 
-			final PublicationScriptProperties script, final Executor executor)
+			final Script script, final Executor executor)
 	{
 		this.eventManager = eventManager;
 		this.connection = connection;
@@ -163,15 +167,15 @@ public class PublicationScriptIO implements IPublicationScriptIO
 				{			
 					public void run()
 					{
-						script.setLastPublishedDate(new Date());
-						script.setCount(publishedMessages);				
+						script.setLastPublished(new Date());
+						script.setMessagesPublished(publishedMessages);				
 					}
 				});
 			}
 			else
 			{
-				script.setLastPublishedDate(new Date());
-				script.setCount(publishedMessages);		
+				script.setLastPublished(new Date());
+				script.setMessagesPublished(publishedMessages);		
 			}
 		}
 	}

@@ -26,24 +26,42 @@ import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
+/**
+ * This class is responsible for (re)establishing connections. 
+ */
 public class ReconnectionManager implements Runnable
 {
+	/** Diagnostic logger. */
 	private final static Logger logger = LoggerFactory.getLogger(ReconnectionManager.class);
 	
+	/** Mapping between connections and connectors implemented as runnables. */
 	private final Map<BaseMqttConnection, Runnable> connections = new HashMap<BaseMqttConnection, Runnable>();
 	
+	/** Sleep between reconnection cycles. */
 	private final static int SLEEP = 100;
 	
-	boolean running;
+	/** Indicates whether the Reconnection Manager is running. */
+	private boolean running;
 	
-	public void addConnection(final BaseMqttConnection connection, final Runnable connectingRunnable)
+	/**
+	 * Adds a connection and its connector to the manager.
+	 * 
+	 * @param connection The connection to add
+	 * @param connector The connector runnable
+	 */
+	public void addConnection(final BaseMqttConnection connection, final Runnable connector)
 	{
 		synchronized (connections)
 		{
-			connections.put(connection, connectingRunnable);
+			connections.put(connection, connector);
 		}
 	}
 	
+	/**
+	 * Removes a connection from the manager.
+	 * 
+	 * @param connection The connection to remove
+	 */
 	public void removeConnection(final BaseMqttConnection connection)
 	{
 		synchronized (connections)
@@ -52,6 +70,9 @@ public class ReconnectionManager implements Runnable
 		}
 	}
 	
+	/**
+	 * Performs one connecting cycle - checks if any connections need reconnecting.
+	 */
 	public void oneCycle()
 	{
 		for (final BaseMqttConnection connection : connections.keySet())
@@ -78,6 +99,9 @@ public class ReconnectionManager implements Runnable
 		}			
 	}
 
+	/**
+	 * Once called, it runs until 'stop' is called.
+	 */
 	public void run()
 	{
 		Thread.currentThread().setName("Reconnection Manager ");
@@ -101,6 +125,9 @@ public class ReconnectionManager implements Runnable
 		ThreadingUtils.logEnding();
 	}
 	
+	/**
+	 * Stops the reconnection manager (graceful shutdown).
+	 */
 	public void stop()
 	{
 		running = false;

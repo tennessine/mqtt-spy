@@ -3,12 +3,13 @@ package pl.baczkowicz.mqttspy.scripts;
 import java.util.Date;
 
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
+import pl.baczkowicz.mqttspy.utils.TimeUtils;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class ObservablePublicationScriptProperties extends PublicationScriptProperties
+public class ObservablePublicationScriptProperties extends Script
 {
 	private SimpleObjectProperty<ScriptRunningState> statusProperty;
 	
@@ -87,22 +88,22 @@ public class ObservablePublicationScriptProperties extends PublicationScriptProp
 		return this.repeatProperty.getValue();
 	}
 	
-	public void setDetails(final ScriptDetails scriptDetails)
+	public void setScriptDetails(final ScriptDetails scriptDetails)
 	{
-		super.setDetails(scriptDetails);
+		super.setScriptDetails(scriptDetails);
 		this.repeatProperty.set(scriptDetails.isRepeat());		
 	}
 	
-	public void setCount(final long messageCount)
+	public void setMessagesPublished(final long messageCount)
 	{
-		super.setCount(messageCount);
-		this.countProperty.set(getCount());
+		super.setMessagesPublished(messageCount);
+		this.countProperty.set(getMessagesPublished());
 	}
 
-	public void setLastPublishedDate(final Date lastPublished)
+	public void setLastPublished(final Date lastPublished)
 	{
-		super.setLastPublishedDate(lastPublished);	
-		this.lastPublishedProperty.set(getLastPublished());
+		super.setLastPublished(lastPublished);	
+		this.lastPublishedProperty.set(TimeUtils.DATE_WITH_SECONDS_SDF.format(lastPublished));
 	}
 	
 	public void setStatus(final ScriptRunningState state)

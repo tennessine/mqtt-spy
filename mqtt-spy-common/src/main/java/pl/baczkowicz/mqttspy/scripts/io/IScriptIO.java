@@ -12,14 +12,14 @@
  *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
  *    
  */
-package pl.baczkowicz.mqttspy.scripts;
+package pl.baczkowicz.mqttspy.scripts.io;
 
 import java.io.IOException;
 
 /**
  * Interface between a script and the mqttspy object, which can be used primarily for publishing messages.
  */
-public interface IPublicationScriptIO
+public interface IScriptIO
 {
 	/**
 	 * Publishes a message with the given payload to the given topic (qos = 0; retained = false).

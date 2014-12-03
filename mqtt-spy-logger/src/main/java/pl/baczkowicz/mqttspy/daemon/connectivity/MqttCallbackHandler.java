@@ -75,7 +75,7 @@ public class MqttCallbackHandler implements MqttCallback
 		final ReceivedMqttMessageWithSubscriptions receivedMessage = new ReceivedMqttMessageWithSubscriptions(currentId, topic, message, connection);
 		
 		// Check matching subscriptions
-		final List<String> matchingSubscriptions = connection.getMatchingSubscriptions(receivedMessage);
+		final List<String> matchingSubscriptions = connection.getTopicMatcher().getMatchingSubscriptions(receivedMessage.getTopic());
 		receivedMessage.setSubscriptions(matchingSubscriptions);
 		
 		// Before scripts

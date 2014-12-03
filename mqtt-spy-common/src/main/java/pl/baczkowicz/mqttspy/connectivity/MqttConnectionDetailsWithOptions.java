@@ -31,9 +31,11 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 	private MqttConnectOptions options;
 
 	/**
+	 * Instantiates the MqttConnectionDetailsWithOptions.
 	 * 
-	 * @param details
-	 * @throws ConfigurationException
+	 * @param details The configured connection details
+	 * 
+	 * @throws ConfigurationException Thrown when errors detected
 	 */
 	public MqttConnectionDetailsWithOptions(final MqttConnectionDetails details) throws ConfigurationException
 	{
@@ -95,6 +97,11 @@ public class MqttConnectionDetailsWithOptions extends MqttConnectionDetails
 		}
 	}
 	
+	/**
+	 * Gets the MqttConnectOptions.
+	 * 
+	 * @return MqttConnectOptions
+	 */
 	public MqttConnectOptions getOptions()
 	{
 		return options;

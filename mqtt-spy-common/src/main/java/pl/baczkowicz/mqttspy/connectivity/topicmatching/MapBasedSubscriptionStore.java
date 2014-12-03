@@ -22,11 +22,16 @@ import java.util.Map;
 import org.dna.mqtt.moquette.messaging.spi.IPersistentSubscriptionStore;
 import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
 
+/**
+ * Simple implementation of the IPersistentSubscriptionStore as required by moquette.
+ */
 public class MapBasedSubscriptionStore implements IPersistentSubscriptionStore
 {
+	/** List of subscriptions. */
 	private final Map<String, List<Subscription>> subscriptions = new HashMap<String, List<Subscription>>();
 
-	public void addNewSubscription(Subscription newSubscription, String clientID)
+	@Override
+	public void addNewSubscription(final Subscription newSubscription, final String clientID)
 	{
 		List<Subscription> clientSubscriptions = subscriptions.get(clientID);
 		
@@ -39,11 +44,13 @@ public class MapBasedSubscriptionStore implements IPersistentSubscriptionStore
 		clientSubscriptions.add(newSubscription);
 	}
 
+	@Override
 	public void removeAllSubscriptions(String clientID)
 	{
 		subscriptions.remove(clientID);
 	}
 
+	@Override
 	public List<Subscription> retrieveAllSubscriptions()
 	{
 		List<Subscription> list = new ArrayList<Subscription>();

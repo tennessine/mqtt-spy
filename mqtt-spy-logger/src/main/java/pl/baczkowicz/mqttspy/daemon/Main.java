@@ -12,7 +12,7 @@ import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
 import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
-import pl.baczkowicz.mqttspy.connectivity.SimpleMqttAsyncConnection;
+import pl.baczkowicz.mqttspy.connectivity.SimpleMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.reconnection.ReconnectionManager;
 import pl.baczkowicz.mqttspy.daemon.configuration.ConfigurationLoader;
 import pl.baczkowicz.mqttspy.daemon.configuration.generated.DaemonMqttConnectionDetails;
@@ -58,7 +58,7 @@ public class Main
 			
 			final DaemonMqttConnectionDetails connectionSettings = loader.getConfiguration().getConnection();
 
-			final SimpleMqttAsyncConnection connection = new SimpleMqttAsyncConnection(connectionSettings);
+			final SimpleMqttConnection connection = new SimpleMqttConnection(connectionSettings);
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
 			final MqttCallbackHandler callback = new MqttCallbackHandler(connection, connectionSettings, scriptManager); 
 			connection.createClient(callback);

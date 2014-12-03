@@ -21,6 +21,9 @@ import java.util.List;
  */
 public class ConnectionUtils
 {
+	/** Indicates connection was never started. */
+	public static final long NEVER_STARTED = 0;
+
 	/** This is the delimiter for separating server URIs in a single string. */
 	public static final String SERVER_DELIMITER = ";";
 

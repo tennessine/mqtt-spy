@@ -14,13 +14,8 @@
  */
 package pl.baczkowicz.mqttspy.connectivity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.Subscription;
-import org.dna.mqtt.moquette.messaging.spi.impl.subscriptions.SubscriptionsStore;
-import org.dna.mqtt.moquette.proto.messages.AbstractMessage.QOSType;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -30,42 +25,61 @@ import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.baczkowicz.mqttspy.connectivity.topicmatching.MapBasedSubscriptionStore;
+import pl.baczkowicz.mqttspy.connectivity.topicmatching.TopicMatcher;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
-import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessage;
+import pl.baczkowicz.mqttspy.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.utils.TimeUtils;
 
+/**
+ * Base MQTT connection class, encapsulating the Paho's MQTT client and providing some common featues.
+ */
 public abstract class BaseMqttConnection implements IMqttConnection
 {
-	final static Logger logger = LoggerFactory.getLogger(BaseMqttConnection.class);
-	
-	public static final long NEVER_STARTED = 0;
+	/** Diagnostic logger. */
+	private static final Logger logger = LoggerFactory.getLogger(BaseMqttConnection.class);
 
+	/** Number of connection attempts made. */
 	private int connectionAttempts = 0;
 
-	private long lastConnectionAttemptTimestamp = NEVER_STARTED;
+	/** Last connection attempt timestamp. */
+	private long lastConnectionAttemptTimestamp = ConnectionUtils.NEVER_STARTED;
 	
-	private Date lastSuccessfulConnectionAttempt;
+	/** Last successful connection attempt timestamp. */
+	private Date lastSuccessfulConnectionAttempt;	
 	
-	private SubscriptionsStore subscriptionsStore;
-	
+	/** The Paho MQTT client. */
 	protected MqttAsyncClient client;	
 
+	/** Connection options. */
 	protected final MqttConnectionDetailsWithOptions connectionDetails;	
 
+	/** COnnection status. */
 	private MqttConnectionStatus connectionStatus = MqttConnectionStatus.NOT_CONNECTED;
 
+	/** Disconnection reason (if any). */
 	private String disconnectionReason;
 	
+	/** Used for matching topics to subscriptions. */
+	private final TopicMatcher topicMatcher;
+	
+	/**
+	 * Instantiates the BaseMqttConnection.
+	 * 
+	 * @param connectionDetails Connection details
+	 */
 	public BaseMqttConnection(final MqttConnectionDetailsWithOptions connectionDetails)
 	{
 		this.connectionDetails = connectionDetails;
-		
-		// Manage subscriptions, based on moquette
-		subscriptionsStore = new SubscriptionsStore();
-		subscriptionsStore.init(new MapBasedSubscriptionStore());
+		this.topicMatcher = new TopicMatcher();		
 	}
 	
+	/**
+	 * Creates an asynchronous client with the given callback.
+	 * 
+	 * @param callback The callback to be set on the MQTT client
+	 * 
+	 * @throws MqttSpyException Thrown when errors detected
+	 */
 	public void createClient(final MqttCallback callback) throws MqttSpyException
 	{
 		try
@@ -89,6 +103,16 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		}
 	}
 	
+	/**
+	 * Asynchronous connection attempt.
+	 * 
+	 * TODO: is that parameter needed?
+	 * @param options The connection options
+	 * @param userContext The user context (used for any callbacks)
+	 * @param callback Connection result callback
+	 * 
+	 * @throws MqttSpyException Thrown when errors detected
+	 */
 	public void connect(final MqttConnectOptions options, final Object userContext, final IMqttActionListener callback) throws MqttSpyException
 	{
 		recordConnectionAttempt();
@@ -111,6 +135,14 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		}
 	}
 	
+	/**
+	 * Synchronous connection attempt.
+	 * 
+	 * TODO: is that parameter needed?
+	 * @param options The connection options
+	 * 
+	 * @throws MqttSpyException Thrown when errors detected
+	 */
 	public void connectAndWait(final MqttConnectOptions options) throws MqttSpyException
 	{
 		recordConnectionAttempt();
@@ -133,27 +165,44 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		}
 	}
 	
+	/**
+	 * Records a connection attempt.
+	 */
 	protected void recordConnectionAttempt()
 	{
 		lastConnectionAttemptTimestamp = TimeUtils.getMonotonicTime();
-		connectionAttempts++;
-		
+		connectionAttempts++;		
 	}
 	
+	/** Records a successful connection. */
 	public void recordSuccessfulConnection()
 	{
 		lastSuccessfulConnectionAttempt = new Date();
 	}
 	
+	/**
+	 * Returns last successful connection attempt.
+	 * 
+	 * @return Formatted date of the last successful connection attempt
+	 */
 	public String getLastSuccessfulyConnectionAttempt()
 	{
 		return TimeUtils.DATE_WITH_SECONDS_SDF.format(lastSuccessfulConnectionAttempt);
 	}
 	
-	public void subscribe(final String topic, final int qos) throws MqttSpyException
+	/**
+	 * Subscribes to the given topic and quality of service.
+	 * 
+	 * @param topic The topic to subscribe to
+	 * @param qos The quality of service requested
+	 * 
+	 * @throws MqttSpyException Thrown when errors detected
+	 */
+	public void subscribeToTopic(final String topic, final int qos) throws MqttSpyException
 	{
 		if (client == null || !client.isConnected())
 		{
+			// TODO: should throw an exception here?
 			logger.warn("Client not connected");
 			return;
 		}
@@ -162,62 +211,40 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		{
 			client.subscribe(topic, qos);
 			
-			addSubscriptionToStore(topic);
+			topicMatcher.addSubscriptionToStore(topic);
 		}
 		catch (MqttException e)
 		{
 			throw new MqttSpyException("Subscription attempt failed", e);
 		}
-	}
-	
-	protected void addSubscriptionToStore(final String topic)
-	{
-		// Store the subscription topic for further matching
-		subscriptionsStore.add(new Subscription(connectionDetails.getClientID(), topic, QOSType.MOST_ONE, true));
-	}
-	
-	protected void removeSubscriptionFromStore(final String topic)
-	{
-		subscriptionsStore.removeSubscription(topic, client.getClientId());
-	}
+	}	
 
+	/**
+	 * Checks if a message can be published.
+	 * 
+	 * @return True if the client is connected	
+	 */
 	public boolean canPublish()
 	{
 		return client != null && client.isConnected();
 	}
 	
-	public MqttConnectionStatus getConnectionStatus()
-	{
-		return connectionStatus;
-	}
-	
-	public void setConnectionStatus(final MqttConnectionStatus connectionStatus)
-	{
-		this.connectionStatus = connectionStatus;
-	}
-	
-	public List<String> getMatchingSubscriptions(final ReceivedMqttMessage message)
-	{		
-		// Check matching subscription, based on moquette
-		final List<Subscription> matchingSubscriptions = subscriptionsStore.matches(message.getTopic());
-		
-		final List<String> matchingSubscriptionTopics = new ArrayList<String>();
-		
-		// For all found subscriptions
-		for (final Subscription matchingSubscription : matchingSubscriptions)
-		{						
-			matchingSubscriptionTopics.add(matchingSubscription.getTopic());
-		}		
-
-		return matchingSubscriptionTopics;
-	}
-	
+	/**
+	 * Records lost connection.
+	 * 
+	 * @param cause The cause of the connection loss
+	 */
 	public void connectionLost(Throwable cause)
 	{
 		setDisconnectionReason(cause.getMessage());
 		setConnectionStatus(MqttConnectionStatus.DISCONNECTED);
 	}
 	
+	/**
+	 * Sets the disconnection reason to the given message.
+	 * 
+	 * @param message The disconnection reason
+	 */
 	public void setDisconnectionReason(final String message)
 	{
 		this.disconnectionReason = message;
@@ -228,27 +255,6 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		}
 	}
 	
-	public String getDisconnectionReason()
-	{
-		return disconnectionReason;
-	}
-	
-	public MqttConnectionDetailsWithOptions getMqttConnectionDetails()
-	{
-		return connectionDetails;
-	}
-
-	public long getLastConnectionAttemptTimestamp()
-	{
-		return lastConnectionAttemptTimestamp;
-	}
-
-	public int getConnectionAttempts()
-	{
-		return connectionAttempts;
-	}
-	
-
 	public void disconnect()
 	{
 		try
@@ -260,5 +266,99 @@ public abstract class BaseMqttConnection implements IMqttConnection
 		{
 			logger.error("Cannot disconnect", e);
 		}
+	}
+	
+	// ===============================
+	// === Setters and getters =======
+	// ===============================
+	
+	/**
+	 * Gets the last disconnection reason.
+	 * 
+	 * @return The disconnection reason
+	 */
+	public String getDisconnectionReason()
+	{
+		return disconnectionReason;
+	}
+	
+	/**
+	 * Gets the MQTT connection details.
+	 * 
+	 * @return The MQTT connection details
+	 */
+	public MqttConnectionDetailsWithOptions getMqttConnectionDetails()
+	{
+		return connectionDetails;
+	}
+
+	/**
+	 * Gets the last connection attempt timestamp.
+	 * 
+	 * @return Last connection attempt timestamp
+	 */
+	public long getLastConnectionAttemptTimestamp()
+	{
+		return lastConnectionAttemptTimestamp;
+	}
+
+	/**
+	 * Gets the number of connections attempts made so far.
+	 * 
+	 * @return The number of connection attempts
+	 */
+	public int getConnectionAttempts()
+	{
+		return connectionAttempts;
+	}
+	
+	/**
+	 * Gets the current connection status.
+	 * 
+	 * @return Current connection status
+	 */
+	public MqttConnectionStatus getConnectionStatus()
+	{
+		return connectionStatus;
+	}
+	
+	/**
+	 * Sets the new connection status
+	 * 
+	 * @param connectionStatus The connection status to set
+	 */
+	public void setConnectionStatus(final MqttConnectionStatus connectionStatus)
+	{
+		this.connectionStatus = connectionStatus;
+	}
+
+	/**
+	 * Gets the topic matcher.
+	 * 
+	 * @return Topic matcher
+	 */
+	public TopicMatcher getTopicMatcher()
+	{
+		return topicMatcher;
+	}
+
+	/**
+	 * Gets the MQTT client.
+	 * 
+	 * @return the client
+	 */
+	public MqttAsyncClient getClient()
+	{
+		return client;
+	}
+
+	/**
+	 * Sets the MQTT client - primarily for testing. 
+	 * 
+	 * @param client the client to set
+	 */
+	public void setClient(final MqttAsyncClient client)
+	{
+		this.client = client;
 	}
 }

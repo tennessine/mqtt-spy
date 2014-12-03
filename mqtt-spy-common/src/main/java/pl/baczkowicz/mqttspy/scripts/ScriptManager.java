@@ -33,7 +33,9 @@ import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.connectivity.IMqttConnection;
 import pl.baczkowicz.mqttspy.exceptions.CriticalException;
 import pl.baczkowicz.mqttspy.messages.IMqttMessage;
+import pl.baczkowicz.mqttspy.scripts.io.ScriptIO;
 
+// TODO: describe the class
 public class ScriptManager
 {
 	public static final String RECEIVED_MESSAGE_PARAMETER = "receivedMessage";
@@ -42,7 +44,7 @@ public class ScriptManager
 	
 	private final static Logger logger = LoggerFactory.getLogger(ScriptManager.class);
 	
-	private Map<File, PublicationScriptProperties> scripts = new HashMap<File, PublicationScriptProperties>();
+	private Map<File, Script> scripts = new HashMap<File, Script>();
 	
 	private IScriptEventManager eventManager;
 
@@ -68,7 +70,7 @@ public class ScriptManager
 		
 		final String scriptName = getScriptName(scriptFile);
 		
-		final PublicationScriptProperties script = new PublicationScriptProperties();
+		final Script script = new Script();
 				
 		createScript(script, scriptName, scriptFile, connection, scriptDetails);
 		
@@ -89,12 +91,12 @@ public class ScriptManager
 		}
 	}
 	
-	public Map<File, PublicationScriptProperties> getScripts()
+	public Map<File, Script> getScripts()
 	{
 		return scripts;
 	}
 		
-	public void createScript(final PublicationScriptProperties scriptProperties,
+	public void createScript(final Script scriptProperties,
 			String scriptName, File scriptFile, final IMqttConnection connection, final ScriptDetails scriptDetails)
 	// public PublicationScriptProperties createScript(String scriptName, File scriptFile, final MqttConnectionInterface connection, final Script scriptDetails)
 	{
@@ -104,13 +106,13 @@ public class ScriptManager
 		{
 //			final PublicationScriptProperties script = new PublicationScriptProperties(scriptName, scriptFile, 
 //					ScriptRunningState.NOT_STARTED, null, 0, scriptEngine, scriptDetails.isRepeat());
-			scriptProperties.setScriptName(scriptName);
+			scriptProperties.setName(scriptName);
 			scriptProperties.setScriptFile(scriptFile);
 			scriptProperties.setStatus(ScriptRunningState.NOT_STARTED);
 			scriptProperties.setScriptEngine(scriptEngine);
-			scriptProperties.setDetails(scriptDetails);
+			scriptProperties.setScriptDetails(scriptDetails);
 			
-			scriptProperties.setPublicationScriptIO(new PublicationScriptIO(connection, eventManager, scriptProperties, executor));
+			scriptProperties.setPublicationScriptIO(new ScriptIO(connection, eventManager, scriptProperties, executor));
 			
 			final Map<String, Object> scriptVariables = new HashMap<String, Object>();
 			scriptVariables.put("mqttspy", scriptProperties.getPublicationScriptIO());	
@@ -140,17 +142,17 @@ public class ScriptManager
 		engine.setBindings(bindings, ScriptContext.ENGINE_SCOPE);
 	}
 	
-	public void runScriptFile(final PublicationScriptProperties script)
+	public void runScriptFile(final Script script)
 	{
 		runScriptFile(script, true);
 	}
 	
-	public void runScriptFile(final PublicationScriptProperties script, final boolean asynchronous)
+	public void runScriptFile(final Script script, final boolean asynchronous)
 	{
 		// Only start if not running already
 		if (!ScriptRunningState.RUNNING.equals(script.getStatus()))
 		{
-			script.createScriptRunner(eventManager, script, executor);
+			script.createScriptRunner(eventManager, executor);
 			
 			if (asynchronous)
 			{
@@ -165,7 +167,7 @@ public class ScriptManager
 
 	public void runScriptFile(final File scriptFile)
 	{
-		final PublicationScriptProperties script = getScript(scriptFile); 
+		final Script script = getScript(scriptFile); 
 		
 		if (script != null)
 		{
@@ -180,7 +182,7 @@ public class ScriptManager
 	
 	public void runScriptFileWithReceivedMessage(final String scriptFile, final boolean asynchronous, final IMqttMessage receivedMessage)
 	{
-		final PublicationScriptProperties script = getScript(new File(scriptFile));
+		final Script script = getScript(new File(scriptFile));
 		
 		if (script != null)
 		{
@@ -193,13 +195,13 @@ public class ScriptManager
 		}
 	}
 	
-	public void runScriptFileWithMessage(final PublicationScriptProperties script, final IMqttMessage message)
+	public void runScriptFileWithMessage(final Script script, final IMqttMessage message)
 	{				
 		script.getScriptEngine().put(ScriptManager.MESSAGE_PARAMETER, message);
 		runScriptFile(script);		
 	}
 	
-	public PublicationScriptProperties getScript(final File scriptFile)
+	public Script getScript(final File scriptFile)
 	{
 		return scripts.get(scriptFile);
 	}
@@ -211,7 +213,7 @@ public class ScriptManager
 
 	public boolean areScriptsRunning()
 	{
-		for (final PublicationScriptProperties script : scripts.values())
+		for (final Script script : scripts.values())
 		{
 			if (ScriptRunningState.RUNNING.equals(script.getStatus()))
 			{

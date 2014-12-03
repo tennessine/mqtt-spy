@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +63,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 	
 	public void messageReceived(final MqttContent receivedMessage)
 	{		
-		final List<String> matchingSubscriptionTopics = getMatchingSubscriptions(receivedMessage);
+		final List<String> matchingSubscriptionTopics = getTopicMatcher().getMatchingSubscriptions(receivedMessage.getTopic());
 				
 		final List<String> matchingActiveSubscriptionTopics = new ArrayList<String>();
 		
@@ -142,7 +141,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 		if (subscriptions.put(subscription.getTopic(), subscription) == null)
 		{
 			subscription.setId(lastUsedSubscriptionId++);	
-			addSubscriptionToStore(subscription.getTopic());
+			getTopicMatcher().addSubscriptionToStore(subscription.getTopic());
 		}
 	}
 
@@ -281,7 +280,7 @@ public class MqttAsyncConnection extends BaseMqttConnection
 	public void removeSubscription(final MqttSubscription subscription)
 	{
 		subscriptions.remove(subscription.getTopic());
-		removeSubscriptionFromStore(subscription.getTopic());
+		getTopicMatcher().removeSubscriptionFromStore(subscription.getTopic());
 	}
 
 	public void setConnectionStatus(MqttConnectionStatus connectionStatus)
@@ -298,16 +297,6 @@ public class MqttAsyncConnection extends BaseMqttConnection
 	public Map<String, MqttSubscription> getSubscriptions()
 	{
 		return subscriptions;
-	}
-
-	public MqttAsyncClient getClient()
-	{
-		return client;
-	}
-
-	public void setClient(MqttAsyncClient client)
-	{
-		this.client = client;
 	}
 
 	public int getPreferredStoreSize()

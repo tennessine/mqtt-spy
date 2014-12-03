@@ -22,15 +22,31 @@ import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
 import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 
-public class SimpleMqttAsyncConnection extends BaseMqttConnection
+/**
+ * Simple synchronous MQTT connection.
+ */
+public class SimpleMqttConnection extends BaseMqttConnection
 {
-	final static Logger logger = LoggerFactory.getLogger(SimpleMqttAsyncConnection.class);
+	/** Diagnostic logger. */
+	private final static Logger logger = LoggerFactory.getLogger(SimpleMqttConnection.class);
 	
-	public SimpleMqttAsyncConnection(final MqttConnectionDetails connectionDetails) throws ConfigurationException
+	/**
+	 * Creates a SimpleMqttConnection.
+	 * 
+	 * @param connectionDetails Configured connection details
+	 *  
+	 * @throws ConfigurationException Thrown in case of an error
+	 */
+	public SimpleMqttConnection(final MqttConnectionDetails connectionDetails) throws ConfigurationException
 	{
 		super(new MqttConnectionDetailsWithOptions(connectionDetails));	
 	}
 	
+	/**
+	 * Attempts a synchronous connection.
+	 * 
+	 * @return True if successfully connected
+	 */
 	public boolean connect()
 	{
 		setConnectionStatus(MqttConnectionStatus.CONNECTING);				
@@ -49,29 +65,43 @@ public class SimpleMqttAsyncConnection extends BaseMqttConnection
 		return false;
 	}
 	
-	public void subscribe(final String topic, final int qos)
+	/**
+	 * Attempts a subscription to the given topic and quality of service.
+	 */
+	public boolean subscribe(final String topic, final int qos)
 	{
 		try
 		{
-			super.subscribe(topic, qos);
+			super.subscribeToTopic(topic, qos);
 			logger.info("Successfully subscribed to " + topic);
+			return true;
 		}
 		catch (MqttSpyException e)
 		{
 			logger.error("Subscription attempt failed for topic {}", topic, e);
 		}
+		
+		return false;
 	}
 	
-	public boolean publish(final String publicationTopic, final String data, final int qos, final boolean retained)
+	/**
+	 * Tries to publish a message to the given topic, with the provided payload, quality of service and retained flag.
+	 * 
+	 * @param publicationTopic Topic to which to publish the message
+	 * @param payload Message payload
+	 * @param qos Requested quality of service
+	 * @param retained Whether the message should be retained
+	 */
+	public boolean publish(final String publicationTopic, final String payload, final int qos, final boolean retained)
 	{
 		if (canPublish())
 		{
 			try
 			{
-				logger.info("Publishing message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
-				client.publish(publicationTopic, data.getBytes(), qos, retained);
+				logger.info("Publishing message on topic \"" + publicationTopic + "\". Payload = \"" + payload + "\"");
+				client.publish(publicationTopic, payload.getBytes(), qos, retained);
 				
-				logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + data + "\"");
+				logger.trace("Published message on topic \"" + publicationTopic + "\". Payload = \"" + payload + "\"");
 				
 				return true;
 			}

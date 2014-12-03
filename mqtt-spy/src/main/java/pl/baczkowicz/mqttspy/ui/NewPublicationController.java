@@ -36,7 +36,7 @@ import pl.baczkowicz.mqttspy.exceptions.ConversionException;
 import pl.baczkowicz.mqttspy.messages.BaseMqttMessageWrapper;
 import pl.baczkowicz.mqttspy.scripts.InteractiveScriptManager;
 import pl.baczkowicz.mqttspy.scripts.ObservablePublicationScriptProperties;
-import pl.baczkowicz.mqttspy.scripts.PublicationScriptProperties;
+import pl.baczkowicz.mqttspy.scripts.Script;
 import pl.baczkowicz.mqttspy.scripts.ScriptTypeEnum;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
@@ -312,7 +312,7 @@ public class NewPublicationController implements Initializable, ScriptListChange
 	{						
 		final BaseMqttMessage message = readMessage(true);
 		
-		final PublicationScriptProperties script = (PublicationScriptProperties) publishScript.getSelectedToggle().getUserData();
+		final Script script = (Script) publishScript.getSelectedToggle().getUserData();
 				
 		if (script == null)
 		{			

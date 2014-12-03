@@ -16,35 +16,49 @@ package pl.baczkowicz.mqttspy.messages;
 
 import pl.baczkowicz.mqttspy.common.generated.BaseMqttMessage;
 
+/**
+ * Wrapper around the base MQTT message, exposing standard access methods.
+ */
 public class BaseMqttMessageWrapper implements IMqttMessage
 {
+	/** Wrapped MQTT message. */
 	private final BaseMqttMessage message;
 
+	/**
+	 * Creates a BaseMqttMessageWrapper from the provided message.
+	 * 
+	 * @param message The message to be wrapped
+	 */
 	public BaseMqttMessageWrapper(final BaseMqttMessage message)
 	{
 		this.message = message;
 	}
 
+	@Override
 	public String getTopic()
 	{
 		return message.getTopic();
 	}
 
+	@Override
 	public String getPayload()
 	{
 		return message.getValue();
 	}
 
+	@Override
 	public int getQoS()
 	{
 		return message.getQos();
 	}
 
+	@Override
 	public boolean isRetained()
 	{
 		return message.isRetained();
 	}
 
+	@Override
 	public void setPayload(String payload)
 	{
 		message.setValue(payload);		

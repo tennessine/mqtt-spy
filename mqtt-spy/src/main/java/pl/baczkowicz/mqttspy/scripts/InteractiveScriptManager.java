@@ -117,7 +117,7 @@ public class InteractiveScriptManager extends ScriptManager
 	{
 		for (final ObservablePublicationScriptProperties script : scriptList)
 		{
-			if (script.getFile().getAbsolutePath().equals(scriptFile.getAbsolutePath()))
+			if (script.getScriptFile().getAbsolutePath().equals(scriptFile.getAbsolutePath()))
 			{
 				return script;
 			}
@@ -156,7 +156,7 @@ public class InteractiveScriptManager extends ScriptManager
 	
 	public void stopScriptFile(final File scriptFile)
 	{
-		final Thread scriptThread = getPublicationScriptProperties(observableScriptList, getScriptName(scriptFile)).getThread();
+		final Thread scriptThread = getPublicationScriptProperties(observableScriptList, getScriptName(scriptFile)).getScriptRunner().getThread();
 
 		if (scriptThread != null)
 		{

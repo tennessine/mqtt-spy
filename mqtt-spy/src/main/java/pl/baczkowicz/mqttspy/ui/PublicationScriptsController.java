@@ -387,7 +387,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 						.getSelectedItem();
 				if (item != null)
 				{
-					startScript(item.getFile());
+					startScript(item.getScriptFile());
 				}
 			}
 		});
@@ -403,7 +403,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 						.getSelectedItem();
 				if (item != null)
 				{
-					stopScript(item.getFile());
+					stopScript(item.getScriptFile());
 				}
 			}
 		});
