@@ -1,5 +1,16 @@
-/**
+/***********************************************************************************
  * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
  */
 package pl.baczkowicz.mqttspy.daemon;
 
@@ -9,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.common.generated.ReconnectionSettings;
-import pl.baczkowicz.mqttspy.common.generated.ScriptDetails;
 import pl.baczkowicz.mqttspy.configuration.PropertyFileLoader;
 import pl.baczkowicz.mqttspy.connectivity.BaseMqttConnection;
 import pl.baczkowicz.mqttspy.connectivity.SimpleMqttConnection;
@@ -21,19 +31,22 @@ import pl.baczkowicz.mqttspy.daemon.connectivity.ConnectionRunnable;
 import pl.baczkowicz.mqttspy.daemon.connectivity.MqttCallbackHandler;
 import pl.baczkowicz.mqttspy.exceptions.MqttSpyException;
 import pl.baczkowicz.mqttspy.exceptions.XMLException;
+import pl.baczkowicz.mqttspy.scripts.Script;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 /**
- * @author kamil
- *
+ * The main class of the daemon.
  */
 public class Main
 {
-	final static Logger logger = LoggerFactory.getLogger(Main.class);
+	/** Diagnostic logger. */
+	private final static Logger logger = LoggerFactory.getLogger(Main.class);
 	
 	/**
-	 * @param args
+	 * The main method, taking one parameter.
+	 * 
+	 * @param The args - should contain only one argument with the configuration file location
 	 */
 	public static void main(String[] args)
 	{
@@ -54,15 +67,19 @@ public class Main
 				return;
 			}				
 									
+			// Load the configuration
 			loader.loadConfiguration(new File(args[0]));
 			
+			// Retrieve connection details
 			final DaemonMqttConnectionDetails connectionSettings = loader.getConfiguration().getConnection();
 
+			// Wire up all classes
 			final SimpleMqttConnection connection = new SimpleMqttConnection(connectionSettings);
 			final ScriptManager scriptManager = new ScriptManager(null, null, connection);
 			final MqttCallbackHandler callback = new MqttCallbackHandler(connection, connectionSettings, scriptManager); 
 			connection.createClient(callback);
 					
+			// Set up reconnection
 			final ReconnectionSettings reconnectionSettings = connection.getMqttConnectionDetails().getReconnectionSettings();			
 			final Runnable connectionRunnable = new ConnectionRunnable(scriptManager, connection, connectionSettings);
 			ReconnectionManager reconnectionManager = null;
@@ -80,11 +97,12 @@ public class Main
 			
 			// Run all configured scripts
 			scriptManager.addScripts(connectionSettings.getBackgroundScript());
-			for (final ScriptDetails script : connectionSettings.getBackgroundScript())
+			for (final Script script : scriptManager.getScripts().values())
 			{
-				scriptManager.runScriptFile(new File(script.getFile()));
+				scriptManager.runScript(script, true);
 			}
 			
+			// If in 'scripts only' mode, exit when all scripts finished
 			if (RunningMode.SCRIPTS_ONLY.equals(connectionSettings.getRunningMode()))
 			{
 				stop(scriptManager, reconnectionManager, connection, callback);
@@ -100,6 +118,14 @@ public class Main
 		}
 	}
 	
+	/**
+	 * Tries to stop all running threads.
+	 * 
+	 * @param scriptManager The script manager (running all scripts)
+	 * @param reconnectionManager The reconnection manager (needs stopping)
+	 * @param connection The connection (needs closing)
+	 * @param callback The connection callback (needs stopping)
+	 */
 	private static void stop(final ScriptManager scriptManager, final ReconnectionManager reconnectionManager, 
 			final BaseMqttConnection connection, final MqttCallbackHandler callback)
 	{

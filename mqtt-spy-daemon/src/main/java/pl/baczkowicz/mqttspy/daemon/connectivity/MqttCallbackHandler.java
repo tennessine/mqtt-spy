@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.daemon.connectivity;
 
 import java.util.HashMap;
@@ -20,51 +34,73 @@ import pl.baczkowicz.mqttspy.messages.ReceivedMqttMessageWithSubscriptions;
 import pl.baczkowicz.mqttspy.scripts.ScriptManager;
 
 /**
- * One MQTT callback handler per connection.
- * 
- * @author Kamil Baczkowicz
- *
+ * Callback handler for the MQTT connection.
  */
 public class MqttCallbackHandler implements MqttCallback
 {
+	/** Diagnostic logger. */
 	private final static Logger logger = LoggerFactory.getLogger(MqttCallbackHandler.class);
 	
 	/** Stores all received messages, so that we don't block the receiving thread. */
 	private final Queue<ReceivedMqttMessageWithSubscriptions> messageQueue = new LinkedBlockingQueue<ReceivedMqttMessageWithSubscriptions>();
 	
-	private final MqttMessageLogger messageHandler;
+	/** Logs all received messages (if configured). */
+	private final MqttMessageLogger messageLogger;
 	
+	/** The connection. */
 	private final BaseMqttConnection connection;
-	
-	private final Map<String, SubscriptionDetails> subscriptions = new HashMap<String, SubscriptionDetails>();
 
-	private final ScriptManager scriptManager;
-
+	/** Connection details. */
 	private final DaemonMqttConnectionDetails connectionSettings;
 	
+	/** Subscription details (as configured). */
+	private final Map<String, SubscriptionDetails> subscriptions = new HashMap<String, SubscriptionDetails>();
+
+	/** Script manager - for running subscription scripts. */
+	private final ScriptManager scriptManager;
+	
+	/** Message ID. */
 	private long currentId = 1;
 
+	/**
+	 * Creates a MqttCallbackHandler.
+	 * 
+	 * @param connection The connection to be used
+	 * @param connectionSettings Connection's details
+	 * @param scriptManager Script manager - for running subscription scripts
+	 */
 	public MqttCallbackHandler(final BaseMqttConnection connection, final DaemonMqttConnectionDetails connectionSettings, final ScriptManager scriptManager)
 	{
 		this.connection = connection;
 		this.connectionSettings = connectionSettings;
 		this.scriptManager = scriptManager;
-		this.messageHandler = new MqttMessageLogger(messageQueue, connectionSettings);
+		this.messageLogger = new MqttMessageLogger(messageQueue, connectionSettings);
 		
 		for (final SubscriptionDetails subscriptionDetails : connectionSettings.getSubscription())
 		{
 			this.subscriptions.put(subscriptionDetails.getTopic(), subscriptionDetails);
 		}
 		
-		new Thread(messageHandler).start();			
+		new Thread(messageLogger).start();			
 	}
 
-	public void connectionLost(Throwable cause)
+	/** 
+	 * Handles connection loss.
+	 * 
+	 * @param cause Reason of the connection loss
+	 */
+	public void connectionLost(final Throwable cause)
 	{
 		logger.error("Connection lost", cause);
 		connection.connectionLost(cause);
 	}
 
+	/**
+	 * Handles received messages.
+	 * 
+	 * @param topic Topic on which the message has been received
+	 * @param message The received message
+	 */
 	public void messageArrived(final String topic, final MqttMessage message)
 	{
 		if (logger.isDebugEnabled())
@@ -92,7 +128,7 @@ public class MqttCallbackHandler implements MqttCallback
 			
 			if (subscriptionDetails.getScriptFile() != null)
 			{
-				scriptManager.runScriptFileWithReceivedMessage(subscriptionDetails.getScriptFile(), false, receivedMessage);
+				scriptManager.runScriptFileWithReceivedMessage(subscriptionDetails.getScriptFile(), receivedMessage);
 			}
 		}
 		
@@ -105,6 +141,11 @@ public class MqttCallbackHandler implements MqttCallback
 		currentId++;
 	}
 	
+	/**
+	 * Adds the message to the 'to be logged' queue.
+	 *  
+	 * @param receivedMessage The received message
+	 */
 	public void logMessage(final ReceivedMqttMessageWithSubscriptions receivedMessage)
 	{
 		// Add the received message to queue for logging
@@ -114,7 +155,12 @@ public class MqttCallbackHandler implements MqttCallback
 		}
 	}
 
-	public void deliveryComplete(IMqttDeliveryToken token)
+	/**
+	 * Handles completion of message delivery.
+	 * 
+	 * @param token Delivery token
+	 */
+	public void deliveryComplete(final IMqttDeliveryToken token)
 	{
 		if (logger.isTraceEnabled())
 		{
@@ -122,8 +168,11 @@ public class MqttCallbackHandler implements MqttCallback
 		}
 	}
 	
+	/**
+	 * Stops the message logger.
+	 */
 	public void stop()
 	{
-		messageHandler.stop();
+		messageLogger.stop();
 	}
 }
