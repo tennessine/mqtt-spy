@@ -12,8 +12,6 @@ import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
 public class UIEventHandler implements Runnable
 {
-	private final static Logger logger = LoggerFactory.getLogger(UIEventHandler.class);
-	
 	private final Queue<MqttSpyUIEvent> uiEventQueue;
 	
 	private final EventManager eventManager;

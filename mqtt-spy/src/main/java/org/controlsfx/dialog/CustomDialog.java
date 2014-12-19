@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - extended class, based on ControlsFx code
+ *    
+ */
 package org.controlsfx.dialog;
 
 import javafx.geometry.Pos;
@@ -8,6 +22,9 @@ import javafx.stage.Window;
 import org.controlsfx.tools.Utils;
 
 @SuppressWarnings("deprecation")
+/**
+ * This is an extended version of the ControlsFx Dialog class to add required functionality.
+ */
 public class CustomDialog extends Dialog
 {
 	public CustomDialog(Object owner, String title)
@@ -17,6 +34,11 @@ public class CustomDialog extends Dialog
 		this.getStylesheets().addAll(window.getScene().getStylesheets());
 	}
 	
+	/**
+	 * Sets content with no limit on max width.
+	 * 
+	 * @param contentText The content text to set
+	 */
 	public final void setContentWithNoMaxWidth(String contentText)
 	{
 		if (contentText == null)

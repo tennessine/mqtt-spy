@@ -358,9 +358,9 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 		this.connection = connection;
 	}
 	
-	public void startScript(final File file)
+	public void startScript(final ObservablePublicationScriptProperties item)
 	{
-		scriptManager.runScriptFile(file);
+		scriptManager.runScript(item, true);
 	}
 	
 	public void stopScript(final File file)
@@ -387,7 +387,7 @@ public class PublicationScriptsController implements Initializable, ScriptStateC
 						.getSelectedItem();
 				if (item != null)
 				{
-					startScript(item.getScriptFile());
+					startScript(item);
 				}
 			}
 		});

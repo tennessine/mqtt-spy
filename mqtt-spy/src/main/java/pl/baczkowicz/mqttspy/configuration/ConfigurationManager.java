@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.configuration;
 
 import java.io.File;
@@ -29,11 +43,7 @@ import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.xml.XMLParser;
 
 /**
- * 
  * Manages loading and saving configuration files.
- * 
- * @author Kamil Baczkowicz
- *
  */
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ConfigurationManager extends PropertyFileLoader
@@ -278,6 +288,15 @@ public class ConfigurationManager extends PropertyFileLoader
 		}
 	}
 	
+	public void clear()
+	{
+		connections.clear();
+		configuration = null;
+		loadedConfigurationFile = null;
+		lastException =  null;
+		lastUsedId = 0;
+	}
+	
 	// ===============================
 	// === Setters and getters =======
 	// ===============================
@@ -324,14 +343,5 @@ public class ConfigurationManager extends PropertyFileLoader
 	public List<ConfiguredConnectionDetails> getConnections()
 	{
 		return connections;
-	}
-
-	public void clear()
-	{
-		connections.clear();
-		configuration = null;
-		loadedConfigurationFile = null;
-		lastException =  null;
-		lastUsedId = 0;
 	}
 }

@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - extended class, based on ControlsFx code
+ *    
+ */
 package org.controlsfx.dialog;
 
 import static impl.org.controlsfx.i18n.Localization.asKey;
@@ -44,6 +58,10 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 
 @SuppressWarnings("deprecation")
+/**
+ * This is an extended version of the ControlsFx Dialogs class to add required functionality. 
+ * Most of the code has been copied from the ControlsFx Dialogs class.
+ */
 public class CustomDialogs
 {
 	/**
