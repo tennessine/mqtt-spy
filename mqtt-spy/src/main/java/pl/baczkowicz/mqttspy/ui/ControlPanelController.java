@@ -36,7 +36,7 @@ import pl.baczkowicz.mqttspy.exceptions.XMLException;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ControlPanelStatsUpdater;
 import pl.baczkowicz.mqttspy.ui.controlpanel.ItemStatus;
 import pl.baczkowicz.mqttspy.ui.controlpanel.UnicefTooltip;
-import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
+import pl.baczkowicz.mqttspy.ui.utils.ActionUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
@@ -249,7 +249,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 			final ConfiguredConnectionDetails connection, final Button connectionButton)
 	{			
 		connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(status));	
-		connectionButton.setOnAction(ConnectionUtils.createNextAction(status, connection.getId(), mqttManager));
+		connectionButton.setOnAction(ActionUtils.createNextAction(status, connection.getId(), mqttManager));
 		
 		final HBox buttonBox = new HBox();			
 		final ProgressIndicator buttonProgress = new ProgressIndicator();
@@ -326,7 +326,7 @@ public class ControlPanelController extends AnchorPane implements Initializable,
 		{
 			final String buttonText = nextActionTitle.get(connection.getConnectionStatus()) + " " + connectionDetails.getName(); 
 			connectionButton.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(connection.getConnectionStatus()));	
-			connectionButton.setOnAction(ConnectionUtils.createNextAction(connection.getConnectionStatus(), connectionDetails.getId(), mqttManager));
+			connectionButton.setOnAction(ActionUtils.createNextAction(connection.getConnectionStatus(), connectionDetails.getId(), mqttManager));
 			
 			connectionButton.setGraphic(null);
 			connectionButton.setText(buttonText);

@@ -2,38 +2,53 @@ package pl.baczkowicz.mqttspy.ui.utils;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextBoundsType;
 
 public class TextUtils
 {
-	static final Text helper;
-	static final double DEFAULT_WRAPPING_WIDTH;
-	static final double DEFAULT_LINE_SPACING;
-	static final String DEFAULT_TEXT;
-	static final TextBoundsType DEFAULT_BOUNDS_TYPE;
+	/** The text object for which operations will be performed. */
+	private static final Text TEXT;
+	
+	/** Default wrapping width. */
+	private static final double DEFAULT_WRAPPING_WIDTH;
+	
+	/** Default line spacing. */
+	private static final double DEFAULT_LINE_SPACING;
+	
+	/** Default text. */
+	private static final String DEFAULT_TEXT;
+		
+	/** Static initialiser. */
 	static
 	{
-		helper = new Text();
-		DEFAULT_WRAPPING_WIDTH = helper.getWrappingWidth();
-		DEFAULT_LINE_SPACING = helper.getLineSpacing();
-		DEFAULT_TEXT = helper.getText();
-		DEFAULT_BOUNDS_TYPE = helper.getBoundsType();
+		TEXT = new Text();
+		DEFAULT_WRAPPING_WIDTH = TEXT.getWrappingWidth();
+		DEFAULT_LINE_SPACING = TEXT.getLineSpacing();
+		DEFAULT_TEXT = TEXT.getText();
 	}
 
-	public static double computeTextWidth(Font font, String text, double help0)
+	/**
+	 * Calculates text width for the given text.
+	 * 
+	 * @param font Font used
+	 * @param text Text calculate with for
+	 * 
+	 * @return Expected text width
+	 */
+	public static double computeTextWidth(final Font font, final String text)
 	{
-		helper.setText(text);
-		helper.setFont(font);
+		TEXT.setText(text);
+		TEXT.setFont(font);
 
-		helper.setWrappingWidth(0.0D);
-		helper.setLineSpacing(0.0D);
-		double d = Math.min(helper.prefWidth(-1.0D), help0);
-		helper.setWrappingWidth((int) Math.ceil(d));
-		d = Math.ceil(helper.getLayoutBounds().getWidth());
+		TEXT.setWrappingWidth(0.0D);
+		TEXT.setLineSpacing(0.0D);
+		double d = Math.min(TEXT.prefWidth(-1.0D), 0.0D);
+		TEXT.setWrappingWidth((int) Math.ceil(d));
+		d = Math.ceil(TEXT.getLayoutBounds().getWidth());
 
-		helper.setWrappingWidth(DEFAULT_WRAPPING_WIDTH);
-		helper.setLineSpacing(DEFAULT_LINE_SPACING);
-		helper.setText(DEFAULT_TEXT);
+		TEXT.setWrappingWidth(DEFAULT_WRAPPING_WIDTH);
+		TEXT.setLineSpacing(DEFAULT_LINE_SPACING);
+		TEXT.setText(DEFAULT_TEXT);
+		
 		return d;
 	}
 }

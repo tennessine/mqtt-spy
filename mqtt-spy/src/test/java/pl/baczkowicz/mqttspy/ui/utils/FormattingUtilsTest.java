@@ -79,7 +79,7 @@ public class FormattingUtilsTest
 	}
 
 	/**
-	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#custom(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
+	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#formatText(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
 	 */
 	@Test
 	public final void testCustomBase64DecodingConversion()
@@ -93,11 +93,11 @@ public class FormattingUtilsTest
 		function.getSubstringConversion().setFormat(ConversionMethod.BASE_64_DECODE);
 		customFormatter.getFunction().add(function);
 		
-		assertEquals("<Body>GOOD</Body>", FormattingUtils.custom(customFormatter, "<Body>R09PRA==</Body>"));
+		assertEquals("<Body>GOOD</Body>", FormattingUtils.formatText(customFormatter, "<Body>R09PRA==</Body>"));
 	}
 	
 	/**
-	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#custom(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
+	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#formatText(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
 	 */
 	@Test
 	public final void testCustomBase64DecodingConversionNoTags()
@@ -111,11 +111,11 @@ public class FormattingUtilsTest
 		function.getSubstringConversion().setFormat(ConversionMethod.BASE_64_DECODE);
 		customFormatter.getFunction().add(function);
 		
-		assertEquals("GOOD", FormattingUtils.custom(customFormatter, "<Body>R09PRA==</Body>"));
+		assertEquals("GOOD", FormattingUtils.formatText(customFormatter, "<Body>R09PRA==</Body>"));
 	}
 	
 	/**
-	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#custom(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
+	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#formatText(pl.baczkowicz.mqttspy.configuration.generated.FormatterDetails, java.lang.String)}.
 	 */
 	@Test
 	public final void testCustomBase64DecodingWithExtract()
@@ -137,22 +137,22 @@ public class FormattingUtilsTest
 		function2.getSubstringExtract().setKeepTags(false);
 		customFormatter.getFunction().add(function2);
 		
-		assertEquals("GOOD", FormattingUtils.custom(customFormatter, "some other stuff <Body>R09PRA==</Body> and even more stuff"));
+		assertEquals("GOOD", FormattingUtils.formatText(customFormatter, "some other stuff <Body>R09PRA==</Body> and even more stuff"));
 	} 
 
 	/**
-	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#convert(pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod, java.lang.String)}.
+	 * Test method for {@link pl.baczkowicz.mqttspy.ui.utils.FormattingUtils#convertText(pl.baczkowicz.mqttspy.configuration.generated.ConversionMethod, java.lang.String)}.
 	 */
 	@Test
 	public final void testConvert()
 	{
-		assertEquals("test", FormattingUtils.convert(ConversionMethod.PLAIN, "test"));
+		assertEquals("test", FormattingUtils.convertText(ConversionMethod.PLAIN, "test"));
 		
-		assertEquals("test2", FormattingUtils.convert(ConversionMethod.HEX_DECODE, "7465737432"));
-		assertEquals("7465737431", FormattingUtils.convert(ConversionMethod.HEX_ENCODE, "test1"));
+		assertEquals("test2", FormattingUtils.convertText(ConversionMethod.HEX_DECODE, "7465737432"));
+		assertEquals("7465737431", FormattingUtils.convertText(ConversionMethod.HEX_ENCODE, "test1"));
 
-		assertEquals("GOOD", FormattingUtils.convert(ConversionMethod.BASE_64_DECODE, "R09PRA=="));
-		assertEquals("R09PRA==", FormattingUtils.convert(ConversionMethod.BASE_64_ENCODE, "GOOD"));
+		assertEquals("GOOD", FormattingUtils.convertText(ConversionMethod.BASE_64_DECODE, "R09PRA=="));
+		assertEquals("R09PRA==", FormattingUtils.convertText(ConversionMethod.BASE_64_ENCODE, "GOOD"));
 	}
 	
 	@Test

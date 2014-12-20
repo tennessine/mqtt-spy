@@ -17,6 +17,8 @@ package pl.baczkowicz.mqttspy.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
+
 /** 
  * Threading related utilities.
  */

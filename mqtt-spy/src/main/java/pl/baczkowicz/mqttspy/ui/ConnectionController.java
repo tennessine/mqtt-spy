@@ -321,7 +321,7 @@ public class ConnectionController implements Initializable, ConnectionStatusChan
 		}
 		connectionTab.getStyleClass().add(StylingUtils.getStyleForMqttConnectionStatus(connectionStatus));
 		
-		DialogUtils.updateConnectionTooltip(connection, tooltip, statisticsManager);
+		DialogUtils.updateConnectionTooltip(connection, tooltip);
 	}
 	
 	public void updateConnectionStats()

@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.ui.utils;
 
 import javafx.event.ActionEvent;
@@ -19,10 +33,21 @@ import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 
+/**
+ * Context menu utils - mainly for creating various context menus.
+ */
 public class ContextMenuUtils
 {
-	// private final static Logger logger = LoggerFactory.getLogger(ContextMenuUtils.class);
-	
+	/**
+	 * Create context menu for the subscription tab.
+	 * 
+	 * @param connection The connection associated with the tab
+	 * @param subscription The subscription associated with the tab
+	 * @param eventManager The global event manager
+	 * @param subscriptionManager The global subscription manager
+	 * 
+	 * @return The created context menu
+	 */
 	public static ContextMenu createSubscriptionTabContextMenu(
 			final MqttAsyncConnection connection, final MqttSubscription subscription, 
 			final EventManager eventManager, final SubscriptionManager subscriptionManager)
@@ -103,7 +128,15 @@ public class ContextMenuUtils
 		return contextMenu;
 	}
 
-	public static ContextMenu createAllSubscriptionsTabContextMenu(final Tab tab,
+	/**
+	 * Creates a context menu for the 'all' tab of the connection.
+	 * 
+	 * @param connection The connection associated with this tab
+	 * @param eventManager The global event manager
+	 * 
+	 * @return Created context menu
+	 */
+	public static ContextMenu createAllSubscriptionsTabContextMenu(
 			final MqttAsyncConnection connection, final EventManager eventManager)
 	{
 		final ContextMenu contextMenu = new ContextMenu();
@@ -150,8 +183,16 @@ public class ContextMenuUtils
 		return contextMenu;
 	}
 	
-	
-
+	/**
+	 * Creates a context menu for the connection tab.
+	 * 
+	 * @param mqttManager The global MQTT manager
+	 * @param connection The connection associated with this tab
+	 * @param connectionController The ConnectionController for this tab's pane
+	 * @param connectionManager The global connection manager
+	 * 
+	 * @return Created context menu
+	 */
 	public static ContextMenu createConnectionMenu(final MqttManager mqttManager, final MqttAsyncConnection connection, 
 			final ConnectionController connectionController, final ConnectionManager connectionManager)
 	{
@@ -159,13 +200,13 @@ public class ContextMenuUtils
 		ContextMenu contextMenu = new ContextMenu();
 
 		MenuItem reconnectItem = new MenuItem("[Connection] Connect / reconnect");
-		reconnectItem.setOnAction(ConnectionUtils.createConnectAction(mqttManager, connection.getProperties().getId()));
+		reconnectItem.setOnAction(ActionUtils.createConnectAction(mqttManager, connection.getProperties().getId()));
 		
 		MenuItem disconnectItem = new MenuItem("[Connection] Disconnect (and keep tab)");
-		disconnectItem.setOnAction(ConnectionUtils.createDisconnectAction(mqttManager, connection.getProperties().getId()));
+		disconnectItem.setOnAction(ActionUtils.createDisconnectAction(mqttManager, connection.getProperties().getId()));
 
 		MenuItem disconnectAndCloseItem = new MenuItem("[Connection] Disconnect (and close tab)");
-		disconnectAndCloseItem.setOnAction(ConnectionUtils.createDisconnectAndCloseAction(connection.getProperties().getId(), connectionManager));
+		disconnectAndCloseItem.setOnAction(ActionUtils.createDisconnectAndCloseAction(connection.getProperties().getId(), connectionManager));
 
 		contextMenu.getItems().add(reconnectItem);
 
@@ -251,7 +292,14 @@ public class ContextMenuUtils
 		return contextMenu;
 	}
 	
-	public static ContextMenu createReplayMenu(final Tab tab)
+	/**
+	 * Creates a context menu for the message log tab.
+	 * 
+	 * @param tab The tab for which to create the menu
+	 * 
+	 * @return Created context menu
+	 */
+	public static ContextMenu createMessageLogMenu(final Tab tab)
 	{
 		// Context menu
 		ContextMenu contextMenu = new ContextMenu();

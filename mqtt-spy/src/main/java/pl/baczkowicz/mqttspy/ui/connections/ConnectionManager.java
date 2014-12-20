@@ -12,11 +12,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-
-import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 import pl.baczkowicz.mqttspy.connectivity.MqttAsyncConnection;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 import pl.baczkowicz.mqttspy.connectivity.MqttContent;
@@ -32,8 +27,11 @@ import pl.baczkowicz.mqttspy.ui.MainController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+import pl.baczkowicz.mqttspy.configuration.ConfigurationManager;
 
 public class ConnectionManager
 {
@@ -73,8 +71,8 @@ public class ConnectionManager
 		connection.setStatisticsManager(statisticsManager);
 
 		// Load a new tab and connection pane
-		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
-		AnchorPane connectionPane = Utils.loadAnchorPane(loader);
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(parent, FxmlUtils.FXML_LOCATION + "ConnectionTab.fxml");
+		AnchorPane connectionPane = FxmlUtils.loadAnchorPane(loader);
 		
 		final ConnectionController connectionController = (ConnectionController) loader.getController();
 		connectionController.setConnection(connection);
@@ -102,7 +100,7 @@ public class ConnectionManager
 								
 				mainController.addConnectionTab(connectionTab);
 				connectionTab.setContextMenu(ContextMenuUtils.createConnectionMenu(mqttManager, connection, connectionController, connectionManager));
-				subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
+				subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(connection, eventManager));
 				
 				eventManager.registerConnectionStatusObserver(connectionController, connection);
 				// connection.addObserver(connectionController);											
@@ -136,11 +134,11 @@ public class ConnectionManager
 		});		
 	}
 	
-	public void loadReplayTab(final MainController mainController, final Object parent, final String name, final List<ReceivedMqttMessage> list)
+	public void loadMessageLogTab(final MainController mainController, final Object parent, final String name, final List<ReceivedMqttMessage> list)
 	{		
 		// Load a new tab and connection pane
-		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "ConnectionTab.fxml");
-		AnchorPane connectionPane = Utils.loadAnchorPane(loader);
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(parent, FxmlUtils.FXML_LOCATION + "ConnectionTab.fxml");
+		AnchorPane connectionPane = FxmlUtils.loadAnchorPane(loader);
 		
 		final ConnectionController connectionController = (ConnectionController) loader.getController();
 		
@@ -172,7 +170,7 @@ public class ConnectionManager
 								
 				mainController.addConnectionTab(replayTab);
 				
-				replayTab.setContextMenu(ContextMenuUtils.createReplayMenu(replayTab));
+				replayTab.setContextMenu(ContextMenuUtils.createMessageLogMenu(replayTab));
 				//subscriptionController.getTab().setContextMenu(ContextMenuUtils.createAllSubscriptionsTabContextMenu(subscriptionController.getTab(), connection, eventManager));
 								
 				// Add "All" subscription tab

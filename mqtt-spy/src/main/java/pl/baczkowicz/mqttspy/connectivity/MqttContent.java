@@ -66,7 +66,7 @@ public class MqttContent extends ReceivedMqttMessage
 		else if (!formatter.equals(lastUsedFormatter))
 		{
 			lastUsedFormatter = formatter;
-			formattedPayload = FormattingUtils.convertText(formatter, new String(getMessage().getPayload()));
+			formattedPayload = FormattingUtils.checkAndFormatText(formatter, new String(getMessage().getPayload()));
 		}
 	}
 	

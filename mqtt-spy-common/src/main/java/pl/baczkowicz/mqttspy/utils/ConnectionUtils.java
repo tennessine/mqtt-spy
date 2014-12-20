@@ -16,6 +16,10 @@ package pl.baczkowicz.mqttspy.utils;
 
 import java.util.List;
 
+import pl.baczkowicz.mqttspy.common.generated.MqttConnectionDetails;
+import pl.baczkowicz.mqttspy.utils.ConnectionUtils;
+import pl.baczkowicz.mqttspy.utils.MqttUtils;
+
 /**
  * Connection utils.
  */
@@ -80,5 +84,54 @@ public class ConnectionUtils
 		}
 
 		return serverURIsAsString.toString();
+	}
+	
+	public static String validateConnectionDetails(final MqttConnectionDetails connectionDetails)
+	{
+		if (connectionDetails.getServerURI() == null || connectionDetails.getServerURI().size() == 0)
+		{
+			return "Server URI cannot be empty";
+		}
+		
+		boolean allEmpty = true;
+		for (final String serverURI : connectionDetails.getServerURI())
+		{
+			if (!serverURI.trim().isEmpty())
+			{
+				allEmpty = false;
+				break;
+			}
+		}		
+		if (allEmpty)
+		{
+			return "Server URI cannot be empty";
+		}
+		
+		if (connectionDetails.getClientID() == null
+				|| connectionDetails.getClientID().trim().isEmpty() 
+				|| connectionDetails.getClientID().length() > MqttUtils.MAX_CLIENT_LENGTH)
+		{
+			return "Client ID cannot be empty or longer than " + MqttUtils.MAX_CLIENT_LENGTH;
+		}
+		
+		if (connectionDetails.getLastWillAndTestament() != null)
+		{
+			if (connectionDetails.getLastWillAndTestament().getTopic() == null || connectionDetails.getLastWillAndTestament().getTopic().isEmpty())				
+			{
+				return "With last will and testament enabled, publication topic cannot be empty";
+			}
+		}
+		
+		if (connectionDetails.getConnectionTimeout() < 0)
+		{
+			return "Connection timeout cannot be less than 0";
+		}
+		
+		if (connectionDetails.getKeepAliveInterval() < 0)
+		{
+			return "Keep alive interval cannot be less than 0";
+		}		
+		
+		return null;
 	}
 }

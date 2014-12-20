@@ -1,16 +1,41 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.ui.utils;
 
+import javafx.scene.paint.Color;
 import pl.baczkowicz.mqttspy.connectivity.MqttConnectionStatus;
 
+/**
+ * Styling-related utilities.
+ */
 public class StylingUtils
 {
-	public static String getStyleForMqttConnectionStatus(final MqttConnectionStatus update)
+	/**
+	 * Gets CSS style for the given MQTT connection status.
+	 * 
+	 * @param status The MQTT connection status
+	 * 
+	 * @return The style to be used
+	 */
+	public static String getStyleForMqttConnectionStatus(final MqttConnectionStatus status)
 	{
 		String style = "connection-default";
 		
-		if (update != null)
+		if (status != null)
 		{
-			switch ((MqttConnectionStatus) update)
+			switch ((MqttConnectionStatus) status)
 			{
 				case NOT_CONNECTED:
 					style = "connection-not-connected";
@@ -34,5 +59,56 @@ public class StylingUtils
 		}
 		
 		return style;
+	}
+	
+	/**
+	 * Creates 'base' RGB string from the given color.
+	 * 
+	 * @param c Color
+	 * 
+	 * @return CSS string setting the base with the given color
+	 */
+	public static String createBaseRGBString(Color c)
+	{
+		return "-fx-base: " + createRGBString(c);
+	}
+
+	/**
+	 * Creates 'control-inner-background' RGB string with opacity.
+	 * 
+	 * @param c Color
+	 * @param opacity Opacity to be used
+	 * 
+	 * @return CSS string setting the inner bg with the given color and opacity
+	 */
+	public static String createBgRGBString(Color c, double opacity)
+	{
+		return "-fx-control-inner-background: " + createRGBAString(c, opacity);
+	}
+
+	/**
+	 * Creates CSS RGB string from the given color.
+	 * 
+	 * @param c Color
+	 * 
+	 * @return CSS RGB string
+	 */
+	public static String createRGBString(Color c)
+	{
+		return "rgb(" + (c.getRed() * 255) + "," + (c.getGreen() * 255) + "," + (c.getBlue() * 255) + ");";
+	}
+
+	/**
+	 * Creates CSS RGBA string from the given color and opacity.
+	 * 
+	 * @param c Color
+	 * @param opacity Opacity to be used
+	 * 
+	 * @return CSS RGBA string
+	 */
+	public static String createRGBAString(Color c, double opacity)
+	{
+		return "rgba(" + (c.getRed() * 255) + "," + (c.getGreen() * 255) + "," + (c.getBlue() * 255) + ", " + opacity
+				+ ");";
 	}
 }

@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import org.slf4j.LoggerFactory;
 
 import pl.baczkowicz.mqttspy.ui.MainController;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
 
 /** 
  * The main class, loading the app.
@@ -56,7 +56,7 @@ public class Main extends Application
 		try
 		{
 			// Load the main window
-			final URL resource = getClass().getResource(Utils.FXML_PACKAGE + Utils.FXML_LOCATION + "MainWindow.fxml");
+			final URL resource = getClass().getResource(FxmlUtils.FXML_PACKAGE + FxmlUtils.FXML_LOCATION + "MainWindow.fxml");
 			final FXMLLoader loader = new FXMLLoader(resource);
 
 			// Get the associated pane

@@ -98,7 +98,7 @@ public class MessageNavigationController implements Initializable, MessageIndexT
 			{
 				// expand the textfield
 				messageIndexValueField.setPrefWidth(TextUtils.computeTextWidth(
-						messageIndexValueField.getFont(), messageIndexValueField.getText(), 0.0D) + 12);
+						messageIndexValueField.getFont(), messageIndexValueField.getText()) + 12);
 			}
 		});
 		

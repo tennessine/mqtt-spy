@@ -50,7 +50,7 @@ import pl.baczkowicz.mqttspy.ui.connections.SubscriptionManager;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
 
 public class SubscriptionController implements Initializable, ClearTabObserver, SubscriptionStatusChangeObserver
 {
@@ -474,8 +474,8 @@ public class SubscriptionController implements Initializable, ClearTabObserver, 
 		if (searchStage == null)
 		{
 			// Create the search window controller
-			final FXMLLoader searchLoader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "SearchWindow.fxml");
-			AnchorPane searchWindow = Utils.loadAnchorPane(searchLoader);
+			final FXMLLoader searchLoader = FxmlUtils.createFXMLLoader(this, FxmlUtils.FXML_LOCATION + "SearchWindow.fxml");
+			AnchorPane searchWindow = FxmlUtils.loadAnchorPane(searchLoader);
 			searchWindowController = (SearchWindowController) searchLoader.getController();
 			searchWindowController.setStore(store);
 			searchWindowController.setSubscription(subscription);

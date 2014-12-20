@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.ui.utils;
 
 import java.io.File;
@@ -31,11 +45,20 @@ import pl.baczkowicz.mqttspy.stats.StatisticsManager;
 import pl.baczkowicz.mqttspy.utils.MqttUtils;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
+/**
+ * Utilities for creating all sorts of dialogs.
+ */
 @SuppressWarnings("deprecation")
 public class DialogUtils
 {
+	/** Format of the stats label. */
 	public static final String STATS_FORMAT = "load: " + getPeriodValues();
 	
+	/**
+	 * Creates the list of all periods defined in the statistics manager.
+	 * 
+	 * @return List of all periods
+	 */
 	public static String getPeriodList()
 	{
 		final StringBuffer sb = new StringBuffer();
@@ -62,6 +85,11 @@ public class DialogUtils
 		return sb.toString();
 	}
 	
+	/**
+	 * Creates the stats format for all periods defined in the statistics manager.
+	 * 
+	 * @return Format for all periods
+	 */
 	public static String getPeriodValues()
 	{
 		final StringBuffer sb = new StringBuffer();
@@ -81,34 +109,67 @@ public class DialogUtils
 		return sb.toString();
 	}
 	
+	/**
+	 * Shows an error dialog.
+	 * 
+	 * @param title Title of the dialog
+	 * @param message Message to be displayed
+	 */
 	public static void showError(final String title, final String message)
 	{
 		Dialogs.create().owner(null).title(title).masthead(null).message(message).showError();
 	}
 	
+	/**
+	 * Shows a warning dialog with "Invalid value detected" title.
+	 * 
+	 * @param message The message to be displayed
+	 */
 	public static void showValidationWarning(final String message)
 	{
 		Dialogs.create().owner(null).title("Invalid value detected").masthead(null)
 				.message(message + ".").showWarning();
 	}
 
-	public static Action showApplyChangesQuestion(final String message)
+	/**
+	 * Asks the user whether to save unsaved changes.
+	 * 
+	 * @param parameter The parameter that has changed
+	 * 
+	 * @return The user's response
+	 */
+	public static Action showApplyChangesQuestion(final String parameter)
 	{
 		return Dialogs.create().owner(null).title("Unsaved changes detected").masthead(null)
-		.message("You've got unsaved changes for " + message + ". Do you want to save/apply them now?").showConfirm();		
+		.message("You've got unsaved changes for " + parameter + ". Do you want to save/apply them now?").showConfirm();		
 	}
 	
-	public static Action showDeleteQuestion(final String message)
+	/**
+	 * Asks the user whether to delete the given element/parameter.
+	 * 
+	 * @param parameter The element to delete
+	 * 
+	 * @return The user's response
+	 */
+	public static Action showDeleteQuestion(final String parameter)
 	{
 		return Dialogs.create().owner(null).title("Deleting connection").masthead(null)
 		.actions(Dialog.ACTION_YES, Dialog.ACTION_CANCEL)
-		.message("Are you sure you want to delete connection '" + message + "'? This cannot be undone.").showConfirm();		
+		.message("Are you sure you want to delete connection '" + parameter + "'? This cannot be undone.").showConfirm();		
 	}
 
+	/**
+	 * Asks the user to review/complete username and password information.
+	 * 
+	 * @param owner The window owner
+	 * @param connectionName Name of the connection
+	 * @param userCredentials Existing user credentials
+	 * 
+	 * @return True when confirmed by user
+	 */
 	public static boolean showUsernameAndPasswordDialog(final Object owner,
 			String connectionName, final UserCredentials userCredentials)
 	{
-		// final Pair<String, String> userInfo = new Pair<String, String>(userCredentials.getUsername(), userCredentials.getPassword());
 		final Pair<String, String> userInfo = new Pair<String, String>(
 				userCredentials.getUsername(), 
 				MqttUtils.decodePassword(userCredentials.getPassword()));
@@ -121,22 +182,30 @@ public class DialogUtils
 		
 		if (response.isPresent())
 		{
-			userCredentials.setUsername(response.get().getKey());
-			
+			userCredentials.setUsername(response.get().getKey());			
 			userCredentials.setPassword(MqttUtils.encodePassword(response.get().getValue()));
-			// userCredentials.setPassword(response.get().getValue());
 			return true;
 		}
 		
 		return false;
 	}
 
+	/**
+	 * Shows a dialog with "Invalid configuration file" title.
+	 * 
+	 * @param message The message to be shown 
+	 */
 	public static void showInvalidConfigurationFileDialog(final String message)
 	{
 		Dialogs.create().owner(null).title("Invalid configuration file").masthead(null)
 				.message(message).showError();
 	}
 
+	/**
+	 * Shows a dialog saying the given file is read-only.
+	 * 
+	 * @param absolutePath The path to the file
+	 */
 	public static void showReadOnlyWarning(final String absolutePath)
 	{
 		Dialogs.create()
@@ -150,7 +219,13 @@ public class DialogUtils
 				.showWarning();
 	}
 	
-	public static void updateConnectionTooltip(final MqttAsyncConnection connection, final Tooltip tooltip, final StatisticsManager statisticsManager)
+	/**
+	 * Updates the given connection tooltip with connection information.
+	 * 
+	 * @param connection The connection to which the tooltip refers
+	 * @param tooltip The tooltip to be updated
+	 */
+	public static void updateConnectionTooltip(final MqttAsyncConnection connection, final Tooltip tooltip)
 	{
 		final StringBuffer sb = new StringBuffer();
 		sb.append("Status: " + connection.getConnectionStatus().toString().toLowerCase());
@@ -175,6 +250,12 @@ public class DialogUtils
 		tooltip.setText(sb.toString());
 	}
 	
+	/**
+	 * Shows the given tooltip for 5 seconds.
+	 * 
+	 * @param button The button to be used as the parent
+	 * @param message The message to be shown in the tooltip
+	 */
 	public static void showTooltip(final Button button, final String message)
 	{
 		final Tooltip tooltip = new Tooltip(message);
@@ -206,6 +287,14 @@ public class DialogUtils
 		}).start();
 	}
 
+	/**
+	 * Shows the choice dialog when missing configuration file is detected.
+	 * 
+	 * @param title The title of the window
+	 * @param window The parent
+	 * 
+	 * @return True when action performed / configuration file created
+	 */
 	public static boolean showDefaultConfigurationFileMissingChoice(final String title, final Window window)
 	{	
 		final DialogAction createWithSample = new DialogAction("Create mqtt-spy configuration file with sample content");
@@ -274,6 +363,11 @@ public class DialogUtils
 		return configurationFileCreated;
 	}
 
+	/**
+	 * Shows a worker / progress dialog.
+	 * 
+	 * @param readAndProcess The task backing up the dialog
+	 */
 	public static void showWorkerDialog(final Task<?> readAndProcess)
 	{
 		Dialogs.create().showWorkerProgress(readAndProcess);

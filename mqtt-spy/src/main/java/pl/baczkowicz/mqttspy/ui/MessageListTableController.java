@@ -31,7 +31,7 @@ import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.events.observers.MessageIndexChangeObserver;
 import pl.baczkowicz.mqttspy.storage.BasicMessageStore;
 import pl.baczkowicz.mqttspy.ui.properties.MqttContentProperties;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class MessageListTableController implements Initializable, MessageIndexChangeObserver
 {
@@ -117,7 +117,7 @@ public class MessageListTableController implements Initializable, MessageIndexCh
 								if (!isEmpty() && item.getSubscription() != null)
 								{
 									
-									this.setStyle(Utils.createBgRGBString(item.getSubscription()
+									this.setStyle(StylingUtils.createBgRGBString(item.getSubscription()
 											.getColor(), getIndex() % 2 == 0 ? 0.8 : 0.6)
 											+ " -fx-background-radius: 6; ");
 								}

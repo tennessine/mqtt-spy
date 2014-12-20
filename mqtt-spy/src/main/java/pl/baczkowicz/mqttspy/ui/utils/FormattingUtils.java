@@ -1,3 +1,17 @@
+/***********************************************************************************
+ * 
+ * Copyright (c) 2014 Kamil Baczkowicz
+ * 
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ * 
+ *    Kamil Baczkowicz - initial API and implementation and/or initial documentation
+ *    
+ */
 package pl.baczkowicz.mqttspy.ui.utils;
 
 import org.slf4j.Logger;
@@ -14,12 +28,23 @@ import pl.baczkowicz.mqttspy.configuration.generated.SubstringReplaceFormatterDe
 import pl.baczkowicz.mqttspy.exceptions.ConversionException;
 import pl.baczkowicz.mqttspy.utils.ConversionUtils;
 
+/**
+ * Formatting-related utils.
+ */
 public class FormattingUtils
 {
-	final static Logger logger = LoggerFactory.getLogger(FormattingUtils.class);
+	/** Diagnostic logger. */
+	private final static Logger logger = LoggerFactory.getLogger(FormattingUtils.class);
 	
-
-	public static String custom(final FormatterDetails customFormatter, final String text)
+	/**
+	 * Formats the given text using the provided formatter.
+	 *  
+	 * @param customFormatter The formatter details
+	 * @param text The text to be formatted
+	 * 
+	 * @return The formatted text
+	 */
+	public static String formatText(final FormatterDetails customFormatter, final String text)
 	{
 		logger.trace("Formatting '" + text + "' with " + customFormatter.getName());
 		String formattedText = text;
@@ -40,7 +65,7 @@ public class FormattingUtils
 			}
 			else if (function.getConversion() != null)
 			{
-				formattedText = convert(function.getConversion().getFormat(), formattedText);
+				formattedText = convertText(function.getConversion().getFormat(), formattedText);
 			}
 			else if (function.getCharacterReplace() != null)
 			{
@@ -56,6 +81,17 @@ public class FormattingUtils
 		return formattedText;
 	}
 	
+	/**
+	 * Replaces characters using the given conversion method.
+	 * 
+	 * @param conversionMethod The conversion method to be used
+	 * @param input The input text
+	 * @param fromCharacter From index
+	 * @param toCharacter To index
+	 * @param wrap Characters to put around the converted text
+	 * 
+	 * @return The converted text
+	 */
 	public static String replaceCharacters(final ConversionMethod conversionMethod, final String input, final int fromCharacter, final int toCharacter, final String wrap)
 	{
 		String convertedText = input;
@@ -68,19 +104,29 @@ public class FormattingUtils
 			{
 				convertedText = convertedText.replace(
 					characterToReplace, 
-					wrap + convert(conversionMethod, characterToReplace) + wrap); 
+					wrap + convertText(conversionMethod, characterToReplace) + wrap); 
 			}
 			else				
 			{
 				convertedText = convertedText.replace(
 						characterToReplace, 
-						convert(conversionMethod, characterToReplace));
+						convertText(conversionMethod, characterToReplace));
 			}
 		}
 		
 		return convertedText;
 	}
 	
+	/**
+	 * Extracts a substring from the given text.
+	 * 
+	 * @param details Details about what to extract
+	 * @param text The text from which to extract
+	 * 
+	 * @return The extracted value
+	 * 
+	 * @throws ConversionException Thrown when cannot process the parameters correctly
+	 */
 	private static String extractValueForConversion(final SubstringFormatterDetails details, final String text) throws ConversionException
 	{
 		final int startTagIndex = text.indexOf(details.getStartTag());
@@ -98,7 +144,17 @@ public class FormattingUtils
 		throw new ConversionException("Cannot find tags");
 	}
 	
-	private static String checkTags(final SubstringFormatterDetails details, final String text, final String input, final String output)
+	/**
+	 * Replaces the given input text (optionally with the configured tags) with the given output text.
+	 *  
+	 * @param details The formatter details
+	 * @param text The text to modify
+	 * @param input The input text to replace
+	 * @param output The text to replace the input with
+	 * 
+	 * @return The converted text
+	 */
+	private static String replaceTextAndTags(final SubstringFormatterDetails details, final String text, final String input, final String output)
 	{
 		String convertedText = text;
 		
@@ -114,6 +170,14 @@ public class FormattingUtils
 		return convertedText;		
 	}
 	
+	/**
+	 * Performs a string conversion for the given text based on the supplied formatter details.
+	 * 
+	 * @param details The formatter details
+	 * @param text The text to format
+	 * 
+	 * @return The formatted text
+	 */
 	private static String doSubstringConversion(final SubstringConversionFormatterDetails details, final String text)
 	{
 		String convertedText = text;
@@ -123,9 +187,9 @@ public class FormattingUtils
 			final String input = extractValueForConversion(details, convertedText);
 			
 			// The actual conversion value
-			final String output = convert(details.getFormat(), input);
+			final String output = convertText(details.getFormat(), input);
 			
-			convertedText = checkTags(details, convertedText, input, output);
+			convertedText = replaceTextAndTags(details, convertedText, input, output);
 		}
 		catch (ConversionException e)
 		{
@@ -135,6 +199,14 @@ public class FormattingUtils
 		return convertedText;
 	}
 	
+	/**
+	 * Performs a string replacement for the given text based on the supplied formatter details.
+	 * 
+	 * @param details The formatter details
+	 * @param text The text to format
+	 * 
+	 * @return The formatted text
+	 */
 	private static String doSubstringReplacement(final SubstringReplaceFormatterDetails details, final String text)
 	{
 		String convertedText = text;
@@ -146,7 +218,7 @@ public class FormattingUtils
 			// The actual replacement value
 			final String output = details.getReplaceWith();
 			
-			convertedText = checkTags(details, convertedText, input, output);
+			convertedText = replaceTextAndTags(details, convertedText, input, output);
 		}
 		catch (ConversionException e)
 		{
@@ -156,6 +228,14 @@ public class FormattingUtils
 		return convertedText;	
 	}
 	
+	/**
+	 * Performs a string extraction for the given text based on the supplied formatter details.
+	 * 
+	 * @param details The formatter details
+	 * @param text The text to format
+	 * 
+	 * @return The formatted text
+	 */
 	private static String doSubstringExtract(final SubstringExtractFormatterDetails details, final String text)
 	{
 		String convertedText = text;
@@ -181,7 +261,15 @@ public class FormattingUtils
 		return convertedText;	
 	}
 	
-	public static String convert(final ConversionMethod method, final String text)
+	/**
+	 * Converts the given text using the supplied method.
+	 * 
+	 * @param method The method to use for conversion
+	 * @param text The text to be converted
+	 * 
+	 * @return The converted text
+	 */
+	public static String convertText(final ConversionMethod method, final String text)
 	{
 		switch (method)
 		{
@@ -210,17 +298,30 @@ public class FormattingUtils
 		}
 	}
 	
-
-	public static String convertText(final FormatterDetails format, final String text)
+	/**
+	 * Formats the given text using the supplied format.
+	 * 
+	 * @param format The format to use for conversion
+	 * @param text The text to be formatted
+	 * 
+	 * @return The formatted text
+	 */
+	public static String checkAndFormatText(final FormatterDetails format, final String text)
 	{		
 		if (format != null)
 		{
-			return FormattingUtils.custom(format, text);
+			return FormattingUtils.formatText(format, text);
 		}
 		return text;
 	}
 	
-	
+	/**
+	 * Creates a basic formatter function from the supplied conversion method.
+	 *  
+	 * @param conversionMethod The conversion method to be used
+	 * 
+	 * @return Created formmater function
+	 */
 	private static FormatterFunction createBasicFormatterFunction(final ConversionMethod conversionMethod)	
 	{
 		final FormatterFunction function = new FormatterFunction();
@@ -233,6 +334,15 @@ public class FormattingUtils
 		return function;
 	}
 	
+	/**
+	 * Creates formatter details for the given parameters.
+	 * 
+	 * @param id The ID of the formatter
+	 * @param name The name of the formatter
+	 * @param conversionMethod The conversion method
+	 * 
+	 * @return FormatterDetails object
+	 */
 	public static FormatterDetails createBasicFormatter(final String id, final String name, final ConversionMethod conversionMethod)	
 	{
 		final FormatterDetails formatter = new FormatterDetails();

@@ -290,7 +290,7 @@ public class MessageController implements Initializable, MessageIndexChangeObser
 	{
 		if (selectionFormat != null)
 		{
-			final String tooltipText = FormattingUtils.convertText(selectionFormat, dataField.getSelectedText());
+			final String tooltipText = FormattingUtils.checkAndFormatText(selectionFormat, dataField.getSelectedText());
 			
 			if (tooltipText.length() > 0)
 			{

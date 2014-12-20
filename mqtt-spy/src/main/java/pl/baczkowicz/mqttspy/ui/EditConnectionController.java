@@ -60,10 +60,11 @@ import pl.baczkowicz.mqttspy.exceptions.ConfigurationException;
 import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.properties.AdvancedTopicProperties;
 import pl.baczkowicz.mqttspy.ui.properties.BaseTopicProperty;
-import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
+import pl.baczkowicz.mqttspy.ui.utils.ConnectivityUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
 import pl.baczkowicz.mqttspy.ui.utils.FormattingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.KeyboardUtils;
+import pl.baczkowicz.mqttspy.utils.ConnectionUtils;
 import pl.baczkowicz.mqttspy.utils.MqttUtils;
 
 @SuppressWarnings({"unchecked", "rawtypes", "deprecation"})
@@ -700,7 +701,7 @@ public class EditConnectionController extends AnchorPane implements Initializabl
 	public void createConnection() throws ConfigurationException
 	{
 		readAndDetectChanges();
-		final String validationResult = ConnectionUtils.validateConnectionDetails(editedConnectionDetails, false);
+		final String validationResult = ConnectivityUtils.validateConnectionDetails(editedConnectionDetails, false);
 		
 		if (validationResult != null)
 		{

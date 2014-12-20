@@ -37,7 +37,7 @@ import pl.baczkowicz.mqttspy.configuration.generated.TabbedSubscriptionDetails;
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.properties.SubscriptionTopicSummaryProperties;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class SubscriptionSummaryTableController implements Initializable
 {
@@ -180,7 +180,7 @@ public class SubscriptionSummaryTableController implements Initializable
 						super.updateItem(item, empty);
 						if (!isEmpty() && item.getSubscription() != null)
 						{
-							this.setStyle(Utils.createBgRGBString(item.getSubscription()
+							this.setStyle(StylingUtils.createBgRGBString(item.getSubscription()
 									.getColor(), getIndex() % 2 == 0 ? 0.8 : 0.6)
 									+ " -fx-background-radius: 6; ");
 						}

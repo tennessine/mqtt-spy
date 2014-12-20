@@ -28,8 +28,9 @@ import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
 import pl.baczkowicz.mqttspy.ui.ConnectionController;
 import pl.baczkowicz.mqttspy.ui.SubscriptionController;
 import pl.baczkowicz.mqttspy.ui.utils.ContextMenuUtils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
+import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 import pl.baczkowicz.mqttspy.ui.utils.TabUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
 
 public class SubscriptionManager
 {
@@ -118,9 +119,9 @@ public class SubscriptionManager
 			final MqttSubscription subscription, final ConnectionController connectionController)
 	{
 		// Load a new tab and connection pane
-		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "SubscriptionPane.fxml");
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(parent, FxmlUtils.FXML_LOCATION + "SubscriptionPane.fxml");
 
-		final AnchorPane subscriptionPane = Utils.loadAnchorPane(loader);
+		final AnchorPane subscriptionPane = FxmlUtils.loadAnchorPane(loader);
 		final SubscriptionController subscriptionController = ((SubscriptionController) loader.getController());
 		
 		final Tab tab = new Tab();
@@ -149,7 +150,7 @@ public class SubscriptionManager
 
 		if (subscription != null)
 		{
-			tab.setStyle(Utils.createBaseRGBString(subscription.getColor()));
+			tab.setStyle(StylingUtils.createBaseRGBString(subscription.getColor()));
 		}
 
 		if (allTab)

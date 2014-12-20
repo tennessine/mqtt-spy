@@ -27,7 +27,8 @@ import pl.baczkowicz.mqttspy.events.observers.MessageAddedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageListChangedObserver;
 import pl.baczkowicz.mqttspy.events.observers.MessageRemovedObserver;
 import pl.baczkowicz.mqttspy.storage.ManagedMessageStoreWithFiltering;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
+import pl.baczkowicz.mqttspy.ui.utils.StylingUtils;
 
 public class SearchWindowController extends AnchorPane implements Initializable, MessageAddedObserver, MessageRemovedObserver, MessageListChangedObserver
 {
@@ -85,9 +86,9 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 	public Tab createSearchTab(final Object parent)
 	{
 		// Load a new tab and message pane
-		final FXMLLoader loader = Utils.createFXMLLoader(parent, Utils.FXML_LOCATION + "SearchPane.fxml");
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(parent, FxmlUtils.FXML_LOCATION + "SearchPane.fxml");
 
-		final AnchorPane searchPane = Utils.loadAnchorPane(loader);
+		final AnchorPane searchPane = FxmlUtils.loadAnchorPane(loader);
 		final SearchPaneController searchPaneController = ((SearchPaneController) loader.getController());
 		
 		final Tab tab = new Tab();
@@ -139,7 +140,7 @@ public class SearchWindowController extends AnchorPane implements Initializable,
 		
 		if (subscription != null)
 		{
-			createNewSearchButton.setStyle(Utils.createBaseRGBString(subscription.getColor()));
+			createNewSearchButton.setStyle(StylingUtils.createBaseRGBString(subscription.getColor()));
 		}
 	}
 	

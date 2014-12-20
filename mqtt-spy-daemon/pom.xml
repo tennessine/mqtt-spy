@@ -152,19 +152,6 @@
 					</items>					
 				</configuration>
 			</plugin>
-	<!-- 
-    <sourceDirectory>src</sourceDirectory>
-    <plugins>
-
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source />
-					<target />
-				</configuration>
-			</plugin>
-    -->
            
       		<!-- Generate JAXB clases -->			
 	        <plugin>

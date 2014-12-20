@@ -42,9 +42,9 @@ import pl.baczkowicz.mqttspy.ui.connections.ConnectionManager;
 import pl.baczkowicz.mqttspy.ui.messagelog.LogReaderTask;
 import pl.baczkowicz.mqttspy.ui.messagelog.TaskWithProgressUpdater;
 import pl.baczkowicz.mqttspy.ui.properties.RuntimeConnectionProperties;
-import pl.baczkowicz.mqttspy.ui.utils.ConnectionUtils;
+import pl.baczkowicz.mqttspy.ui.utils.ConnectivityUtils;
 import pl.baczkowicz.mqttspy.ui.utils.DialogUtils;
-import pl.baczkowicz.mqttspy.ui.utils.Utils;
+import pl.baczkowicz.mqttspy.ui.utils.FxmlUtils;
 
 public class MainController
 {
@@ -162,8 +162,8 @@ public class MainController
 			eventManager.deregisterConnectionStatusObserver(editConnectionsController);
 		}
 		
-		final FXMLLoader loader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "EditConnectionsWindow.fxml");
-		final AnchorPane connectionWindow = Utils.loadAnchorPane(loader);
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(this, FxmlUtils.FXML_LOCATION + "EditConnectionsWindow.fxml");
+		final AnchorPane connectionWindow = FxmlUtils.loadAnchorPane(loader);
 		editConnectionsController = ((EditConnectionsController) loader.getController());
 		editConnectionsController.setManager(mqttManager); 		
 		editConnectionsController.setMainController(this);
@@ -184,8 +184,8 @@ public class MainController
 	
 	private void initialiseConverterWindow()
 	{
-		final FXMLLoader loader = Utils.createFXMLLoader(this, Utils.FXML_LOCATION + "ConverterWindow.fxml");
-		final AnchorPane converterWindow = Utils.loadAnchorPane(loader);
+		final FXMLLoader loader = FxmlUtils.createFXMLLoader(this, FxmlUtils.FXML_LOCATION + "ConverterWindow.fxml");
+		final AnchorPane converterWindow = FxmlUtils.loadAnchorPane(loader);
 		
 		Scene scene = new Scene(converterWindow);
 		scene.getStylesheets().addAll(mainPane.getScene().getStylesheets());		
@@ -377,7 +377,7 @@ public class MainController
 		
 		if (!cancelled)
 		{
-			final String validationResult = ConnectionUtils.validateConnectionDetails(connectionDetails, true);
+			final String validationResult = ConnectivityUtils.validateConnectionDetails(connectionDetails, true);
 			if (validationResult != null)
 			{
 				DialogUtils.showValidationWarning(validationResult);

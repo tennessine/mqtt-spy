@@ -3,10 +3,6 @@ package pl.baczkowicz.mqttspy.events.ui;
 import java.util.Queue;
 
 import javafx.application.Platform;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import pl.baczkowicz.mqttspy.events.EventManager;
 import pl.baczkowicz.mqttspy.utils.ThreadingUtils;
 
